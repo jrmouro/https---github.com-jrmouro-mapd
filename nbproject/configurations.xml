@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Arquivos de Cabeçalho"
+                   projectFiles="true">
+      <itemPath>EndPoint.h</itemPath>
+      <itemPath>Identifiable.h</itemPath>
+      <itemPath>InstanceExperiment.h</itemPath>
+      <itemPath>InstanceMap.h</itemPath>
+      <itemPath>InstanceTask.h</itemPath>
+      <itemPath>MapdException.h</itemPath>
+      <itemPath>Path.h</itemPath>
+      <itemPath>Site.h</itemPath>
+      <itemPath>SiteMap.h</itemPath>
+      <itemPath>StepMap.h</itemPath>
+      <itemPath>StepPath.h</itemPath>
+      <itemPath>StepSite.h</itemPath>
+      <itemPath>StepTask.h</itemPath>
+      <itemPath>Task.h</itemPath>
+      <itemPath>TaskMap.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Arquivos de Código-Fonte"
+                   projectFiles="true">
+      <itemPath>main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Arquivos de Recurso"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Arquivos de Teste"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+      <logicalFolder name="f1"
+                     displayName="MapdExceptionTest"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>tests/newsimpletest.cpp</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Arquivos Importantes"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <standard>10</standard>
+        </cTool>
+        <ccTool>
+          <standard>11</standard>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerOptionItem>`pkg-config --libs sfml-all`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="EndPoint.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Identifiable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="InstanceExperiment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="InstanceMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="InstanceTask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MapdException.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Path.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Site.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SiteMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StepMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StepPath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StepSite.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StepTask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Task.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TaskMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <folder path="TestFiles/f1">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
+      </folder>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/newsimpletest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <standard>11</standard>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="EndPoint.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Identifiable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="InstanceExperiment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="InstanceMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="InstanceTask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MapdException.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Path.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Site.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SiteMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StepMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StepPath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StepSite.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StepTask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Task.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TaskMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <folder path="TestFiles/f1">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
+      </folder>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/newsimpletest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

@@ -1,0 +1,240 @@
+/* 
+ * File:   SiteMap.h
+ * Author: ronaldo
+ *
+ * Created on 6 de abril de 2023, 10:33
+ */
+
+#ifndef SITEMAP_H
+#define SITEMAP_H
+
+#include <string>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <functional>
+#include <SFML/Graphics/Color.hpp>
+#include "Site.h"
+
+class SiteMap {
+public:
+    
+    SiteMap() : colunm_size(0), row_size(0), site_matrix(nullptr) { }
+
+    SiteMap(unsigned row_size, unsigned column_size) : colunm_size(column_size), row_size(row_size) {
+
+        unsigned size = column_size * row_size;
+        
+        if(size > 0){
+        
+            site_matrix = new Site::Type[row_size * column_size];
+        
+        }
+
+    }
+
+    SiteMap(const SiteMap& orig) : colunm_size(orig.colunm_size), row_size(orig.row_size) {
+
+        unsigned size = orig.colunm_size * orig.row_size;
+        
+        if(size > 0){ 
+
+            this->site_matrix = new Site::Type[size];
+
+            for (unsigned i = 0; i < size; i++)
+                this->site_matrix[i] = orig.site_matrix[i];
+        
+        }
+        
+    }
+    
+    SiteMap& operator=(const SiteMap& right) {
+        // Check for self-assignment!
+        if (this == &right) // Same object?
+            return *this; // Yes, so skip assignment, and just return *this.
+        if(this->site_matrix != nullptr) delete this->site_matrix;
+        unsigned size = right.colunm_size * right.row_size;
+        this->colunm_size = right.colunm_size;
+        this->row_size = right.row_size;
+        if(size > 0){            
+            this->site_matrix = new Site::Type[size];
+            for (unsigned i = 0; i < size; i++)
+                this->site_matrix[i] = right.site_matrix[i];
+        }
+        return *this;
+    }
+
+
+    virtual ~SiteMap() {
+
+        if (site_matrix != nullptr) delete site_matrix;
+
+    }
+    
+    void setType(unsigned linearLocation, Site::Type value) {
+        
+        if (linearLocation < row_size * colunm_size)
+            this->site_matrix[linearLocation] = value;
+
+    }
+
+    void setType(unsigned row, unsigned column, Site::Type value) {
+
+        if (row < row_size && column < colunm_size)
+            this->site_matrix[row * colunm_size + column] = value;
+
+    }
+
+    Site::Type getType(unsigned row, unsigned column) {
+
+        if (row < row_size && column < colunm_size)
+            return this->site_matrix[row * colunm_size + column];
+
+        return Site::Type::none;
+
+    }
+    
+//    static Site siteByLinearLocation(const SiteMap& siteMap, unsigned location){
+//        return Site(location / siteMap.row_size, location % siteMap.row_size);
+//    }
+    
+    static unsigned linearLocationBySite(const SiteMap& siteMap, const Site& site){
+        return site.row() * siteMap.getColumn_size() + site.colunm();
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const SiteMap& obj) {
+        
+        os << "row_size: " << obj.row_size << std::endl;
+        os << "colunm_size: " << obj.colunm_size << std::endl;
+
+        for (unsigned r = 0; r < obj.row_size; r++) {
+
+            for (unsigned c = 0; c < obj.colunm_size; c++) {
+
+                auto p = obj.site_matrix[r * obj.colunm_size + c];
+
+                if (p == Site::Type::none) {
+                    os << "@";
+                } else if (p == Site::Type::bot) {
+                    os << "r";
+                } else if (p == Site::Type::endpoint) {
+                    os << "e";
+                }else if (p == Site::Type::task) {
+                    os << "t";
+                } else {
+                    os << " ";
+                }
+
+            }
+
+            os << std::endl;
+
+        }
+
+        return os;
+
+    }
+
+    void load(std::ifstream& filestream, std::function<bool(unsigned, unsigned, Site::Type)> func) {
+
+        for (unsigned r = 0; r < this->row_size; r++) {
+
+            std::string line;
+            getline(filestream, line);
+
+            for (unsigned c = 0; c < this->colunm_size; c++) {
+
+                Site::Type t = Site::Type::path;
+                
+                if (line[c] == '@') {
+                    this->setType(r, c, Site::Type::none);
+                    t = Site::Type::none;
+                } else if (line[c] == 'r') {
+                    this->setType(r, c, Site::Type::bot);
+                    t = Site::Type::bot;
+                } else if (line[c] == 'e') {
+                    this->setType(r, c, Site::Type::endpoint);
+                    t = Site::Type::endpoint;
+                } else {
+                    this->setType(r, c, Site::Type::path);
+                    t = Site::Type::path;
+                }
+                
+                if(func(r, c, t)) return;
+
+            }
+
+        }
+
+    }
+
+    void listSites(std::function<bool(unsigned, unsigned, Site::Type, const SiteMap&) > func) {
+
+        for (unsigned r = 0; r < row_size; r++)
+
+            for (unsigned c = 0; c < colunm_size; c++)
+
+                if (func(r, c, site_matrix[r * colunm_size + c], *this))return;
+
+
+
+    }
+    
+    void listSites(std::function<bool(Site) > func) {
+
+        for (unsigned r = 0; r < row_size; r++)
+
+            for (unsigned c = 0; c < colunm_size; c++)
+
+                if (func(Site(r, c, site_matrix[r * colunm_size + c])))return;
+
+    }
+
+    unsigned getColumn_size() const {
+        return colunm_size;
+    }
+
+    unsigned getRow_size() const {
+        return row_size;
+    }
+
+    void draw(sf::RenderWindow& window) {
+
+        listSites(
+
+                [&window](unsigned row, unsigned column, Site::Type p, const SiteMap & map) {
+
+                    sf::RectangleShape shape_point(sf::Vector2f(window.getSize().x / map.getColumn_size(), window.getSize().y / map.getRow_size()));
+                    shape_point.setPosition(sf::Vector2f(column * window.getSize().x / map.getColumn_size(), row * window.getSize().y / map.getRow_size()));
+
+                    if (p == Site::Type::none) {
+                        shape_point.setFillColor(sf::Color::White);
+                    } else if (p == Site::Type::bot) {
+                        shape_point.setFillColor(sf::Color::Red);
+                    } else if (p == Site::Type::endpoint) {
+                        shape_point.setFillColor(sf::Color::Blue);
+                    } else if (p == Site::Type::task) {
+                        shape_point.setFillColor(sf::Color::Cyan);
+                    }else {
+                        shape_point.setFillColor(sf::Color::Green);
+                    }
+
+                    window.draw(shape_point);
+                    
+                    return false;
+                    
+                }
+                
+        );
+
+    }
+    
+private:
+
+    Site::Type* site_matrix = nullptr;
+    unsigned colunm_size = 0, row_size = 0;
+
+};
+
+#endif /* SITEMAP_H */
+
