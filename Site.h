@@ -14,27 +14,52 @@
 #define SITE_H
 
 #include <cmath>
+#include <unordered_map>
 #include "MapdException.h"
 #include "Identifiable.h"
+#include "Drawable.h"
 
-class Site : public Identifiable<int>{
+class Site : public Identifiable<int>, public Drawable{
 public:
+    
+    
     
     enum Type {
         bot,
         endpoint,
         path,
         task,        
-        none
+        none,
+        util1,
+        util2
     };
+    
+    static const class _TypeColorMap{
+        
+    public:
+        
+        _TypeColorMap() {
+            map.insert(std::pair<Site::Type,sf::Color>(Type::bot, sf::Color::Yellow));
+            map.insert(std::pair<Site::Type,sf::Color>(Type::endpoint, sf::Color::Blue));
+            map.insert(std::pair<Site::Type,sf::Color>(Type::path, sf::Color::Green));
+            map.insert(std::pair<Site::Type,sf::Color>(Type::task, sf::Color::Cyan));
+            map.insert(std::pair<Site::Type,sf::Color>(Type::none, sf::Color::Red));
+            map.insert(std::pair<Site::Type,sf::Color>(Type::util1, sf::Color::Black));
+            map.insert(std::pair<Site::Type,sf::Color>(Type::util2, sf::Color::White));
+        }
+        
+        sf::Color get(Site::Type siteType) const {
+            std::unordered_map<Site::Type,sf::Color>::const_iterator it;
+            it = map.find(siteType);
+            if(it != map.end()) return it->second;            
+            return sf::Color::Transparent;
+        }
 
-//    enum Position {
-//        left, //row-
-//        right, //row+
-//        up, //colunm-
-//        down, //colunm+
-//        count
-//    };
+    private:
+        
+        std::unordered_map<Site::Type,sf::Color> map;
+        
+    } TypeColorMap;
     
     Site(int id) : _id(id), _row(0), _colunm(0), _type(Type::none) {}
     
@@ -119,16 +144,34 @@ public:
         
     }
     
-    virtual int id(){
+    virtual int id() const{
         return this->_id;
     }
+    
+    virtual void draw(const Render& render) const {
+        
+        sf::RectangleShape shape_point(sf::Vector2f(render.GetCell().first, render.GetCell().second));
+        shape_point.setPosition(sf::Vector2f(this->_colunm * render.GetCell().first, this->_row * render.GetCell().second));
+        shape_point.setFillColor(Site::TypeColorMap.get(this->_type));
+        render.draw(shape_point);
+        
+    }
+    
+    virtual bool match(const Site& other) const{
+        
+        return this->_row == other._row && this->_colunm == other._colunm;
+        
+    }
+    
 
 private:
-    const int _id;
-    const unsigned _row, _colunm;
+    int _id;
+    unsigned _row, _colunm;
     Type _type;
 
 };
+
+const Site::_TypeColorMap Site::TypeColorMap;
 
 #endif /* SITE_H */
 

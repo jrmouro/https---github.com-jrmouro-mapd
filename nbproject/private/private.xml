@@ -7,21 +7,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/Path.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/Task.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/SiteMap.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/InstanceTask.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/StepPath.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/StepTask.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/Site.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/main.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/InstanceMap.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/tests/newsimpletest.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/TaskMap.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/Instances/small/kiva-0.2.task</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/StepSite.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/StepMap.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/MapdException.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/AstarAlgorithm.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/PathAlgorithm.h</file>
         </group>
     </open-files>
 </project-private>

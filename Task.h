@@ -25,7 +25,7 @@ public:
 
     virtual ~Task(){}
     
-    virtual int id(){
+    virtual int id() const{
         return this->_id;
     }
     

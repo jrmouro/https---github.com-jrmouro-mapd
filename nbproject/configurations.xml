@@ -4,7 +4,17 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Arquivos de Cabeçalho"
                    projectFiles="true">
+      <logicalFolder name="f1" displayName="Algorithm" projectFiles="true">
+        <itemPath>AstarAlgorithm.h</itemPath>
+        <itemPath>PathAlgorithm.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="Drawable" projectFiles="true">
+        <itemPath>Drawable.h</itemPath>
+        <itemPath>Render.cpp</itemPath>
+        <itemPath>Render.h</itemPath>
+      </logicalFolder>
       <itemPath>EndPoint.h</itemPath>
+      <itemPath>Experiment.h</itemPath>
       <itemPath>Identifiable.h</itemPath>
       <itemPath>InstanceExperiment.h</itemPath>
       <itemPath>InstanceMap.h</itemPath>
@@ -68,7 +78,13 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="AstarAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Drawable.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="EndPoint.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Experiment.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Identifiable.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -81,6 +97,12 @@
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Path.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PathAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Render.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Render.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Site.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -139,7 +161,13 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="AstarAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Drawable.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="EndPoint.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Experiment.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Identifiable.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -152,6 +180,12 @@
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Path.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PathAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Render.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Render.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Site.h" ex="false" tool="3" flavor2="0">
       </item>

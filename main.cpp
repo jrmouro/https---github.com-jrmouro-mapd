@@ -10,8 +10,10 @@
  * Created on 6 de abril de 2023, 10:31
  */
 
-#include <SFML/Graphics.hpp>
+
 #include "InstanceExperiment.h"
+#include "AstarAlgorithm.h"
+#include "Render.h"
 
 using namespace std;
 

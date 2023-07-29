@@ -11,7 +11,7 @@
 template<class T>
 class Identifiable {
 public:
-    virtual T id() = 0;
+    virtual T id() const = 0;
 };
 
 #endif /* IDENTIFIABLE_H */

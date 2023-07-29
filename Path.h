@@ -12,7 +12,7 @@
 #include "Site.h"
 #include "MapdException.h"
 
-class Path {
+class Path : public Drawable{
 public:
 
     Path() {}
@@ -108,6 +108,21 @@ public:
         return d_row;
     }
 
+    void clear(){
+        this->sites.clear();
+        this->d_row = 0;
+        this->d_colunm = 0;
+    }
+    
+    virtual void draw(const Render& render) const {
+        
+        for(std::vector<Site>::const_iterator it = sites.begin(); it != sites.end(); it++){
+            
+            it->draw(render);
+            
+        }
+        
+    }
 
 private:
     std::vector<Site> sites;

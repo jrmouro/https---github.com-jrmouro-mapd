@@ -14,9 +14,10 @@
 #include <sstream>
 #include <functional>
 #include <SFML/Graphics/Color.hpp>
+#include <vector>
 #include "Site.h"
 
-class SiteMap {
+class SiteMap : public Drawable{
 public:
     
     SiteMap() : colunm_size(0), row_size(0), site_matrix(nullptr) { }
@@ -85,10 +86,10 @@ public:
 
     }
 
-    Site::Type getType(unsigned row, unsigned column) {
+    Site::Type getType(int row, int colunm) const {
 
-        if (row < row_size && column < colunm_size)
-            return this->site_matrix[row * colunm_size + column];
+        if (row > -1 && row < row_size && colunm > -1 && colunm < colunm_size)
+            return this->site_matrix[row * colunm_size + colunm];
 
         return Site::Type::none;
 
@@ -168,7 +169,7 @@ public:
 
     }
 
-    void listSites(std::function<bool(unsigned, unsigned, Site::Type, const SiteMap&) > func) {
+    void listSites(std::function<bool(unsigned, unsigned, Site::Type, const SiteMap&) > func) const{
 
         for (unsigned r = 0; r < row_size; r++)
 
@@ -227,6 +228,54 @@ public:
                 
         );
 
+    }
+    
+    virtual void draw(const Render& render) const {
+        
+        listSites(
+
+                [&render](unsigned row, unsigned column, Site::Type siteType, const SiteMap & map) {
+
+                    sf::RectangleShape shape_point(sf::Vector2f(render.GetCell().first, render.GetCell().second));
+                    shape_point.setPosition(sf::Vector2f(column * render.GetCell().first, row * render.GetCell().second));
+                    shape_point.setFillColor(Site::TypeColorMap.get(siteType));                    
+                    render.draw(shape_point);
+                    
+                    return false;
+                    
+                }
+                
+        );
+        
+    }
+    
+    virtual std::vector<Site> neighborhood(const Site& site) const {
+        
+        std::vector<Site> ret;
+        
+        int neighbor_row = (int)site.row() - 1;
+        int neighbor_colunm = (int)site.colunm() - 1;
+        
+        auto siteType = this->getType(neighbor_row, site.colunm());
+        if(siteType != Site::Type::none)
+            ret.push_back(Site(neighbor_row * this->row_size + site.colunm(), neighbor_row, site.colunm(), siteType));
+            
+        neighbor_row = (int)site.row() + 1;
+        siteType = this->getType(neighbor_row, site.colunm());
+        if(siteType != Site::Type::none)
+            ret.push_back(Site(neighbor_row * this->row_size + site.colunm(), neighbor_row, site.colunm(), siteType));
+        
+        siteType = this->getType(site.row(), neighbor_colunm);
+        if(siteType != Site::Type::none)
+            ret.push_back(Site(site.row() * this->row_size + neighbor_colunm, site.row(), neighbor_colunm, siteType));
+            
+        neighbor_colunm = (int)site.colunm() + 1;
+        siteType = this->getType(site.row(), neighbor_colunm);
+        if(siteType != Site::Type::none)
+            ret.push_back(Site(site.row() * this->row_size + neighbor_colunm, site.row(), neighbor_colunm, siteType));
+                    
+        return ret;
+        
     }
     
 private:

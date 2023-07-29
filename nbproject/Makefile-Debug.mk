@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/Render.o \
 	${OBJECTDIR}/main.o
 
 # Test Directory
@@ -72,6 +73,11 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapd: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapd ${OBJECTFILES} ${LDLIBSOPTIONS}
 
+${OBJECTDIR}/Render.o: Render.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Render.o Render.cpp
+
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -94,6 +100,19 @@ ${TESTDIR}/tests/newsimpletest.o: tests/newsimpletest.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest.o tests/newsimpletest.cpp
 
+
+${OBJECTDIR}/Render_nomain.o: ${OBJECTDIR}/Render.o Render.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/Render.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Render_nomain.o Render.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/Render.o ${OBJECTDIR}/Render_nomain.o;\
+	fi
 
 ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp 
 	${MKDIR} -p ${OBJECTDIR}

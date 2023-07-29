@@ -8,10 +8,14 @@
 #ifndef INSTANCEEXPERIMENT_H
 #define INSTANCEEXPERIMENT_H
 
+
+#include <SFML/Graphics.hpp>
 #include "InstanceMap.h"
 #include "InstanceTask.h"
+#include "Experiment.h"
+#include "Render.h"
 
-class InstanceExperiment {
+class InstanceExperiment : public Experiment{
     
 public:
     InstanceExperiment(const std::string mapFilename, const std::string taskFilename) :
@@ -22,7 +26,7 @@ public:
 
     virtual ~InstanceExperiment(){}
     
-    void run(){
+    virtual void run(){
         auto map = InstanceMap::load(this->mapFilename);
         auto tasks = InstanceTask::load(this->taskFilename, [map](unsigned id){
             return *map->getEndPointById(id);
@@ -36,25 +40,34 @@ public:
             return false;
         });
         
-        sf::RenderWindow window(sf::VideoMode(map->getColumn_size()*10, map->getRow_size()*10), this->mapFilename);
-
-        while (window.isOpen())
-        {
-            sf::Event event;
-
-            while (window.pollEvent(event))
-            {
-                if (event.type == sf::Event::Closed)
-                    window.close();
-            }
-
-            window.clear();
-
-            map->draw(window);
-
-            window.display();
-
-        }
+        Render render(
+                std::pair<unsigned, unsigned>(16,16),
+                std::pair<unsigned, unsigned>(map->getColumn_size(),map->getRow_size()),
+                this->mapFilename);
+        
+        render.add(map->getSiteMap());
+        
+        render.loop();
+        
+//        sf::RenderWindow window(sf::VideoMode(map->getColumn_size()*16, map->getRow_size()*16), this->mapFilename);
+//
+//        while (window.isOpen()){
+//            
+//            sf::Event event;
+//
+//            while (window.pollEvent(event))
+//            {
+//                if (event.type == sf::Event::Closed)
+//                    window.close();
+//            }
+//
+//            window.clear();
+//
+//            map->draw(window);
+//
+//            window.display();
+//
+//        }
 
         if(map != nullptr){
 
