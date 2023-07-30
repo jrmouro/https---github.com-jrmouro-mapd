@@ -1,6 +1,18 @@
 #include "Render.h"
 #include "Drawable.h"
 
+Render::Render( const std::pair<unsigned, unsigned>& cell,
+        const std::pair<unsigned, unsigned>& grid,
+        const std::string& title,
+        Drawable* drawable) : 
+    cell(cell), 
+    grid(grid), 
+    title(title){
+    
+    this->drawables.push_back(drawable);
+
+}
+
 void Render::add(Drawable* drawable){
     
     this->drawables.push_back(drawable);

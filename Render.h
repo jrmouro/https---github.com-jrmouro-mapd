@@ -20,20 +20,28 @@ class Render {
             const std::string& title) : 
         cell(cell), 
         grid(grid), 
-        title(title)
-//        ,
-//        window(
-//            new sf::RenderWindow(
-//                sf::VideoMode(grid.first*cell.first, grid.second*cell.second), 
-//                title))
-        {}
+        title(title){}
+        
+    Render( const std::pair<unsigned, unsigned>& cell,
+        const std::pair<unsigned, unsigned>& grid,
+        const std::string& title,
+        const std::vector<Drawable*>& drawables) : 
+    cell(cell), 
+    grid(grid), 
+    title(title),
+    drawables(drawables){}
+    
+    Render( const std::pair<unsigned, unsigned>& cell,
+        const std::pair<unsigned, unsigned>& grid,
+        const std::string& title,
+        Drawable* drawable);
             
             
-    Render(const Render& other) :
-    title(other.title), cell(other.cell), grid(other.grid)
-//    , window(new sf::RenderWindow(
-//                    sf::VideoMode(other.grid.first*other.cell.first, other.grid.second*other.cell.second))) 
-    {}
+    Render(const Render& other) : 
+        title(other.title), 
+        cell(other.cell), 
+        grid(other.grid), 
+        drawables(other.drawables){}
 
     std::pair<unsigned, unsigned> GetCell() const { return cell; }
     std::pair<unsigned, unsigned> GetGrid() const { return grid; }
@@ -51,10 +59,6 @@ class Render {
         if(this->window != nullptr)
             this->window->draw(sf_drawable);            
     }
-    
-//    std::pair<unsigned, unsigned> windowSize() const {
-//        return std::pair<unsigned, unsigned>(window->getSize().x, window->getSize().y);
-//    }
     
     void loop();
     

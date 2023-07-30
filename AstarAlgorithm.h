@@ -17,17 +17,48 @@
 
 class AstarAlgorithm : public PathAlgorithm{
 public:
+        
+    virtual bool solve(const SiteMap& map, const Site& start, const Site& goal, Path& path){
+        
+        this->closedStates.clear(); // row -> colunm        
+        this->priorityStates.clear();
+        
+        AstarState* startState = new AstarState(.0f, this->heuristic(start, goal), start, nullptr);        
+        AstarState* solved = this->solveAux(startState, map, goal);
+                    
+        while(solved != nullptr){            
+            path.insert(0, solved->getSite());
+            solved = solved->getPrevious();
+        }
+        
+        
+        return solved;
+        
+    }
+    
+    virtual ~AstarAlgorithm(){
+        
+        for (auto elem : visited) {
+            
+            delete elem;
+
+        }
+        
+    }
+    
+protected:
     
     class AstarState{
     public:
         
-        AstarState(float traveled, float heuristic, const Site& site, unsigned step) :
-        traveled(traveled), _cost(heuristic + traveled), site(site), step(step) {}
+        AstarState(float traveled, float heuristic, const Site& site, AstarState* previous) :
+        traveled(traveled), _cost(heuristic + traveled), site(site), previous(previous) {}
+        
 
         AstarState(const AstarState& other) :
-        traveled(other.traveled), _cost(other._cost), site(other.site), step(other.step) { }
+        traveled(other.traveled), _cost(other._cost), site(other.site), previous(other.previous) { }
         
-        virtual ~AstarState(){}
+        virtual ~AstarState(){ }
         
         const Site getSite() const {
             return site;
@@ -44,35 +75,40 @@ public:
         bool operator<(const AstarState& right) const {
             return this->cost() < right.cost();
         }
-        
-        unsigned getStep() const {
-            return step;
+                
+        AstarState* getPrevious() const {
+            return this->previous;
         }
         
     private:
-        unsigned step;
         float traveled, _cost;
         Site site;
+        AstarState* previous;
     };
     
     class AstarStateComparison {
     public:      
-        bool operator() (const AstarState& as1, const AstarState& as2) const {
-          return as1 < as2;
+        bool operator() (const AstarState* as1, const AstarState* as2) const {
+          return *as2 < *as1;
         }
     };
+    
+    
+private:
+    
+    std::vector<AstarState*> visited;
     
     class PriorityStates{
         
     public:
         
-        void push(const AstarState&  state){
+        void push(AstarState*  state){
             
             this->states.push(state);
             
         }
         
-        AstarState pop(){
+        AstarState* pop(){
             auto ret = this->states.top();
             this->states.pop();
             return ret;
@@ -82,27 +118,32 @@ public:
             return this->states.empty();
         }
         
+        void clear(){            
+            while (!this->states.empty())
+               this->states.pop();           
+        }
+        
         
     private:
         
-        std::priority_queue<AstarState,std::vector<AstarState>,AstarStateComparison> states;
+        std::priority_queue<AstarState*,std::vector<AstarState*>,AstarStateComparison> states;
         
-    };
+    } priorityStates;
     
     class ClosedStates{
     public:
         
-        void add(const AstarState& state){
+        void add(AstarState* state){
             
             std::unordered_map<unsigned, std::unordered_set<unsigned>>::iterator it;
-            it = this->states.find(state.getSite().row());
+            it = this->states.find(state->getSite().row());
 
             if ( it == this->states.end() ){
                 std::unordered_set<unsigned> set;
-                it = this->states.insert(std::pair<unsigned, std::unordered_set<unsigned>>(state.getSite().row(), set)).first;
+                it = this->states.insert(std::pair<unsigned, std::unordered_set<unsigned>>(state->getSite().row(), set)).first;
             } 
             
-            it->second.insert(state.getSite().colunm());
+            it->second.insert(state->getSite().colunm());
             
         }
         
@@ -123,55 +164,42 @@ public:
             
         }
         
+        void clear(){
+            this->states.clear();
+        }
+        
     private:
         std::unordered_map<unsigned, std::unordered_set<unsigned>> states;
-    };
+    } closedStates;
     
     virtual float heuristic(const Site& start, const Site& goal) const{
         
         return std::abs((int)start.row() - (int)goal.row()) + std::abs((int)start.colunm() - (int)goal.colunm());
         
-    }
+    }    
     
-    virtual bool solve(const SiteMap& map, const Site& start, const Site& goal, Path& path) const {
-        
-        ClosedStates closedStates; // row -> colunm        
-        PriorityStates priorityStates;
-        AstarState startState(.0f, this->heuristic(start, goal), start, 0);
-        
-        bool solved = this->solveAux(startState, closedStates, priorityStates, map, goal, path);
-        
-        if(!solved) path.clear();
-        
-        return solved;
-        
-    }
-    
-    virtual bool solveAux(
-        const AstarState& current,
-        ClosedStates& closedStates,
-        PriorityStates& priorityStates,
+    AstarState* solveAux(
+        AstarState* current,
         const SiteMap& map,
-        const Site& goal, 
-        Path& path) const {
+        const Site& goal){
         
-        path.set(current.getStep(), current.getSite());
-        
-        if(goal.match(current.getSite())){
+        this->visited.push_back(current);
+                
+        if(goal.match(current->getSite())){
                         
-            return true;
+            return current;
             
         }
             
-        closedStates.add(current);
-        auto neighborhood = map.neighborhood(current.getSite());
+        this->closedStates.add(current);
+        auto neighborhood = map.neighborhood(current->getSite());
 
         std::vector<Site>::const_iterator it;
         for(it = neighborhood.begin(); it != neighborhood.end(); it++){
 
             if(!closedStates.closed(it->row(), it->colunm())){
 
-                priorityStates.push(AstarState(current.getTraveled() + 1, this->heuristic(*it, goal), *it, current.getStep() + 1));
+                this->priorityStates.push(new AstarState(current->getTraveled() + 1, this->heuristic(*it, goal), *it, current));
 
             }
 
@@ -179,12 +207,12 @@ public:
         
         if(!priorityStates.empty()){
             
-            return this->solveAux(priorityStates.pop(), closedStates, priorityStates, map, goal, path);
+            return this->solveAux(priorityStates.pop(), map, goal);
             
         }  
                 
         
-        return false;
+        return nullptr;
         
     }
     

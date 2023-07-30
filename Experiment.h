@@ -8,7 +8,9 @@
 #ifndef EXPERIMENT_H
 #define EXPERIMENT_H
 
-class Experiment {
+#include "Resetable.h"
+
+class Experiment{
 public:
     virtual void run() = 0;
 };

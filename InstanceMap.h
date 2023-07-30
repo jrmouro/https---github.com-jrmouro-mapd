@@ -18,7 +18,7 @@
 #include "SiteMap.h"
 #include "EndPoint.h"
 
-class InstanceMap {
+class InstanceMap : public Drawable{
 public:
 
     InstanceMap(
@@ -108,8 +108,12 @@ public:
         
     }
     
-    void draw(sf::RenderWindow& window){
-        this->siteMap->draw(window);
+//    void draw(sf::RenderWindow& window){
+//        this->siteMap->draw(window);
+//    }
+    
+    virtual void draw(const Render& render) const{
+        this->siteMap->draw(render);
     }
     
     unsigned getColumn_size() const {

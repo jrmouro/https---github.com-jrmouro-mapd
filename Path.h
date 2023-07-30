@@ -43,8 +43,8 @@ public:
 
             this->sites.erase(this->sites.begin() + index, this->sites.end());
 
-        } else {
-
+        } if (index > this->sites.size()) {
+            
             try {
                 std::ostringstream stream;
                 stream << "invalid index [" << index << "]";
@@ -92,6 +92,23 @@ public:
         this->sites.push_back(site);
 
     }
+    
+    void insert(unsigned index, const Site& site){       
+        
+        std::vector<Site>::iterator it;
+        it = this->sites.begin() + index;
+        
+        if(it != this->sites.end()){
+            
+            this->sites.insert(it, site);
+            
+        } else {
+            
+            this->sites.push_back(site);
+            
+        }       
+    
+    }
 
     friend std::ostream& operator<<(std::ostream& os, const Path& obj) {
         for (std::vector<Site>::const_iterator it = obj.sites.begin(); it != obj.sites.end(); ++it)
@@ -118,7 +135,10 @@ public:
         
         for(std::vector<Site>::const_iterator it = sites.begin(); it != sites.end(); it++){
             
-            it->draw(render);
+            sf::RectangleShape shape_point(sf::Vector2f(render.GetCell().first, render.GetCell().second));
+            shape_point.setPosition(sf::Vector2f(it->colunm() * render.GetCell().first, it->row() * render.GetCell().second));
+            shape_point.setFillColor(Site::TypeColorMap.get(Site::util1));
+            render.draw(shape_point);
             
         }
         

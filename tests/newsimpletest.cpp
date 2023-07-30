@@ -22,10 +22,10 @@
 void test1() {
     std::cout << "newsimpletest test 1" << std::endl;
     Path p;
-    Site s1(0,0);
-    Site s2(0,1);
-    Site s3(0,2);
-    Site s4(2,2);
+    Site s1(0, 0, 0);
+    Site s2(1, 0, 1);
+    Site s3(2, 0, 2);
+    Site s4(3, 2, 2);
     
     p.add(s1);
     p.add(s2);
@@ -34,7 +34,7 @@ void test1() {
     
     std::cout << p << std::endl << std::endl;
     
-    p.set(2, Site(1, 1));
+    p.set(2, Site(4, 1, 1));
     
     std::cout << p << std::endl;
     

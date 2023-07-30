@@ -50,6 +50,31 @@ public:
         }
 
     }
+    
+    Task getTaskbyId(unsigned id){
+        
+        std::map<unsigned, std::vector<Task>*>::const_iterator it;
+        for (it = this->tasks.begin(); it != this->tasks.end(); ++it) {
+                      
+            std::vector<Task>::const_iterator it2;
+            for (it2 = it->second->begin(); it2 != it->second->end(); ++it2) {
+                                
+                if(it2->id() == id) return *it2;
+                
+            }            
+
+        }
+        
+        try {
+            std::ostringstream stream;
+            stream << "invalid id [" << id << "]";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+    }
    
     
     void listTasks(std::function<bool(unsigned, const Task&)> func) const{
