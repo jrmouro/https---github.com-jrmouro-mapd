@@ -20,7 +20,8 @@ int main(int argc, char** argv) {
     auto experiment = AstarExperiment(    
         "./Instances/small/kiva-0.2.task",
         "./Instances/small/kiva-50-500-5.map", 
-        true);
+        true,
+        32);
     
     experiment.run();
     

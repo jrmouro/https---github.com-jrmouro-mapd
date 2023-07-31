@@ -66,8 +66,7 @@ protected:
     InstanceMap *instanceMap = nullptr;
     std::string filename;
     
-private:   
-    
+private:      
     bool render = false;
 };
 

@@ -63,12 +63,17 @@ class Render {
     void loop();
     
     void add(Drawable* drawable);
+    
+    sf::Time GetElapsed() const {
+        return elapsed;
+    }
          
 private:
     
     std::string title;
     std::pair<unsigned, unsigned> cell, grid;
     sf::RenderWindow* window;
+    sf::Time elapsed;
     std::vector<Drawable*> drawables;
 
 };

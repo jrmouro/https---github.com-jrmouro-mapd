@@ -26,8 +26,12 @@ void Render::loop(){
             grid.first*cell.first, 
             grid.second*cell.second), 
         title);
+    
+    sf::Clock clock;
         
     while (window->isOpen()){
+        
+        this->elapsed = clock.restart();
 
         sf::Event event;
 
