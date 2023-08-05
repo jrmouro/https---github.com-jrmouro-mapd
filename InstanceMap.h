@@ -16,33 +16,29 @@
 #include <map>
 
 #include "SiteMap.h"
-#include "EndPoint.h"
+#include "BinaryMap.h"
 
 class InstanceMap : public Drawable{
 public:
-
+            
     InstanceMap(
+        unsigned step_size,
         unsigned row_size, 
-        unsigned column_size,
-            unsigned num_bots,
-            unsigned num_endpoints,
-            unsigned num_steps) : 
-        siteMap(new SiteMap(row_size, column_size)),
-        num_bots(num_bots),
-        num_endpoints(num_endpoints),
-        num_steps(num_steps){ }
-
+        unsigned colunm_size,
+        unsigned num_bots,
+        unsigned num_endpoints) : 
+            siteMap(row_size, colunm_size),
+            binaryMap(step_size, row_size, colunm_size),
+            num_bots(num_bots),
+            num_endpoints(num_endpoints){ }
+            
     InstanceMap(const InstanceMap& orig) : 
-        siteMap(new SiteMap(*orig.siteMap)),
+        siteMap(orig.siteMap),
+        binaryMap(orig.binaryMap),
         num_bots(orig.num_bots),
-        num_endpoints(orig.num_endpoints),
-        num_steps(orig.num_steps){ }
+        num_endpoints(orig.num_endpoints){ }
 
-    virtual ~InstanceMap() {
-    
-        delete this->siteMap;
-        
-    }
+    virtual ~InstanceMap() { }
     
     static InstanceMap* load(std::string filename_instance) {
 
@@ -54,10 +50,10 @@ public:
             getline(filestream, line);
             std::stringstream ss(line);
 
-            unsigned row, col, bots, steps, endpoints;
+            unsigned row_size, colunm_size, bots, step_size, endpoints;
 
-            ss >> row;
-            ss >> col;
+            ss >> row_size;
+            ss >> colunm_size;
             
             ss.clear();
             getline(filestream, line);
@@ -72,9 +68,9 @@ public:
             ss.clear();
             getline(filestream, line);
             ss << line;
-            ss >> steps;
+            ss >> step_size;
 
-            auto imap = new InstanceMap(row, col, bots, endpoints, steps);            
+            auto imap = new InstanceMap(step_size, row_size, colunm_size, bots, endpoints);            
 
             imap->loadMap(filestream);
 
@@ -91,41 +87,48 @@ public:
     void loadMap(std::ifstream& filestream){
         
         unsigned i = 0, j = 0;
-        this->siteMap->load(filestream, [&i, &j, this](unsigned row, unsigned colunm, Site::Type siteType){
+        this->siteMap.load(filestream, [&i, &j, this](unsigned row, unsigned colunm, Site::Type siteType){
+            
+            this->binaryMap.setValuesFrom(0, row, colunm, !(siteType == Site::Type::none));
              
             if(siteType == Site::Type::endpoint) 
                 
-                this->endpointMap.insert(std::pair<unsigned, EndPoint>(i++, EndPoint(i, row, colunm)));
+                this->endpointMap.insert(std::pair<unsigned, Site>(i++, Site(row, colunm, siteType)));
             
             else if(siteType == Site::Type::bot) 
                 
-                this->botMap.insert(std::pair<unsigned, Site>(j++, Site(j, row, colunm, siteType)));
-                
-            
+                this->botMap.insert(std::pair<unsigned, Site>(j++, Site(row, colunm, siteType)));           
             
             return false;
+            
         });
         
     }
-    
-//    void draw(sf::RenderWindow& window){
-//        this->siteMap->draw(window);
-//    }
-    
+        
     virtual void draw(const Render& render) const{
-        this->siteMap->draw(render);
+        this->siteMap.draw(render);
     }
     
     unsigned getColumn_size() const {
-        return this->siteMap->getColumn_size();
+        return this->siteMap.getColumn_size();
     }
 
     unsigned getRow_size() const {
-        return this->siteMap->getRow_size();
+        return this->siteMap.getRow_size();
     }
     
-    SiteMap* getSiteMap() const {
+    const SiteMap& getSiteMap() const {
         return siteMap;
+    }
+    
+    const BinaryMap& getBinaryMap() const {
+        return binaryMap;
+    }
+    
+    void setTaskEndpoint(unsigned row, unsigned colunm) {
+        
+        this->siteMap.setType(row, colunm, Site::Type::task);        
+        
     }
     
     unsigned getNumBots() const {
@@ -136,13 +139,9 @@ public:
         return num_endpoints;
     }
 
-    unsigned getNumSteps() const {
-        return num_steps;
-    }
-
-    const EndPoint* getEndPointById(unsigned endpointId){
+    const Site* getEndPointById(unsigned endpointId){
         
-        std::map<unsigned, EndPoint>::const_iterator it;
+        std::map<unsigned, Site>::const_iterator it;
         it = this->endpointMap.find(endpointId);
 
         if (it != this->endpointMap.end()) {
@@ -167,25 +166,45 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const InstanceMap& obj) {
         os << "num_endpoints: " << obj.num_endpoints << std::endl;
         os << "num_bots: " << obj.num_bots << std::endl;
-        os << "num_steps: " << obj.num_steps << std::endl;
         
         os << "endpointMap:" << std::endl;
-        std::map<unsigned, EndPoint>::const_iterator it;
+        std::map<unsigned, Site>::const_iterator it;
         for (it = obj.endpointMap.begin(); it != obj.endpointMap.end(); ++it)
             os << (*it).first << " " << (*it).second << std::endl;   
         
         os << "siteMap:" << std::endl;
-        os << *obj.siteMap;
+        os << obj.siteMap;
                 
         return os;
+    }
+    
+    void listBots(const std::function<bool(unsigned, const Site&)> function){
+        
+        for (auto elem : botMap) {
+            
+            if(function(elem.first, elem.second)) break;
+
+        }
+        
+    }
+    
+    void listEndpoints(const std::function<bool(unsigned, const Site&)> function){
+        
+        for (auto elem : endpointMap) {
+            
+            if(function(elem.first, elem.second)) break;
+
+        }
+        
     }
 
     
 private:
     
-    unsigned num_bots, num_endpoints, num_steps;
-    SiteMap* siteMap;
-    std::map<unsigned,EndPoint> endpointMap;
+    unsigned num_bots, num_endpoints;
+    SiteMap siteMap;
+    BinaryMap binaryMap;
+    std::map<unsigned,Site> endpointMap;
     std::map<unsigned,Site> botMap;
 
 };

@@ -9,13 +9,12 @@
 #define TASK_H
 
 #include "Identifiable.h"
-#include "EndPoint.h"
 
 class Task : public Identifiable<int>{
     
 public:
     
-    Task(int id, EndPoint pickup, EndPoint delivery) :
+    Task(int id, Site pickup, Site delivery) :
     _id(id), pickup(pickup), delivery(delivery) {}
 
     Task(const Task& other) :
@@ -29,11 +28,11 @@ public:
         return this->_id;
     }
     
-    EndPoint getDelivery() const {
+    Site getDelivery() const {
         return delivery;
     }
 
-    EndPoint getPickup() const {
+    Site getPickup() const {
         return pickup;
     }
     
@@ -45,7 +44,7 @@ public:
 private:
     
     int _id;
-    EndPoint pickup, delivery;
+    Site pickup, delivery;
 
 };
 

@@ -57,10 +57,10 @@ public:
             
         }
         
-        this->instanceTask->getTaskMap()->listTasks([map](unsigned step, const Task& task){
+        this->instanceTask->getTaskMap().listTasks([map](unsigned step, const Task& task){
        
-            map->getSiteMap()->setType(task.getPickup().row(), task.getPickup().colunm(), Site::Type::task);
-            map->getSiteMap()->setType(task.getDelivery().row(), task.getDelivery().colunm(), Site::Type::task);
+            map->setTaskEndpoint(task.getPickup().row(), task.getPickup().colunm());
+            map->setTaskEndpoint(task.getDelivery().row(), task.getDelivery().colunm());
             
             return false;
         });

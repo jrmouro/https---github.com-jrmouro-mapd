@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "../Site.h"
-#include "../Path.h"
+#include "../BinaryPath.h"
 
 /*
  * Simple C++ Test Suite
@@ -21,7 +21,7 @@
 
 void test1() {
     std::cout << "newsimpletest test 1" << std::endl;
-    Path p;
+    BinaryPath p;
     Site s1(0, 0, 0);
     Site s2(1, 0, 1);
     Site s3(2, 0, 2);

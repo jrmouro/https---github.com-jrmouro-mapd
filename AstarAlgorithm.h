@@ -13,36 +13,58 @@
 #include <queue>
 #include <cmath>
 #include "PathAlgorithm.h"
-#include "SiteMap.h"
+#include "BinaryMap.h"
+#include "Site.h"
 
 class AstarAlgorithm : public PathAlgorithm{
 public:
+    
+    AstarAlgorithm(){}
+    
+    AstarAlgorithm(const AstarAlgorithm& other){}
+    
+    virtual bool solve(const BinaryMap& map, const Site& start, const Site& goal, BinaryPath& path, unsigned step) const{
         
-    virtual bool solve(const SiteMap& map, const Site& start, const Site& goal, Path& path){
+        bool ret = false;      
+        ClosedStates closedStates;
+        PriorityStates priorityStates;
+        std::vector<AstarState*> visitedStates;
         
-        this->closedStates.clear(); // row -> colunm        
-        this->priorityStates.clear();
         
-        AstarState* startState = new AstarState(.0f, this->heuristic(start, goal), start, nullptr);        
-        AstarState* solved = this->solveAux(startState, map, goal);
+        AstarState* startState = new AstarState(.0f, this->heuristic(start.parse(0), goal.parse(0)), start.parse(step), nullptr);        
+        AstarState* solved = this->solveAux(startState, map, goal.parse(0), closedStates, priorityStates, visitedStates);
                     
-        while(solved != nullptr){            
-            path.insert(0, solved->getSite());
-            solved = solved->getPrevious();
+        if(solved != nullptr){
+            
+            path.clear();
+        
+            while(solved != nullptr){            
+//                path.insert(0, solved->getSite());
+                path.add(solved->getSite());
+                solved = solved->getPrevious();
+            }            
+            
+            ret = true;
+        
         }
         
-        
-        return solved;
+        for (auto elem : visitedStates) {
+            
+            delete elem;
+
+        }
+                
+        return ret;
         
     }
     
     virtual ~AstarAlgorithm(){
         
-        for (auto elem : visited) {
-            
-            delete elem;
-
-        }
+//        for (auto elem : visited) {
+//            
+//            delete elem;
+//
+//        }
         
     }
     
@@ -51,7 +73,7 @@ protected:
     class AstarState{
     public:
         
-        AstarState(float traveled, float heuristic, const Site& site, AstarState* previous) :
+        AstarState(float traveled, float heuristic, const BinarySite& site, AstarState* previous) :
         traveled(traveled), _cost(heuristic + traveled), site(site), previous(previous) {}
         
 
@@ -60,7 +82,7 @@ protected:
         
         virtual ~AstarState(){ }
         
-        const Site getSite() const {
+        const BinarySite getSite() const {
             return site;
         }
         
@@ -82,7 +104,7 @@ protected:
         
     private:
         float traveled, _cost;
-        Site site;
+        BinarySite site;
         AstarState* previous;
     };
     
@@ -95,9 +117,7 @@ protected:
     
     
 private:
-    
-    std::vector<AstarState*> visited;
-    
+        
     class PriorityStates{
         
     public:
@@ -128,7 +148,7 @@ private:
         
         std::priority_queue<AstarState*,std::vector<AstarState*>,AstarStateComparison> states;
         
-    } priorityStates;
+    };
     
     class ClosedStates{
     public:
@@ -170,9 +190,9 @@ private:
         
     private:
         std::unordered_map<unsigned, std::unordered_set<unsigned>> states;
-    } closedStates;
+    };
     
-    virtual float heuristic(const Site& start, const Site& goal) const{
+    virtual float heuristic(const BinarySite& start, const BinarySite& goal) const{
         
         return std::abs((int)start.row() - (int)goal.row()) + std::abs((int)start.colunm() - (int)goal.colunm());
         
@@ -180,26 +200,29 @@ private:
     
     AstarState* solveAux(
         AstarState* current,
-        const SiteMap& map,
-        const Site& goal){
+        const BinaryMap& map,
+        const BinarySite& goal,
+        ClosedStates& closedStates,
+        PriorityStates& priorityStates,
+        std::vector<AstarState*>& visitedStates )const{
         
-        this->visited.push_back(current);
+        visitedStates.push_back(current);
                 
-        if(goal.match(current->getSite())){
+        if(goal.row() == current->getSite().row() && goal.colunm() == current->getSite().colunm()){
                         
             return current;
             
         }
             
-        this->closedStates.add(current);
+        closedStates.add(current);
         auto neighborhood = map.neighborhood(current->getSite());
 
-        std::vector<Site>::const_iterator it;
+        std::vector<BinarySite>::const_iterator it;
         for(it = neighborhood.begin(); it != neighborhood.end(); it++){
 
             if(!closedStates.closed(it->row(), it->colunm())){
 
-                this->priorityStates.push(new AstarState(current->getTraveled() + 1, this->heuristic(*it, goal), *it, current));
+                priorityStates.push(new AstarState(current->getTraveled() + 1, this->heuristic(*it, goal), *it, current));
 
             }
 
@@ -207,11 +230,10 @@ private:
         
         if(!priorityStates.empty()){
             
-            return this->solveAux(priorityStates.pop(), map, goal);
+            return this->solveAux(priorityStates.pop(), map, goal,closedStates, priorityStates, visitedStates);
             
         }  
-                
-        
+                   
         return nullptr;
         
     }

@@ -23,35 +23,39 @@ public:
     virtual void run(){
                 
         InstanceTaskExperiment::run();
-        
+               
         AstarAlgorithm astar;
         
-        auto siteMap = this->instanceMap->getSiteMap();
-        auto task = this->instanceTask->getTaskMap()->getTaskbyId(this->taskId);
+        auto siteMap = this->instanceMap->getBinaryMap();
         
-        Path path;
-        
-        astar.solve(*siteMap, task.getPickup(), task.getDelivery(), path);
-        
-        if(this->astarRender){
-        
-            Render render(
-                    std::pair<unsigned, unsigned>(16,16),
-                    std::pair<unsigned, unsigned>(this->instanceMap->getColumn_size(),this->instanceMap->getRow_size()),
-                    this->filename, this->instanceMap);
+        this->instanceTask->getTaskMap().listTasks([this, &siteMap, &astar](unsigned step, const Task& task){
             
-            render.add(&path);
-
-            render.loop();
+            BinaryPath path;
         
-        }
+            if(astar.solve(siteMap, task.getPickup(), task.getDelivery(), path, 0))
+                std::cout << path << std::endl;
+
+            if(this->astarRender){
+
+                Render render(
+                        std::pair<unsigned, unsigned>(16,16),
+                        std::pair<unsigned, unsigned>(this->instanceMap->getColumn_size(),this->instanceMap->getRow_size()),
+                        this->filename, this->instanceMap);
+
+                render.add(&path);
+
+                render.loop();
+
+            }
+            
+            return true;
+            
+        });
         
         
     }
     
-    virtual ~AstarExperiment(){
-        
-    }
+    virtual ~AstarExperiment(){ }
     
 private:
     

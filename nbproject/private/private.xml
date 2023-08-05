@@ -7,13 +7,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/AstarAlgorithm.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/Path.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/Site.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/Instances/small/kiva-50-500-5.map</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/main.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/AstarExperiment.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/RenderExperiment.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/Agent.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/Task.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/StepPath.h</file>
         </group>
     </open-files>
 </project-private>

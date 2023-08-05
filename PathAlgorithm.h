@@ -1,4 +1,3 @@
-
 /* 
  * File:   PathAlgorithm.h
  * Author: ronaldo
@@ -9,11 +8,12 @@
 #ifndef PATHALGORITHM_H
 #define PATHALGORITHM_H
 
-#include "Path.h"
+#include "BinaryMap.h"
+#include "BinaryPath.h"
 
 class PathAlgorithm {
 public:
-    virtual bool solve(const SiteMap& map, const Site& start, const Site& goal, Path& path) = 0;
+    virtual bool solve(const BinaryMap& map, const Site& start, const Site& goal, BinaryPath& path, unsigned step) const = 0;
 };
 
 #endif /* PATHALGORITHM_H */

@@ -21,70 +21,44 @@ public:
 
     TaskMap(const TaskMap& orig) : tasks(orig.tasks) {}
 
-    virtual ~TaskMap() {
-
-        std::map<unsigned, std::vector<Task>*>::iterator it;
-        for (it = this->tasks.begin(); it != this->tasks.end(); ++it) {
-
-            delete (*it).second;
-
-        }
-
-    }
+    virtual ~TaskMap() {}
     
     void set(unsigned step, const Task& task) {
-
-        std::map<unsigned, std::vector<Task>*>::iterator it;
+        
+        std::map<unsigned, std::vector<Task>>::iterator it;
         it = this->tasks.find(step);
 
         if (it != this->tasks.end()) {
 
-            (*it).second->push_back(task);
+            (*it).second.push_back(task);
 
         } else {
-
-            std::vector<Task>* vTask = new std::vector<Task>();
-            vTask->push_back(task);
-            this->tasks.insert(std::pair<unsigned, std::vector<Task>*>(step, vTask));
-
+            auto it2 = this->tasks.insert(std::pair<unsigned, std::vector<Task>>(step, std::vector<Task>()));
+            it2.first->second.push_back(task);
         }
 
     }
     
-    Task getTaskbyId(unsigned id){
-        
-        std::map<unsigned, std::vector<Task>*>::const_iterator it;
-        for (it = this->tasks.begin(); it != this->tasks.end(); ++it) {
-                      
-            std::vector<Task>::const_iterator it2;
-            for (it2 = it->second->begin(); it2 != it->second->end(); ++it2) {
-                                
-                if(it2->id() == id) return *it2;
-                
-            }            
-
-        }
-        
-        try {
-            std::ostringstream stream;
-            stream << "invalid id [" << id << "]";
-            MAPD_EXCEPTION(stream.str());
-        } catch (std::exception& e) {
-            std::cout << e.what() << std::endl;
-            std::abort();
-        }
-        
-    }
-   
-    
+//    const std::vector<Task>& get(unsigned step){
+//        
+//        std::map<unsigned, std::vector<Task>>::const_iterator it;
+//        it = this->tasks.find(step);
+//         if (it != this->tasks.end()) {
+//
+//            return it->second;
+//
+//        } 
+//        
+//        return std::vector<Task>(); 
+//    }
+            
     void listTasks(std::function<bool(unsigned, const Task&)> func) const{
-
         
-        std::map<unsigned, std::vector<Task>*>::const_iterator it;
+        std::map<unsigned, std::vector<Task>>::const_iterator it;
         for (it = this->tasks.begin(); it != this->tasks.end(); ++it) {
                       
             std::vector<Task>::const_iterator it2;
-            for (it2 = it->second->begin(); it2 != it->second->end(); ++it2) {
+            for (it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
                                 
                 if(func(it->first, *it2)) return;
                 
@@ -97,13 +71,13 @@ public:
     
     void listTasksByStep(unsigned step, std::function<bool(const Task&)> func) const{
 
-        std::map<unsigned, std::vector<Task>*>::const_iterator it;
+        std::map<unsigned, std::vector<Task>>::const_iterator it;
         it = this->tasks.find(step);
 
         if (it != this->tasks.end()) {
             
             std::vector<Task>::const_iterator it2;
-            for (it2 = it->second->begin(); it2 != it->second->end(); ++it2) {
+            for (it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
                                 
                 if(func(*it2)) return;
                 
@@ -113,7 +87,7 @@ public:
 
     }
 
-    void load(std::ifstream& filestream, std::function<EndPoint(unsigned)> oracle) {
+    void load(std::ifstream& filestream, std::function<Site(unsigned)> oracle) {
 
         std::string line;
         std::stringstream stream;
@@ -134,13 +108,13 @@ public:
     
     friend std::ostream& operator<<(std::ostream& os, const TaskMap& obj) {
         
-        std::map<unsigned, std::vector<Task>*>::const_iterator it;
+        std::map<unsigned, std::vector<Task>>::const_iterator it;
         for (it = obj.tasks.begin(); it != obj.tasks.end(); ++it) {
             
             os << it->first << ":" << std::endl;
           
             std::vector<Task>::const_iterator it2;
-            for (it2 = it->second->begin(); it2 != it->second->end(); ++it2) {
+            for (it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
                 
                 os << "\t "<< *it2 << std::endl;
                 
@@ -155,8 +129,7 @@ public:
 
 private:
 
-
-    std::map<unsigned, std::vector<Task>*> tasks;
+    std::map<unsigned, std::vector<Task>> tasks;
 
 };
 

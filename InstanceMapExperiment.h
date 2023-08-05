@@ -14,7 +14,7 @@
 class InstanceMapExperiment : public Experiment{
 public:
     
-    InstanceMapExperiment(std::string filename, bool render) : filename(filename), render(render) { }
+    InstanceMapExperiment(std::string filename, bool render = true) : filename(filename), render(render) { }
 
     InstanceMapExperiment(const InstanceMapExperiment& other) :
     instanceMap(other.instanceMap), filename(other.filename), render(other.render) {

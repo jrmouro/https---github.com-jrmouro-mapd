@@ -10,7 +10,7 @@
 
 class Resetable {
 public:
-    virtual void reset() = 0;
+    virtual void reset(){}
 };
 
 #endif /* RESETABLE_H */

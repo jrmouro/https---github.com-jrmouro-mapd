@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/cppFiles/class.h to edit this template
- */
-
 /* 
  * File:   Site.h
  * Author: ronaldo
@@ -18,18 +13,17 @@
 #include "MapdException.h"
 #include "Identifiable.h"
 #include "Drawable.h"
+#include "BinarySite.h"
 
-class Site : public Identifiable<int>, public Drawable{
+class Site : public Drawable{
 public:
     
-    
-    
     enum Type {
-        bot,
-        endpoint,
-        path,
-        task,        
         none,
+        path,
+        bot,
+        endpoint,        
+        task,      
         util1,
         util2
     };
@@ -61,13 +55,13 @@ public:
         
     } TypeColorMap;
     
-    Site(int id) : _id(id), _row(0), _colunm(0), _type(Type::none) {}
+    Site() : Site(0, 0, Type::none) {}
+        
+    Site(unsigned row, unsigned colunm) : Site(row, colunm, Type::none) {}    
     
-    Site(int id, unsigned row, unsigned colunm) : _id(id), _row(row), _colunm(colunm), _type(Type::none) {}
+    Site(unsigned row, unsigned colunm, Type _type) : _row(row), _colunm(colunm), _type(_type) {}
 
-    Site(int id, unsigned row, unsigned colunm, Type _type) : _id(id), _row(row), _colunm(colunm), _type(_type) {}
-
-    Site(const Site& orig) : _id(orig._id), _row(orig._row), _colunm(orig._colunm), _type(orig._type) {}
+    Site(const Site& orig) : _row(orig._row), _colunm(orig._colunm), _type(orig._type) {}
 
     virtual ~Site() { }
 
@@ -86,42 +80,6 @@ public:
     void setType(Type _type) {
         this->_type = _type;
     }
-
-//    static bool areNeighbors(const Site& s1, const Site& s2) {
-//
-//        int rowDiff = std::abs((int) s1._row - (int) s2._row);
-//        int colDiff = std::abs((int) s1._colunm - (int) s2._colunm);
-//
-//        return (rowDiff + colDiff) == 1;
-//    }
-//
-//    static Site neighbor(Site::Position position, const Site& site) {
-//
-//        switch (position) {
-//            case Position::right:
-//                return Site(site._row + 1, site._colunm);
-//            case Position::left:
-//                if(site._row > 0)
-//                    return Site(site._row - 1, site._colunm);
-//                break;
-//            case Position::up:
-//                if(site._colunm > 0)
-//                    return Site(site._row, site._colunm - 1);
-//                break;
-//            case Position::down:
-//                return Site(site._row, site._colunm + 1);
-//        }
-//
-//        try {
-//            std::ostringstream stream;
-//            stream << "invalid position [" << position << "]";
-//            MAPD_EXCEPTION(stream.str());
-//        } catch (std::exception& e) {
-//            std::cout << e.what() << std::endl;
-//            std::abort();
-//        }
-//        
-//    }
 
     friend std::ostream& operator<<(std::ostream& os, const Site& obj) {
         os << obj._row << " . " << obj._colunm << "[" << Site::siteTypeToString(obj._type) << "]";
@@ -144,9 +102,6 @@ public:
         
     }
     
-    virtual int id() const{
-        return this->_id;
-    }
     
     virtual void draw(const Render& render) const {
         
@@ -157,21 +112,20 @@ public:
         
     }
     
-    virtual bool match(const Site& other) const{
+    
+    
+    virtual BinarySite parse(unsigned step)const{
         
-        return this->_row == other._row && this->_colunm == other._colunm;
+        return BinarySite(step, _row, _colunm, !(_type == Type::none));
         
     }
     
 
 private:
-    int _id;
     unsigned _row, _colunm;
     Type _type;
 
 };
-
-const Site::_TypeColorMap Site::TypeColorMap;
 
 #endif /* SITE_H */
 

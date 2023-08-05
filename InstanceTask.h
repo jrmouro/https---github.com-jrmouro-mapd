@@ -20,17 +20,13 @@
 class InstanceTask {
 public:
 
-    InstanceTask(unsigned numTask, unsigned totalStep) : taskMap(new TaskMap()), numTask(numTask), totalStep(totalStep) { }
+    InstanceTask(unsigned numTask, unsigned totalStep) : numTask(numTask), totalStep(totalStep) { }
+    InstanceTask(const InstanceTask& orig) : taskMap(orig.taskMap), numTask(orig.numTask), totalStep(orig.totalStep) { }
 
-    InstanceTask(const InstanceTask& orig) : taskMap(new TaskMap(*orig.taskMap)), numTask(orig.numTask), totalStep(orig.totalStep) { }
-
-    virtual ~InstanceTask() {
     
-        delete this->taskMap;
-        
-    }
+    virtual ~InstanceTask() { }
     
-    static InstanceTask* load(std::string filename_instance, std::function<const EndPoint(unsigned)> endpointOracle) {
+    static InstanceTask* load(std::string filename_instance, std::function<const Site(unsigned)> endpointOracle) {
 
         std::ifstream filestream(filename_instance);
 
@@ -64,25 +60,24 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, const InstanceTask& obj) {
         
-        os << *obj.taskMap;
+        os << obj.taskMap;
 
         return os;
 
     }
     
-    void loadTasks(std::ifstream& filestream, std::function<const EndPoint(unsigned)> oracle){
-        this->taskMap->load(filestream, oracle);
+    void loadTasks(std::ifstream& filestream, std::function<const Site(unsigned)> oracle){
+        this->taskMap.load(filestream, oracle);
     }
-    
-    
-    TaskMap* getTaskMap() const {
+        
+    const TaskMap& getTaskMap() const {
         return taskMap;
     }
     
 private:
 
     unsigned totalStep, numTask;
-    TaskMap *taskMap;
+    TaskMap taskMap;
 
 };
 
