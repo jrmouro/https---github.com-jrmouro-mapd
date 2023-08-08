@@ -13,7 +13,7 @@
 
 class PathAlgorithm {
 public:
-    virtual bool solve(const BinaryMap& map, const Site& start, const Site& goal, BinaryPath& path, unsigned step) const = 0;
+    virtual bool solve(const BinaryMap& map, const _site& start, const _site& goal, BinaryPath& path, unsigned step) const = 0;
 };
 
 #endif /* PATHALGORITHM_H */

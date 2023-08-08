@@ -70,33 +70,85 @@ public:
 
     }
     
-    void insert(unsigned index, const BinarySite& site){       
+    void progress(const BinarySite& site){       
         
-        std::vector<BinarySite>::iterator it;
-        it = this->sites.begin() + index;
-        
-        if(it != this->sites.end()){
-            
-            this->sites.insert(it, site);
-            
-        } else {
-            
-            this->sites.push_back(site);
-            
-        }       
+        std::vector<BinarySite>::iterator it = this->sites.begin();
+        this->sites.insert(it, site);       
     
     }
     
-    void erase(unsigned index){
+    void progress(const BinaryPath& site){       
         
-        std::vector<BinarySite>::iterator it;
-        it = this->sites.begin() + index;
+        this->rlist([this](const BinarySite& site){
+            
+            this->progress(site);
+            
+            return false;
+            
+        });        
+    
+    }
+    
+//    void endJoin(const BinaryPath& path){
+//        
+//    }
+    
+//    void erase(unsigned index){
+//        
+//        std::vector<BinarySite>::iterator it;
+//        it = this->sites.begin() + index;
+//        
+//        if(it != this->sites.end()){
+//            
+//            this->sites.erase(it);
+//            
+//        }
+//        
+//    }
+    
+    const BinarySite& goalSite()const{
         
-        if(it != this->sites.end()){
+        if(this->sites.size() > 0){   
             
-            this->sites.erase(it);
+            return this->sites.front();
             
-        }
+        } else {
+            
+             try {
+                std::ostringstream stream;
+                stream << "invalid base on empty path";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }     
+    }
+    
+    const BinarySite& currentSite() const{
+        
+        if(this->sites.size() > 0){   
+            
+            return this->sites.back();
+            
+        } else {
+            
+             try {
+                std::ostringstream stream;
+                stream << "invalid top on empty path";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }     
+    }
+    
+    void move(){
+        
+        this->pop();
         
     }
     
@@ -120,8 +172,10 @@ public:
         }     
     }
     
-    unsigned size()const{
+    unsigned size() const{
+        
         return this->sites.size();
+        
     }
 
     friend std::ostream& operator<<(std::ostream& os, const BinaryPath& obj) {
@@ -143,9 +197,40 @@ public:
         for(std::vector<BinarySite>::const_iterator it = sites.begin(); it != sites.end(); it++){
             
             sf::RectangleShape shape_point(sf::Vector2f(render.GetCell().first, render.GetCell().second));
-            shape_point.setPosition(sf::Vector2f(it->colunm() * render.GetCell().first, it->row() * render.GetCell().second));
+            shape_point.setPosition(sf::Vector2f(it->GetColunm() * render.GetCell().first, it->GetRow() * render.GetCell().second));
             shape_point.setFillColor(BinarySite::TypeColorMap.get(it->getValue()));
             render.draw(shape_point);
+            
+        }
+        
+    }
+    
+    
+    void list(const std::function<bool(const BinarySite&)>& function) const {
+        
+        for(std::vector<BinarySite>::const_iterator it = sites.cbegin(); it != sites.cend(); it++){
+            
+            if(function(*it)) return;
+            
+        }
+        
+    }
+    
+    void rlist(const std::function<bool(const BinarySite&)>& function) const {
+        
+        for(std::vector<BinarySite>::const_reverse_iterator it = sites.crbegin(); it != sites.crend(); it++){
+            
+            if(function(*it)) return;
+            
+        }
+        
+    }
+    
+    void moveList(const std::function<bool(const BinarySite&, const BinarySite&)>& function) const {
+        
+        for(std::vector<BinarySite>::const_reverse_iterator it = sites.crbegin(); it != sites.crend() - 1; it++){
+            
+            if(function(*it, *(it + 1))) return;
             
         }
         

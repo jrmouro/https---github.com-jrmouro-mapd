@@ -20,6 +20,8 @@
 
 class InstanceMap : public Drawable{
 public:
+    
+    friend class InstanceMAPD;
             
     InstanceMap(
         unsigned step_size,
@@ -91,13 +93,17 @@ public:
             
             this->binaryMap.setValuesFrom(0, row, colunm, !(siteType == Site::Type::none));
              
-            if(siteType == Site::Type::endpoint) 
+            if(siteType == Site::Type::endpoint){
                 
-                this->endpointMap.insert(std::pair<unsigned, Site>(i++, Site(row, colunm, siteType)));
+                this->endpointMap.insert(std::pair<unsigned, _site>(i++, _site(row, colunm)));
+                this->endpoints.push_back(_site(row, colunm));
             
-            else if(siteType == Site::Type::bot) 
+            } else if(siteType == Site::Type::bot) {
                 
-                this->botMap.insert(std::pair<unsigned, Site>(j++, Site(row, colunm, siteType)));           
+                this->botMap.insert(std::pair<unsigned, _site>(j++, _site(row, colunm)));    
+                this->endpoints.push_back(_site(row, colunm));
+            
+            }
             
             return false;
             
@@ -139,9 +145,9 @@ public:
         return num_endpoints;
     }
 
-    const Site* getEndPointById(unsigned endpointId){
+    const _site* getNoBotEndPointById(unsigned endpointId){
         
-        std::map<unsigned, Site>::const_iterator it;
+        std::map<unsigned, _site>::const_iterator it;
         it = this->endpointMap.find(endpointId);
 
         if (it != this->endpointMap.end()) {
@@ -168,31 +174,44 @@ public:
         os << "num_bots: " << obj.num_bots << std::endl;
         
         os << "endpointMap:" << std::endl;
-        std::map<unsigned, Site>::const_iterator it;
+        std::map<unsigned, _site>::const_iterator it;
         for (it = obj.endpointMap.begin(); it != obj.endpointMap.end(); ++it)
             os << (*it).first << " " << (*it).second << std::endl;   
         
         os << "siteMap:" << std::endl;
         os << obj.siteMap;
+        
+        os << "binaryMap:" << std::endl;
+        os << obj.binaryMap;
                 
         return os;
     }
     
-    void listBots(const std::function<bool(unsigned, const Site&)> function){
+    void listBotsEndPoints(const std::function<bool(unsigned, const _site&)> function){
         
         for (auto elem : botMap) {
             
-            if(function(elem.first, elem.second)) break;
+            if(function(elem.first, elem.second)) return;
 
         }
         
     }
     
-    void listEndpoints(const std::function<bool(unsigned, const Site&)> function){
+    void listNoBotsEndpoints(const std::function<bool(unsigned, const _site&)> function){
         
         for (auto elem : endpointMap) {
             
-            if(function(elem.first, elem.second)) break;
+            if(function(elem.first, elem.second)) return;
+
+        }
+        
+    }
+    
+    void listEndpoints(const std::function<bool(const _site&)> function){
+        
+        for (auto endpoint : endpoints) {
+            
+            if(function(endpoint)) return;
 
         }
         
@@ -204,8 +223,9 @@ private:
     unsigned num_bots, num_endpoints;
     SiteMap siteMap;
     BinaryMap binaryMap;
-    std::map<unsigned,Site> endpointMap;
-    std::map<unsigned,Site> botMap;
+    std::map<unsigned,_site> endpointMap;
+    std::map<unsigned,_site> botMap;
+    std::vector<_site> endpoints;
 
 };
 

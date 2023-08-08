@@ -32,7 +32,7 @@ public:
             InstanceMap *map = this->instanceMap;
             
             this->instanceTask = InstanceTask::load(other.taskFilename, [map](unsigned id){
-                return *map->getEndPointById(id);
+                return *map->getNoBotEndPointById(id);
             });
             
         } else {
@@ -49,18 +49,20 @@ public:
         
         InstanceMap *map = this->instanceMap;
         
+        std::cout << *map << std::endl;
+        
         if(this->instanceTask == nullptr){      
                         
             this->instanceTask = InstanceTask::load(this->taskFilename, [map](unsigned id){
-                return *map->getEndPointById(id);
+                return *map->getNoBotEndPointById(id);
             });
             
         }
         
         this->instanceTask->getTaskMap().listTasks([map](unsigned step, const Task& task){
        
-            map->setTaskEndpoint(task.getPickup().row(), task.getPickup().colunm());
-            map->setTaskEndpoint(task.getDelivery().row(), task.getDelivery().colunm());
+            map->setTaskEndpoint(task.getPickup().GetRow(), task.getPickup().GetColunm());
+            map->setTaskEndpoint(task.getDelivery().GetRow(), task.getDelivery().GetColunm());
             
             return false;
         });

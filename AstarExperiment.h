@@ -34,6 +34,11 @@ public:
         
             if(astar.solve(siteMap, task.getPickup(), task.getDelivery(), path, 0))
                 std::cout << path << std::endl;
+            
+//            path.moveList([](const BinarySite& i, const BinarySite& f){
+//                std::cout << i << "    " << f << std::endl;
+//                return false;
+//            });
 
             if(this->astarRender){
 

@@ -15,6 +15,7 @@
 #include "PathAlgorithm.h"
 #include "BinaryMap.h"
 #include "Site.h"
+#include "_site.h"
 
 class AstarAlgorithm : public PathAlgorithm{
 public:
@@ -23,23 +24,23 @@ public:
     
     AstarAlgorithm(const AstarAlgorithm& other){}
     
-    virtual bool solve(const BinaryMap& map, const Site& start, const Site& goal, BinaryPath& path, unsigned step) const{
+    virtual bool solve(const BinaryMap& map, const _site& start, const _site& goal, BinaryPath& path, unsigned step) const{
         
         bool ret = false;      
         ClosedStates closedStates;
         PriorityStates priorityStates;
         std::vector<AstarState*> visitedStates;
         
+        auto bstart = BinarySite(step, start.GetRow(), start.GetColunm(), true);
         
-        AstarState* startState = new AstarState(.0f, this->heuristic(start.parse(0), goal.parse(0)), start.parse(step), nullptr);        
-        AstarState* solved = this->solveAux(startState, map, goal.parse(0), closedStates, priorityStates, visitedStates);
+        AstarState* startState = new AstarState(.0f, this->heuristic(start, goal), bstart, nullptr);        
+        AstarState* solved = this->solveAux(startState, map, goal, closedStates, priorityStates, visitedStates);
                     
         if(solved != nullptr){
             
             path.clear();
         
             while(solved != nullptr){            
-//                path.insert(0, solved->getSite());
                 path.add(solved->getSite());
                 solved = solved->getPrevious();
             }            
@@ -58,18 +59,10 @@ public:
         
     }
     
-    virtual ~AstarAlgorithm(){
-        
-//        for (auto elem : visited) {
-//            
-//            delete elem;
-//
-//        }
-        
-    }
+    virtual ~AstarAlgorithm(){ }
     
 protected:
-    
+        
     class AstarState{
     public:
         
@@ -156,14 +149,14 @@ private:
         void add(AstarState* state){
             
             std::unordered_map<unsigned, std::unordered_set<unsigned>>::iterator it;
-            it = this->states.find(state->getSite().row());
+            it = this->states.find(state->getSite().GetRow());
 
             if ( it == this->states.end() ){
                 std::unordered_set<unsigned> set;
-                it = this->states.insert(std::pair<unsigned, std::unordered_set<unsigned>>(state->getSite().row(), set)).first;
+                it = this->states.insert(std::pair<unsigned, std::unordered_set<unsigned>>(state->getSite().GetRow(), set)).first;
             } 
             
-            it->second.insert(state->getSite().colunm());
+            it->second.insert(state->getSite().GetColunm());
             
         }
         
@@ -192,23 +185,23 @@ private:
         std::unordered_map<unsigned, std::unordered_set<unsigned>> states;
     };
     
-    virtual float heuristic(const BinarySite& start, const BinarySite& goal) const{
+    virtual float heuristic(const _site& start, const _site& goal) const{
         
-        return std::abs((int)start.row() - (int)goal.row()) + std::abs((int)start.colunm() - (int)goal.colunm());
+        return std::abs((int)start.GetRow() - (int)goal.GetRow()) + std::abs((int)start.GetColunm() - (int)goal.GetColunm());
         
     }    
     
     AstarState* solveAux(
         AstarState* current,
         const BinaryMap& map,
-        const BinarySite& goal,
+        const _site& goal,
         ClosedStates& closedStates,
         PriorityStates& priorityStates,
         std::vector<AstarState*>& visitedStates )const{
         
         visitedStates.push_back(current);
                 
-        if(goal.row() == current->getSite().row() && goal.colunm() == current->getSite().colunm()){
+        if(goal.GetRow() == current->getSite().GetRow() && goal.GetColunm() == current->getSite().GetColunm()){
                         
             return current;
             
@@ -220,7 +213,7 @@ private:
         std::vector<BinarySite>::const_iterator it;
         for(it = neighborhood.begin(); it != neighborhood.end(); it++){
 
-            if(!closedStates.closed(it->row(), it->colunm())){
+            if(!closedStates.closed(it->GetRow(), it->GetColunm())){
 
                 priorityStates.push(new AstarState(current->getTraveled() + 1, this->heuristic(*it, goal), *it, current));
 

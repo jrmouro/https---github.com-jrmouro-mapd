@@ -97,7 +97,7 @@ public:
     }
         
     static unsigned linearLocationBySite(const SiteMap& siteMap, const Site& site){
-        return site.row() * siteMap.getColumn_size() + site.colunm();
+        return site.GetRow() * siteMap.getColumn_size() + site.GetColunm();
     }
 
     friend std::ostream& operator<<(std::ostream& os, const SiteMap& obj) {

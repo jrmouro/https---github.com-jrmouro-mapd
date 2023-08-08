@@ -14,8 +14,9 @@
 #include "Identifiable.h"
 #include "Drawable.h"
 #include "BinarySite.h"
+#include "_site.h"
 
-class Site : public Drawable{
+class Site : public _site, public Drawable{
 public:
     
     enum Type {
@@ -59,19 +60,12 @@ public:
         
     Site(unsigned row, unsigned colunm) : Site(row, colunm, Type::none) {}    
     
-    Site(unsigned row, unsigned colunm, Type _type) : _row(row), _colunm(colunm), _type(_type) {}
+    Site(unsigned row, unsigned colunm, Type _type) : _site(row, colunm), _type(_type) {}
 
-    Site(const Site& orig) : _row(orig._row), _colunm(orig._colunm), _type(orig._type) {}
+    Site(const Site& orig) : _site(orig), _type(orig._type) {}
 
     virtual ~Site() { }
 
-    unsigned colunm() const {
-        return _colunm;
-    }
-
-    unsigned row() const {
-        return _row;
-    }
     
     Type getType() const {
         return _type;
@@ -82,7 +76,7 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Site& obj) {
-        os << obj._row << " . " << obj._colunm << "[" << Site::siteTypeToString(obj._type) << "]";
+        os << (_site&)obj << "[" << Site::siteTypeToString(obj._type) << "]";
         return os;
     }
     
@@ -106,7 +100,7 @@ public:
     virtual void draw(const Render& render) const {
         
         sf::RectangleShape shape_point(sf::Vector2f(render.GetCell().first, render.GetCell().second));
-        shape_point.setPosition(sf::Vector2f(this->_colunm * render.GetCell().first, this->_row * render.GetCell().second));
+        shape_point.setPosition(sf::Vector2f(this->colunm * render.GetCell().first, this->row * render.GetCell().second));
         shape_point.setFillColor(Site::TypeColorMap.get(this->_type));
         render.draw(shape_point);
         
@@ -116,13 +110,12 @@ public:
     
     virtual BinarySite parse(unsigned step)const{
         
-        return BinarySite(step, _row, _colunm, !(_type == Type::none));
+        return BinarySite(step, row, colunm, !(_type == Type::none));
         
     }
     
 
 private:
-    unsigned _row, _colunm;
     Type _type;
 
 };

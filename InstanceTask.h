@@ -19,14 +19,16 @@
 
 class InstanceTask {
 public:
+    
+    friend class InstanceMAPD;
 
-    InstanceTask(unsigned numTask, unsigned totalStep) : numTask(numTask), totalStep(totalStep) { }
-    InstanceTask(const InstanceTask& orig) : taskMap(orig.taskMap), numTask(orig.numTask), totalStep(orig.totalStep) { }
+    InstanceTask(unsigned numTask, unsigned totalStep) : numTask(numTask), lastStep(totalStep) { }
+    InstanceTask(const InstanceTask& orig) : taskMap(orig.taskMap), numTask(orig.numTask), lastStep(orig.lastStep) { }
 
     
     virtual ~InstanceTask() { }
     
-    static InstanceTask* load(std::string filename_instance, std::function<const Site(unsigned)> endpointOracle) {
+    static InstanceTask* load(std::string filename_instance, std::function<const _site(unsigned)> endpointOracle) {
 
         std::ifstream filestream(filename_instance);
 
@@ -66,7 +68,7 @@ public:
 
     }
     
-    void loadTasks(std::ifstream& filestream, std::function<const Site(unsigned)> oracle){
+    void loadTasks(std::ifstream& filestream, std::function<const _site(unsigned)> oracle){
         this->taskMap.load(filestream, oracle);
     }
         
@@ -74,9 +76,14 @@ public:
         return taskMap;
     }
     
+    unsigned getLastStep() const {
+        return lastStep;
+    }
+
+    
 private:
 
-    unsigned totalStep, numTask;
+    unsigned lastStep, numTask;
     TaskMap taskMap;
 
 };

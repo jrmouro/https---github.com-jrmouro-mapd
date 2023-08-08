@@ -87,7 +87,7 @@ public:
 
     }
 
-    void load(std::ifstream& filestream, std::function<Site(unsigned)> oracle) {
+    void load(std::ifstream& filestream, std::function<_site(unsigned)> oracle) {
 
         std::string line;
         std::stringstream stream;

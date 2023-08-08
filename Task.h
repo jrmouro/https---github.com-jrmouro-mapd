@@ -13,14 +13,24 @@
 class Task : public Identifiable<int>{
     
 public:
-    
-    Task(int id, Site pickup, Site delivery) :
+            
+    Task(int id, _site pickup, _site delivery) :
     _id(id), pickup(pickup), delivery(delivery) {}
 
     Task(const Task& other) :
             _id(other._id),
             pickup(other.pickup), 
             delivery(other.delivery) { }
+    
+    Task& operator=(const Task& right) {
+        if (this == &right)
+            return *this;
+        this->pickup = right.pickup;
+        this->delivery = right.delivery;
+        this->_id = right._id;
+        return *this;
+    }
+
 
     virtual ~Task(){}
     
@@ -28,11 +38,11 @@ public:
         return this->_id;
     }
     
-    Site getDelivery() const {
+    _site getDelivery() const {
         return delivery;
     }
 
-    Site getPickup() const {
+    _site getPickup() const {
         return pickup;
     }
     
@@ -44,7 +54,7 @@ public:
 private:
     
     int _id;
-    Site pickup, delivery;
+    _site pickup, delivery;
 
 };
 

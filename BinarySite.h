@@ -8,9 +8,10 @@
 #ifndef BINARYSITE_H
 #define BINARYSITE_H
 
+#include "_stepSite.h"
 #include "Drawable.h"
 
-class BinarySite : public Drawable{
+class BinarySite : public _stepSite, public Drawable{
 public:   
     
     static const class _TypeColorMap{
@@ -23,33 +24,13 @@ public:
         }    
         
     } TypeColorMap;
-        
-    BinarySite() : _step(0), _row(0), _colunm(0), value(false) {}
-    
-    BinarySite(unsigned row, unsigned colunm) : _step(0), _row(row), _colunm(colunm), value(false) {}
-    
-    BinarySite(unsigned step, unsigned row, unsigned colunm) : _step(step), _row(row), _colunm(colunm), value(false) {}
-    
-    BinarySite(unsigned row, unsigned colunm, bool value) : _step(0), _row(row), _colunm(colunm), value(value) {}
-    
-    BinarySite(unsigned step, unsigned row, unsigned colunm, bool value) : _step(step), _row(row), _colunm(colunm), value(value) {}
+            
+    BinarySite(unsigned step, unsigned row, unsigned colunm, bool value) : _stepSite(step, row, colunm), value(value) {}
 
-    BinarySite(const BinarySite& orig) : _step(orig._step), _row(orig._row), _colunm(orig._colunm), value(orig.value) {}
+    BinarySite(const BinarySite& orig) : _stepSite(orig), value(orig.value) {}
 
     virtual ~BinarySite() { }
 
-    unsigned colunm() const {
-        return _colunm;
-    }
-
-    unsigned row() const {
-        return _row;
-    }
-    
-    unsigned step() const {
-        return _step;
-    }
-    
     bool getValue() const {
         return value;
     }
@@ -59,7 +40,7 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream& os, const BinarySite& obj) {
-        os << obj._step << " . " << obj._row << " . " << obj._colunm << "[" << obj.value << "]";
+        os << (_stepSite&)obj << "[" << obj.value << "]";
         return os;
     }
     
@@ -71,11 +52,9 @@ public:
         render.draw(shape_point);
         
     }
-    
-    virtual bool match(const BinarySite& other) const{
         
-        return this->_row == other._row && this->_colunm == other._colunm;
-        
+    void stepping(){
+        this->_step++;
     }
     
 

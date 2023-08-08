@@ -6,6 +6,8 @@
                    projectFiles="true">
       <logicalFolder name="f1" displayName="Algorithm" projectFiles="true">
         <itemPath>AstarAlgorithm.h</itemPath>
+        <itemPath>DistanceAlgorithm.h</itemPath>
+        <itemPath>ManhattanAlgorithm.h</itemPath>
         <itemPath>PathAlgorithm.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Drawable" projectFiles="true">
@@ -25,6 +27,7 @@
       <itemPath>BinaryPath.h</itemPath>
       <itemPath>BinarySite.h</itemPath>
       <itemPath>Identifiable.h</itemPath>
+      <itemPath>InstanceMAPD.h</itemPath>
       <itemPath>InstanceMap.h</itemPath>
       <itemPath>InstanceTask.h</itemPath>
       <itemPath>MapdException.h</itemPath>
@@ -32,9 +35,12 @@
       <itemPath>Resetable.h</itemPath>
       <itemPath>Site.h</itemPath>
       <itemPath>SiteMap.h</itemPath>
+      <itemPath>System.h</itemPath>
       <itemPath>Task.h</itemPath>
       <itemPath>TaskMap.h</itemPath>
       <itemPath>Token.h</itemPath>
+      <itemPath>_site.h</itemPath>
+      <itemPath>_stepSite.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Arquivos de Código-Fonte"
@@ -106,11 +112,15 @@
       </item>
       <item path="BinarySite.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="DistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Drawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Experiment.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Identifiable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="InstanceMAPD.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="InstanceMap.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -119,6 +129,8 @@
       <item path="InstanceTask.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="InstanceTaskExperiment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ManhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -140,11 +152,17 @@
       </item>
       <item path="SiteMap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="System.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Task.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="TaskMap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Token.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_site.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_stepSite.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
         <cTool>
@@ -218,11 +236,15 @@
       </item>
       <item path="BinarySite.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="DistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Drawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Experiment.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Identifiable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="InstanceMAPD.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="InstanceMap.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -231,6 +253,8 @@
       <item path="InstanceTask.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="InstanceTaskExperiment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ManhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -252,11 +276,17 @@
       </item>
       <item path="SiteMap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="System.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Task.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="TaskMap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Token.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_site.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_stepSite.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
         <cTool>

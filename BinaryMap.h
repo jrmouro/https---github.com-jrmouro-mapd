@@ -18,6 +18,7 @@
 #include <set>
 
 #include "BinarySite.h"
+#include "BinaryPath.h"
 
 
 class BinaryMap : public Drawable{
@@ -98,6 +99,26 @@ public:
                 this->site_matrix[step * row_Colunm_product + row * colunm_size + column] = value;
 
     }
+    
+    void setMoving(const BinarySite& orig, const BinarySite& target){
+        
+        this->setValuesFrom(orig.GetStep() + 1, orig.GetRow(), orig.GetColunm(), true);
+        this->setValuesFrom(target.GetStep(), target.GetRow(), target.GetColunm(), false);
+        
+    }
+    
+    void setMoving(const BinaryPath& path){
+        
+        auto current = path.currentSite();
+        this->setValuesFrom(current.GetStep() + 1, current.GetRow(), current.GetColunm(), true);
+        auto goal = path.goalSite();
+        this->setValuesFrom(goal.GetStep(), goal.GetRow(), goal.GetColunm(), false);
+        path.list([this](const BinarySite& site){
+            this->setValue(site.GetStep(), site.GetRow(), site.GetColunm(), false);
+            return false;
+        });
+        
+    }
 
     bool getValue(int step, int row, int colunm) const {
 
@@ -109,7 +130,7 @@ public:
     }
         
     static unsigned linearLocationBySite(const BinaryMap& binaryMap, const BinarySite& site){
-        return site.step() * site.row() * site.colunm() + site.row() * binaryMap.getColumn_size() + site.colunm();
+        return site.GetStep() * site.GetRow() * site.GetColunm() + site.GetRow() * binaryMap.getColumn_size() + site.GetColunm();
     }
 
     friend std::ostream& operator<<(std::ostream& os, const BinaryMap& obj) {
@@ -226,36 +247,36 @@ public:
         
         std::vector<BinarySite> ret;
         
-        const unsigned step = site.step() + 1;
+        const unsigned step = site.GetStep() + 1;
         const unsigned stepProduct = step * this->row_Colunm_product;
         
-        int neighbor_row = (int)site.row() - 1;
-        int neighbor_colunm = (int)site.colunm() - 1;
+        int neighbor_row = (int)site.GetRow() - 1;
+        int neighbor_colunm = (int)site.GetColunm() - 1;
                 
-        auto value = this->getValue(step, neighbor_row, site.colunm());
+        auto value = this->getValue(step, neighbor_row, site.GetColunm());
         if(value){
-            ret.push_back(BinarySite(step, neighbor_row, site.colunm(), value));
+            ret.push_back(BinarySite(step, neighbor_row, site.GetColunm(), value));
         }
             
-        neighbor_row = (int)site.row() + 1;
-        value = this->getValue(step, neighbor_row, site.colunm());
+        neighbor_row = (int)site.GetRow() + 1;
+        value = this->getValue(step, neighbor_row, site.GetColunm());
         if(value){
-            ret.push_back(BinarySite(step, neighbor_row, site.colunm(), value));
+            ret.push_back(BinarySite(step, neighbor_row, site.GetColunm(), value));
         }
         
-        value = this->getValue(step, site.row(), neighbor_colunm);
+        value = this->getValue(step, site.GetRow(), neighbor_colunm);
         if(value){
-            ret.push_back(BinarySite(step, site.row(), neighbor_colunm, value));
+            ret.push_back(BinarySite(step, site.GetRow(), neighbor_colunm, value));
         }
             
-        neighbor_colunm = (int)site.colunm() + 1;
-        value = this->getValue(step, site.row(), neighbor_colunm);
+        neighbor_colunm = (int)site.GetColunm() + 1;
+        value = this->getValue(step, site.GetRow(), neighbor_colunm);
         if(value){
-            ret.push_back(BinarySite(step, site.row(), neighbor_colunm, value));
+            ret.push_back(BinarySite(step, site.GetRow(), neighbor_colunm, value));
         }
                 
-        value = this->getValue(step, site.row(), site.colunm());
-        ret.push_back(BinarySite(step, site.row(), site.colunm(), value));
+        value = this->getValue(step, site.GetRow(), site.GetColunm());
+        ret.push_back(BinarySite(step, site.GetRow(), site.GetColunm(), value));
         
         return ret;
         

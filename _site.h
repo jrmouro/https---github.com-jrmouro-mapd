@@ -1,131 +1,62 @@
 /* 
- * File:   Site.h
+ * File:   _site.h
  * Author: ronaldo
  *
  * Created on 25 de julho de 2023, 19:25
  */
 
-#ifndef SITE_H
-#define SITE_H
+#ifndef _SITE_H
+#define _SITE_H
 
 #include <cmath>
-#include <unordered_map>
-#include "MapdException.h"
-#include "Identifiable.h"
-#include "Drawable.h"
-#include "BinarySite.h"
 
-class Site : public Drawable{
+
+class _site{
+    
 public:
+        
+    _site(unsigned row, unsigned colunm) :
+    row(row), colunm(colunm) {}
     
-    enum Type {
-        none,
-        path,
-        bot,
-        endpoint,        
-        task,      
-        util1,
-        util2
-    };
-    
-    static const class _TypeColorMap{
-        
-    public:
-        
-        _TypeColorMap() {
-            map.insert(std::pair<Site::Type,sf::Color>(Type::bot, sf::Color::Yellow));
-            map.insert(std::pair<Site::Type,sf::Color>(Type::endpoint, sf::Color::Blue));
-            map.insert(std::pair<Site::Type,sf::Color>(Type::path, sf::Color::Green));
-            map.insert(std::pair<Site::Type,sf::Color>(Type::task, sf::Color::Cyan));
-            map.insert(std::pair<Site::Type,sf::Color>(Type::none, sf::Color::Red));
-            map.insert(std::pair<Site::Type,sf::Color>(Type::util1, sf::Color::Black));
-            map.insert(std::pair<Site::Type,sf::Color>(Type::util2, sf::Color::White));
-        }
-        
-        sf::Color get(Site::Type siteType) const {
-            std::unordered_map<Site::Type,sf::Color>::const_iterator it;
-            it = map.find(siteType);
-            if(it != map.end()) return it->second;            
-            return sf::Color::Transparent;
-        }
-
-    private:
-        
-        std::unordered_map<Site::Type,sf::Color> map;
-        
-    } TypeColorMap;
-    
-    Site() : Site(0, 0, Type::none) {}
-        
-    Site(unsigned row, unsigned colunm) : Site(row, colunm, Type::none) {}    
-    
-    Site(unsigned row, unsigned colunm, Type _type) : _row(row), _colunm(colunm), _type(_type) {}
-
-    Site(const Site& orig) : _row(orig._row), _colunm(orig._colunm), _type(orig._type) {}
-
-    virtual ~Site() { }
-
-    unsigned colunm() const {
-        return _colunm;
-    }
-
-    unsigned row() const {
-        return _row;
+    _site(const _site& other) :
+    row(other.row), colunm(other.colunm) {
     }
     
-    Type getType() const {
-        return _type;
+    _site& operator=(const _site& right) {
+        if (this == &right)
+            return *this;
+        this->row = right.row;
+        this->colunm = right.colunm;
+        return *this;
     }
 
-    void setType(Type _type) {
-        this->_type = _type;
+    virtual ~_site(){}
+    
+    unsigned GetColunm() const {
+        return colunm;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Site& obj) {
-        os << obj._row << " . " << obj._colunm << "[" << Site::siteTypeToString(obj._type) << "]";
+    unsigned GetRow() const {
+        return row;
+    }
+    
+    friend std::ostream& operator<<(std::ostream& os, const _site& obj) {
+        os << obj.row << " . " << obj.colunm;
         return os;
     }
     
-    static std::string siteTypeToString(Site::Type siteType){
-        
-        if (siteType == Site::Type::none) {
-            return "@";
-        } else if (siteType == Site::Type::bot) {
-            return "r";
-        } else if (siteType == Site::Type::endpoint) {
-            return "e";
-        }else if (siteType == Site::Type::task) {
-            return "t";
-        }
-        
-        return " ";
-        
+    virtual bool match(const _site& other){
+        return this->row == other.row && this->colunm == other.colunm;
     }
     
-    
-    virtual void draw(const Render& render) const {
-        
-        sf::RectangleShape shape_point(sf::Vector2f(render.GetCell().first, render.GetCell().second));
-        shape_point.setPosition(sf::Vector2f(this->_colunm * render.GetCell().first, this->_row * render.GetCell().second));
-        shape_point.setFillColor(Site::TypeColorMap.get(this->_type));
-        render.draw(shape_point);
-        
+    virtual bool isNeighboorTo(const _site& other){
+        return (this->row == other.row && std::abs((int)this->colunm - (int)other.colunm) == 1) || 
+                (this->colunm == other.colunm && std::abs((int)this->row - (int)other.row) == 1);
     }
     
-    
-    
-    virtual BinarySite parse(unsigned step)const{
-        
-        return BinarySite(step, _row, _colunm, !(_type == Type::none));
-        
-    }
-    
-
-private:
-    unsigned _row, _colunm;
-    Type _type;
-
+protected:
+    unsigned row, colunm;
 };
 
-#endif /* SITE_H */
+#endif /* _SITE_H */
 
