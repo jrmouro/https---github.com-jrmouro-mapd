@@ -8,11 +8,12 @@
 #ifndef RENDER_H
 #define RENDER_H
 
+#include <functional>
 #include <SFML/Graphics.hpp>
 
 class Drawable;
-
 class Render {
+    
  public:
         
     Render( const std::pair<unsigned, unsigned>& cell,
@@ -25,7 +26,7 @@ class Render {
     Render( const std::pair<unsigned, unsigned>& cell,
         const std::pair<unsigned, unsigned>& grid,
         const std::string& title,
-        const std::vector<Drawable*>& drawables) : 
+        const std::vector<const Drawable*>& drawables) : 
     cell(cell), 
     grid(grid), 
     title(title),
@@ -34,7 +35,7 @@ class Render {
     Render( const std::pair<unsigned, unsigned>& cell,
         const std::pair<unsigned, unsigned>& grid,
         const std::string& title,
-        Drawable* drawable);
+        const Drawable* drawable);
             
             
     Render(const Render& other) : 
@@ -60,9 +61,9 @@ class Render {
             this->window->draw(sf_drawable);            
     }
     
-    void loop();
+    void loop(unsigned elapse = 1000, std::function<void()> update = [](){});
     
-    void add(Drawable* drawable);
+    void add(const Drawable* drawable);
     
     sf::Time GetElapsed() const {
         return elapsed;
@@ -74,7 +75,7 @@ private:
     std::pair<unsigned, unsigned> cell, grid;
     sf::RenderWindow* window;
     sf::Time elapsed;
-    std::vector<Drawable*> drawables;
+    std::vector<const Drawable*> drawables;
 
 };
 

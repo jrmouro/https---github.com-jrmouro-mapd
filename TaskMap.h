@@ -90,16 +90,16 @@ public:
     void load(std::ifstream& filestream, std::function<_site(unsigned)> oracle) {
 
         std::string line;
-        std::stringstream stream;
+//        std::stringstream stream;
         
         int taskId = 0;
 
         while (std::getline(filestream, line)) {
             
-            stream.clear();
-            stream << line;
+//            stream.clear();
+//            stream << line;
             int t, s, g, ts, tg;
-            stream >> t >> s >> g >> ts >> tg;            
+            std::stringstream(line) >> t >> s >> g >> ts >> tg;            
             this->set(t, Task(taskId++, oracle(s), oracle(g)));           
 
         }

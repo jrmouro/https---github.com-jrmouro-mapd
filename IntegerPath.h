@@ -1,85 +1,47 @@
 /* 
- * File:   BinaryPath.h
+ * File:   IntegerPath.h
  * Author: ronaldo
  *
- * Created on 25 de julho de 2023, 19:36
+ * Created on 11 de agosto de 2023, 12:58
  */
 
-#ifndef BINARYPATH_H
-#define BINARYPATH_H
+#ifndef INTEGERPATH_H
+#define INTEGERPATH_H
 
 #include <vector>
-#include "BinarySite.h"
+#include <functional>
+#include "IntegerSite.h"
 #include "MapdException.h"
 
-class BinaryPath : public Drawable{
+class IntegerPath : public Drawable{
 public:
-
-    BinaryPath() {}
     
-    BinaryPath(const BinarySite& site) {
+    IntegerPath() {}
+    
+    IntegerPath(const IntegerSite& site) {
         sites.push_back(site);
     }
+    
+    IntegerPath(const IntegerPath& orig) : sites(orig.sites) {}
+    
+    virtual ~IntegerPath() {}
 
-    BinaryPath(const BinaryPath& orig) : sites(orig.sites) {}
-
-    virtual ~BinaryPath() {}
-
-//    void set(unsigned index, const Site& site) {
-//
-//        if (index < this->sites.size()) {
-//
-//            if (index > 0) {
-//
-//                for (std::vector<Site>::const_iterator it = this->sites.begin() + index; it != this->sites.end(); ++it) {
-//
-//                    this->d_row -= std::abs((int) (*(it - 1)).row() - (int) (*it).row());
-//                    this->d_colunm -= std::abs((int) (*(it - 1)).colunm() - (int) (*it).colunm());
-//                                        
-//                }
-//
-//            } else {
-//
-//                this->d_row = 0;
-//                this->d_colunm = 0;
-//
-//            }
-//
-//            this->sites.erase(this->sites.begin() + index, this->sites.end());
-//
-//        } else if (index > this->sites.size()) {
-//            
-//            try {
-//                std::ostringstream stream;
-//                stream << "invalid index [" << index << "]";
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            }
-//
-//        }
-//
-//        this->add(site);
-//
-//    }
-
-    void add(const BinarySite& site) {
+    void add(const IntegerSite& site) {
 
         this->sites.push_back(site);
 
     }
     
-    void progress(const BinarySite& site){       
+    void progress(const IntegerSite& site){       
         
-        std::vector<BinarySite>::iterator it = this->sites.begin();
+        std::vector<IntegerSite>::iterator it = this->sites.begin();
         this->sites.insert(it, site);       
     
     }
     
-    void progress(const BinaryPath& site){       
+    void progress(const IntegerPath& path){       
         
-        this->rlist([this](const BinarySite& site){
+        path.rlist([this](const IntegerSite& site){
             
             this->progress(site);
             
@@ -88,25 +50,8 @@ public:
         });        
     
     }
-    
-//    void endJoin(const BinaryPath& path){
-//        
-//    }
-    
-//    void erase(unsigned index){
-//        
-//        std::vector<BinarySite>::iterator it;
-//        it = this->sites.begin() + index;
-//        
-//        if(it != this->sites.end()){
-//            
-//            this->sites.erase(it);
-//            
-//        }
-//        
-//    }
-    
-    const BinarySite& goalSite()const{
+        
+    const IntegerSite& goalSite()const{
         
         if(this->sites.size() > 0){   
             
@@ -126,7 +71,7 @@ public:
         }     
     }
     
-    const BinarySite& currentSite() const{
+    const IntegerSite& currentSite() const{
         
         if(this->sites.size() > 0){   
             
@@ -152,10 +97,10 @@ public:
         
     }
     
-    BinarySite pop(){
+    IntegerSite pop(){
         
         if(this->sites.size() > 0){     
-            BinarySite site = this->sites.back();
+            IntegerSite site = this->sites.back();
             this->sites.pop_back();
             return site;
         } else {
@@ -178,8 +123,8 @@ public:
         
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const BinaryPath& obj) {
-        for (std::vector<BinarySite>::const_iterator it = obj.sites.begin(); it != obj.sites.end(); ++it)
+    friend std::ostream& operator<<(std::ostream& os, const IntegerPath& obj) {
+        for (std::vector<IntegerSite>::const_reverse_iterator it = obj.sites.rbegin(); it != obj.sites.rend(); ++it)
             os << *it << std::endl;
         return os;
     }
@@ -194,11 +139,11 @@ public:
     
     virtual void draw(const Render& render) const {
         
-        for(std::vector<BinarySite>::const_iterator it = sites.begin(); it != sites.end(); it++){
+        for(std::vector<IntegerSite>::const_iterator it = sites.begin(); it != sites.end(); it++){
             
             sf::RectangleShape shape_point(sf::Vector2f(render.GetCell().first, render.GetCell().second));
             shape_point.setPosition(sf::Vector2f(it->GetColunm() * render.GetCell().first, it->GetRow() * render.GetCell().second));
-            shape_point.setFillColor(BinarySite::TypeColorMap.get(it->getValue()));
+            shape_point.setFillColor(IntegerSite::TypeColorMap.get(it->getType()));
             render.draw(shape_point);
             
         }
@@ -206,9 +151,9 @@ public:
     }
     
     
-    void list(const std::function<bool(const BinarySite&)>& function) const {
+    void list(const std::function<bool(const IntegerSite&)>& function) const {
         
-        for(std::vector<BinarySite>::const_iterator it = sites.cbegin(); it != sites.cend(); it++){
+        for(std::vector<IntegerSite>::const_iterator it = sites.cbegin(); it != sites.cend(); it++){
             
             if(function(*it)) return;
             
@@ -216,9 +161,9 @@ public:
         
     }
     
-    void rlist(const std::function<bool(const BinarySite&)>& function) const {
+    void rlist(const std::function<bool(const IntegerSite&)>& function) const {
         
-        for(std::vector<BinarySite>::const_reverse_iterator it = sites.crbegin(); it != sites.crend(); it++){
+        for(std::vector<IntegerSite>::const_reverse_iterator it = sites.crbegin(); it != sites.crend(); it++){
             
             if(function(*it)) return;
             
@@ -226,9 +171,9 @@ public:
         
     }
     
-    void moveList(const std::function<bool(const BinarySite&, const BinarySite&)>& function) const {
+    void moveList(const std::function<bool(const IntegerSite&, const IntegerSite&)>& function) const {
         
-        for(std::vector<BinarySite>::const_reverse_iterator it = sites.crbegin(); it != sites.crend() - 1; it++){
+        for(std::vector<IntegerSite>::const_reverse_iterator it = sites.crbegin(); it != sites.crend() - 1; it++){
             
             if(function(*it, *(it + 1))) return;
             
@@ -236,13 +181,32 @@ public:
         
     }
     
-    
-
+    void setSiteValueByIndex(unsigned index, int type){
+        
+        std::vector<IntegerSite>::iterator it = sites.begin() + index;
+        if(it != sites.end()){
+            
+            it->setType(type);
+            
+        } else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "invalid site index";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }
+    }    
+        
 private:
-    
-    std::vector<BinarySite> sites;
+        
+    std::vector<IntegerSite> sites;
     
 };
 
-#endif /* BINARYPATH_H */
+#endif /* INTEGERPATH_H */
 

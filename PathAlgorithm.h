@@ -8,12 +8,12 @@
 #ifndef PATHALGORITHM_H
 #define PATHALGORITHM_H
 
-#include "BinaryMap.h"
-#include "BinaryPath.h"
+#include "IntegerMap.h"
+#include "_stepPath.h"
 
 class PathAlgorithm {
 public:
-    virtual bool solve(const BinaryMap& map, const _site& start, const _site& goal, BinaryPath& path, unsigned step) const = 0;
+    virtual bool solve(const IntegerMap& map, const _site& start, const _site& goal, _stepPath& path, unsigned step, int type) const = 0;
 };
 
 #endif /* PATHALGORITHM_H */

@@ -16,7 +16,8 @@
 #include <map>
 
 #include "SiteMap.h"
-#include "BinaryMap.h"
+#include "IntegerMap.h"
+#include "IntegerSite.h"
 
 class InstanceMap : public Drawable{
 public:
@@ -30,13 +31,13 @@ public:
         unsigned num_bots,
         unsigned num_endpoints) : 
             siteMap(row_size, colunm_size),
-            binaryMap(step_size, row_size, colunm_size),
+            integerMap(step_size, row_size, colunm_size),
             num_bots(num_bots),
             num_endpoints(num_endpoints){ }
             
     InstanceMap(const InstanceMap& orig) : 
         siteMap(orig.siteMap),
-        binaryMap(orig.binaryMap),
+        integerMap(orig.integerMap),
         num_bots(orig.num_bots),
         num_endpoints(orig.num_endpoints){ }
 
@@ -50,27 +51,27 @@ public:
 
             std::string line;
             getline(filestream, line);
-            std::stringstream ss(line);
+//            std::stringstream ss(line);
 
-            unsigned row_size, colunm_size, bots, step_size, endpoints;
+            int row_size, colunm_size, bots, step_size, endpoints;
 
-            ss >> row_size;
-            ss >> colunm_size;
+            std::stringstream(line) >> row_size >> colunm_size;
+//            ss >> colunm_size;
             
-            ss.clear();
+//            ss.clear();
             getline(filestream, line);
-            ss << line;
-            ss >> endpoints;
+//            ss << line;
+            std::stringstream(line) >> endpoints;
             
-            ss.clear();
+//            ss.clear();
             getline(filestream, line);
-            ss << line;
-            ss >> bots;
+//            ss << line;
+            std::stringstream(line) >> bots;
             
-            ss.clear();
+//            ss.clear();
             getline(filestream, line);
-            ss << line;
-            ss >> step_size;
+//            ss << line;
+            std::stringstream(line) >> step_size;
 
             auto imap = new InstanceMap(step_size, row_size, colunm_size, bots, endpoints);            
 
@@ -91,8 +92,21 @@ public:
         unsigned i = 0, j = 0;
         this->siteMap.load(filestream, [&i, &j, this](unsigned row, unsigned colunm, Site::Type siteType){
             
-            this->binaryMap.setValuesFrom(0, row, colunm, !(siteType == Site::Type::none));
-             
+            if(siteType == Site::Type::none){
+                
+                this->integerMap.setTypesFrom(0, row, colunm, IntegerSite::Type::blocked);
+                
+            } else if(siteType == Site::Type::bot){
+                
+                this->integerMap.setTypesFrom(0, row, colunm, j);
+                
+            }else{
+                
+                this->integerMap.setTypesFrom(0, row, colunm, IntegerSite::Type::free);
+                
+            }
+            
+                         
             if(siteType == Site::Type::endpoint){
                 
                 this->endpointMap.insert(std::pair<unsigned, _site>(i++, _site(row, colunm)));
@@ -127,8 +141,8 @@ public:
         return siteMap;
     }
     
-    const BinaryMap& getBinaryMap() const {
-        return binaryMap;
+    const IntegerMap& getIntegerMap() const {
+        return integerMap;
     }
     
     void setTaskEndpoint(unsigned row, unsigned colunm) {
@@ -182,12 +196,12 @@ public:
         os << obj.siteMap;
         
         os << "binaryMap:" << std::endl;
-        os << obj.binaryMap;
+        os << obj.integerMap;
                 
         return os;
     }
     
-    void listBotsEndPoints(const std::function<bool(unsigned, const _site&)> function){
+    void listBotsEndPoints(std::function<bool(unsigned, const _site&)> function) const {
         
         for (auto elem : botMap) {
             
@@ -197,7 +211,7 @@ public:
         
     }
     
-    void listNoBotsEndpoints(const std::function<bool(unsigned, const _site&)> function){
+    void listNoBotsEndpoints(std::function<bool(unsigned, const _site&)> function)const {
         
         for (auto elem : endpointMap) {
             
@@ -216,13 +230,18 @@ public:
         }
         
     }
+    
+    const std::vector<_site>& getEndpoints() const {
+        return endpoints;
+    }
+
 
     
 private:
     
     unsigned num_bots, num_endpoints;
     SiteMap siteMap;
-    BinaryMap binaryMap;
+    IntegerMap integerMap;
     std::map<unsigned,_site> endpointMap;
     std::map<unsigned,_site> botMap;
     std::vector<_site> endpoints;

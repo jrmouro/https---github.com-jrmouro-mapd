@@ -13,7 +13,6 @@
 #include <iostream>
 #include <sstream>
 #include <functional>
-#include <SFML/Graphics/Color.hpp>
 #include <vector>
 #include <set>
 #include "Site.h"
@@ -174,20 +173,7 @@ public:
         return row_size;
     }
             
-    virtual void draw(const Render& render) const {
-        
-        for (unsigned r = 0; r < row_size; r++)
-
-            for (unsigned c = 0; c < colunm_size; c++){
-
-                sf::RectangleShape shape_point(sf::Vector2f(render.GetCell().first, render.GetCell().second));
-                shape_point.setPosition(sf::Vector2f(c * render.GetCell().first, r * render.GetCell().second));
-                shape_point.setFillColor(Site::TypeColorMap.get(site_matrix[r * colunm_size + c]));                    
-                render.draw(shape_point);
-
-            }
-        
-    }
+    virtual void draw(const Render& render) const;
         
        
 private:

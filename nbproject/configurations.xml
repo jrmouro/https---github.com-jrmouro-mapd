@@ -11,9 +11,17 @@
         <itemPath>PathAlgorithm.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Drawable" projectFiles="true">
+        <itemPath>Circle.cpp</itemPath>
+        <itemPath>Circle.h</itemPath>
         <itemPath>Drawable.h</itemPath>
+        <itemPath>Rectangle.cpp</itemPath>
+        <itemPath>Rectangle.h</itemPath>
         <itemPath>Render.cpp</itemPath>
         <itemPath>Render.h</itemPath>
+        <itemPath>Shape.cpp</itemPath>
+        <itemPath>Shape.h</itemPath>
+        <itemPath>Text.cpp</itemPath>
+        <itemPath>Text.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Experiment" projectFiles="true">
         <itemPath>AstarExperiment.h</itemPath>
@@ -21,17 +29,20 @@
         <itemPath>InstanceMapExperiment.h</itemPath>
         <itemPath>InstanceTaskExperiment.h</itemPath>
         <itemPath>RenderExperiment.h</itemPath>
+        <itemPath>SystemExperiment.h</itemPath>
       </logicalFolder>
       <itemPath>Agent.h</itemPath>
-      <itemPath>BinaryMap.h</itemPath>
-      <itemPath>BinaryPath.h</itemPath>
-      <itemPath>BinarySite.h</itemPath>
       <itemPath>Identifiable.h</itemPath>
       <itemPath>InstanceMAPD.h</itemPath>
       <itemPath>InstanceMap.h</itemPath>
       <itemPath>InstanceTask.h</itemPath>
+      <itemPath>IntegerMap.h</itemPath>
+      <itemPath>IntegerPath.h</itemPath>
+      <itemPath>IntegerSite.h</itemPath>
       <itemPath>MapdException.h</itemPath>
       <itemPath>Online.h</itemPath>
+      <itemPath>ReportAgent.h</itemPath>
+      <itemPath>ReportTask.h</itemPath>
       <itemPath>Resetable.h</itemPath>
       <itemPath>Site.h</itemPath>
       <itemPath>SiteMap.h</itemPath>
@@ -39,14 +50,28 @@
       <itemPath>Task.h</itemPath>
       <itemPath>TaskMap.h</itemPath>
       <itemPath>Token.h</itemPath>
+      <itemPath>_agent.h</itemPath>
+      <itemPath>_agent_free.h</itemPath>
+      <itemPath>_agent_occupied.h</itemPath>
+      <itemPath>_agent_state.h</itemPath>
       <itemPath>_site.h</itemPath>
+      <itemPath>_stepPath.h</itemPath>
       <itemPath>_stepSite.h</itemPath>
+      <itemPath>_system.h</itemPath>
+      <itemPath>_token.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Arquivos de Código-Fonte"
                    projectFiles="true">
-      <itemPath>BinarySite.cpp</itemPath>
+      <itemPath>Agent.cpp</itemPath>
       <itemPath>Site.cpp</itemPath>
+      <itemPath>SiteMap.cpp</itemPath>
+      <itemPath>Token.cpp</itemPath>
+      <itemPath>_agent.cpp</itemPath>
+      <itemPath>_agent_free.cpp</itemPath>
+      <itemPath>_agent_occupied.cpp</itemPath>
+      <itemPath>_agent_state.cpp</itemPath>
+      <itemPath>_token.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -57,14 +82,8 @@
                    displayName="Arquivos de Teste"
                    projectFiles="false"
                    kind="TEST_LOGICAL_FOLDER">
-      <logicalFolder name="f2"
-                     displayName="InstanceMapExperimentTest"
-                     projectFiles="true"
-                     kind="TEST">
-        <itemPath>tests/newsimpletest1.cpp</itemPath>
-      </logicalFolder>
       <logicalFolder name="f1"
-                     displayName="MapdExceptionTest"
+                     displayName="New Teste Simples C++"
                      projectFiles="true"
                      kind="TEST">
         <itemPath>tests/newsimpletest.cpp</itemPath>
@@ -98,19 +117,17 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="Agent.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="Agent.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="AstarAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="AstarExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="BinaryMap.h" ex="false" tool="3" flavor2="0">
+      <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="BinaryPath.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="BinarySite.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="BinarySite.h" ex="false" tool="3" flavor2="0">
+      <item path="Circle.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="DistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -130,6 +147,12 @@
       </item>
       <item path="InstanceTaskExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="IntegerMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IntegerPath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IntegerSite.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="ManhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
@@ -138,31 +161,77 @@
       </item>
       <item path="PathAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Rectangle.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Rectangle.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Render.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Render.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="RenderExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="ReportAgent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ReportTask.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Resetable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Shape.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Shape.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Site.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Site.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="SiteMap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="SiteMap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="System.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SystemExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Task.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="TaskMap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Text.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Text.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Token.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="Token.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_free.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_free.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_occupied.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_occupied.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_state.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_state.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_site.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_stepPath.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_stepSite.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_system.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_token.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_token.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
         <cTool>
@@ -179,26 +248,9 @@
           <output>${TESTDIR}/TestFiles/f1</output>
         </linkerTool>
       </folder>
-      <folder path="TestFiles/f2">
-        <cTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </cTool>
-        <ccTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </ccTool>
-        <linkerTool>
-          <output>${TESTDIR}/TestFiles/f2</output>
-        </linkerTool>
-      </folder>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/newsimpletest.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="tests/newsimpletest1.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -222,19 +274,17 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="Agent.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="Agent.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="AstarAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="AstarExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="BinaryMap.h" ex="false" tool="3" flavor2="0">
+      <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="BinaryPath.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="BinarySite.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="BinarySite.h" ex="false" tool="3" flavor2="0">
+      <item path="Circle.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="DistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -254,6 +304,12 @@
       </item>
       <item path="InstanceTaskExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="IntegerMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IntegerPath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IntegerSite.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="ManhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
@@ -262,31 +318,77 @@
       </item>
       <item path="PathAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Rectangle.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Rectangle.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Render.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Render.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="RenderExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="ReportAgent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ReportTask.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Resetable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Shape.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Shape.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Site.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Site.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="SiteMap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="SiteMap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="System.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SystemExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Task.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="TaskMap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Text.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Text.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Token.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="Token.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_free.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_free.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_occupied.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_occupied.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_state.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_state.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_site.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_stepPath.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_stepSite.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_system.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_token.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_token.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
         <cTool>
@@ -303,26 +405,9 @@
           <output>${TESTDIR}/TestFiles/f1</output>
         </linkerTool>
       </folder>
-      <folder path="TestFiles/f2">
-        <cTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </cTool>
-        <ccTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </ccTool>
-        <linkerTool>
-          <output>${TESTDIR}/TestFiles/f2</output>
-        </linkerTool>
-      </folder>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/newsimpletest.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="tests/newsimpletest1.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

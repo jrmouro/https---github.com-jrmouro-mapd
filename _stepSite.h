@@ -9,6 +9,7 @@
 #define _STEPSITE_H
 
 #include <iostream>
+#include <vector>
 #include "_site.h"
 
 
@@ -29,9 +30,61 @@ public:
         return step;
     }
     
+    void SetStep(unsigned step) {
+        this->step = step;
+    }
+    
     friend std::ostream& operator<<(std::ostream& os, const _stepSite& obj) {
         os << obj.step << " . " << (_site&)obj;
         return os;
+    }
+    
+    virtual std::vector<_stepSite> neighborhood(const _stepSite& size) const {
+        
+        std::vector<_stepSite> ret;
+        
+        const unsigned step = this->step + 1;
+        
+        if(step < size.step){
+        
+            int neighbor_row = (int)this->row - 1;
+            int neighbor_colunm = (int)this->colunm;
+
+            if(neighbor_row > -1 && neighbor_row < size.row && neighbor_colunm < size.colunm){
+                ret.push_back(_stepSite(step, neighbor_row, neighbor_colunm));
+            }
+            
+            neighbor_row = (int)this->row + 1;
+            
+            if(neighbor_row < size.row && neighbor_colunm < size.colunm){
+                ret.push_back(_stepSite(step, neighbor_row, neighbor_colunm));
+            }
+
+            neighbor_row = (int)this->row;
+            neighbor_colunm = (int)this->colunm - 1;
+            
+            if(neighbor_row < size.row && neighbor_colunm > -1 && neighbor_colunm < size.colunm){
+                ret.push_back(_stepSite(step, neighbor_row, neighbor_colunm));
+            }
+            
+            neighbor_colunm = (int)this->colunm + 1;
+            
+            if(neighbor_row < size.row && neighbor_colunm < size.colunm){
+                ret.push_back(_stepSite(step, neighbor_row, neighbor_colunm));
+            }
+            
+            neighbor_row = (int)this->row;
+            neighbor_colunm = (int)this->colunm;
+            
+            if(neighbor_row < size.row && neighbor_colunm < size.colunm){
+                ret.push_back(_stepSite(step, neighbor_row, neighbor_colunm));
+            }
+            
+        
+        }
+        
+        return ret;
+        
     }
     
 protected:

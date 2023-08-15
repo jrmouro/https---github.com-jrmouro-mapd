@@ -1,68 +1,71 @@
 /* 
- * File:   BinarySite.h
+ * File:   IntegerSite.h
  * Author: ronaldo
  *
- * Created on 5 de agosto de 2023, 16:45
+ * Created on 11 de agosto de 2023, 12:45
  */
 
-#ifndef BINARYSITE_H
-#define BINARYSITE_H
+#ifndef INTEGERSITE_H
+#define INTEGERSITE_H
 
 #include "_stepSite.h"
 #include "Drawable.h"
 
-class BinarySite : public _stepSite, public Drawable{
-public:   
+class IntegerSite : public _stepSite/*, public Drawable*/{
+public:  
+    
+    enum Type{
+        blocked = -2,
+        free = -1
+    };
     
     static const class _TypeColorMap{
         
     public:
                 
-        sf::Color get(bool value) const {
-            if(value) return sf::Color::White;
-            return sf::Color::Black;
+        sf::Color get(int type) const {
+            if(type < -1) return sf::Color::Black;
+            return sf::Color::White;
         }    
         
     } TypeColorMap;
             
-    BinarySite(unsigned step, unsigned row, unsigned colunm, bool value) : _stepSite(step, row, colunm), value(value) {}
+    IntegerSite(unsigned step, unsigned row, unsigned colunm, int type) : 
+            _stepSite(step, row, colunm), 
+            type(type){}
 
-    BinarySite(const BinarySite& orig) : _stepSite(orig), value(orig.value) {}
+    IntegerSite(const IntegerSite& orig) : _stepSite(orig), type(orig.type) {}
+    
+    virtual ~IntegerSite() { }
 
-    virtual ~BinarySite() { }
-
-    bool getValue() const {
-        return value;
+    int getType() const {
+        return type;
     }
 
-    void setValue(bool value) {
-        this->value = value;
+    void setType(int type) {
+        this->type = type;
     }
-
-    friend std::ostream& operator<<(std::ostream& os, const BinarySite& obj) {
-        os << (_stepSite&)obj << "[" << obj.value << "]";
+    
+    friend std::ostream& operator<<(std::ostream& os, const IntegerSite& obj) {
+        os << (_stepSite&)obj << "[" << obj.type << "]";
         return os;
     }
     
-    virtual void draw(const Render& render) const {
-        
-        sf::RectangleShape shape_point(sf::Vector2f(render.GetCell().first, render.GetCell().second));
-        shape_point.setPosition(sf::Vector2f(this->_colunm * render.GetCell().first, this->_row * render.GetCell().second));
-        shape_point.setFillColor(BinarySite::TypeColorMap.get(this->value));
-        render.draw(shape_point);
-        
-    }
-        
-    void stepping(){
-        this->_step++;
-    }
-    
+//    virtual void draw(const Render& render) const {
+//        
+//        sf::RectangleShape shape_point(sf::Vector2f(render.GetCell().first, render.GetCell().second));
+//        shape_point.setPosition(sf::Vector2f(this->GetColunm() * render.GetCell().first, this->GetRow() * render.GetCell().second));
+//        shape_point.setFillColor(IntegerSite::TypeColorMap.get(this->type));
+//        render.draw(shape_point);
+//        
+//    }
+       
 
 private:
-    unsigned _step, _row, _colunm;
-    bool value;
+    
+    int type;
 
 };
 
-#endif /* BINARYSITE_H */
+#endif /* INTEGERSITE_H */
 

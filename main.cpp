@@ -6,9 +6,7 @@
  */
 
 
-#include "AstarExperiment.h"
-#include "AstarAlgorithm.h"
-#include "Render.h"
+#include "SystemExperiment.h"
 
 using namespace std;
 
@@ -17,11 +15,9 @@ using namespace std;
  */
 int main(int argc, char** argv) {
     
-    auto experiment = AstarExperiment(    
-        "./Instances/test/test.task",
-        "./Instances/test/test.map", 
-        true,
-        1);
+    auto experiment = SystemExperiment(    
+        "./Instances/test/test_1.task",
+        "./Instances/test/test_1.map");
     
     experiment.run();
     

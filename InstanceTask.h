@@ -36,15 +36,12 @@ public:
 
             unsigned ntask, tstep;
             std::string line;
-            getline(filestream, line);
-            std::stringstream ss(line);         
 
-            ss >> ntask;
-            
-            ss.clear();
             getline(filestream, line);
-            ss << line;
-            ss >> tstep;
+            std::stringstream(line) >> ntask;
+            
+            getline(filestream, line);
+            std::stringstream(line) >> tstep;
 
             auto itask = new InstanceTask(ntask, tstep);
             

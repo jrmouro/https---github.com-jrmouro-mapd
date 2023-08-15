@@ -8,11 +8,15 @@
 #ifndef TASK_H
 #define TASK_H
 
+#include <iostream>
 #include "Identifiable.h"
+#include "_site.h"
 
 class Task : public Identifiable<int>{
     
 public:
+    
+    Task() : _id(0) {}
             
     Task(int id, _site pickup, _site delivery) :
     _id(id), pickup(pickup), delivery(delivery) {}

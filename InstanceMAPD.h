@@ -16,7 +16,7 @@
 class InstanceMAPD {
 public:
     
-    friend class System;
+    friend class _system;
     
     InstanceMAPD(InstanceMap* instanceMap, InstanceTask* instanceTask) :
         instanceMap(instanceMap), instanceTask(instanceTask) {}
@@ -53,6 +53,22 @@ public:
          
     }
     
+    friend std::ostream& operator<<(std::ostream& os, const InstanceMAPD& obj) {
+        os << "InstanceMap:" << std::endl;
+        os << *obj.instanceMap << std::endl;
+        os << "InstanceTask:" << std::endl;
+        os << *obj.instanceTask << std::endl;
+        return os;
+    }
+
+    InstanceMap* getInstanceMap() const {
+        return instanceMap;
+    }
+
+    InstanceTask* getInstanceTask() const {
+        return instanceTask;
+    }
+
     
     
 private:

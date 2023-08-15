@@ -12,51 +12,36 @@
 #include "Token.h"
 #include "Agent.h"
 
-
 class System {
 public:
     
-    System(InstanceMAPD* instanceMAPD) :
+    System(InstanceMAPD& instanceMAPD) :
     instanceMAPD(instanceMAPD) {}
     
     System(const System& other) :
-    instanceMAPD(new InstanceMAPD(*other.instanceMAPD)) {}
+    instanceMAPD(other.instanceMAPD) {}
 
-    virtual ~System(){}
+    virtual ~_system(){}
     
-    void run(){
+    void step(Token& token){ 
         
-        std::vector<Agent> agents;
-        
-        instanceMAPD->instanceMap->listBots([agents&](unsigned id, const Site& site){
+        if(
+            token.getCurrentStep() < instanceMAPD.instanceMap->getIntegerMap().getStep_size() &&
+            (   
+                token.getCurrentStep() < instanceMAPD.instanceTask->getLastStep() 
+                || !token.anyPendingTask()
+                || !token.anyOpenTask()
+            )){
             
-            agents.push_back(Agent(id, site));
-            
-            return false;
-            
-        });
-        
-        Token token(
-            instanceMAPD->instanceMap->getSiteMap(),
-            instanceMAPD->instanceMap->getBinaryMap(),
-            agents);
-        
-        
-        unsigned step = 0;
-        
-        while(
-            step < instanceMAPD->instanceMap->getBinaryMap().getStep_size() &&
-            (step < instanceMAPD->instanceTask->getLastStep() || !token.tasksEmpty())){
-                                    
-            instanceMAPD->instanceTask->getTaskMap().listTasksByStep(step, [token&](const Task& task){
+            instanceMAPD.instanceTask->getTaskMap().listTasksByStep(token.getCurrentStep(), [&token](const Task& task){
                 
-                token.addTask(task);
+                token.addPendingTask(task);
                 
                 return false;
                 
             });
             
-            token.listAgents([token&](const Agent& agent){
+            token.listAgents([&token](Agent& agent){
                 
                 agent.receive(token);
                 
@@ -64,25 +49,66 @@ public:
                 
             });
                     
-            token.listAgents([token&](const Agent& agent){
+            token.listAgents([&token](Agent& agent){
+                
+                agent.move(token);
+                
+                return false;
+                
+            });
+            
+            token.stepping();
+                        
+        }
+        
+    }
+    
+    void run(Token& token){
+      
+        unsigned step = token.getCurrentStep();
+        
+        while(
+            token.getCurrentStep() < instanceMAPD.instanceMap->getIntegerMap().getStep_size() &&
+            (   
+                token.getCurrentStep() < instanceMAPD.instanceTask->getLastStep() 
+                || !token.anyPendingTask()
+                || !token.anyOpenTask()
+            )){
+                                  
+                                    
+            instanceMAPD.instanceTask->getTaskMap().listTasksByStep(token.getCurrentStep(), [&token](const Task& task){
+                
+                token.addPendingTask(task);
+                
+                return false;
+                
+            });
+            
+            token.listAgents([&token](Agent& agent){
                 
                 agent.receive(token);
                 
                 return false;
                 
             });
+                    
+            token.listAgents([&token](Agent& agent){
+                
+                agent.move(token);
+                
+                return false;
+                
+            });
             
-            token.setStep(step);
-            
-            step++;
-            
+            token.stepping();
+                        
         }
-        
+                
     }
     
 private:
     
-    InstanceMAPD* instanceMAPD;
+    InstanceMAPD& instanceMAPD;
 
 };
 

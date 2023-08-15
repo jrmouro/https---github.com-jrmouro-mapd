@@ -26,11 +26,11 @@ public:
                
         AstarAlgorithm astar;
         
-        auto siteMap = this->instanceMap->getBinaryMap();
+        auto siteMap = this->instanceMap->getIntegerMap();
         
         this->instanceTask->getTaskMap().listTasks([this, &siteMap, &astar](unsigned step, const Task& task){
             
-            BinaryPath path;
+            _stepPath path;
         
             if(astar.solve(siteMap, task.getPickup(), task.getDelivery(), path, 0))
                 std::cout << path << std::endl;

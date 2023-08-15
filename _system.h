@@ -1,62 +1,47 @@
 /* 
- * File:   System.h
+ * File:   _system.h
  * Author: ronaldo
  *
- * Created on 6 de agosto de 2023, 09:28
+ * Created on 15 de agosto de 2023, 09:03
  */
 
-#ifndef SYSTEM_H
-#define SYSTEM_H
+#ifndef _SYSTEM_H
+#define _SYSTEM_H
 
 #include "InstanceMAPD.h"
-#include "Token.h"
-#include "Agent.h"
+#include "_token.h"
+#include "_agent.h"
 
-
-class System {
+class _system {
 public:
     
-    System(InstanceMAPD* instanceMAPD) :
+    _system(InstanceMAPD& instanceMAPD) :
     instanceMAPD(instanceMAPD) {}
     
-    System(const System& other) :
-    instanceMAPD(new InstanceMAPD(*other.instanceMAPD)) {}
+    _system(const _system& other) :
+    instanceMAPD(other.instanceMAPD) {}
 
-    virtual ~System(){}
+    virtual ~_system(){}
     
-    void run(){
+    void step(_token& token){ 
         
-        std::vector<Agent> agents;
-        
-        instanceMAPD->instanceMap->listBots([agents&](unsigned id, const Site& site){
+        if(
+            token.getCurrentStep() < instanceMAPD.instanceMap->getIntegerMap().getStep_size() &&
+            (   
+                token.getCurrentStep() < instanceMAPD.instanceTask->getLastStep() 
+                || !token.anyPendingTask()
+                || !token.anyOpenTask()
+            )){
             
-            agents.push_back(Agent(id, site));
-            
-            return false;
-            
-        });
-        
-        Token token(
-            instanceMAPD->instanceMap->getSiteMap(),
-            instanceMAPD->instanceMap->getBinaryMap(),
-            agents);
-        
-        
-        unsigned step = 0;
-        
-        while(
-            step < instanceMAPD->instanceMap->getBinaryMap().getStep_size() &&
-            (step < instanceMAPD->instanceTask->getLastStep() || !token.tasksEmpty())){
-                                    
-            instanceMAPD->instanceTask->getTaskMap().listTasksByStep(step, [token&](const Task& task){
+            instanceMAPD.instanceTask->getTaskMap().listTasksByStep(token.getCurrentStep(), [&token](const Task& task){
                 
-                token.addTask(task);
+                token.addPendingTask(task);
                 
                 return false;
                 
             });
             
-            token.listAgents([token&](const Agent& agent){
+            token.listAgents([&token](_agent& agent){
                 
                 agent.receive(token);
                 
@@ -64,27 +49,68 @@ public:
                 
             });
                     
-            token.listAgents([token&](const Agent& agent){
+            token.listAgents([&token](_agent& agent){
+                
+                agent.move(token);
+                
+                return false;
+                
+            });
+            
+            token.stepping();
+                        
+        }
+        
+    }
+    
+    void run(_token& token){
+      
+        unsigned step = token.getCurrentStep();
+        
+        while(
+            token.getCurrentStep() < instanceMAPD.instanceMap->getIntegerMap().getStep_size() &&
+            (   
+                token.getCurrentStep() < instanceMAPD.instanceTask->getLastStep() 
+                || !token.anyPendingTask()
+                || !token.anyOpenTask()
+            )){
+                                  
+                                    
+            instanceMAPD.instanceTask->getTaskMap().listTasksByStep(token.getCurrentStep(), [&token](const Task& task){
+                
+                token.addPendingTask(task);
+                
+                return false;
+                
+            });
+            
+            token.listAgents([&token](_agent& agent){
                 
                 agent.receive(token);
                 
                 return false;
                 
             });
+                    
+            token.listAgents([&token](_agent& agent){
+                
+                agent.move(token);
+                
+                return false;
+                
+            });
             
-            token.setStep(step);
-            
-            step++;
-            
+            token.stepping();
+                        
         }
-        
+                
     }
     
 private:
     
-    InstanceMAPD* instanceMAPD;
+    InstanceMAPD& instanceMAPD;
 
 };
 
-#endif /* SYSTEM_H */
+#endif /* _SYSTEM_H */
 

@@ -17,6 +17,7 @@
 
 #include <exception>
 #include <sstream>
+#include <iostream>
 
 class MapdException : public std::exception {
 public:

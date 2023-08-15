@@ -9,40 +9,32 @@
 
 #include <vector>
 #include <map>
+#include <iostream>
+#include "SiteMap.h"
 #include "Task.h"
+#include "ReportTask.h"
 #include "MapdException.h"
 #include "ManhattanAlgorithm.h"
 #include "AstarAlgorithm.h"
+#include "Agent.h"
 
-
-class Token {
+class Agent;
+class Token : public Drawable{
 public:
     
     Token(
         const SiteMap& siteMap, 
-        const BinaryMap& binaryMap, 
+        const IntegerMap& integerMap, 
         const std::vector<Agent>& agents,
-        const std::vector<_site>& endpoints) : 
-            siteMap(siteMap), 
-            binaryMap(binaryMap),
-            agents(agents),
-            endpoints(endpoints){}
-    
-    Token(
-        const SiteMap& siteMap, 
-        const BinaryMap& binaryMap, 
-        const std::vector<Agent>& agents,
-        const std::vector<_site>& endpoints,
-        const std::map<Task>& tasks) :
-        Token(siteMap, binaryMap, agents, endpoints), pendingTasks(tasks) {}
-    
+        const std::vector<_site>& endpoints);
+            
     Token(const Token& other) :
         siteMap(other.siteMap), 
-        binaryMap(other.binaryMap),
+        integerMap(other.integerMap),
         agents(other.agents), 
         endpoints(other.endpoints),
         pendingTasks(other.pendingTasks),
-        finishedTasks(other.finishedTasks){ }
+        reportTasks(other.reportTasks){ }
     
     virtual ~Token(){
     
@@ -53,28 +45,32 @@ public:
         
     void addPendingTask(const Task& task){
         this->pendingTasks.insert(std::pair<unsigned, Task>(task.id(), task));
-    }
-    
-    void addFinishedTask(const Task& task){
-        this->finishedTasks.insert(std::pair<unsigned, Task>(task.id(), task));
-    }
-    
+        this->reportTasks.insert(std::pair<unsigned, ReportTask>(task.id(), ReportTask(task, currentStep)));
+    }   
+      
     void removePendingTask(const Task& task){
         this->pendingTasks.erase(task.id());
     }
     
-    
-    void listAgents(const std::function<bool(const Agent&)> function){
-        
-        for (auto agent : agents) {
-            
-            if(function(agent))return;
-
-        }
-
+    void addOpenTask(const Task& task){
+        this->openTasks.insert(std::pair<unsigned, Task>(task.id(), task));
     }
     
-    void listTasks(const std::function<bool(const Task&)> function){
+    void removeOpenTask(const Task& task){
+        this->openTasks.erase(task.id());
+    }
+    
+    bool anyPendingTask()const{
+        return pendingTasks.empty();
+    }
+    
+    bool anyOpenTask()const{
+        return openTasks.empty();
+    }
+        
+    void listAgents(const std::function<bool(Agent&)> function);
+    
+    void listTasks(const std::function<bool(const Task&)> function)const{
         
         for (auto taskPair : pendingTasks) {
             
@@ -84,7 +80,7 @@ public:
 
     }
     
-    void listEndpoints(const std::function<bool(const _site&)> function){
+    void listEndpoints(const std::function<bool(const _site&)> function)const{
         
         for (auto endpoint : endpoints) {
             
@@ -98,41 +94,13 @@ public:
         return siteMap;
     }
     
-    BinaryMap& getBinaryMap() const {
-        return binaryMap;
+    IntegerMap& getIntegerMap(){
+        return integerMap;
     }
     
     void stepping() {
-        this->step++;
-    }
-    
-    bool anyPendingTask()const{
-        return pendingTasks.empty();
-    }
-    
-    void finishTask(const Task& task){
-        
-        auto it = pendingTasks.find(task.id());
-        
-        if(it != pendingTasks.end()){
-            
-            pendingTasks.erase(it);
-            addFinishedTask(task);
-            
-        }else{
-            
-            try {
-                std::ostringstream stream;
-                stream << "task not found";
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
-            
-        }
-        
-    }
+        this->currentStep++;
+    }   
     
     const DistanceAlgorithm* distanceAlgorithm()const{
         return _distanceAlgorithm;
@@ -143,27 +111,60 @@ public:
     }
     
     unsigned getCurrentStep() const {
-        return step;
+        return currentStep;
+    }
+    
+    void reportTaskUpdate(unsigned taskId, unsigned agentId, ReportTask::PathType pathType, const _stepPath& path){
+        
+        std::map<unsigned, ReportTask>::iterator it = reportTasks.find(taskId);
+        
+        if(it != reportTasks.end()){
+            
+            it->second.SetPath(agentId, pathType, path);
+            
+        } else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "report task not found";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }
+        
+    }  
+    
+    friend std::ostream& operator<<(std::ostream& os, const Token& obj) {
+        os << "SiteMap:" << obj.siteMap << std::endl;
+        os << "IntegerMap:" << obj.integerMap << std::endl;
+        for(auto pair: obj.reportTasks){
+            
+            os << pair.second << std::endl;
+            
+        }
+        return os;
     }
 
-    
-protected:
-    
-    void addFinishedTask(const Task& task){
-        this->finishedTasks.insert(std::pair<unsigned, Task>(task.id(), task));
-    }
+        
+    virtual void draw(const Render& render) const;
             
 private:
     
-    const std::vector<Agent>& agents;
-    std::map<unsigned,Task> pendingTasks, finishedTasks;
+    std::vector<Agent> agents;
+    std::map<unsigned, Task> pendingTasks, openTasks;
+    std::map<unsigned, ReportTask> reportTasks;
     const SiteMap& siteMap;
-    BinaryMap binaryMap;
+    IntegerMap integerMap;
     const std::vector<_site>& endpoints;
-    unsigned step = 0;
+    unsigned currentStep = 0;
     
     DistanceAlgorithm* _distanceAlgorithm = new ManhattanAlgorithm();
     PathAlgorithm* _pathAlgorithm = new AstarAlgorithm();
+    
+    
     
 };
 

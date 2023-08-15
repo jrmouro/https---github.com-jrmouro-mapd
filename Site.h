@@ -10,12 +10,12 @@
 
 #include <cmath>
 #include <unordered_map>
+#include <SFML/Graphics/Color.hpp>
 #include "MapdException.h"
-#include "Identifiable.h"
-#include "Drawable.h"
-#include "BinarySite.h"
 #include "_site.h"
+#include "Drawable.h"
 
+class Render;
 class Site : public _site, public Drawable{
 public:
     
@@ -46,7 +46,8 @@ public:
         sf::Color get(Site::Type siteType) const {
             std::unordered_map<Site::Type,sf::Color>::const_iterator it;
             it = map.find(siteType);
-            if(it != map.end()) return it->second;            
+            if(it != map.end()) 
+                return it->second;            
             return sf::Color::Transparent;
         }
 
@@ -97,23 +98,8 @@ public:
     }
     
     
-    virtual void draw(const Render& render) const {
+    virtual void draw(const Render& render) const;
         
-        sf::RectangleShape shape_point(sf::Vector2f(render.GetCell().first, render.GetCell().second));
-        shape_point.setPosition(sf::Vector2f(this->colunm * render.GetCell().first, this->row * render.GetCell().second));
-        shape_point.setFillColor(Site::TypeColorMap.get(this->_type));
-        render.draw(shape_point);
-        
-    }
-    
-    
-    
-    virtual BinarySite parse(unsigned step)const{
-        
-        return BinarySite(step, row, colunm, !(_type == Type::none));
-        
-    }
-    
 
 private:
     Type _type;

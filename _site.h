@@ -15,7 +15,7 @@ class _site{
     
 public:
         
-    _site(unsigned row, unsigned colunm) :
+    _site(unsigned row = 0, unsigned colunm = 0) :
     row(row), colunm(colunm) {}
     
     _site(const _site& other) :
@@ -41,15 +41,15 @@ public:
     }
     
     friend std::ostream& operator<<(std::ostream& os, const _site& obj) {
-        os << obj.row << " . " << obj.colunm;
+        os << "(" << obj.row << " . " << obj.colunm << ")";
         return os;
     }
     
-    virtual bool match(const _site& other){
+    virtual bool match(const _site& other)const{
         return this->row == other.row && this->colunm == other.colunm;
     }
     
-    virtual bool isNeighboorTo(const _site& other){
+    virtual bool isNeighboorTo(const _site& other)const{
         return (this->row == other.row && std::abs((int)this->colunm - (int)other.colunm) == 1) || 
                 (this->colunm == other.colunm && std::abs((int)this->row - (int)other.row) == 1);
     }

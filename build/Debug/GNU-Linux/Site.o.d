@@ -1,18 +1,16 @@
-build/Debug/GNU-Linux/Site.o: Site.cpp Site.h MapdException.h \
- Identifiable.h Drawable.h Render.h BinarySite.h _stepSite.h _site.h
+build/Debug/GNU-Linux/Site.o: Site.cpp Site.h MapdException.h _site.h \
+ Drawable.h Render.h Rectangle.h Shape.h
 
 Site.h:
 
 MapdException.h:
 
-Identifiable.h:
+_site.h:
 
 Drawable.h:
 
 Render.h:
 
-BinarySite.h:
+Rectangle.h:
 
-_stepSite.h:
-
-_site.h:
+Shape.h:
