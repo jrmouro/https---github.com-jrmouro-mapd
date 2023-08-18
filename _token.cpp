@@ -3,11 +3,11 @@
 
 _token::_token(
         const SiteMap& siteMap, 
-        const IntegerMap& integerMap, 
+        const _stepMap& integerMap, 
         const std::vector<_agent>& agents,
         const std::vector<_site>& endpoints) : 
             siteMap(siteMap), 
-            integerMap(integerMap),
+            stepMap(integerMap),
             agents(agents),
             endpoints(endpoints){}
 

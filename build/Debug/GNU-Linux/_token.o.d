@@ -1,7 +1,7 @@
 build/Debug/GNU-Linux/_token.o: _token.cpp _token.h SiteMap.h Site.h \
- MapdException.h _site.h Drawable.h Task.h Identifiable.h ReportTask.h \
- _stepPath.h _stepSite.h ManhattanAlgorithm.h DistanceAlgorithm.h \
- AstarAlgorithm.h PathAlgorithm.h IntegerMap.h IntegerSite.h _agent.h \
+ MapdException.h _site.h Drawable.h _task.h Identifiable.h ReportTask.h \
+ _stepPath.h _stepSite.h ManhattanAlgorithm.h _distanceAlgorithm.h \
+ _stepAstarAlgorithm.h _stepPathAlgorithm.h _stepMap.h _agent.h \
  _agent_state.h
 
 _token.h:
@@ -16,7 +16,7 @@ _site.h:
 
 Drawable.h:
 
-Task.h:
+_task.h:
 
 Identifiable.h:
 
@@ -28,15 +28,13 @@ _stepSite.h:
 
 ManhattanAlgorithm.h:
 
-DistanceAlgorithm.h:
+_distanceAlgorithm.h:
 
-AstarAlgorithm.h:
+_stepAstarAlgorithm.h:
 
-PathAlgorithm.h:
+_stepPathAlgorithm.h:
 
-IntegerMap.h:
-
-IntegerSite.h:
+_stepMap.h:
 
 _agent.h:
 

@@ -9,7 +9,7 @@
 #define ASTAREXPERIMENT_H
 
 #include "InstanceTaskExperiment.h"
-#include "AstarAlgorithm.h"
+#include "_stepAstarAlgorithm.h"
 
 class AstarExperiment : public InstanceTaskExperiment{
 public:
@@ -24,11 +24,11 @@ public:
                 
         InstanceTaskExperiment::run();
                
-        AstarAlgorithm astar;
+        _stepAstarAlgorithm astar;
         
         auto siteMap = this->instanceMap->getIntegerMap();
         
-        this->instanceTask->getTaskMap().listTasks([this, &siteMap, &astar](unsigned step, const Task& task){
+        this->instanceTask->getTaskMap().listTasks([this, &siteMap, &astar](unsigned step, const _task& task){
             
             _stepPath path;
         

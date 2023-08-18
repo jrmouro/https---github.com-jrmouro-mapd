@@ -2,6 +2,8 @@
 #include "Render.h"
 #include "Rectangle.h"
 
+const SiteMap::_TypeColorMap SiteMap::TypeColorMap;
+
 void SiteMap::draw(const Render& render) const {
 
     for (unsigned r = 0; r < row_size; r++)
@@ -14,7 +16,7 @@ void SiteMap::draw(const Render& render) const {
                     c * render.GetCell().first,
                     r * render.GetCell().second),
                     sf::Vector2f(render.GetCell().first, render.GetCell().second),
-                    Site::TypeColorMap.get(site_matrix[r * colunm_size + c]));
+                    SiteMap::TypeColorMap.get(nodes[r * colunm_size + c]));
 
             background.draw(render);
 

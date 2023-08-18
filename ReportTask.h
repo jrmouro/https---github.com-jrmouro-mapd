@@ -11,7 +11,7 @@
 #include <map>
 #include "_stepPath.h"
 
-class ReportTask : public Task{
+class ReportTask : public _task{
 public:
     
     enum PathType{
@@ -23,14 +23,14 @@ public:
 
     
     
-    ReportTask(const Task& task, int taskArrivalStep) :
-    Task(task), taskArrivalStep(taskArrivalStep) { }
+    ReportTask(const _task& task, int taskArrivalStep) :
+    _task(task), taskArrivalStep(taskArrivalStep) { }
     
     ReportTask(int id, _site pickup, _site delivery, int taskArrivalStep) :
-    Task(id, pickup, delivery), taskArrivalStep(taskArrivalStep) { }
+    _task(id, pickup, delivery), taskArrivalStep(taskArrivalStep) { }
     
     ReportTask(const ReportTask& other) :
-            Task(other), 
+            _task(other), 
             taskArrivalStep(other.taskArrivalStep), 
             pickupMap(other.pickupMap),
             deliveryMap(other.deliveryMap),
@@ -62,7 +62,7 @@ public:
     virtual ~ReportTask(){}
     
     friend std::ostream& operator<<(std::ostream& os, const ReportTask& obj) {
-        os << "Task: " << (Task&)obj << std::endl;
+        os << "Task: " << (_task&)obj << std::endl;
         os << "taskArrivalStep: " << obj.taskArrivalStep << std::endl;
         
         os << "pickupPaths:" << std::endl;

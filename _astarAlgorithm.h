@@ -1,41 +1,41 @@
 /* 
- * File:   AstarAlgorithm.h
+ * File:   _astarAlgorithm.h
  * Author: ronaldo
  *
  * Created on 27 de julho de 2023, 16:49
  */
 
-#ifndef ASTARALGORITHM_H
-#define ASTARALGORITHM_H
+#ifndef _ASTARALGORITHM_H
+#define _ASTARALGORITHM_H
 
 #include <unordered_map>
 #include <unordered_set>
 #include <queue>
 #include <cmath>
 #include <iostream>
-#include "PathAlgorithm.h"
-#include "IntegerMap.h"
+#include "_pathAlgorithm.h"
+#include "SiteMap.h"
 #include "_site.h"
+#include "_path.h"
 
-class AstarAlgorithm : public PathAlgorithm{
+class _astarAlgorithm : public _pathAlgorithm{
 public:
     
-    AstarAlgorithm(){}
+    _astarAlgorithm(){}
     
-    AstarAlgorithm(const AstarAlgorithm& other){}
+    _astarAlgorithm(const _astarAlgorithm& other){}
     
-    virtual bool solve(const IntegerMap& map, const _site& start, const _site& goal, _stepPath& path, unsigned step, int type) const{
+    virtual bool solve(const SiteMap& map, const _site& start, const _site& goal, _path& path) const{
         
         bool ret = false;  
-        unsigned rowColunm = map.getRow_size()*map.getColumn_size();
-        ClosedStates closedStates(rowColunm, map.getColumn_size() ,map.getStep_size() * rowColunm);
+        ClosedStates closedStates(map.getColumn_size() ,map.getRow_size()*map.getColumn_size());
         PriorityStates priorityStates;
         std::vector<AstarState*> visitedStates;
         
-        auto bstart = _stepSite(step, start.GetRow(), start.GetColunm());
+        auto bstart = _site(start.GetRow(), start.GetColunm());
         
         AstarState* startState = new AstarState(.0f, this->heuristic(start, goal), bstart, nullptr);        
-        AstarState* solved = this->solveAux(startState, map, goal, closedStates, priorityStates, visitedStates, type);
+        AstarState* solved = this->solveAux(startState, map, goal, closedStates, priorityStates, visitedStates);
                   
 //        std::cout << map << std::endl;
         
@@ -66,14 +66,14 @@ public:
         
     }
     
-    virtual ~AstarAlgorithm(){ }
+    virtual ~_astarAlgorithm(){ }
     
 protected:
         
     class AstarState{
     public:
         
-        AstarState(float traveled, float heuristic, const _stepSite& site, AstarState* previous) :
+        AstarState(float traveled, float heuristic, const _site& site, AstarState* previous) :
         traveled(traveled), _cost(heuristic + traveled), site(site), previous(previous) {}
         
 
@@ -82,7 +82,7 @@ protected:
         
         virtual ~AstarState(){ }
         
-        const _stepSite getSite() const {
+        const _site getSite() const {
             return site;
         }
         
@@ -112,7 +112,7 @@ protected:
         
     private:
         float traveled, _cost;
-        _stepSite site;
+        _site site;
         AstarState* previous;
     };
     
@@ -173,30 +173,28 @@ private:
     class ClosedStates{
     public:
         
-        ClosedStates(unsigned rowColunm, unsigned colunm, unsigned size) :
-        rowColunm(rowColunm), colunm(colunm), states(size, false) {}
+        ClosedStates(unsigned colunm, unsigned size) :
+        colunm(colunm), states(size, false) {}
         
         ClosedStates(const ClosedStates& other) :
-        rowColunm(other.rowColunm), colunm(other.colunm), states(other.states) { }
+        colunm(other.colunm), states(other.states) { }
 
         void add(AstarState* state){
             states[
-                state->getSite().GetStep() * rowColunm + 
                 state->getSite().GetRow() * colunm + 
                 state->getSite().GetColunm()] = true;             
         }
         
-        bool closed(const _stepSite& site){
+        bool closed(const _site& site){
                         
             return states[
-                site.GetStep() * rowColunm + 
                 site.GetRow() * colunm + 
                 site.GetColunm()];
             
         }
         
     private:
-        unsigned rowColunm, colunm;
+        unsigned colunm;
         std::vector<bool> states;
     };
     
@@ -208,18 +206,13 @@ private:
     
     AstarState* solveAux(
         AstarState* current,
-        const IntegerMap& map,
+        const SiteMap& map,
         const _site& goal,
         ClosedStates& closedStates,
         PriorityStates& priorityStates,
-        std::vector<AstarState*>& visitedStates,
-        int type)const{
+        std::vector<AstarState*>& visitedStates)const{
         
         visitedStates.push_back(current);
-        
-//         std::cout << "goal: " << goal << "    current: "<< *current << std::endl;
-        
-//        closedStates.add(current);
                 
         if(goal.GetRow() == current->getSite().GetRow() && goal.GetColunm() == current->getSite().GetColunm()){
                         
@@ -227,37 +220,27 @@ private:
             
         }
             
-//        closedStates.add(current);
-        auto neighborhood = current->getSite().neighborhood(_stepSite(map.getStep_size(), map.getRow_size(), map.getColumn_size()));
-
-        std::vector<_stepSite>::const_iterator it;
-        for(it = neighborhood.begin(); it != neighborhood.end(); it++){
+        map.listNeighborFreeSites(current->getSite(), [current, goal, &closedStates, &priorityStates, this](const _site& site){
             
-            bool flag1 = !closedStates.closed(*it), 
-                    flag2 = map.getType(it->GetStep(), it->GetRow(), it->GetColunm()) == IntegerSite::Type::free, 
-                    flag3 = map.getType(it->GetStep(), it->GetRow(), it->GetColunm()) == type;
-
-            if(!closedStates.closed(*it) && 
-                    (map.getType(it->GetStep(), it->GetRow(), it->GetColunm()) == IntegerSite::Type::free || 
-                    map.getType(it->GetStep(), it->GetRow(), it->GetColunm()) == type)){
+            if(!closedStates.closed(site)){
                 
-                auto state = new AstarState(current->getTraveled() + 1, this->heuristic(*it, goal), *it, current);
+                auto state = new AstarState(current->getTraveled() + 1, this->heuristic(site, goal), site, current);
 
                 priorityStates.push(state);
                 
                 closedStates.add(state);
 
             }
-
-        }
+         
+            return false;
+            
+        });
         
         if(!priorityStates.empty()){
             
             auto state = priorityStates.pop();
             
-//            std::cout << *state << std::endl;
-            
-            return this->solveAux(state, map, goal, closedStates, priorityStates, visitedStates, type);
+            return this->solveAux(state, map, goal, closedStates, priorityStates, visitedStates);
             
         }  
                    
@@ -267,5 +250,5 @@ private:
     
 };
 
-#endif /* ASTARALGORITHM_H */
+#endif /* _ASTARALGORITHM_H */
 

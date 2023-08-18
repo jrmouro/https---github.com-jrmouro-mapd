@@ -43,7 +43,7 @@ public:
             return *map->getNoBotEndPointById(id);
         });
         
-        tasks->getTaskMap().listTasks([map](unsigned step, const Task& task){       
+        tasks->getTaskMap().listTasks([map](unsigned step, const _task& task){       
             map->setTaskEndpoint(task.getPickup().GetRow(), task.getPickup().GetColunm());
             map->setTaskEndpoint(task.getDelivery().GetRow(), task.getDelivery().GetColunm());            
             return false;

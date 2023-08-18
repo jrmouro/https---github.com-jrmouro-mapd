@@ -33,7 +33,7 @@ public:
                 || !token.anyOpenTask()
             )){
             
-            instanceMAPD.instanceTask->getTaskMap().listTasksByStep(token.getCurrentStep(), [&token](const Task& task){
+            instanceMAPD.instanceTask->getTaskMap().listTasksByStep(token.getCurrentStep(), [&token](const _task& task){
                 
                 token.addPendingTask(task);
                 
@@ -76,7 +76,7 @@ public:
             )){
                                   
                                     
-            instanceMAPD.instanceTask->getTaskMap().listTasksByStep(token.getCurrentStep(), [&token](const Task& task){
+            instanceMAPD.instanceTask->getTaskMap().listTasksByStep(token.getCurrentStep(), [&token](const _task& task){
                 
                 token.addPendingTask(task);
                 

@@ -11,11 +11,11 @@
 #include <map>
 #include <iostream>
 #include "SiteMap.h"
-#include "Task.h"
+#include "_task.h"
 #include "ReportTask.h"
 #include "MapdException.h"
 #include "ManhattanAlgorithm.h"
-#include "AstarAlgorithm.h"
+#include "_stepAstarAlgorithm.h"
 #include "_agent.h"
 
 class _agent;
@@ -24,13 +24,13 @@ public:
     
     _token(
         const SiteMap& siteMap, 
-        const IntegerMap& integerMap, 
+        const _stepMap& integerMap, 
         const std::vector<_agent>& agents,
         const std::vector<_site>& endpoints);
             
     _token(const _token& other) :
         siteMap(other.siteMap), 
-        integerMap(other.integerMap),
+        stepMap(other.stepMap),
         agents(other.agents), 
         endpoints(other.endpoints),
         pendingTasks(other.pendingTasks),
@@ -38,25 +38,25 @@ public:
     
     virtual ~_token(){
     
-        delete _distanceAlgorithm;
-        delete _pathAlgorithm;
+        delete distanceAlgorithm;
+        delete pathAlgorithm;
     
     }  
         
-    void addPendingTask(const Task& task){
-        this->pendingTasks.insert(std::pair<unsigned, Task>(task.id(), task));
+    void addPendingTask(const _task& task){
+        this->pendingTasks.insert(std::pair<unsigned, _task>(task.id(), task));
         this->reportTasks.insert(std::pair<unsigned, ReportTask>(task.id(), ReportTask(task, currentStep)));
     }   
       
-    void removePendingTask(const Task& task){
+    void removePendingTask(const _task& task){
         this->pendingTasks.erase(task.id());
     }
     
-    void addOpenTask(const Task& task){
-        this->openTasks.insert(std::pair<unsigned, Task>(task.id(), task));
+    void addOpenTask(const _task& task){
+        this->openTasks.insert(std::pair<unsigned, _task>(task.id(), task));
     }
     
-    void removeOpenTask(const Task& task){
+    void removeOpenTask(const _task& task){
         this->openTasks.erase(task.id());
     }
     
@@ -70,7 +70,7 @@ public:
         
     void listAgents(const std::function<bool(_agent&)> function);
     
-    void listTasks(const std::function<bool(const Task&)> function)const{
+    void listTasks(const std::function<bool(const _task&)> function)const{
         
         for (auto taskPair : pendingTasks) {
             
@@ -94,20 +94,20 @@ public:
         return siteMap;
     }
     
-    IntegerMap& getIntegerMap(){
-        return integerMap;
+    _stepMap& getStepMap(){
+        return stepMap;
     }
     
     void stepping() {
         this->currentStep++;
     }   
     
-    const DistanceAlgorithm* distanceAlgorithm()const{
-        return _distanceAlgorithm;
+    const _distanceAlgorithm* getDistanceAlgorithm()const{
+        return distanceAlgorithm;
     }
     
-    const PathAlgorithm* pathAlgorithm()const{
-        return _pathAlgorithm;
+    const _stepPathAlgorithm* getPathAlgorithm()const{
+        return pathAlgorithm;
     }
     
     unsigned getCurrentStep() const {
@@ -139,7 +139,8 @@ public:
     
     friend std::ostream& operator<<(std::ostream& os, const _token& obj) {
         os << "SiteMap:" << obj.siteMap << std::endl;
-        os << "IntegerMap:" << obj.integerMap << std::endl;
+//        os << "IntegerMap:" << obj.integerMap << std::endl;
+        os << "current step: " << obj.currentStep << std::endl;
         for(auto pair: obj.reportTasks){
             
             os << pair.second << std::endl;
@@ -154,15 +155,15 @@ public:
 private:
     
     std::vector<_agent> agents;
-    std::map<unsigned, Task> pendingTasks, openTasks;
+    std::map<unsigned, _task> pendingTasks, openTasks;
     std::map<unsigned, ReportTask> reportTasks;
     const SiteMap& siteMap;
-    IntegerMap integerMap;
+    _stepMap stepMap;
     const std::vector<_site>& endpoints;
     unsigned currentStep = 0;
     
-    DistanceAlgorithm* _distanceAlgorithm = new ManhattanAlgorithm();
-    PathAlgorithm* _pathAlgorithm = new AstarAlgorithm();
+    _distanceAlgorithm* distanceAlgorithm = new ManhattanAlgorithm();
+    _stepPathAlgorithm* pathAlgorithm = new _stepAstarAlgorithm();
     
     
     

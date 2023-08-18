@@ -9,7 +9,8 @@
 #define _SITE_H
 
 #include <cmath>
-
+#include <iostream>
+#include <functional>
 
 class _site{
     
@@ -49,11 +50,26 @@ public:
         return this->row == other.row && this->colunm == other.colunm;
     }
     
-    virtual bool isNeighboorTo(const _site& other)const{
-        return (this->row == other.row && std::abs((int)this->colunm - (int)other.colunm) == 1) || 
-                (this->colunm == other.colunm && std::abs((int)this->row - (int)other.row) == 1);
+    virtual void listNeighbors(const std::function<bool(const _site& site)> function) const {
+                        
+        int neighbor_row = (int)this->row - 1;
+        if(neighbor_row > -1){
+            if(function(_site(neighbor_row, this->colunm))) return;
+        }
+        if(function(_site(this->row + 1, this->colunm))) return;
+
+
+        int neighbor_colunm = (int)this->colunm - 1;
+        if(neighbor_colunm > -1 ){
+            if(function(_site(this->row, neighbor_colunm))) return;
+        }
+        if(function(_site(this->row, this->colunm + 1))) return;
+
+        function(_site(this->row, this->colunm));         
+        
+        
     }
-    
+        
 protected:
     unsigned row, colunm;
 };

@@ -10,7 +10,7 @@
 
 #include "Identifiable.h"
 #include "_stepPath.h"
-#include "Task.h"
+#include "_task.h"
 #include "_agent_state.h"
 #include "Drawable.h"
 
@@ -21,7 +21,7 @@ class _agent : public Identifiable<int>, public Drawable{
 public:
         
     _agent(int _id, const _stepSite& currentSite);
-
+    
     _agent(const _agent& other);
 
     virtual ~_agent();
@@ -30,18 +30,15 @@ public:
         return _id;
     }
     
-    void setState(_agent_state* _state) {
+    void changeState(_agent_state* _state) {
         if(this->_state != nullptr) delete this->_state;
         this->_state = _state;
     }
     
-    const Task* currentTask() const {
-        return _currentTask;
-    }
+    
     
     void undesignTask(){
-        if(_currentTask != nullptr) delete _currentTask;
-        _currentTask = nullptr;
+        _currentTaskIndex = -1;
     }
  
     const _stepSite& currentSite()const{
@@ -62,21 +59,26 @@ public:
     
     const bool isResting()const{
         
-        return _currentTask == nullptr;
+        return _currentTaskIndex == -1;
         
+    }
+    
+    void designTask(const _task& task){
+        tasks.push_back(task);
+        _currentTaskIndex = tasks.size() - 1;
     }
     
     const bool isDesigned()const{
         
-        return _currentTask != nullptr;
+        return _currentTaskIndex > -1;
         
     }
     
     const bool isDelivering()const{
         
-        if(_currentTask != nullptr){
+        if(_currentTaskIndex != -1){
             
-            return isParked() && _currentTask->getDelivery().match(_currentPath.currentSite());
+            return isParked() && currentTask()->getDelivery().match(_currentPath.currentSite());
             
         }
         
@@ -86,9 +88,9 @@ public:
     
     const bool isPickupping()const{
         
-        if(_currentTask != nullptr){
+        if(_currentTaskIndex > -1){
             
-            return _currentTask->getPickup().match(_currentPath.currentSite());
+            return currentTask()->getPickup().match(_currentPath.currentSite());
             
         }
         
@@ -106,7 +108,7 @@ public:
 
             try {
                 std::ostringstream stream;
-                stream << "invalid path size";
+                stream << "invalid path size - agent: " << std::endl << *this;
                 MAPD_EXCEPTION(stream.str());
             } catch (std::exception& e) {
                 std::cout << e.what() << std::endl;
@@ -121,27 +123,61 @@ public:
     
     virtual void receive(_token& token);
     
-    virtual _site* selectNewEndpoint(_token& token);
+    virtual bool selectNewEndpoint(_token& token, _site& selectNewSite);
           
-    virtual bool selectNewTask(_token& token);
+    virtual bool selectNewTask(_token& token, _task& selectedTask);
     
-    virtual bool isConflictingRestEndpoint(_token& token, Task* const task) const;
+    virtual bool isConflictingRestEndpoint(_token& token, _task& conflitTask) const;
     
-    virtual void updateRestEndpointPath(_token& token, const Task& conflitTask);
+    virtual void updateRestEndpointPath(_token& token, const _task& conflitTask);
     
-    virtual void updateTaskPath(_token& token);
+    virtual void updateTaskPath(_token& token, const _task& task);
     
     virtual void updateTrivialPath(_token& token);
     
-    virtual void draw(const Render& render) const{
-        this->_state->onDraw(render);
+    virtual void draw(const Render& render) const;    
+    
+    friend std::ostream& operator<<(std::ostream& os, const _agent& obj) {
+        os <<"agent id: "<< obj._id << std::endl;
+        os <<"agent path: "<< obj._currentPath << std::endl;
+        if(obj._currentTaskIndex > -1)
+            os <<"agent current task: "<< obj.getCurrentTask() << std::endl;
+        os <<"agent state: "<< obj._state->stateName() << std::endl;
+        return os;
     }
+    
+    _task getCurrentTask() const{
+        
+        if(_currentTaskIndex > -1)
+            return tasks.at(_currentTaskIndex);
+        
+        try {
+            std::ostringstream stream;
+            stream << "no current task" << std::endl;
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+        return _task();
+        
+    }
+        
         
 protected:
     const int _id;
     _agent_state* _state;
     _stepPath _currentPath;    
-    Task* _currentTask = nullptr;
+    std::vector<_task> tasks;
+    int _currentTaskIndex = -1;
+    
+    const _task* const currentTask() const {
+        
+        if(_currentTaskIndex > -1)
+            return &tasks.at(_currentTaskIndex);
+        return nullptr;
+    }
 };
 
 #endif /* _AGENT_H */

@@ -51,7 +51,7 @@ public:
         
         
         Render render(
-                    std::pair<unsigned, unsigned>(32,32),
+                    std::pair<unsigned, unsigned>(64,64),
                     std::pair<unsigned, unsigned>(
                         instanceMAPD->getInstanceMap()->getColumn_size(),
                         instanceMAPD->getInstanceMap()->getRow_size()),
@@ -61,7 +61,7 @@ public:
                 std::to_string(__token.getCurrentStep()),
                 sf::Vector2f(
                     instanceMAPD->getInstanceMap()->getColumn_size()/2 * render.GetCell().first, 
-                    instanceMAPD->getInstanceMap()->getRow_size()/2 * render.GetCell().second),
+                    0),
                 sf::Vector2f(
                     render.GetCell().first, 
                     0),
@@ -73,9 +73,10 @@ public:
         
         _system __system(*instanceMAPD);    
         
-        render.loop(1000, [&__system, &__token, &textStep](){
+        render.loop(800, [&__system, &__token, &textStep](){
             __system.step(__token);
-            textStep.setDrawText(std::to_string(__token.getCurrentStep()));            
+            textStep.setDrawText(std::to_string(__token.getCurrentStep())); 
+//            std::cout << __token << std::endl;
         });
         
         std::cout << __token << std::endl;

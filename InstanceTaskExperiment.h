@@ -54,7 +54,7 @@ public:
             
         }
         
-        this->instanceTask->getTaskMap().listTasks([map](unsigned step, const Task& task){
+        this->instanceTask->getTaskMap().listTasks([map](unsigned step, const _task& task){
        
             map->setTaskEndpoint(task.getPickup().GetRow(), task.getPickup().GetColunm());
             map->setTaskEndpoint(task.getDelivery().GetRow(), task.getDelivery().GetColunm());

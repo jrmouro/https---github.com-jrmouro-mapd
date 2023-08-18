@@ -1,32 +1,32 @@
 /* 
- * File:   Task.h
+ * File:   _task.h
  * Author: ronaldo
  *
  * Created on 26 de julho de 2023, 06:58
  */
 
-#ifndef TASK_H
-#define TASK_H
+#ifndef _TASK_H
+#define _TASK_H
 
 #include <iostream>
 #include "Identifiable.h"
 #include "_site.h"
 
-class Task : public Identifiable<int>{
+class _task : public Identifiable<int>{
     
 public:
     
-    Task() : _id(0) {}
+    _task() : _id(0), pickup(), delivery() {}
             
-    Task(int id, _site pickup, _site delivery) :
+    _task(int id, _site pickup, _site delivery) :
     _id(id), pickup(pickup), delivery(delivery) {}
 
-    Task(const Task& other) :
+    _task(const _task& other) :
             _id(other._id),
             pickup(other.pickup), 
             delivery(other.delivery) { }
     
-    Task& operator=(const Task& right) {
+    _task& operator=(const _task& right) {
         if (this == &right)
             return *this;
         this->pickup = right.pickup;
@@ -36,7 +36,7 @@ public:
     }
 
 
-    virtual ~Task(){}
+    virtual ~_task(){}
     
     virtual int id() const{
         return this->_id;
@@ -50,9 +50,13 @@ public:
         return pickup;
     }
     
-    friend std::ostream& operator<<(std::ostream& os, const Task& obj) {
+    friend std::ostream& operator<<(std::ostream& os, const _task& obj) {
         os << obj._id << "["<< obj.pickup << " -> " << obj.delivery << "]";
         return os;
+    }
+    
+    bool isInnocuous()const{
+        return pickup.match(delivery);
     }
     
 private:
@@ -62,5 +66,5 @@ private:
 
 };
 
-#endif /* TASK_H */
+#endif /* _TASK_H */
 

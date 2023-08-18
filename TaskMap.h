@@ -12,7 +12,7 @@
 #include <vector>
 #include <sstream>
 #include <functional>
-#include "Task.h"
+#include "_task.h"
 
 class TaskMap {
 public:
@@ -23,9 +23,9 @@ public:
 
     virtual ~TaskMap() {}
     
-    void set(unsigned step, const Task& task) {
+    void set(unsigned step, const _task& task) {
         
-        std::map<unsigned, std::vector<Task>>::iterator it;
+        std::map<unsigned, std::vector<_task>>::iterator it;
         it = this->tasks.find(step);
 
         if (it != this->tasks.end()) {
@@ -33,7 +33,7 @@ public:
             (*it).second.push_back(task);
 
         } else {
-            auto it2 = this->tasks.insert(std::pair<unsigned, std::vector<Task>>(step, std::vector<Task>()));
+            auto it2 = this->tasks.insert(std::pair<unsigned, std::vector<_task>>(step, std::vector<_task>()));
             it2.first->second.push_back(task);
         }
 
@@ -52,12 +52,12 @@ public:
 //        return std::vector<Task>(); 
 //    }
             
-    void listTasks(std::function<bool(unsigned, const Task&)> func) const{
+    void listTasks(std::function<bool(unsigned, const _task&)> func) const{
         
-        std::map<unsigned, std::vector<Task>>::const_iterator it;
+        std::map<unsigned, std::vector<_task>>::const_iterator it;
         for (it = this->tasks.begin(); it != this->tasks.end(); ++it) {
                       
-            std::vector<Task>::const_iterator it2;
+            std::vector<_task>::const_iterator it2;
             for (it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
                                 
                 if(func(it->first, *it2)) return;
@@ -69,14 +69,14 @@ public:
 
     }
     
-    void listTasksByStep(unsigned step, std::function<bool(const Task&)> func) const{
+    void listTasksByStep(unsigned step, std::function<bool(const _task&)> func) const{
 
-        std::map<unsigned, std::vector<Task>>::const_iterator it;
+        std::map<unsigned, std::vector<_task>>::const_iterator it;
         it = this->tasks.find(step);
 
         if (it != this->tasks.end()) {
             
-            std::vector<Task>::const_iterator it2;
+            std::vector<_task>::const_iterator it2;
             for (it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
                                 
                 if(func(*it2)) return;
@@ -100,7 +100,7 @@ public:
 //            stream << line;
             int t, s, g, ts, tg;
             std::stringstream(line) >> t >> s >> g >> ts >> tg;            
-            this->set(t, Task(taskId++, oracle(s), oracle(g)));           
+            this->set(t, _task(taskId++, oracle(s), oracle(g)));           
 
         }
 
@@ -108,12 +108,12 @@ public:
     
     friend std::ostream& operator<<(std::ostream& os, const TaskMap& obj) {
         
-        std::map<unsigned, std::vector<Task>>::const_iterator it;
+        std::map<unsigned, std::vector<_task>>::const_iterator it;
         for (it = obj.tasks.begin(); it != obj.tasks.end(); ++it) {
             
             os << it->first << ":" << std::endl;
           
-            std::vector<Task>::const_iterator it2;
+            std::vector<_task>::const_iterator it2;
             for (it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
                 
                 os << "\t "<< *it2 << std::endl;
@@ -129,7 +129,7 @@ public:
 
 private:
 
-    std::map<unsigned, std::vector<Task>> tasks;
+    std::map<unsigned, std::vector<_task>> tasks;
 
 };
 

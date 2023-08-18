@@ -1,47 +1,47 @@
 /* 
- * File:   _stepPath.h
+ * File:   _path.h
  * Author: ronaldo
  *
  * Created on 11 de agosto de 2023, 13:58
  */
 
-#ifndef _STEPPATH_H
-#define _STEPPATH_H
+#ifndef _PATH_H
+#define _PATH_H
 
 #include <vector>
 #include <functional>
-#include "_stepSite.h"
+#include "_site.h"
 #include "MapdException.h"
 
-class _stepPath{
+class _path{
 public:
     
-    _stepPath() {}
+    _path() {}
     
-    _stepPath(const _stepSite& site) {
+    _path(const _site& site) {
         sites.push_back(site);
     }
     
-    _stepPath(const _stepPath& orig) : sites(orig.sites) {}
+    _path(const _path& orig) : sites(orig.sites) {}
     
-    virtual ~_stepPath() {}
+    virtual ~_path() {}
 
-    void add(const _stepSite& site) {
+    void add(const _site& site) {
 
         this->sites.push_back(site);
 
     }
     
-    void progress(const _stepSite& site){       
+    void progress(const _site& site){       
         
-        std::vector<_stepSite>::iterator it = this->sites.begin();
+        std::vector<_site>::iterator it = this->sites.begin();
         this->sites.insert(it, site);       
     
     }
     
-    void progress(const _stepPath& path){       
+    void progress(const _path& path){       
         
-        path.rlist([this](const _stepSite& site){
+        path.rlist([this](const _site& site){
             
             this->progress(site);
             
@@ -51,7 +51,7 @@ public:
     
     }
         
-    const _stepSite& goalSite()const{
+    const _site& goalSite()const{
         
         if(!this->sites.empty()){   
             
@@ -71,7 +71,7 @@ public:
         }     
     }
     
-    const _stepSite& currentSite() const{
+    const _site& currentSite() const{
         
         if(!this->sites.empty()){   
             
@@ -91,10 +91,10 @@ public:
         }     
     }
     
-    _stepSite pop(){
+    _site pop(){
         
         if(this->sites.size() > 0){     
-            _stepSite site = this->sites.back();
+            _site site = this->sites.back();
             this->sites.pop_back();
             return site;
         } else {
@@ -117,8 +117,8 @@ public:
         
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const _stepPath& obj) {
-        for (std::vector<_stepSite>::const_reverse_iterator it = obj.sites.rbegin(); it != obj.sites.rend(); ++it)
+    friend std::ostream& operator<<(std::ostream& os, const _path& obj) {
+        for (std::vector<_site>::const_reverse_iterator it = obj.sites.rbegin(); it != obj.sites.rend(); ++it)
             os << *it << std::endl;
         return os;
     }
@@ -131,9 +131,9 @@ public:
         return this->sites.empty();
     }
         
-    void list(const std::function<bool(const _stepSite&)>& function) const {
+    void list(const std::function<bool(const _site&)>& function) const {
         
-        for(std::vector<_stepSite>::const_iterator it = sites.cbegin(); it != sites.cend(); it++){
+        for(std::vector<_site>::const_iterator it = sites.cbegin(); it != sites.cend(); it++){
             
             if(function(*it)) return;
             
@@ -141,9 +141,9 @@ public:
         
     }
     
-    void rlist(const std::function<bool(const _stepSite&)>& function) const {
+    void rlist(const std::function<bool(const _site&)>& function) const {
         
-        for(std::vector<_stepSite>::const_reverse_iterator it = sites.crbegin(); it != sites.crend(); it++){
+        for(std::vector<_site>::const_reverse_iterator it = sites.crbegin(); it != sites.crend(); it++){
             
             if(function(*it)) return;
             
@@ -151,9 +151,9 @@ public:
         
     }
     
-    void moveList(const std::function<bool(const _stepSite&, const _stepSite&)>& function) const {
+    void moveList(const std::function<bool(const _site&, const _site&)>& function) const {
         
-        for(std::vector<_stepSite>::const_reverse_iterator it = sites.crbegin(); it != sites.crend() - 1; it++){
+        for(std::vector<_site>::const_reverse_iterator it = sites.crbegin(); it != sites.crend() - 1; it++){
             
             if(function(*it, *(it + 1))) return;
             
@@ -164,9 +164,9 @@ public:
         
 private:
         
-    std::vector<_stepSite> sites;
+    std::vector<_site> sites;
     
 };
 
-#endif /* _STEPPATH_H */
+#endif /* _PATH_H */
 

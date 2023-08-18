@@ -8,9 +8,9 @@
 #ifndef MANHATTANALGORITHM_H
 #define MANHATTANALGORITHM_H
 
-#include "DistanceAlgorithm.h"
+#include "_distanceAlgorithm.h"
 
-class ManhattanAlgorithm : public DistanceAlgorithm{
+class ManhattanAlgorithm : public _distanceAlgorithm{
 public:
     virtual unsigned solve(const _site& start, const _site& goal) const{
         return std::abs((int)start.GetRow() - (int)goal.GetRow()) + 

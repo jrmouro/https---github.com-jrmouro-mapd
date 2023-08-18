@@ -8,7 +8,7 @@
 #ifndef _AGENT_STATE_H
 #define _AGENT_STATE_H
 
-#include "Task.h"
+#include "_task.h"
 
 class _token;
 class Render;
@@ -25,8 +25,9 @@ public:
         discharged
     };
         
-    _agent_state(_agent* agent) : agent(agent) {}    
-    _agent_state(const _agent_state& other) : agent(other.agent) {}    
+    _agent_state(){}    
+    _agent_state(const _agent_state& other) {}   
+    
     virtual ~_agent_state(){} 
     
     virtual bool isFree()const{
@@ -46,14 +47,14 @@ public:
     }
     
     virtual AgentStateId stateId()const = 0;
+    virtual std::string stateName()const = 0;
       
-    virtual _agent_state* builder(AgentStateId stateId, _agent* agent) const;
-    virtual void onUpdatePath(_token& token) const;
-    virtual void onMoveUpdate(_token& token) const;
-    virtual void onDraw(const Render& render) const;
+    virtual _agent_state* builder() const = 0;
+    
+    virtual void onUpdatePath(_token& token,  _agent* agent) const;
+    virtual void onMoveUpdate(_token& token,  _agent* agent) const;
+    virtual void onDraw(const Render& render, const _agent* const agent) const;
         
-protected:
-    _agent* agent;
 };
 
 #endif /* _AGENT_STATE_H */

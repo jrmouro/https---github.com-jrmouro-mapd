@@ -35,7 +35,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/Agent.o \
 	${OBJECTDIR}/Circle.o \
 	${OBJECTDIR}/Rectangle.o \
 	${OBJECTDIR}/Render.o \
@@ -43,7 +42,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/Site.o \
 	${OBJECTDIR}/SiteMap.o \
 	${OBJECTDIR}/Text.o \
-	${OBJECTDIR}/Token.o \
 	${OBJECTDIR}/_agent.o \
 	${OBJECTDIR}/_agent_free.o \
 	${OBJECTDIR}/_agent_occupied.o \
@@ -56,11 +54,13 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 
 # Test Files
 TESTFILES= \
-	${TESTDIR}/TestFiles/f1
+	${TESTDIR}/TestFiles/f1 \
+	${TESTDIR}/TestFiles/f2
 
 # Test Object Files
 TESTOBJECTFILES= \
-	${TESTDIR}/tests/newsimpletest.o
+	${TESTDIR}/tests/newsimpletest.o \
+	${TESTDIR}/tests/newsimpletest1.o
 
 # C Compiler Flags
 CFLAGS=
@@ -85,11 +85,6 @@ LDLIBSOPTIONS=`pkg-config --libs sfml-all`
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapd: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapd ${OBJECTFILES} ${LDLIBSOPTIONS}
-
-${OBJECTDIR}/Agent.o: Agent.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Agent.o Agent.cpp
 
 ${OBJECTDIR}/Circle.o: Circle.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -125,11 +120,6 @@ ${OBJECTDIR}/Text.o: Text.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Text.o Text.cpp
-
-${OBJECTDIR}/Token.o: Token.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Token.o Token.cpp
 
 ${OBJECTDIR}/_agent.o: _agent.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -172,6 +162,10 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/newsimpletest.o ${OBJECTFILES:%.o=%_no
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc} -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS}   
 
+${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/newsimpletest1.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc} -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS}   
+
 
 ${TESTDIR}/tests/newsimpletest.o: tests/newsimpletest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
@@ -179,18 +173,11 @@ ${TESTDIR}/tests/newsimpletest.o: tests/newsimpletest.cpp
 	$(COMPILE.cc) -g -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest.o tests/newsimpletest.cpp
 
 
-${OBJECTDIR}/Agent_nomain.o: ${OBJECTDIR}/Agent.o Agent.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/Agent.o`; \
-	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
-	then  \
-	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Agent_nomain.o Agent.cpp;\
-	else  \
-	    ${CP} ${OBJECTDIR}/Agent.o ${OBJECTDIR}/Agent_nomain.o;\
-	fi
+${TESTDIR}/tests/newsimpletest1.o: tests/newsimpletest1.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest1.o tests/newsimpletest1.cpp
+
 
 ${OBJECTDIR}/Circle_nomain.o: ${OBJECTDIR}/Circle.o Circle.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -283,19 +270,6 @@ ${OBJECTDIR}/Text_nomain.o: ${OBJECTDIR}/Text.o Text.cpp
 	    ${CP} ${OBJECTDIR}/Text.o ${OBJECTDIR}/Text_nomain.o;\
 	fi
 
-${OBJECTDIR}/Token_nomain.o: ${OBJECTDIR}/Token.o Token.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/Token.o`; \
-	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
-	then  \
-	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Token_nomain.o Token.cpp;\
-	else  \
-	    ${CP} ${OBJECTDIR}/Token.o ${OBJECTDIR}/Token_nomain.o;\
-	fi
-
 ${OBJECTDIR}/_agent_nomain.o: ${OBJECTDIR}/_agent.o _agent.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent.o`; \
@@ -379,6 +353,7 @@ ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp
 	@if [ "${TEST}" = "" ]; \
 	then  \
 	    ${TESTDIR}/TestFiles/f1 || true; \
+	    ${TESTDIR}/TestFiles/f2 || true; \
 	else  \
 	    ./${TEST} || true; \
 	fi

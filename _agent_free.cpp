@@ -8,73 +8,89 @@
 #include "_agent_free.h"
 #include "_agent.h"
 #include "_agent_occupied.h"
+#include "_token.h"
 #include "Render.h"
 #include "Circle.h"
 #include "Text.h"
 
-void _agent_free::onUpdatePath(_token& token)const {
+void _agent_free::onUpdatePath(_token& token,  _agent* agent) const {
+    
+    if (agent->isParked()) { // request token condition
+        
+        if (!agent->isResting()){ //retirar depois
+            
+            try {
+                std::ostringstream stream;
+                stream << "no resting";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }                                  
+            
+        } 
+        
+        _task newTask;
+        
+        if (agent->selectNewTask(token, newTask)) {
+            
+            agent->designTask(newTask);
 
-    if (this->agent->isResting()) {
+            agent->updateTaskPath(token, newTask);
+            
+            if (agent->isParked()) {
+                
+                token.removeOpenTask(newTask);
 
-        if (this->agent->selectNewTask(token)) {
+                agent->undesignTask();
+                
+                agent->updateTrivialPath(token); 
+                
+            } else if (agent->isPickupping()) { // caso do agente já se encontrar em pickup site
 
-            this->agent->updateTaskPath(token);
-
-            if (this->agent->isPickupping()) {
-
-                this->agent->setState(new _agent_occupied(this->agent));
+                agent->changeState(new _agent_occupied());
+                
+                return;
 
             }
+            
+            std::cout << "aqui" << std::endl;
 
             return;
 
         }
+        
+        _task conflit;
 
-        Task conflit;
-
-        if (this->agent->isConflictingRestEndpoint(token, &conflit)) {
-
-            this->agent->updateRestEndpointPath(token, conflit);
-
-            return;
-
-        }
-
+//        if (agent->isConflictingRestEndpoint(token, &conflit)) {
+//
+//            agent->updateRestEndpointPath(token, conflit);
+//
+//            return;
+//
+//        }
+        
+        agent->updateTrivialPath(token);       
+        
     }
 
-    if (this->agent->isParked()) {
+}
 
-        Task conflit;
+void _agent_free::onMoveUpdate(_token& token,  _agent* agent)const {
 
-        if (this->agent->isConflictingRestEndpoint(token, &conflit)) {
+    if (agent->isPickupping()) {
 
-            this->agent->updateRestEndpointPath(token, conflit);
-
-            return;
-
-        }
-
-        this->agent->updateTrivialPath(token);
+        agent->changeState(new _agent_occupied());
 
     }
 
 }
 
-void _agent_free::onMoveUpdate(_token& token)const {
-
-    if (this->agent->isPickupping()) {
-
-        this->agent->setState(new _agent_occupied(this->agent));
-
-    }
-
-}
-
-void _agent_free::onDraw(const Render& render) const {
+void _agent_free::onDraw(const Render& render, const _agent* const agent) const {
 
     sf::Vector2f position(
-            this->agent->currentSite().GetColunm() * render.GetCell().first,
-            this->agent->currentSite().GetRow() * render.GetCell().second);
+            agent->currentSite().GetColunm() * render.GetCell().first,
+            agent->currentSite().GetRow() * render.GetCell().second);
 
     Circle background(
             position,
@@ -82,7 +98,7 @@ void _agent_free::onDraw(const Render& render) const {
             sf::Color::Black);
 
     Text textAgentId(
-            std::to_string(this->agent->id()),
+            std::to_string(agent->id()),
             position,
             sf::Vector2f(
             render.GetCell().first / 2,
@@ -96,14 +112,14 @@ void _agent_free::onDraw(const Render& render) const {
 
     //    _agent_state::onDraw(render);
 
-    if (this->agent->isDesigned()) {
+    if (agent->isDesigned()) {
 
         sf::Vector2f position(
-                this->agent->currentSite().GetColunm() * render.GetCell().first + render.GetCell().first / 2,
-                this->agent->currentSite().GetRow() * render.GetCell().second + render.GetCell().first / 2);
+                agent->currentSite().GetColunm() * render.GetCell().first + render.GetCell().first / 2,
+                agent->currentSite().GetRow() * render.GetCell().second + render.GetCell().first / 2);
 
         Text textTaskId(
-                std::to_string(this->agent->currentTask()->id()),
+                std::to_string(agent->getCurrentTask().id()),
                 position,
                 sf::Vector2f(render.GetCell().first / 2, 0),
                 sf::Color::Cyan);

@@ -9,18 +9,19 @@
 #include "_agent_state.h"
 #include "_token.h"
 #include "_agent_free.h"
+#include "Render.h"
+#include "Circle.h"
+#include "Text.h"
 
 _agent::_agent(int _id, const _stepSite& currentSite) : 
-_id(_id), _currentPath(currentSite) { 
+_id(_id), _currentPath(currentSite), _state(new _agent_free()) { }
 
-    this->_state = new _agent_free(this);
-
-}
-
-_agent::_agent(const _agent& other) :  _id(other._id), _currentPath(other._currentPath) {
-
-    this->_state = other._state->builder(other._state->stateId(), this);
-}
+_agent::_agent(const _agent& other)  :
+    _id(other._id), 
+    _state(other._state->builder()), 
+    _currentPath(other._currentPath), 
+    tasks(other.tasks), 
+    _currentTaskIndex(other._currentTaskIndex) { }
 
 
 _agent::~_agent(){ 
@@ -30,79 +31,69 @@ _agent::~_agent(){
 
 void _agent::receive(_token& token) {
  
-    this->_state->onUpdatePath(token);
+//    this->_state->onUpdatePath(token, this);
+    
+//    std::cout << "aqui";
+    
+    _task task;
+    
+    if (this->isParked()) { // request token condition
+        
+        if(this->isPickupping()){
+            
+        }
+        
+        if(this->isDesigned()){
+            
+            token.removeOpenTask(this->getCurrentTask());
+
+            this->undesignTask();
+        }
+                   
+        if (this->selectNewTask(token, task)) {
+            
+            this->designTask(task);
+            
+            token.removePendingTask(task);
+            token.addOpenTask(task);
+
+            this->updateTaskPath(token, task);
+            
+            if (this->isParked()) {
+                
+                token.removeOpenTask(task);
+
+                this->undesignTask();
+                
+                this->updateTrivialPath(token); 
+                
+            } 
+            
+            return;
+
+        } else if (this->isConflictingRestEndpoint(token, task)) {
+
+            this->updateRestEndpointPath(token, task);
+
+            return;
+
+        }
+        
+        this->updateTrivialPath(token);       
+        
+    }
     
 }
 
 void _agent::move(_token& token) {
-
-
-//        _currentPath.pop();
-    this->stepping();
-        
-    this->_state->onMoveUpdate(token);
-
+    
     
 
+    this->stepping();
+        
+//    this->_state->onMoveUpdate(token, this);
+
 }
-
-
-//void _agent::updatePath(Token& token){
-//
-//    if (state == free) {
-//
-//        if (this->isResting()) {
-//
-//            if (selectNewTask(token)) {
-//
-//                updateTaskPath(token);
-//                state == occupied;
-//
-//            } else if (isParked()) {
-//
-//                if (isConflictingRestEndpoint(token)) {
-//
-//                    updateRestEndpointPath(token);
-//
-//                } else {
-//
-//                    updateTrivialPath(token);
-//
-//                }
-//
-//            }
-//
-//        }
-//        
-//    }
-//
-//}
-
-
-//void _agent::moveUpdate(Token& token) {
-//    
-//    if (state == free) {
-//
-//        if(this->isPickupping()){
-//            
-//            this->state = occupied;
-//            
-//        }        
-//
-//    } else if (state == occupied) {
-//
-//        if(this->isDelivering()){
-//            
-//            token.removeOpenTask(*currentTask);
-//            delete currentTask;
-//            currentTask = nullptr;
-//            this->state = free;
-//            
-//        }
-//
-//    }    
-//
-//}
 
 void _agent::updateTrivialPath(_token& token) {
 
@@ -111,7 +102,7 @@ void _agent::updateTrivialPath(_token& token) {
         _stepSite site = _currentPath.currentSite();
         site.SetStep(site.GetStep() + 1);
         _currentPath.progress(site);
-        token.getIntegerMap().setMoving(_currentPath, this->id());
+        token.getStepMap().setMoving(_currentPath, this->id());
 
     } else {
 
@@ -128,74 +119,70 @@ void _agent::updateTrivialPath(_token& token) {
 
 }
 
-_site* _agent::selectNewEndpoint(_token& token) {
+bool _agent::selectNewEndpoint(_token& token, _site& selectNewSite) {
 
     unsigned min_distance = 0xffffffff;
-    _site* endpoint = nullptr;
 
-    token.listEndpoints([&token, &min_distance, &endpoint, this](const _site & site) {
+    token.listEndpoints([&token, &min_distance, &selectNewSite, this](const _site &endpoint) {
+        
+        bool flag = true;
 
-        token.listTasks([&token, &min_distance, &endpoint, site, this](const Task & task) {
+        token.listTasks([endpoint, &flag](const _task & task) {
 
-            if (!task.getDelivery().match(site)) {
+            if (task.getDelivery().match(endpoint)) {
 
-                token.listAgents([&token, &min_distance, &endpoint, site, task, this](_agent & agent) {
-
-                    if (this->id() != agent.id()) { //other agents
-
-                        if (!agent.goalSite().match(site)) {
-
-                            unsigned distance = token.distanceAlgorithm()->solve(this->currentSite(), site);
-
-                            if (distance < min_distance) {
-                                min_distance = distance;
-                                if (endpoint != nullptr) delete endpoint;
-                                endpoint = new _site(site);
-                            }
-
-                        }
-
-                    } 
-                    
-//                    else {
-//
-//                        unsigned distance = token.distanceAlgorithm()->solve(this->currentSite(), site);
-//
-//                        if (distance < min_distance) {
-//                            min_distance = distance;
-//                            if (endpoint != nullptr) delete endpoint;
-//                            endpoint = new _site(site);
-//                        }
-//
-//                    }
-
-                    return false;
-
-                });
-
+                flag = false;
+                
+                return true;                
 
             }
 
             return false;
 
         });
+        
+        if(flag){
+        
+            token.listAgents([endpoint, this, &flag](_agent & agent) {
 
+                if (this->id() != agent.id() && agent.goalSite().match(endpoint)) { //other agents
+
+                    flag = false;
+                    
+                    return true;
+
+                } 
+
+                return false;
+
+            });
+                
+        }
+        
+        if(flag){
+            
+            unsigned distance = token.getDistanceAlgorithm()->solve(this->currentSite(), endpoint);
+            if (distance < min_distance) {
+                min_distance = distance;
+                selectNewSite = endpoint;
+            }
+            
+            
+        }
 
         return false;
 
     });
 
-    return endpoint;
+    return min_distance < 0xffffffff;
 
 }
 
-bool _agent::selectNewTask(_token& token) {
-
+bool _agent::selectNewTask(_token& token, _task& selectedTask) {
 
     unsigned min_distance = 0xffffffff;
-    Task selectedTask;
-
-    token.listTasks([&token, &min_distance, &selectedTask, this](const Task & task) {
+    
+    token.listTasks([&token, &min_distance, &selectedTask, this](const _task & task) {
         
         bool flag = true;
         
@@ -219,7 +206,7 @@ bool _agent::selectNewTask(_token& token) {
         
         if(flag){
             
-            unsigned distance = token.distanceAlgorithm()->solve(this->currentSite(), task.getPickup());
+            unsigned distance = token.getDistanceAlgorithm()->solve(this->currentSite(), task.getPickup());
 
             if (distance < min_distance) {
                 min_distance = distance;
@@ -228,59 +215,25 @@ bool _agent::selectNewTask(_token& token) {
             
         }
         
-
-//        token.listAgents([&token, &min_distance, &selectedTask, task, this](const _agent & agent) {
-//
-//            if (this->id() != agent.id()) { //other agents
-//
-//                if (!agent.goalSite().match(task.getPickup()) && !agent.goalSite().match(task.getDelivery())) {
-//
-//                    unsigned distance = token.distanceAlgorithm()->solve(this->currentSite(), task.getPickup());
-//
-//                    if (distance < min_distance) {
-//                        min_distance = distance;
-//                        selectedTask = task;
-//                    }
-//
-//                }
-//
-//            }
-//
-//            return false;
-//
-//        });
-
         return false;
 
     });
 
-    if (min_distance < 0xffffffff) {
-
-        if (_currentTask != nullptr) delete _currentTask;
-        _currentTask = new Task(selectedTask);
-
-        token.removePendingTask(selectedTask);
-        token.addOpenTask(selectedTask);
-
-        return true;
-
-    }
-
-    return false;
+    return min_distance < 0xffffffff;
 
 }
 
-bool _agent::isConflictingRestEndpoint(_token& token, Task* const conflitTask) const {
+bool _agent::isConflictingRestEndpoint(_token& token, _task& conflitTask) const {
 
     bool conflit = false;
 
-    token.listTasks([token, &conflit, conflitTask, this](const Task & task) {
+    token.listTasks([token, &conflit, &conflitTask, this](const _task & task) {
 
         if (task.getDelivery().match(this->currentSite())) {
 
             conflit = true;
             
-            *conflitTask = task;
+            conflitTask = task;
 
             return true;
 
@@ -294,23 +247,20 @@ bool _agent::isConflictingRestEndpoint(_token& token, Task* const conflitTask) c
 
 }
 
-void _agent::updateRestEndpointPath(_token& token, const Task& conflitTask) {
+void _agent::updateRestEndpointPath(_token& token, const _task& conflitTask) {
 
-    _site* endpoint = selectNewEndpoint(token);
+    _site endpoint;
 
-    if (endpoint != nullptr) {
+    if (selectNewEndpoint(token, endpoint)) {
 
         _stepPath restPath;
 
-        bool flag = token.pathAlgorithm()->solve(
-                token.getIntegerMap(),
+        bool flag = token.getPathAlgorithm()->solve(
+                token.getStepMap(),
                 this->_currentPath.goalSite(),
-                *endpoint,
+                endpoint,
                 restPath,
                 this->_currentPath.goalSite().GetStep(), this->id());
-
-
-        delete endpoint;
 
         if (flag) {
 
@@ -320,7 +270,7 @@ void _agent::updateRestEndpointPath(_token& token, const Task& conflitTask) {
 
                 token.reportTaskUpdate(conflitTask.id(), this->id(), ReportTask::PathType::rest, restPath);
                 _currentPath.progress(restPath);
-                token.getIntegerMap().setMoving(_currentPath, this->id());
+                token.getStepMap().setMoving(_currentPath, this->id());
 
 
             }
@@ -355,44 +305,44 @@ void _agent::updateRestEndpointPath(_token& token, const Task& conflitTask) {
 }
 
 
-void _agent::updateTaskPath(_token& token) {
+void _agent::updateTaskPath(_token& token, const _task& task) {
 
     _stepPath pickupPath;
-    bool flag = token.pathAlgorithm()->solve(
-            token.getIntegerMap(),
+    bool flag = token.getPathAlgorithm()->solve(
+            token.getStepMap(),
             this->_currentPath.currentSite(),
-            _currentTask->getPickup(),
+            task.getPickup(),
             pickupPath,
             token.getCurrentStep(), this->id());
 
     if (flag) {
 
-        token.reportTaskUpdate(_currentTask->id(), this->id(), ReportTask::PathType::pickup, pickupPath);
+        token.reportTaskUpdate(task.id(), this->id(), ReportTask::PathType::pickup, pickupPath);
         pickupPath.pop();
         _currentPath.progress(pickupPath);
 
         _stepPath deliveryPath;
-        flag = token.pathAlgorithm()->solve(
-                token.getIntegerMap(),
-                _currentTask->getPickup(),
-                _currentTask->getDelivery(),
+        flag = token.getPathAlgorithm()->solve(
+                token.getStepMap(),
+                task.getPickup(),
+                task.getDelivery(),
                 deliveryPath,
                 token.getCurrentStep() + _currentPath.size() - 1, this->id());
 
         if (flag) {
 
-            token.reportTaskUpdate(_currentTask->id(), this->id(), ReportTask::PathType::delivery, deliveryPath);
+            token.reportTaskUpdate(task.id(), this->id(), ReportTask::PathType::delivery, deliveryPath);
 
             deliveryPath.pop();
             _currentPath.progress(deliveryPath);
-            token.getIntegerMap().setMoving(_currentPath, this->id());
+            token.getStepMap().setMoving(_currentPath, this->id());
 
 
         } else {
 
             try {
                 std::ostringstream stream;
-                stream << "unsolved task delivery endpoint path: " << *_currentTask;
+                stream << "unsolved task delivery endpoint path: " << task;
                 MAPD_EXCEPTION(stream.str());
             } catch (std::exception& e) {
                 std::cout << e.what() << std::endl;
@@ -405,7 +355,7 @@ void _agent::updateTaskPath(_token& token) {
 
         try {
             std::ostringstream stream;
-            stream << "unsolved task pickup endpoint path: " << *_currentTask;
+            stream << "unsolved task pickup endpoint path: " << task;
             MAPD_EXCEPTION(stream.str());
         } catch (std::exception& e) {
             std::cout << e.what() << std::endl;
@@ -416,63 +366,46 @@ void _agent::updateTaskPath(_token& token) {
 
 }
 
+void _agent::draw(const Render& render) const{
+    
+//    this->_state->onDraw(render, this);
+    
+    sf::Vector2f position(
+            this->currentSite().GetColunm() * render.GetCell().first,
+            this->currentSite().GetRow() * render.GetCell().second);
 
-//void Agent::draw(const Render& render) const {
-//
-//    sf::Vector2f position(
-//            this->currentSite().GetColunm() * render.GetCell().first,
-//            this->currentSite().GetRow() * render.GetCell().second);
-//
-//    Circle background(
-//            position,
-//            sf::Vector2f(render.GetCell().first / 2, 0),
-//            sf::Color::Black);
-//
-//    Text textAgentId(
-//            std::to_string(this->id()),
-//            position,
-//            sf::Vector2f(
-//            render.GetCell().first / 2,
-//            0),
-//            sf::Color::White);
-//
-//    textAgentId.draw(render);
-//
-//    background.draw(render);
-//    textAgentId.draw(render);
-//
-//    if (this->currentTask != nullptr) {
-//
-//        Text textTaskId(
-//                std::to_string(currentTask->id()),
-//                position + sf::Vector2f(render.GetCell().first / 2, render.GetCell().first / 2),
-//                sf::Vector2f(
-//                render.GetCell().first / 2,
-//                0),
-//                sf::Color::Cyan);
-//
-//        textTaskId.draw(render);
-//
-//        if (this->state == occupied) {
-//
-//            Circle occupied(
-//                    position + sf::Vector2f(render.GetCell().first / 2, 0),
-//                    sf::Vector2f(render.GetCell().first / 4, 0),
-//                    sf::Color::Cyan);
-//
-//            occupied.draw(render);
-//
-//
-//        }
-//
-//    }
-//
-//
-//
-//}
-//
-//
-//
-//
-//
-//
+    Circle background(
+            position,
+            sf::Vector2f(render.GetCell().first / 2, 0),
+            sf::Color(this->id()*100, this->id()*100, this->id()*100));
+
+    Text textAgentId(
+            std::to_string(this->id()),
+            position,
+            sf::Vector2f(
+            render.GetCell().first / 2,
+            0),
+            sf::Color::White);
+
+    background.draw(render);
+    textAgentId.draw(render);
+
+    if (this->isDesigned()) {
+
+        sf::Vector2f position(
+                this->currentSite().GetColunm() * render.GetCell().first + render.GetCell().first / 2,
+                this->currentSite().GetRow() * render.GetCell().second + render.GetCell().first / 2);
+
+        Text textTaskId(
+                std::to_string(this->getCurrentTask().id()),
+                position,
+                sf::Vector2f(render.GetCell().first / 2, 0),
+                sf::Color::Cyan);
+
+        textTaskId.draw(render);
+
+    }
+    
+}
+
+

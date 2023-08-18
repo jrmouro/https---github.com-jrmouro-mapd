@@ -13,19 +13,9 @@
 #include "_agent_free.h"
 #include "_agent_occupied.h"
 
-void _agent_state::onUpdatePath(_token& token) const {}
+void _agent_state::onUpdatePath(_token& token,  _agent* agent) const {}
 
-void _agent_state::onMoveUpdate(_token& token) const {}
+void _agent_state::onMoveUpdate(_token& token,  _agent* agent) const {}
 
-void _agent_state::onDraw(const Render& render) const {}
+void _agent_state::onDraw(const Render& render, const _agent* const agent) const {}
 
-_agent_state* _agent_state::builder(AgentStateId stateId, _agent* agent) const {
-
-    switch (stateId) {
-        case AgentStateId::free: return new _agent_free(agent);
-        case AgentStateId::occupied: return new _agent_occupied(agent);
-    }
-
-    return nullptr;
-
-}

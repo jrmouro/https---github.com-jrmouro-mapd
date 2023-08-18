@@ -13,9 +13,9 @@
 
 class _agent_free: public _agent_state {
 public:
-    _agent_free(_agent* agent) : _agent_state(agent) {}
+    _agent_free() : _agent_state() {}
     
-    _agent_free(const _agent_free& other) : _agent_state(other) { }
+    _agent_free(const _agent_free& other) : _agent_state() { }
     
     virtual ~_agent_free(){}
     
@@ -27,9 +27,18 @@ public:
         return AgentStateId::free;
     }
     
-    virtual void onUpdatePath(_token& token) const;
-    virtual void onMoveUpdate(_token& token) const;
-    virtual void onDraw(const Render& render) const;    
+    virtual std::string stateName()const{
+        return "free";
+    }
+    
+    virtual _agent_state* builder() const{
+        return new _agent_free();
+    }
+    
+    virtual void onUpdatePath(_token& token,  _agent* agent) const;
+    virtual void onMoveUpdate(_token& token,  _agent* agent) const;
+    virtual void onDraw(const Render& render, const _agent* const agent) const; 
+    
 
 };
 
