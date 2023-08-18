@@ -9,6 +9,7 @@
         <itemPath>_astarAlgorithm.h</itemPath>
         <itemPath>_astarDistanceAlgorithm.h</itemPath>
         <itemPath>_distanceAlgorithm.h</itemPath>
+        <itemPath>_endPointsDistanceAlgorithm.h</itemPath>
         <itemPath>_pathAlgorithm.h</itemPath>
         <itemPath>_stepAstarAlgorithm.h</itemPath>
         <itemPath>_stepPathAlgorithm.h</itemPath>
@@ -206,6 +207,8 @@
       </item>
       <item path="_distanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_endPointsDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_path.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_pathAlgorithm.h" ex="false" tool="3" flavor2="0">
@@ -373,6 +376,8 @@
       <item path="_astarDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_distanceAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_endPointsDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_path.h" ex="false" tool="3" flavor2="0">
       </item>

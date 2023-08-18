@@ -161,7 +161,9 @@ bool _agent::selectNewEndpoint(_token& token, _site& selectNewSite) {
         
         if(flag){
             
-            unsigned distance = token.getDistanceAlgorithm()->solve(this->currentSite(), endpoint);
+//            unsigned distance = token.getManhattanAlgorithm().solve(this->currentSite(), endpoint);
+            unsigned distance = token.getEndpointsDistanceAlgorithm().solve(this->currentSite(), endpoint);
+            
             if (distance < min_distance) {
                 min_distance = distance;
                 selectNewSite = endpoint;
@@ -206,7 +208,8 @@ bool _agent::selectNewTask(_token& token, _task& selectedTask) {
         
         if(flag){
             
-            unsigned distance = token.getDistanceAlgorithm()->solve(this->currentSite(), task.getPickup());
+//            unsigned distance = token.getManhattanAlgorithm().solve(this->currentSite(), task.getPickup());
+            unsigned distance = token.getEndpointsDistanceAlgorithm().solve(this->currentSite(), task.getPickup());
 
             if (distance < min_distance) {
                 min_distance = distance;
@@ -255,7 +258,7 @@ void _agent::updateRestEndpointPath(_token& token, const _task& conflitTask) {
 
         _stepPath restPath;
 
-        bool flag = token.getPathAlgorithm()->solve(
+        bool flag = token.getStepAstarAlgorithm().solve(
                 token.getStepMap(),
                 this->_currentPath.goalSite(),
                 endpoint,
@@ -308,7 +311,7 @@ void _agent::updateRestEndpointPath(_token& token, const _task& conflitTask) {
 void _agent::updateTaskPath(_token& token, const _task& task) {
 
     _stepPath pickupPath;
-    bool flag = token.getPathAlgorithm()->solve(
+    bool flag = token.getStepAstarAlgorithm().solve(
             token.getStepMap(),
             this->_currentPath.currentSite(),
             task.getPickup(),
@@ -322,7 +325,7 @@ void _agent::updateTaskPath(_token& token, const _task& task) {
         _currentPath.progress(pickupPath);
 
         _stepPath deliveryPath;
-        flag = token.getPathAlgorithm()->solve(
+        flag = token.getStepAstarAlgorithm().solve(
                 token.getStepMap(),
                 task.getPickup(),
                 task.getDelivery(),

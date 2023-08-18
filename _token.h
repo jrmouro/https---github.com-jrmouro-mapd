@@ -15,6 +15,7 @@
 #include "ReportTask.h"
 #include "MapdException.h"
 #include "ManhattanAlgorithm.h"
+#include "_endPointsDistanceAlgorithm.h"
 #include "_stepAstarAlgorithm.h"
 #include "_agent.h"
 
@@ -28,18 +29,33 @@ public:
         const std::vector<_agent>& agents,
         const std::vector<_site>& endpoints);
             
+//    _token(const _token& other) :
+//        siteMap(other.siteMap), 
+//        stepMap(other.stepMap),
+//        agents(other.agents), 
+//        endpoints(other.endpoints),
+//        pendingTasks(other.pendingTasks),
+//        reportTasks(other.reportTasks){ }
+    
     _token(const _token& other) :
-        siteMap(other.siteMap), 
-        stepMap(other.stepMap),
-        agents(other.agents), 
-        endpoints(other.endpoints),
-        pendingTasks(other.pendingTasks),
-        reportTasks(other.reportTasks){ }
+    agents(other.agents), 
+    pendingTasks(other.pendingTasks), 
+    openTasks(other.openTasks), 
+    reportTasks(other.reportTasks), 
+    siteMap(other.siteMap), 
+    stepMap(other.stepMap), 
+    endpoints(other.endpoints), 
+    currentStep(other.currentStep), 
+    manhattanAlgorithm(other.manhattanAlgorithm), 
+    stepAstarAlgorithm(other.stepAstarAlgorithm), 
+    endpointsDistanceAlgorithm(other.endpointsDistanceAlgorithm) { }
+
     
     virtual ~_token(){
     
-        delete distanceAlgorithm;
-        delete pathAlgorithm;
+//        delete manhattanAlgorithm;
+//        delete pathAlgorithm;
+//        delete endpointsDistanceAlgorithm;
     
     }  
         
@@ -102,12 +118,16 @@ public:
         this->currentStep++;
     }   
     
-    const _distanceAlgorithm* getDistanceAlgorithm()const{
-        return distanceAlgorithm;
+    const _distanceAlgorithm& getManhattanAlgorithm()const{
+        return manhattanAlgorithm;
     }
     
-    const _stepPathAlgorithm* getPathAlgorithm()const{
-        return pathAlgorithm;
+    const _distanceAlgorithm& getEndpointsDistanceAlgorithm()const{
+        return endpointsDistanceAlgorithm;
+    }
+    
+    const _stepPathAlgorithm& getStepAstarAlgorithm()const{
+        return stepAstarAlgorithm;
     }
     
     unsigned getCurrentStep() const {
@@ -139,7 +159,6 @@ public:
     
     friend std::ostream& operator<<(std::ostream& os, const _token& obj) {
         os << "SiteMap:" << obj.siteMap << std::endl;
-//        os << "IntegerMap:" << obj.integerMap << std::endl;
         os << "current step: " << obj.currentStep << std::endl;
         for(auto pair: obj.reportTasks){
             
@@ -162,10 +181,13 @@ private:
     const std::vector<_site>& endpoints;
     unsigned currentStep = 0;
     
-    _distanceAlgorithm* distanceAlgorithm = new ManhattanAlgorithm();
-    _stepPathAlgorithm* pathAlgorithm = new _stepAstarAlgorithm();
+//    _distanceAlgorithm* manhattanAlgorithm = new ManhattanAlgorithm();
+//    _distanceAlgorithm* endpointsDistanceAlgorithm = new _endpointsDistanceAlgorithm();
+//    _stepPathAlgorithm* pathAlgorithm = new _stepAstarAlgorithm();
     
-    
+    ManhattanAlgorithm manhattanAlgorithm;
+    _stepAstarAlgorithm stepAstarAlgorithm;
+    _endpointsDistanceAlgorithm endpointsDistanceAlgorithm;
     
 };
 

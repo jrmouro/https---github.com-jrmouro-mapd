@@ -51,7 +51,7 @@ public:
         
         
         Render render(
-                    std::pair<unsigned, unsigned>(64,64),
+                    std::pair<unsigned, unsigned>(100,100),
                     std::pair<unsigned, unsigned>(
                         instanceMAPD->getInstanceMap()->getColumn_size(),
                         instanceMAPD->getInstanceMap()->getRow_size()),

@@ -22,8 +22,6 @@ public:
     
     _astarDistanceAlgorithm(const _astarDistanceAlgorithm& other) :
     map(other.map) { }
-
-
     
     virtual ~_astarDistanceAlgorithm(){}
     
@@ -45,7 +43,7 @@ public:
                 
                 try {
                     std::ostringstream stream;
-                    stream << "invalid site: " << goal;
+                    stream << "invalid goal site: " << goal;
                     MAPD_EXCEPTION(stream.str());
                 } catch (std::exception& e) {
                     std::cout << e.what() << std::endl;
@@ -58,7 +56,7 @@ public:
             
             try {
                 std::ostringstream stream;
-                stream << "invalid site: " << start;
+                stream << "invalid start site: " << start;
                 MAPD_EXCEPTION(stream.str());
             } catch (std::exception& e) {
                 std::cout << e.what() << std::endl;

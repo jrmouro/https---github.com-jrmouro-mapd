@@ -9,7 +9,8 @@ _token::_token(
             siteMap(siteMap), 
             stepMap(integerMap),
             agents(agents),
-            endpoints(endpoints){}
+            endpoints(endpoints),
+            endpointsDistanceAlgorithm(siteMap, endpoints) {}
 
 void _token::listAgents(const std::function<bool(_agent&)> function){
    
