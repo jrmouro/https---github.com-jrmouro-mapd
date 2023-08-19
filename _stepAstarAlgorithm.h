@@ -24,6 +24,60 @@ public:
     
     _stepAstarAlgorithm(const _stepAstarAlgorithm& other){}
     
+    virtual bool solve(const _stepMap& map, _stepPath& path, const _site& goal, int type) const {
+        
+        bool ret;
+        
+        if(!path.empty()){
+            
+            bool ret = false;  
+            unsigned rowColunm = map.getRow_size()*map.getColumn_size();
+            ClosedStates closedStates(rowColunm, map.getColumn_size() ,map.getStep_size() * rowColunm);
+            PriorityStates priorityStates;
+            std::vector<AstarState*> visitedStates;
+            
+            AstarState* startState = new AstarState(.0f, this->heuristic(path.goalSite(), goal), path.goalSite(), nullptr);
+            
+            AstarState* solved = this->solveAux(startState, map, goal, closedStates, priorityStates, visitedStates, type);
+                  
+            if(solved != nullptr){
+
+                _stepPath auxPath;
+
+                while(solved->getPrevious() != nullptr){            
+                    auxPath.add(solved->getSite());
+                    solved = solved->getPrevious();
+                } 
+                
+                path.progress(auxPath);
+
+                ret = true;
+
+            }
+            
+            for (auto elem : visitedStates) {
+            
+                delete elem;
+
+            }
+            
+        } else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "invalid empty path";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            } 
+             
+        }
+        
+        return ret;
+        
+    }
+    
     virtual bool solve(const _stepMap& map, const _site& start, const _site& goal, _stepPath& path, unsigned step, int type) const{
         
         bool ret = false;  

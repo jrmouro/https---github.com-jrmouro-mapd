@@ -15,9 +15,7 @@ class ReportTask : public _task{
 public:
     
     enum PathType{
-        none,
-        pickup,
-        delivery,
+        task,
         rest
     };
 
@@ -32,8 +30,7 @@ public:
     ReportTask(const ReportTask& other) :
             _task(other), 
             taskArrivalStep(other.taskArrivalStep), 
-            pickupMap(other.pickupMap),
-            deliveryMap(other.deliveryMap),
+            taskMap(other.taskMap),
             restMap(other.restMap){ }
 
         
@@ -45,11 +42,8 @@ public:
         
         switch(typePath){
             
-            case PathType::pickup:
-                pickupMap.insert(std::pair<unsigned, _stepPath>(agentId, path));
-                break;
-            case PathType::delivery:
-                deliveryMap.insert(std::pair<unsigned, _stepPath>(agentId, path));
+            case PathType::task:
+                taskMap.insert(std::pair<unsigned, _stepPath>(agentId, path));
                 break;
             case PathType::rest:
                 restMap.insert(std::pair<unsigned, _stepPath>(agentId, path));
@@ -65,18 +59,12 @@ public:
         os << "Task: " << (_task&)obj << std::endl;
         os << "taskArrivalStep: " << obj.taskArrivalStep << std::endl;
         
-        os << "pickupPaths:" << std::endl;
-        for(auto pair : obj.pickupMap){
+        os << "taskPaths:" << std::endl;
+        for(auto pair : obj.taskMap){
             os << "agentId: " << pair.first << std::endl;
             os << pair.second << std::endl;
         }
-        
-        os << "delivelyPaths:" << std::endl;
-        for(auto pair : obj.deliveryMap){
-            os << "agentId: " << pair.first << std::endl;
-            os << pair.second << std::endl;
-        }
-        
+                
         os << "restPaths:" << std::endl;
         for(auto pair : obj.restMap){
             os << "agentId: " << pair.first << std::endl;
@@ -90,7 +78,7 @@ private:
     
     unsigned taskArrivalStep;
     
-    std::map<unsigned, _stepPath> pickupMap, deliveryMap, restMap;
+    std::map<unsigned, _stepPath> taskMap, restMap;
     
 };
 

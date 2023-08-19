@@ -15,7 +15,7 @@
 #include <functional>
 #include <map>
 
-#include "SiteMap.h"
+#include "_map.h"
 #include "_stepMap.h"
 
 class InstanceMap : public Drawable{
@@ -29,14 +29,14 @@ public:
         unsigned colunm_size,
         unsigned num_bots,
         unsigned num_endpoints) : 
-            siteMap(row_size, colunm_size),
-            integerMap(step_size, row_size, colunm_size),
+            map(row_size, colunm_size),
+            stepMap(step_size, row_size, colunm_size),
             num_bots(num_bots),
             num_endpoints(num_endpoints){ }
             
     InstanceMap(const InstanceMap& orig) : 
-        siteMap(orig.siteMap),
-        integerMap(orig.integerMap),
+        map(orig.map),
+        stepMap(orig.stepMap),
         num_bots(orig.num_bots),
         num_endpoints(orig.num_endpoints){ }
 
@@ -89,29 +89,29 @@ public:
     void loadMap(std::ifstream& filestream){
         
         unsigned i = 0, j = 0;
-        this->siteMap.load(filestream, [&i, &j, this](unsigned row, unsigned colunm, SiteMap::Type siteType){
+        this->map.load(filestream, [&i, &j, this](unsigned row, unsigned colunm, _map::Type siteType){
             
-            if(siteType == SiteMap::Type::none){
+            if(siteType == _map::Type::none){
                 
-                this->integerMap.setTypesFrom(0, row, colunm, _stepMap::NodeType::blockedNode);
+                this->stepMap.setTypesFrom(0, row, colunm, _stepMap::NodeType::blockedNode);
                 
-            } else if(siteType == SiteMap::Type::bot){
+            } else if(siteType == _map::Type::bot){
                 
-                this->integerMap.setTypesFrom(0, row, colunm, j);
+                this->stepMap.setTypesFrom(0, row, colunm, j);
                 
             }else{
                 
-                this->integerMap.setTypesFrom(0, row, colunm, _stepMap::NodeType::freeNode);
+                this->stepMap.setTypesFrom(0, row, colunm, _stepMap::NodeType::freeNode);
                 
             }
             
                          
-            if(siteType == SiteMap::Type::endpoint){
+            if(siteType == _map::Type::endpoint){
                 
                 this->endpointMap.insert(std::pair<unsigned, _site>(i++, _site(row, colunm)));
                 this->endpoints.push_back(_site(row, colunm));
             
-            } else if(siteType == SiteMap::Type::bot) {
+            } else if(siteType == _map::Type::bot) {
                 
                 this->botMap.insert(std::pair<unsigned, _site>(j++, _site(row, colunm)));    
                 this->endpoints.push_back(_site(row, colunm));
@@ -125,28 +125,28 @@ public:
     }
         
     virtual void draw(const Render& render) const{
-        this->siteMap.draw(render);
+        this->map.draw(render);
     }
     
     unsigned getColumn_size() const {
-        return this->siteMap.getColumn_size();
+        return this->map.getColumn_size();
     }
 
     unsigned getRow_size() const {
-        return this->siteMap.getRow_size();
+        return this->map.getRow_size();
     }
     
-    const SiteMap& getSiteMap() const {
-        return siteMap;
+    const _map& getMap() const {
+        return map;
     }
     
-    const _stepMap& getIntegerMap() const {
-        return integerMap;
+    const _stepMap& getStepMap() const {
+        return stepMap;
     }
     
     void setTaskEndpoint(unsigned row, unsigned colunm) {
         
-        this->siteMap.setType(row, colunm, SiteMap::Type::task);        
+        this->map.setType(row, colunm, _map::Type::task);        
         
     }
     
@@ -192,10 +192,10 @@ public:
             os << (*it).first << " " << (*it).second << std::endl;   
         
         os << "siteMap:" << std::endl;
-        os << obj.siteMap;
+        os << obj.map;
         
         os << "binaryMap:" << std::endl;
-        os << obj.integerMap;
+        os << obj.stepMap;
                 
         return os;
     }
@@ -239,8 +239,8 @@ public:
 private:
     
     unsigned num_bots, num_endpoints;
-    SiteMap siteMap;
-    _stepMap integerMap;
+    _map map;
+    _stepMap stepMap;
     std::map<unsigned,_site> endpointMap;
     std::map<unsigned,_site> botMap;
     std::vector<_site> endpoints;

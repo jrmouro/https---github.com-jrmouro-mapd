@@ -14,6 +14,7 @@
 class _stepPathAlgorithm {
 public:
     virtual bool solve(const _stepMap& map, const _site& start, const _site& goal, _stepPath& path, unsigned step, int type) const = 0;
+    virtual bool solve(const _stepMap& map, _stepPath& path, const _site& goal, int type) const = 0;
 };
 
 #endif /* _STEPPATHALGORITHM_H */

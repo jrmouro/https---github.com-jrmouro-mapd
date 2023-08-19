@@ -12,99 +12,21 @@
 #include "Circle.h"
 #include "Text.h"
 #include "Render.h"
+#include "_system.h"
 
-void _agent_occupied::onUpdatePath(_token& token,  _agent* agent)const {
+_agent_state* _agent_occupied::_instance = nullptr;
 
-    if (agent->isParked()) { // request token condition
-        
-        if (agent->isResting()){ //retirar depois
-            
-            try {
-                std::ostringstream stream;
-                stream << "no resting";
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }                                  
-            
-        } 
-        
-        if (!agent->isDelivering()){ //retirar depois
-            
-            try {
-                std::ostringstream stream;
-                stream << "no delivering";
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }                                  
-            
-        } 
-        
-        
+void _agent_occupied::onMoveUpdate(_system& system,  _agent* agent)const {
 
-        token.removeOpenTask(agent->getCurrentTask());
+   if (agent->isDelivering()){
+       
+       system.getToken().removeOpenTask(agent->getCurrentTask());
 
-        agent->undesignTask();
-        
-        _task newTask;
-                        
-        if (agent->selectNewTask(token, newTask)) {
-
-            agent->updateTaskPath(token, newTask);
-            
-            if (agent->isParked()) {
-                
-                token.removeOpenTask(agent->getCurrentTask());
-
-                agent->undesignTask();
-                
-                agent->updateTrivialPath(token); 
-                
-                agent->changeState(new _agent_free());
-                
-            } else if (!agent->isPickupping()) { // caso do agente já se encontrar em pickup site
-
-                agent->changeState(new _agent_free());
-                
-                return;
-
-            } 
-
-            return;
-
-        } else {
-        
-            _task conflit;
-
-//            if (agent->isConflictingRestEndpoint(token, &conflit)) {
-//
-//                agent->updateRestEndpointPath(token, conflit);
-//
-//            } else {
-//
-//                agent->updateTrivialPath(token);  
-//
-//            }
-
-            agent->changeState(new _agent_free());
-        
-        }
-        
-    }
-
-}
-
-
-void _agent_occupied::onMoveUpdate(_token& token,  _agent* agent)const {
-
-//   if (!this->agent->isDelivering()){
-//       
-//       this->agent->setState(new _agent_free(this->agent));
-//       
-//   }
+       agent->undesignTask();
+       
+       changeState(agent, _agent_free::getInstance());
+       
+   }
 
 }
 

@@ -1,12 +1,12 @@
 /* 
- * File:   SiteMap.h
+ * File:   _map.h
  * Author: ronaldo
  *
  * Created on 6 de abril de 2023, 10:33
  */
 
-#ifndef SITEMAP_H
-#define SITEMAP_H
+#ifndef _MAP_H
+#define _MAP_H
 
 #include <string>
 #include <fstream>
@@ -14,10 +14,15 @@
 #include <sstream>
 #include <functional>
 #include <vector>
+#include <unordered_map>
 #include <set>
-#include "Site.h"
+#include <SFML/Graphics/Color.hpp>
+#include "Drawable.h"
+#include "Render.h"
+#include "_site.h"
+#include "MapdException.h"
 
-class SiteMap : public Drawable{
+class _map : public Drawable{
 public:
     
     enum Type {
@@ -54,9 +59,9 @@ public:
         
     } TypeColorMap;
         
-    SiteMap() : SiteMap(0, 0){}
+    _map() : _map(0, 0){}
 
-    SiteMap(unsigned row_size, unsigned colunm_size) :  colunm_size(colunm_size), row_size(row_size){
+    _map(unsigned row_size, unsigned colunm_size) :  colunm_size(colunm_size), row_size(row_size){
 
         unsigned size = row_size * colunm_size;
         
@@ -68,7 +73,7 @@ public:
 
     }
 
-    SiteMap(const SiteMap& orig) : colunm_size(orig.colunm_size), row_size(orig.row_size){
+    _map(const _map& orig) : colunm_size(orig.colunm_size), row_size(orig.row_size){
 
         unsigned size = orig.row_size * orig.colunm_size;
         
@@ -83,7 +88,7 @@ public:
         
     }
     
-    SiteMap& operator=(const SiteMap& right) {
+    _map& operator=(const _map& right) {
         // Check for self-assignment!
         if (this == &right) // Same object?
             return *this; // Yes, so skip assignment, and just return *this.
@@ -100,7 +105,7 @@ public:
     }
 
 
-    virtual ~SiteMap() {
+    virtual ~_map() {
 
         if (nodes != nullptr) delete nodes;
 
@@ -128,12 +133,8 @@ public:
         return Type::none;
 
     }
-        
-    static unsigned linearLocationBySite(const SiteMap& siteMap, const Site& site){
-        return site.GetRow() * siteMap.getColumn_size() + site.GetColunm();
-    }
-
-    friend std::ostream& operator<<(std::ostream& os, const SiteMap& obj) {
+       
+    friend std::ostream& operator<<(std::ostream& os, const _map& obj) {
         
         os << "row_size: " << obj.row_size << std::endl;
         os << "colunm_size: " << obj.colunm_size << std::endl;
@@ -257,5 +258,5 @@ private:
 
 };
 
-#endif /* SITEMAP_H */
+#endif /* _MAP_H */
 

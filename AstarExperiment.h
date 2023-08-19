@@ -26,7 +26,7 @@ public:
                
         _stepAstarAlgorithm astar;
         
-        auto siteMap = this->instanceMap->getIntegerMap();
+        auto siteMap = this->instanceMap->getStepMap();
         
         this->instanceTask->getTaskMap().listTasks([this, &siteMap, &astar](unsigned step, const _task& task){
             

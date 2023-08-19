@@ -12,75 +12,27 @@
 #include "Render.h"
 #include "Circle.h"
 #include "Text.h"
+#include "_system.h"
 
-void _agent_free::onUpdatePath(_token& token,  _agent* agent) const {
+_agent_state* _agent_free::_instance = nullptr;
+
+void _agent_free::onUpdatePath(_system& system,  _agent* agent) const {
     
-    if (agent->isParked()) { // request token condition
-        
-        if (!agent->isResting()){ //retirar depois
-            
-            try {
-                std::ostringstream stream;
-                stream << "no resting";
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }                                  
-            
-        } 
-        
-        _task newTask;
-        
-        if (agent->selectNewTask(token, newTask)) {
-            
-            agent->designTask(newTask);
+    agent->updatePath(system);
+    
+    if (agent->isPickupping()) { // caso do agente já se encontrar em pickup site
 
-            agent->updateTaskPath(token, newTask);
-            
-            if (agent->isParked()) {
-                
-                token.removeOpenTask(newTask);
+        changeState(agent, _agent_occupied::getInstance());
 
-                agent->undesignTask();
-                
-                agent->updateTrivialPath(token); 
-                
-            } else if (agent->isPickupping()) { // caso do agente já se encontrar em pickup site
-
-                agent->changeState(new _agent_occupied());
-                
-                return;
-
-            }
-            
-            std::cout << "aqui" << std::endl;
-
-            return;
-
-        }
-        
-        _task conflit;
-
-//        if (agent->isConflictingRestEndpoint(token, &conflit)) {
-//
-//            agent->updateRestEndpointPath(token, conflit);
-//
-//            return;
-//
-//        }
-        
-        agent->updateTrivialPath(token);       
-        
     }
-
+    
 }
 
-void _agent_free::onMoveUpdate(_token& token,  _agent* agent)const {
+void _agent_free::onMoveUpdate(_system& system,  _agent* agent)const {
 
     if (agent->isPickupping()) {
 
-        agent->changeState(new _agent_occupied());
+        changeState(agent, _agent_occupied::getInstance());
 
     }
 
@@ -109,8 +61,6 @@ void _agent_free::onDraw(const Render& render, const _agent* const agent) const 
 
     background.draw(render);
     textAgentId.draw(render);
-
-    //    _agent_state::onDraw(render);
 
     if (agent->isDesigned()) {
 

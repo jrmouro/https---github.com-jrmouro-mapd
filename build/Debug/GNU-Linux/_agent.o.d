@@ -1,14 +1,17 @@
 build/Debug/GNU-Linux/_agent.o: _agent.cpp _agent.h Identifiable.h \
- _stepPath.h _stepSite.h _site.h MapdException.h _task.h _agent_state.h \
- Drawable.h _token.h SiteMap.h Site.h ReportTask.h ManhattanAlgorithm.h \
- _distanceAlgorithm.h _endPointsDistanceAlgorithm.h \
+ _stepMap.h _stepPath.h _stepSite.h _site.h MapdException.h _task.h \
+ _agent_state.h Drawable.h _token.h _map.h Render.h ReportTask.h \
+ ManhattanAlgorithm.h _distanceAlgorithm.h _endPointsDistanceAlgorithm.h \
  _astarDistanceAlgorithm.h _path.h _astarAlgorithm.h _pathAlgorithm.h \
- _stepMap.h _stepAstarAlgorithm.h _stepPathAlgorithm.h _agent_free.h \
- Render.h Circle.h Shape.h Text.h
+ _stepAstarAlgorithm.h _stepPathAlgorithm.h _agent_free.h Circle.h \
+ Shape.h Text.h _system.h InstanceMAPD.h InstanceMap.h InstanceTask.h \
+ TaskMap.h
 
 _agent.h:
 
 Identifiable.h:
+
+_stepMap.h:
 
 _stepPath.h:
 
@@ -26,9 +29,9 @@ Drawable.h:
 
 _token.h:
 
-SiteMap.h:
+_map.h:
 
-Site.h:
+Render.h:
 
 ReportTask.h:
 
@@ -46,18 +49,24 @@ _astarAlgorithm.h:
 
 _pathAlgorithm.h:
 
-_stepMap.h:
-
 _stepAstarAlgorithm.h:
 
 _stepPathAlgorithm.h:
 
 _agent_free.h:
 
-Render.h:
-
 Circle.h:
 
 Shape.h:
 
 Text.h:
+
+_system.h:
+
+InstanceMAPD.h:
+
+InstanceMap.h:
+
+InstanceTask.h:
+
+TaskMap.h:

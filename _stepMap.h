@@ -370,7 +370,7 @@ public:
 
     }
     
-    void setMoving(_stepPath& path, int type){
+    void setMoving(const _stepPath& path, int type){
         
         auto current = path.currentSite();
         this->setTypesFrom(current.GetStep() + 1, current.GetRow(), current.GetColunm(), NodeType::freeNode);

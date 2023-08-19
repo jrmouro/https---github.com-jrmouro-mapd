@@ -13,9 +13,13 @@
 #include "_agent_free.h"
 #include "_agent_occupied.h"
 
-void _agent_state::onUpdatePath(_token& token,  _agent* agent) const {}
+void _agent_state::onUpdatePath(_system& system, _agent* agent) const {}
 
-void _agent_state::onMoveUpdate(_token& token,  _agent* agent) const {}
+void _agent_state::onMoveUpdate(_system& system,  _agent* agent) const {}
 
 void _agent_state::onDraw(const Render& render, const _agent* const agent) const {}
+
+void _agent_state::changeState(_agent* agent, _agent_state* state) const{
+    agent->changeState(state);
+}
 

@@ -39,13 +39,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/Rectangle.o \
 	${OBJECTDIR}/Render.o \
 	${OBJECTDIR}/Shape.o \
-	${OBJECTDIR}/Site.o \
-	${OBJECTDIR}/SiteMap.o \
 	${OBJECTDIR}/Text.o \
 	${OBJECTDIR}/_agent.o \
 	${OBJECTDIR}/_agent_free.o \
 	${OBJECTDIR}/_agent_occupied.o \
 	${OBJECTDIR}/_agent_state.o \
+	${OBJECTDIR}/_map.o \
 	${OBJECTDIR}/_token.o \
 	${OBJECTDIR}/main.o
 
@@ -106,16 +105,6 @@ ${OBJECTDIR}/Shape.o: Shape.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Shape.o Shape.cpp
 
-${OBJECTDIR}/Site.o: Site.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Site.o Site.cpp
-
-${OBJECTDIR}/SiteMap.o: SiteMap.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SiteMap.o SiteMap.cpp
-
 ${OBJECTDIR}/Text.o: Text.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -140,6 +129,11 @@ ${OBJECTDIR}/_agent_state.o: _agent_state.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_state.o _agent_state.cpp
+
+${OBJECTDIR}/_map.o: _map.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_map.o _map.cpp
 
 ${OBJECTDIR}/_token.o: _token.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -231,32 +225,6 @@ ${OBJECTDIR}/Shape_nomain.o: ${OBJECTDIR}/Shape.o Shape.cpp
 	    ${CP} ${OBJECTDIR}/Shape.o ${OBJECTDIR}/Shape_nomain.o;\
 	fi
 
-${OBJECTDIR}/Site_nomain.o: ${OBJECTDIR}/Site.o Site.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/Site.o`; \
-	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
-	then  \
-	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Site_nomain.o Site.cpp;\
-	else  \
-	    ${CP} ${OBJECTDIR}/Site.o ${OBJECTDIR}/Site_nomain.o;\
-	fi
-
-${OBJECTDIR}/SiteMap_nomain.o: ${OBJECTDIR}/SiteMap.o SiteMap.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/SiteMap.o`; \
-	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
-	then  \
-	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SiteMap_nomain.o SiteMap.cpp;\
-	else  \
-	    ${CP} ${OBJECTDIR}/SiteMap.o ${OBJECTDIR}/SiteMap_nomain.o;\
-	fi
-
 ${OBJECTDIR}/Text_nomain.o: ${OBJECTDIR}/Text.o Text.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/Text.o`; \
@@ -320,6 +288,19 @@ ${OBJECTDIR}/_agent_state_nomain.o: ${OBJECTDIR}/_agent_state.o _agent_state.cpp
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_state_nomain.o _agent_state.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_state.o ${OBJECTDIR}/_agent_state_nomain.o;\
+	fi
+
+${OBJECTDIR}/_map_nomain.o: ${OBJECTDIR}/_map.o _map.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_map.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_map_nomain.o _map.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_map.o ${OBJECTDIR}/_map_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_token_nomain.o: ${OBJECTDIR}/_token.o _token.cpp 

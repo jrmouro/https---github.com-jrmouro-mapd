@@ -8,7 +8,9 @@
 #ifndef _AGENT_H
 #define _AGENT_H
 
+#include <sstream>
 #include "Identifiable.h"
+#include "_stepMap.h"
 #include "_stepPath.h"
 #include "_task.h"
 #include "_agent_state.h"
@@ -30,15 +32,30 @@ public:
         return _id;
     }
     
-    void changeState(_agent_state* _state) {
-        if(this->_state != nullptr) delete this->_state;
-        this->_state = _state;
+    void setTrivialPathMoving(_stepMap& stepMap){
+        
+        _stepSite site = this->_currentPath.goalSite();
+        _stepPath path(site);
+        site.SetStep(site.GetStep() + 1);
+        path.progress(site);
+        
+        setPathMoving(path, stepMap);      
+        
     }
     
-    
-    
+    void setPathMoving(const _stepPath& path, _stepMap& stepMap){
+        
+        this->_currentPath = path;
+        stepMap.setMoving(path, this->id());        
+        
+    }
+            
     void undesignTask(){
         _currentTaskIndex = -1;
+    }
+    
+    const _stepPath& currentPath()const{
+        return _currentPath;
     }
  
     const _stepSite& currentSite()const{
@@ -119,22 +136,30 @@ public:
         
     }
     
-    virtual void move(_token& token);
+    void progressPath(const _stepPath& path){
+        
+        _currentPath.progress(path);
+        
+    }
     
-    virtual void receive(_token& token);
+    virtual void move(_system& system);
     
-    virtual bool selectNewEndpoint(_token& token, _site& selectNewSite);
+    virtual void receive(_system& system);
+    
+    virtual void updatePath(_system& system);
+    virtual bool updateTaskPath(_system& system);
+    virtual bool updateRestPath(_system& system);
+    
+    virtual bool selectNewRestEndpoint(_system& system, _site& selectNewSite);
           
-    virtual bool selectNewTask(_token& token, _task& selectedTask);
+    virtual bool selectNewTask(_system& system, _task& selectedTask) const;
     
     virtual bool isConflictingRestEndpoint(_token& token, _task& conflitTask) const;
     
-    virtual void updateRestEndpointPath(_token& token, const _task& conflitTask);
-    
-    virtual void updateTaskPath(_token& token, const _task& task);
-    
-    virtual void updateTrivialPath(_token& token);
-    
+    virtual bool restEndpointPath(const _stepMap& map, const _site& endpoint, _stepPath& path);
+        
+    virtual bool taskPath(const _stepMap& map, const _task& task, _stepPath& path) const;
+        
     virtual void draw(const Render& render) const;    
     
     friend std::ostream& operator<<(std::ostream& os, const _agent& obj) {
@@ -177,6 +202,12 @@ protected:
         if(_currentTaskIndex > -1)
             return &tasks.at(_currentTaskIndex);
         return nullptr;
+    }
+    
+private:
+    friend class _agent_state;
+    void changeState(_agent_state* state){
+        _state = state;
     }
 };
 

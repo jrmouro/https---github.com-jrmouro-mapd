@@ -32,54 +32,38 @@ public:
     virtual void run(){
         
         InstanceMAPD* instanceMAPD = InstanceMAPD::load(mapFilename, taskFilename);
-        
-        std::vector<_agent> _agents;
-        
-        instanceMAPD->getInstanceMap()->listBotsEndPoints([&_agents](unsigned id, const _site& site){
-            
-            _agents.push_back(_agent(id, _stepSite(0, site.GetRow(), site.GetColunm())));
-            
-            return false;
-            
-        });
-        
-        _token __token(
-            instanceMAPD->getInstanceMap()->getSiteMap(),
-            instanceMAPD->getInstanceMap()->getIntegerMap(),
-            _agents,
-            instanceMAPD->getInstanceMap()->getEndpoints());
-        
+                
+        _system system(*instanceMAPD);
         
         Render render(
                     std::pair<unsigned, unsigned>(100,100),
                     std::pair<unsigned, unsigned>(
-                        instanceMAPD->getInstanceMap()->getColumn_size(),
-                        instanceMAPD->getInstanceMap()->getRow_size()),
+                        instanceMAPD->getMapColumn_size(),
+                        instanceMAPD->getMapRow_size()),
                     "Test Instance");
         
         Text textStep(
-                std::to_string(__token.getCurrentStep()),
+                std::to_string(system.getToken().getCurrentStep()),
                 sf::Vector2f(
-                    instanceMAPD->getInstanceMap()->getColumn_size()/2 * render.GetCell().first, 
+                    instanceMAPD->getMapColumn_size()/2 * render.GetCell().first, 
                     0),
                 sf::Vector2f(
                     render.GetCell().first, 
                     0),
                 sf::Color::White);
         
-        render.add(&instanceMAPD->getInstanceMap()->getSiteMap());
-        render.add(&__token);
+        render.add(&instanceMAPD->getMap());
+        render.add(&system.getToken());
         render.add(&textStep);
+          
         
-        _system __system(*instanceMAPD);    
-        
-        render.loop(800, [&__system, &__token, &textStep](){
-            __system.step(__token);
-            textStep.setDrawText(std::to_string(__token.getCurrentStep())); 
+        render.loop(800, [&system, &textStep](){
+            system.step();
+            textStep.setDrawText(std::to_string(system.getToken().getCurrentStep())); 
 //            std::cout << __token << std::endl;
         });
         
-        std::cout << __token << std::endl;
+        std::cout << system.getToken() << std::endl;
         
         delete instanceMAPD;
         

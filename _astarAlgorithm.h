@@ -14,7 +14,7 @@
 #include <cmath>
 #include <iostream>
 #include "_pathAlgorithm.h"
-#include "SiteMap.h"
+#include "_map.h"
 #include "_site.h"
 #include "_path.h"
 
@@ -25,7 +25,7 @@ public:
     
     _astarAlgorithm(const _astarAlgorithm& other){}
     
-    virtual bool solve(const SiteMap& map, const _site& start, const _site& goal, _path& path) const{
+    virtual bool solve(const _map& map, const _site& start, const _site& goal, _path& path) const{
         
         bool ret = false;  
         ClosedStates closedStates(map.getColumn_size() ,map.getRow_size()*map.getColumn_size());
@@ -206,7 +206,7 @@ private:
     
     AstarState* solveAux(
         AstarState* current,
-        const SiteMap& map,
+        const _map& map,
         const _site& goal,
         ClosedStates& closedStates,
         PriorityStates& priorityStates,

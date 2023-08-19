@@ -8,7 +8,7 @@
 #ifndef INSTANCEMAPD_H
 #define INSTANCEMAPD_H
 
-
+#include <vector>
 #include "InstanceMap.h"
 #include "InstanceTask.h"
 
@@ -16,8 +16,7 @@
 class InstanceMAPD {
 public:
     
-    friend class _system;
-    
+        
     InstanceMAPD(InstanceMap* instanceMap, InstanceTask* instanceTask) :
         instanceMap(instanceMap), instanceTask(instanceTask) {}
     
@@ -61,15 +60,43 @@ public:
         return os;
     }
 
-    InstanceMap* getInstanceMap() const {
-        return instanceMap;
+    const TaskMap& getTaskMap() const {
+        return instanceTask->getTaskMap();
     }
-
-    InstanceTask* getInstanceTask() const {
-        return instanceTask;
-    }
-
     
+    const _map& getMap() const {
+        return instanceMap->getMap();
+    }
+    
+    const _stepMap& getStepMap() const {
+        return instanceMap->getStepMap();
+    }
+        
+    void listBotsEndPoints(std::function<bool(unsigned, const _site&)> function) const {
+        
+        instanceMap->listBotsEndPoints(function);
+        
+    }
+    
+    unsigned getLastStepTask() const {
+        return instanceTask->getLastStep();
+    }
+    
+    unsigned getMapColumn_size() const {
+        return instanceMap->getStepMap().getColumn_size();
+    }
+
+    unsigned getMapRow_size() const {
+        return instanceMap->getStepMap().getRow_size();
+    }
+    
+    unsigned getMapStep_size() const {
+        return instanceMap->getStepMap().getStep_size();
+    } 
+    
+    const std::vector<_site>& getEndpoints() const {
+        return instanceMap->getEndpoints();
+    }
     
 private:
     

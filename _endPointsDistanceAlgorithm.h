@@ -12,7 +12,7 @@
 #include <vector>
 #include <unordered_map>
 #include "_distanceAlgorithm.h"
-#include "SiteMap.h"
+#include "_map.h"
 #include "_astarDistanceAlgorithm.h"
 
 class _endpointsDistanceAlgorithm : public _distanceAlgorithm{
@@ -21,7 +21,7 @@ public:
     
     _endpointsDistanceAlgorithm(){}
     
-    _endpointsDistanceAlgorithm(const SiteMap& map, const std::vector<_site>& endpoints){
+    _endpointsDistanceAlgorithm(const _map& map, const std::vector<_site>& endpoints){
         reset(map, endpoints);
     }
     
@@ -101,7 +101,7 @@ public:
         
     }
     
-    void reset(const SiteMap& map, const std::vector<_site>& endpoints){
+    void reset(const _map& map, const std::vector<_site>& endpoints){
         
         _astarDistanceAlgorithm astar(map);
         

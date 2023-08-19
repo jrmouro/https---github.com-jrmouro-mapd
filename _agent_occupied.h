@@ -14,30 +14,29 @@ class _agent_occupied : public _agent_state{
     
 public:
     
-    _agent_occupied() :    _agent_state() {}
-    _agent_occupied(const _agent_occupied& other) : _agent_state(other) {}
-
-    virtual ~_agent_occupied(){}
-    
-    virtual AgentStateId stateId()const{
-        return AgentStateId::occupied;
+    static _agent_state * getInstance(){
+        
+        if(_agent_occupied::_instance == nullptr)
+            _agent_occupied::_instance = new _agent_occupied();
+        
+        return _agent_occupied::_instance;
+        
     }
     
+    virtual ~_agent_occupied(){}
+        
     virtual std::string stateName()const{
         return "occupied";
     }
-    
-    virtual _agent_state* builder() const{
-        return new _agent_occupied();
-    }
-    
-    virtual void onUpdatePath(_token& token,  _agent* agent) const;
-    virtual void onMoveUpdate(_token& token,  _agent* agent) const;
+        
+    virtual void onMoveUpdate(_system& system,  _agent* agent) const;
     virtual void onDraw(const Render& render, const _agent* const agent) const;
-    
-    virtual bool isOccupied()const{
-        return true;
-    }
+       
+    protected:
+        _agent_occupied() : _agent_state() {}
+
+    private:
+        static _agent_state* _instance;
     
 };
 

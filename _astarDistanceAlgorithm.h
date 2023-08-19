@@ -10,14 +10,14 @@
 
 #include <climits>
 #include "_distanceAlgorithm.h"
-#include "SiteMap.h"
+#include "_map.h"
 #include "_path.h"
 #include "_astarAlgorithm.h"
 
 class _astarDistanceAlgorithm : public _distanceAlgorithm{
 public:
     
-    _astarDistanceAlgorithm(const SiteMap& map) :
+    _astarDistanceAlgorithm(const _map& map) :
     map(map) { }
     
     _astarDistanceAlgorithm(const _astarDistanceAlgorithm& other) :
@@ -72,7 +72,7 @@ public:
     
 private:
     
-    const SiteMap& map;
+    const _map& map;
     
 };
 

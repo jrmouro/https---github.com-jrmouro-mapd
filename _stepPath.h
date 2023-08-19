@@ -24,6 +24,17 @@ public:
     
     _stepPath(const _stepPath& orig) : sites(orig.sites) {}
     
+    _stepPath& operator=(const _stepPath& right) {
+        if (this == &right)
+            return *this;
+        this->sites.clear();
+        for (auto site : right.sites) {
+            this->sites.push_back(site);
+        }
+        return *this;
+    }
+
+    
     virtual ~_stepPath() {}
 
     void add(const _stepSite& site) {

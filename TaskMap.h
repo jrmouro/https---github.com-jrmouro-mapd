@@ -39,18 +39,6 @@ public:
 
     }
     
-//    const std::vector<Task>& get(unsigned step){
-//        
-//        std::map<unsigned, std::vector<Task>>::const_iterator it;
-//        it = this->tasks.find(step);
-//         if (it != this->tasks.end()) {
-//
-//            return it->second;
-//
-//        } 
-//        
-//        return std::vector<Task>(); 
-//    }
             
     void listTasks(std::function<bool(unsigned, const _task&)> func) const{
         
@@ -90,14 +78,11 @@ public:
     void load(std::ifstream& filestream, std::function<_site(unsigned)> oracle) {
 
         std::string line;
-//        std::stringstream stream;
         
         int taskId = 0;
 
         while (std::getline(filestream, line)) {
             
-//            stream.clear();
-//            stream << line;
             int t, s, g, ts, tg;
             std::stringstream(line) >> t >> s >> g >> ts >> tg;            
             this->set(t, _task(taskId++, oracle(s), oracle(g)));           

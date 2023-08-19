@@ -13,7 +13,7 @@
 
 class _pathAlgorithm {
 public:
-    virtual bool solve(const SiteMap& map, const _site& start, const _site& goal, _path& path) const = 0;
+    virtual bool solve(const _map& map, const _site& start, const _site& goal, _path& path) const = 0;
 };
 
 #endif /* _PATHALGORITHM_H */

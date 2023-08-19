@@ -15,7 +15,7 @@
 #include <functional>
 
 #include "TaskMap.h"
-#include "SiteMap.h"
+#include "_map.h"
 
 class InstanceTask {
 public:
