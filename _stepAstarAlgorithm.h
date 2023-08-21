@@ -26,11 +26,10 @@ public:
     
     virtual bool solve(const _stepMap& map, _stepPath& path, const _site& goal, int type) const {
         
-        bool ret;
+        bool ret = false;
         
         if(!path.empty()){
-            
-            bool ret = false;  
+             
             unsigned rowColunm = map.getRow_size()*map.getColumn_size();
             ClosedStates closedStates(rowColunm, map.getColumn_size() ,map.getStep_size() * rowColunm);
             PriorityStates priorityStates;

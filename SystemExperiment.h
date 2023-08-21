@@ -57,7 +57,7 @@ public:
         render.add(&textStep);
           
         
-        render.loop(800, [&system, &textStep](){
+        render.loop(200, [&system, &textStep](){
             system.step();
             textStep.setDrawText(std::to_string(system.getToken().getCurrentStep())); 
 //            std::cout << __token << std::endl;

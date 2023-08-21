@@ -1,12 +1,12 @@
 /* 
- * File:   TaskMap.h
+ * File:   _taskMap.h
  * Author: ronaldo
  *
  * Created on 26 de julho de 2023, 08:19
  */
 
-#ifndef TASKMAP_H
-#define TASKMAP_H
+#ifndef _TASKMAP_H
+#define _TASKMAP_H
 
 #include <map>
 #include <vector>
@@ -14,14 +14,14 @@
 #include <functional>
 #include "_task.h"
 
-class TaskMap {
+class _taskMap {
 public:
 
-    TaskMap() {}
+    _taskMap() {}
 
-    TaskMap(const TaskMap& orig) : tasks(orig.tasks) {}
+    _taskMap(const _taskMap& orig) : tasks(orig.tasks) {}
 
-    virtual ~TaskMap() {}
+    virtual ~_taskMap() {}
     
     void set(unsigned step, const _task& task) {
         
@@ -91,7 +91,7 @@ public:
 
     }
     
-    friend std::ostream& operator<<(std::ostream& os, const TaskMap& obj) {
+    friend std::ostream& operator<<(std::ostream& os, const _taskMap& obj) {
         
         std::map<unsigned, std::vector<_task>>::const_iterator it;
         for (it = obj.tasks.begin(); it != obj.tasks.end(); ++it) {
@@ -118,5 +118,5 @@ private:
 
 };
 
-#endif /* TASKMAP_H */
+#endif /* _TASKMAP_H */
 

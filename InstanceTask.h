@@ -14,7 +14,7 @@
 #include <sstream>
 #include <functional>
 
-#include "TaskMap.h"
+#include "_taskMap.h"
 #include "_map.h"
 
 class InstanceTask {
@@ -69,7 +69,7 @@ public:
         this->taskMap.load(filestream, oracle);
     }
         
-    const TaskMap& getTaskMap() const {
+    const _taskMap& getTaskMap() const {
         return taskMap;
     }
     
@@ -81,7 +81,7 @@ public:
 private:
 
     unsigned lastStep, numTask;
-    TaskMap taskMap;
+    _taskMap taskMap;
 
 };
 

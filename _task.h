@@ -15,7 +15,7 @@
 class _task : public Identifiable<int>{
     
 public:
-    
+        
     _task() : _id(0), pickup(), delivery() {}
             
     _task(int id, _site pickup, _site delivery) :
@@ -50,6 +50,14 @@ public:
         return pickup;
     }
     
+    void setDelivery(_site delivery) {
+        this->delivery = delivery;
+    }
+
+    void setPickup(_site pickup) {
+        this->pickup = pickup;
+    }
+    
     friend std::ostream& operator<<(std::ostream& os, const _task& obj) {
         os << obj._id << "["<< obj.pickup << " -> " << obj.delivery << "]";
         return os;
@@ -57,6 +65,10 @@ public:
     
     bool isInnocuous()const{
         return pickup.match(delivery);
+    }
+    
+    virtual _task* instance()const{
+        return new _task(*this);
     }
     
 private:

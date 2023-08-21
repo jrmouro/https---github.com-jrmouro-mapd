@@ -8,6 +8,7 @@
 #ifndef _ENDPOINTSDISTANCEALGORITHM_H
 #define _ENDPOINTSDISTANCEALGORITHM_H
 
+#include <cmath>
 #include <climits>
 #include <vector>
 #include <unordered_map>
@@ -26,7 +27,10 @@ public:
     }
     
     _endpointsDistanceAlgorithm(const _endpointsDistanceAlgorithm& other) :
-    size(other.size), domain(other.domain) {
+            size(other.size), 
+            mapColunmSize(other.mapColunmSize), 
+            endpointsSize(other.endpointsSize),  
+            domain(other.domain){
         
         distances = new unsigned[size];
         
@@ -45,17 +49,17 @@ public:
         
         if(distances != nullptr){
         
-            auto it1 = domain.find(start.GetRow() * colunmSize + start.GetColunm());
+            auto it1 = domain.find(start.GetRow() * mapColunmSize + start.GetColunm());
             
             if(it1 != domain.end()){
             
-                auto it2 = domain.find(goal.GetRow() * colunmSize + goal.GetColunm());
+                auto it2 = domain.find(goal.GetRow() * mapColunmSize + goal.GetColunm());
                 
                 if(it2 != domain.end()){
                     
                     unsigned row = it1->second, colunm = it2->second;
                     
-                    return distances[row * colunmSize + colunm];
+                    return distances[row * endpointsSize + colunm];
                     
                 } else {
                     
@@ -108,8 +112,9 @@ public:
         if(distances != nullptr) delete distances;
         domain.clear();
         
+        endpointsSize = endpoints.size();
         size = endpoints.size() * endpoints.size();
-        colunmSize = map.getColumn_size();
+        mapColunmSize = map.getColumn_size();
         
         distances = new unsigned[size];
         
@@ -120,7 +125,7 @@ public:
         for (auto endpoint : endpoints) {
                         
             domain.insert(std::pair<unsigned,unsigned>(
-                endpoint.GetRow() * colunmSize + endpoint.GetColunm(), 
+                endpoint.GetRow() * mapColunmSize + endpoint.GetColunm(), 
                 index++));                     
                         
         }
@@ -128,7 +133,7 @@ public:
         
         for (auto e1 : endpoints) {
                         
-            auto it1 = domain.find(e1.GetRow() * colunmSize + e1.GetColunm());
+            auto it1 = domain.find(e1.GetRow() * mapColunmSize + e1.GetColunm());
             
             if(it1 != domain.end()){
                 
@@ -136,14 +141,14 @@ public:
             
                 for (auto e2 : endpoints) {
 
-                    auto it2 = domain.find(e2.GetRow() * colunmSize + e2.GetColunm());
+                    auto it2 = domain.find(e2.GetRow() * mapColunmSize + e2.GetColunm());
                     
                     if(it2 != domain.end()){
                         
                         unsigned colunm = it2->second;
                                      
-                        unsigned l1 = row * colunmSize + colunm;
-                        unsigned l2 = colunm * colunmSize + row;
+                        unsigned l1 = row * endpointsSize + colunm;
+                        unsigned l2 = colunm * endpointsSize + row;
 
                         if(e1.match(e2)){
                             
@@ -189,10 +194,29 @@ public:
             
         }
         
+//        std::cout << *this << std::endl;
+               
     }
     
+    friend std::ostream& operator<<(std::ostream& os, const _endpointsDistanceAlgorithm& obj) {
+        
+        os << " - distances matrix - " << std::endl;
+        int c = 0;
+        for (int i = 0; i < obj.size; i++) {
+            c++;
+            os << obj.distances[i] << "\t";
+            if(c == obj.endpointsSize){
+                c = 0;
+                os << std::endl;
+            }
+        }
+
+        return os;
+    }
+
+    
 private:
-    unsigned size = 0, colunmSize = 0;
+    unsigned size = 0, mapColunmSize = 0, endpointsSize = 0;
     unsigned *distances = nullptr;
     std::unordered_map<unsigned, unsigned> domain;
 

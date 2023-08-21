@@ -10,6 +10,7 @@
         <itemPath>_astarDistanceAlgorithm.h</itemPath>
         <itemPath>_distanceAlgorithm.h</itemPath>
         <itemPath>_endPointsDistanceAlgorithm.h</itemPath>
+        <itemPath>_fractioningRateAlgorithm.h</itemPath>
         <itemPath>_pathAlgorithm.h</itemPath>
         <itemPath>_stepAstarAlgorithm.h</itemPath>
         <itemPath>_stepPathAlgorithm.h</itemPath>
@@ -43,11 +44,12 @@
       <itemPath>ReportAgent.h</itemPath>
       <itemPath>ReportTask.h</itemPath>
       <itemPath>Resetable.h</itemPath>
-      <itemPath>TaskMap.h</itemPath>
       <itemPath>_agent.h</itemPath>
+      <itemPath>_agent_designed.h</itemPath>
       <itemPath>_agent_free.h</itemPath>
       <itemPath>_agent_occupied.h</itemPath>
       <itemPath>_agent_state.h</itemPath>
+      <itemPath>_c_task.h</itemPath>
       <itemPath>_map.h</itemPath>
       <itemPath>_path.h</itemPath>
       <itemPath>_site.h</itemPath>
@@ -56,12 +58,14 @@
       <itemPath>_stepSite.h</itemPath>
       <itemPath>_system.h</itemPath>
       <itemPath>_task.h</itemPath>
+      <itemPath>_taskMap.h</itemPath>
       <itemPath>_token.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Arquivos de Código-Fonte"
                    projectFiles="true">
       <itemPath>_agent.cpp</itemPath>
+      <itemPath>_agent_designed.cpp</itemPath>
       <itemPath>_agent_free.cpp</itemPath>
       <itemPath>_agent_occupied.cpp</itemPath>
       <itemPath>_agent_state.cpp</itemPath>
@@ -166,8 +170,6 @@
       </item>
       <item path="SystemExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="TaskMap.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Text.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Text.h" ex="false" tool="3" flavor2="0">
@@ -175,6 +177,10 @@
       <item path="_agent.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_designed.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_designed.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_free.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -192,9 +198,13 @@
       </item>
       <item path="_astarDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_c_task.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_distanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_endPointsDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_fractioningRateAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_map.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -219,6 +229,8 @@
       <item path="_system.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_task.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_taskMap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_token.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -330,8 +342,6 @@
       </item>
       <item path="SystemExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="TaskMap.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Text.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Text.h" ex="false" tool="3" flavor2="0">
@@ -339,6 +349,10 @@
       <item path="_agent.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_designed.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_designed.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_free.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -356,9 +370,13 @@
       </item>
       <item path="_astarDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_c_task.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_distanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_endPointsDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_fractioningRateAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_map.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -383,6 +401,8 @@
       <item path="_system.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_task.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_taskMap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_token.cpp" ex="false" tool="1" flavor2="0">
       </item>

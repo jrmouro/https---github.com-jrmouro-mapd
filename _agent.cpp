@@ -44,103 +44,149 @@ void _agent::move(_system& system) {
 bool _agent::updateTaskPath(_system& system){
     
     _task newTask;
+    _stepPath path(this->currentSite());
+    bool flag = system.getToken().selectNewTaskPathToAgent(*this, newTask, path);
+    
+    if(flag){
         
-    if (this->selectNewTask(system, newTask)) {
-
-        system.getToken().addOpenTask(newTask);
-
-        system.getToken().removePendingTask(newTask);
-
+        system.getToken().assignTask(newTask, *this);
+        system.getToken().reportTaskUpdate(newTask.id(), this->id(), ReportTask::PathType::task, path);
+        
         this->designTask(newTask);
+        this->setPathMoving(path, system.getToken().getStepMap());
+        
+        if (this->isParked()) {
+                
+            system.getToken().runTask((newTask));
+            system.getToken().finishTask(newTask);
 
-        _stepPath path(this->currentSite());
+            this->undesignTask();                    
 
-        if(this->taskPath(system.getStepMap(), newTask, path)){
+            this->setTrivialPathMoving(system.getStepMap());   
 
-            system.getToken().reportTaskUpdate(newTask.id(), this->id(), ReportTask::PathType::task, path);  
+        } 
 
-            this->setPathMoving(path, system.getStepMap());                                    
-
-            if (this->isParked()) {
-
-                system.getToken().removeOpenTask(newTask);
-                this->undesignTask();                    
-
-                this->setTrivialPathMoving(system.getStepMap());   
-
-            } 
-            
-            return true;
-
-        } else {
-
-            try {
-                std::ostringstream stream;
-                stream << "unsolved task path: ";
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
-
-        }
-
+        return true;
+        
     }
     
+    
     return false;
+    
+//    _task newTask;
+//        
+//    if (this->selectNewTask(system, newTask)) {
+//        
+//        system.getToken().assignTask(newTask, *this);
+//
+//        this->designTask(newTask);
+//
+//        _stepPath path(this->currentSite());
+//
+//        if(this->taskPath(system.getStepMap(), newTask, path)){
+//
+//            system.getToken().reportTaskUpdate(newTask.id(), this->id(), ReportTask::PathType::task, path);  
+//
+//            this->setPathMoving(path, system.getStepMap());                                    
+//
+//            if (this->isParked()) {
+//                
+//                system.getToken().finishTask(newTask);
+//                
+//                this->undesignTask();                    
+//
+//                this->setTrivialPathMoving(system.getStepMap());   
+//
+//            } 
+//            
+//            return true;
+//
+//        } else {
+//
+//            try {
+//                std::ostringstream stream;
+//                stream << "unsolved task path: ";
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            }
+//
+//        }
+//
+//    }
+//    
+//    return false;
     
 }
 
 bool _agent::updateRestPath(_system& system){
     
-    _task conflit;
+    _task conflict;
+    
+    _stepPath restPath(this->currentSite());
+    
+    if(system.getToken().selectNewRestEndpointPathToAgent(*this, conflict, restPath)){
+        
+        system.getToken().reportTaskUpdate(conflict.id(), this->id(), ReportTask::PathType::rest, restPath);  
 
-    if (this->isConflictingRestEndpoint(system.getToken(), conflit)) {
-
-        _site endpoint;
-
-        if (this->selectNewRestEndpoint(system, endpoint)) {
-
-            _stepPath restPath(this->currentSite());
-
-            if(this->restEndpointPath(system.getStepMap(), endpoint, restPath)){
-
-                system.getToken().reportTaskUpdate(conflit.id(), this->id(), ReportTask::PathType::rest, restPath);  
-
-                this->setPathMoving(restPath, system.getStepMap());
-
-                return true;
-
-            }else{
-
-                try {
-                    std::ostringstream stream;
-                    stream << "unsolved rest endpoint path";
-                    MAPD_EXCEPTION(stream.str());
-                } catch (std::exception& e) {
-                    std::cout << e.what() << std::endl;
-                    std::abort();
-                }
-
-            }
-
-        } else {
-
-            try {
-                std::ostringstream stream;
-                 stream << "new rest endpoint not found";
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
-
-
-        }
-
+        this->setPathMoving(restPath, system.getStepMap());
+        
+        return true;
+        
     }
     
     return false;
+    
+    
+//    _task conflit;
+//
+//    if (this->isConflictingRestEndpoint(system.getToken(), conflit)) {
+//
+//        _site endpoint;
+//
+//        if (this->selectNewRestEndpoint(system, endpoint)) {
+//
+//            _stepPath restPath(this->currentSite());
+//
+//            if(this->restEndpointPath(system.getStepMap(), endpoint, restPath)){
+//
+//                system.getToken().reportTaskUpdate(conflit.id(), this->id(), ReportTask::PathType::rest, restPath);  
+//
+//                this->setPathMoving(restPath, system.getStepMap());
+//
+//                return true;
+//
+//            }else{
+//
+//                try {
+//                    std::ostringstream stream;
+//                    stream << "unsolved rest endpoint path";
+//                    MAPD_EXCEPTION(stream.str());
+//                } catch (std::exception& e) {
+//                    std::cout << e.what() << std::endl;
+//                    std::abort();
+//                }
+//
+//            }
+//
+//        } else {
+//
+//            try {
+//                std::ostringstream stream;
+//                 stream << "new rest endpoint not found";
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            }
+//
+//
+//        }
+//
+//    }
+//    
+//    return false;
     
 }
 

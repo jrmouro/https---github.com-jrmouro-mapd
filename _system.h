@@ -26,7 +26,7 @@ public:
     _system(const _system& other) :
         map(new _map(*other.map)), 
         stepMap(new _stepMap(*other.stepMap)), 
-        taskMap(new TaskMap(*other.taskMap)), 
+        taskMap(new _taskMap(*other.taskMap)), 
         token(new _token(*other.token)) { }
 
 
@@ -62,9 +62,9 @@ public:
         
         stepMap = new _stepMap(instanceMAPD.getStepMap());
         
-        taskMap = new TaskMap(instanceMAPD.getTaskMap());
+        taskMap = new _taskMap(instanceMAPD.getTaskMap());
         
-        token = new _token();
+        token = new _token(*map, *stepMap, *endpoints, *endpointsDistanceAlgorithm);
         
         instanceMAPD.listBotsEndPoints([this](unsigned id, const _site& site){
                         
@@ -126,10 +126,6 @@ public:
         return lastStepTask;
     }
 
-//    const _map& getMap() const {
-//        return *map;
-//    }
-
     _stepMap& getStepMap(){
         return *stepMap;
     }
@@ -137,11 +133,7 @@ public:
     _token& getToken(){
         return *token;
     }
-    
-//    const std::vector<_site> getEndpoints() const {
-//        return *endpoints;
-//    }
-    
+        
     void listEndpoints(const std::function<bool(const _site&)> function)const{
         
         for (auto endpoint : *endpoints) {
@@ -158,7 +150,7 @@ private:
     unsigned lastStepTask = 0;
     _map* map = nullptr;
     _stepMap* stepMap = nullptr;
-    TaskMap* taskMap = nullptr;
+    _taskMap* taskMap = nullptr;
     _token* token = nullptr;
     std::vector<_site>* endpoints = nullptr;
     _endpointsDistanceAlgorithm *endpointsDistanceAlgorithm = nullptr;
@@ -170,7 +162,8 @@ private:
             (   
                 token->getCurrentStep() < lastStepTask 
                 || !token->anyPendingTask()
-                || !token->anyOpenTask()
+                || !token->anyAssignedTask()
+                || !token->anyRunningTask()
             )){
             
             taskMap->listTasksByStep(token->getCurrentStep(), [this](const _task& task){
@@ -212,7 +205,8 @@ private:
             (   
                 token->getCurrentStep() < lastStepTask 
                 || !token->anyPendingTask()
-                || !token->anyOpenTask()
+                || !token->anyAssignedTask()
+                || !token->anyRunningTask()
             )){
             
                 taskMap->listTasksByStep(token->getCurrentStep(), [this](const _task& task){

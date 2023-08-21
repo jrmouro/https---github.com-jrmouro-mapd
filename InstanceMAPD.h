@@ -60,7 +60,7 @@ public:
         return os;
     }
 
-    const TaskMap& getTaskMap() const {
+    const _taskMap& getTaskMap() const {
         return instanceTask->getTaskMap();
     }
     

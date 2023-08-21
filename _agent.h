@@ -32,6 +32,10 @@ public:
         return _id;
     }
     
+    virtual _agent* instance()const{
+        return new _agent(*this);
+    }
+    
     void setTrivialPathMoving(_stepMap& stepMap){
         
         _stepSite site = this->_currentPath.goalSite();

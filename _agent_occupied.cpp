@@ -20,7 +20,7 @@ void _agent_occupied::onMoveUpdate(_system& system,  _agent* agent)const {
 
    if (agent->isDelivering()){
        
-       system.getToken().removeOpenTask(agent->getCurrentTask());
+       system.getToken().finishTask(agent->getCurrentTask());
 
        agent->undesignTask();
        

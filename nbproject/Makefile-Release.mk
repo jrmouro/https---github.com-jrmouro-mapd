@@ -41,6 +41,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Shape.o \
 	${OBJECTDIR}/Text.o \
 	${OBJECTDIR}/_agent.o \
+	${OBJECTDIR}/_agent_designed.o \
 	${OBJECTDIR}/_agent_free.o \
 	${OBJECTDIR}/_agent_occupied.o \
 	${OBJECTDIR}/_agent_state.o \
@@ -114,6 +115,11 @@ ${OBJECTDIR}/_agent.o: _agent.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent.o _agent.cpp
+
+${OBJECTDIR}/_agent_designed.o: _agent_designed.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_designed.o _agent_designed.cpp
 
 ${OBJECTDIR}/_agent_free.o: _agent_free.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -249,6 +255,19 @@ ${OBJECTDIR}/_agent_nomain.o: ${OBJECTDIR}/_agent.o _agent.cpp
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_nomain.o _agent.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent.o ${OBJECTDIR}/_agent_nomain.o;\
+	fi
+
+${OBJECTDIR}/_agent_designed_nomain.o: ${OBJECTDIR}/_agent_designed.o _agent_designed.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_designed.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_designed_nomain.o _agent_designed.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_agent_designed.o ${OBJECTDIR}/_agent_designed_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_agent_free_nomain.o: ${OBJECTDIR}/_agent_free.o _agent_free.cpp 

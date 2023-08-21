@@ -10,7 +10,6 @@
 
 #include "_agent_state.h"
 
-
 class _agent_free: public _agent_state {
     
 public:

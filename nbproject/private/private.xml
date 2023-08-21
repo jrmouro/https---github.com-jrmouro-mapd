@@ -7,27 +7,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_endPointsDistanceAlgorithm.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_system.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_agent.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/SystemExperiment.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_stepAstarAlgorithm.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_agent_occupied.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/InstanceMAPD.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/InstanceTask.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_stepMap.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/Instances/test/test_1.task</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_stepPath.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_agent_state.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_agent_occupied.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/main.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/InstanceMap.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_agent_free.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_agent_occupied.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_agent.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_token.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_agent_free.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_token.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Netbeans/mapd/_agent_state.h</file>
         </group>
     </open-files>
 </project-private>
