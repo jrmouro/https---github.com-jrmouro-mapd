@@ -4,8 +4,8 @@ build/Debug/GNU-Linux/_agent.o: _agent.cpp _agent.h Identifiable.h \
  ReportTask.h ManhattanAlgorithm.h _distanceAlgorithm.h \
  _endPointsDistanceAlgorithm.h _astarDistanceAlgorithm.h _path.h \
  _astarAlgorithm.h _pathAlgorithm.h _stepAstarAlgorithm.h \
- _stepPathAlgorithm.h _agent_free.h Circle.h Shape.h Text.h _system.h \
- InstanceMAPD.h InstanceMap.h InstanceTask.h _taskMap.h
+ _stepPathAlgorithm.h _agent_parked.h _agent_free.h Circle.h Shape.h \
+ Text.h _system.h InstanceMAPD.h InstanceMap.h InstanceTask.h _taskMap.h
 
 _agent.h:
 
@@ -54,6 +54,8 @@ _pathAlgorithm.h:
 _stepAstarAlgorithm.h:
 
 _stepPathAlgorithm.h:
+
+_agent_parked.h:
 
 _agent_free.h:
 

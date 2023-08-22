@@ -16,32 +16,6 @@
 
 _agent_state* _agent_free::_instance = nullptr;
 
-void _agent_free::onUpdatePath(_system& system,  _agent* agent) const {
-    
-    agent->updatePath(system);
-    
-    if (agent->isPickupping()) {
-
-        system.getToken().runTask(agent->getCurrentTask());
-        
-        changeState(agent, _agent_occupied::getInstance());
-
-    }
-    
-}
-
-void _agent_free::onMoveUpdate(_system& system,  _agent* agent)const {
-
-    if (agent->isPickupping()) {
-        
-        system.getToken().runTask(agent->getCurrentTask());
-
-        changeState(agent, _agent_occupied::getInstance());
-
-    }
-
-}
-
 void _agent_free::onDraw(const Render& render, const _agent* const agent) const {
 
     sf::Vector2f position(

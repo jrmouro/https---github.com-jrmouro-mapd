@@ -8,9 +8,9 @@
 #ifndef _AGENT_DESIGNED_H
 #define _AGENT_DESIGNED_H
 
-#include "_agent_free.h"
+#include "_agent_state.h"
 
-class _agent_designed : public _agent_free {
+class _agent_designed : public _agent_state {
 public:
     
     static _agent_state * getInstance(){
@@ -25,15 +25,14 @@ public:
     virtual ~_agent_designed(){}
             
     virtual std::string stateName()const{
-        return "designed (" + _agent_free::stateName() + ")" ;
+        return "designed";
     }
         
-    virtual void onUpdatePath(_system& system,  _agent* agent) const;
     virtual void onMoveUpdate(_system& system,  _agent* agent) const;
     virtual void onDraw(const Render& render, const _agent* const agent) const; 
     
     protected:        
-        _agent_designed() : _agent_free() {}
+        _agent_designed() : _agent_state() {}
     
     private:
         static _agent_state* _instance;

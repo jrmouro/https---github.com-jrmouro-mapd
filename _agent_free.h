@@ -28,9 +28,7 @@ public:
     virtual std::string stateName()const{
         return "free";
     }
-        
-    virtual void onUpdatePath(_system& system,  _agent* agent) const;
-    virtual void onMoveUpdate(_system& system,  _agent* agent) const;
+
     virtual void onDraw(const Render& render, const _agent* const agent) const; 
     
     protected:        

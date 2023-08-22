@@ -8,14 +8,14 @@
 #include "_agent.h"
 #include "_agent_state.h"
 #include "_token.h"
-#include "_agent_free.h"
+#include "_agent_parked.h"
 #include "Render.h"
 #include "Circle.h"
 #include "Text.h"
 #include "_system.h"
 
 _agent::_agent(int _id, const _stepSite& currentSite) : 
-_id(_id), _currentPath(currentSite), _state(_agent_free::getInstance()) { }
+_id(_id), _currentPath(currentSite), _state(_agent_parked::getInstance()) { }
 
 _agent::_agent(const _agent& other)  :
     _id(other._id), 
@@ -73,51 +73,6 @@ bool _agent::updateTaskPath(_system& system){
     
     return false;
     
-//    _task newTask;
-//        
-//    if (this->selectNewTask(system, newTask)) {
-//        
-//        system.getToken().assignTask(newTask, *this);
-//
-//        this->designTask(newTask);
-//
-//        _stepPath path(this->currentSite());
-//
-//        if(this->taskPath(system.getStepMap(), newTask, path)){
-//
-//            system.getToken().reportTaskUpdate(newTask.id(), this->id(), ReportTask::PathType::task, path);  
-//
-//            this->setPathMoving(path, system.getStepMap());                                    
-//
-//            if (this->isParked()) {
-//                
-//                system.getToken().finishTask(newTask);
-//                
-//                this->undesignTask();                    
-//
-//                this->setTrivialPathMoving(system.getStepMap());   
-//
-//            } 
-//            
-//            return true;
-//
-//        } else {
-//
-//            try {
-//                std::ostringstream stream;
-//                stream << "unsolved task path: ";
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            }
-//
-//        }
-//
-//    }
-//    
-//    return false;
-    
 }
 
 bool _agent::updateRestPath(_system& system){
@@ -137,56 +92,6 @@ bool _agent::updateRestPath(_system& system){
     }
     
     return false;
-    
-    
-//    _task conflit;
-//
-//    if (this->isConflictingRestEndpoint(system.getToken(), conflit)) {
-//
-//        _site endpoint;
-//
-//        if (this->selectNewRestEndpoint(system, endpoint)) {
-//
-//            _stepPath restPath(this->currentSite());
-//
-//            if(this->restEndpointPath(system.getStepMap(), endpoint, restPath)){
-//
-//                system.getToken().reportTaskUpdate(conflit.id(), this->id(), ReportTask::PathType::rest, restPath);  
-//
-//                this->setPathMoving(restPath, system.getStepMap());
-//
-//                return true;
-//
-//            }else{
-//
-//                try {
-//                    std::ostringstream stream;
-//                    stream << "unsolved rest endpoint path";
-//                    MAPD_EXCEPTION(stream.str());
-//                } catch (std::exception& e) {
-//                    std::cout << e.what() << std::endl;
-//                    std::abort();
-//                }
-//
-//            }
-//
-//        } else {
-//
-//            try {
-//                std::ostringstream stream;
-//                 stream << "new rest endpoint not found";
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            }
-//
-//
-//        }
-//
-//    }
-//    
-//    return false;
     
 }
 
@@ -211,6 +116,17 @@ void _agent::updatePath(_system& system){
             if(!this->updateRestPath(system))
                 this->setTrivialPathMoving(system.getStepMap());
                      
+    } else {
+        
+        try {
+            std::ostringstream stream;
+            stream << "no parked agent: " << *this;
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }        
+        
     }
 
     

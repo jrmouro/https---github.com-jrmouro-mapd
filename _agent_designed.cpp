@@ -8,6 +8,7 @@
 #include "_agent_designed.h"
 #include "_agent.h"
 #include "_agent_occupied.h"
+#include "_agent_parked.h"
 #include "_token.h"
 #include "Render.h"
 #include "Circle.h"
@@ -15,20 +16,6 @@
 #include "_system.h"
 
 _agent_state* _agent_designed::_instance = nullptr;
-
-void _agent_designed::onUpdatePath(_system& system,  _agent* agent) const {
-    
-    agent->updatePath(system);
-    
-    if (agent->isPickupping()) { // caso do agente já se encontrar em pickup site
-
-        system.getToken().runTask(agent->getCurrentTask());
-        
-        changeState(agent, _agent_occupied::getInstance());
-
-    }
-    
-}
 
 void _agent_designed::onMoveUpdate(_system& system,  _agent* agent)const {
 
@@ -39,12 +26,18 @@ void _agent_designed::onMoveUpdate(_system& system,  _agent* agent)const {
         changeState(agent, _agent_occupied::getInstance());
 
     }
+    
+    if(agent->isParked()){
+        
+        changeState(agent, _agent_parked::getInstance());
+        
+    }
 
 }
 
 void _agent_designed::onDraw(const Render& render, const _agent* const agent) const {
 
-    _agent_free::onDraw(render, agent);    
+    _agent_state::onDraw(render, agent);    
 
     sf::Vector2f position(
             agent->currentSite().GetColunm() * render.GetCell().first + render.GetCell().first / 2,
@@ -57,7 +50,5 @@ void _agent_designed::onDraw(const Render& render, const _agent* const agent) co
             sf::Color::Cyan);
 
     textTaskId.draw(render);
-
-    
 
 }

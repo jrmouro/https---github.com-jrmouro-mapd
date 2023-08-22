@@ -47,7 +47,9 @@
       <itemPath>_agent.h</itemPath>
       <itemPath>_agent_designed.h</itemPath>
       <itemPath>_agent_free.h</itemPath>
+      <itemPath>_agent_goingToRest.h</itemPath>
       <itemPath>_agent_occupied.h</itemPath>
+      <itemPath>_agent_parked.h</itemPath>
       <itemPath>_agent_state.h</itemPath>
       <itemPath>_c_task.h</itemPath>
       <itemPath>_map.h</itemPath>
@@ -67,7 +69,9 @@
       <itemPath>_agent.cpp</itemPath>
       <itemPath>_agent_designed.cpp</itemPath>
       <itemPath>_agent_free.cpp</itemPath>
+      <itemPath>_agent_goingToRest.cpp</itemPath>
       <itemPath>_agent_occupied.cpp</itemPath>
+      <itemPath>_agent_parked.cpp</itemPath>
       <itemPath>_agent_state.cpp</itemPath>
       <itemPath>_map.cpp</itemPath>
       <itemPath>_token.cpp</itemPath>
@@ -186,9 +190,17 @@
       </item>
       <item path="_agent_free.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_agent_goingToRest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_goingToRest.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_agent_occupied.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_occupied.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_parked.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_parked.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_state.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -358,9 +370,17 @@
       </item>
       <item path="_agent_free.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_agent_goingToRest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_goingToRest.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_agent_occupied.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_occupied.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_parked.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_parked.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_state.cpp" ex="false" tool="1" flavor2="0">
       </item>

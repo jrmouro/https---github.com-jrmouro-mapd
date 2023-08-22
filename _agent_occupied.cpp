@@ -7,7 +7,7 @@
 
 #include "_agent_occupied.h"
 #include "_agent.h"
-#include "_agent_free.h"
+#include "_agent_parked.h"
 #include "_token.h"
 #include "Circle.h"
 #include "Text.h"
@@ -24,7 +24,7 @@ void _agent_occupied::onMoveUpdate(_system& system,  _agent* agent)const {
 
        agent->undesignTask();
        
-       changeState(agent, _agent_free::getInstance());
+       changeState(agent, _agent_parked::getInstance());
        
    }
 
