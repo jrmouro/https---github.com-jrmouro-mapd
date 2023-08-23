@@ -17,6 +17,16 @@
 _agent_state* _agent_goingToRest::_instance = nullptr;
 
 void _agent_goingToRest::onMoveUpdate(_system& system,  _agent* agent)const {
+    
+    if(agent->previousSite().GetStep() == agent->currentSite().GetStep()){ // parado
+        
+        agent->expendEnergy(AER::unloaded);
+        
+    } else { // deslocando
+        
+        agent->expendEnergy(AER::moving);
+        
+    }
 
     if(agent->isParked()){
         

@@ -40,22 +40,6 @@ void _agent_free::onDraw(const Render& render, const _agent* const agent) const 
     background.draw(render);
     textAgentId.draw(render);
 
-//    if (agent->isDesigned()) {
-//
-//        sf::Vector2f position(
-//                agent->currentSite().GetColunm() * render.GetCell().first + render.GetCell().first / 2,
-//                agent->currentSite().GetRow() * render.GetCell().second + render.GetCell().first / 2);
-//
-//        Text textTaskId(
-//                std::to_string(agent->getCurrentTask().id()),
-//                position,
-//                sf::Vector2f(render.GetCell().first / 2, 0),
-//                sf::Color::Cyan);
-//
-//        textTaskId.draw(render);
-//
-//    }
-
 }
 
 

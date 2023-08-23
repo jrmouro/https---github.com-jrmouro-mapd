@@ -16,7 +16,7 @@ class _task : public Identifiable<int>{
     
 public:
         
-    _task() : _id(0), pickup(), delivery() {}
+    _task(int id = 0) : _id(id), pickup(), delivery() {}
             
     _task(int id, _site pickup, _site delivery) :
     _id(id), pickup(pickup), delivery(delivery) {}

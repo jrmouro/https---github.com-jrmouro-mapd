@@ -39,6 +39,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Rectangle.o \
 	${OBJECTDIR}/Render.o \
 	${OBJECTDIR}/Shape.o \
+	${OBJECTDIR}/TaskThresholdToken.o \
 	${OBJECTDIR}/Text.o \
 	${OBJECTDIR}/_agent.o \
 	${OBJECTDIR}/_agent_designed.o \
@@ -107,6 +108,11 @@ ${OBJECTDIR}/Shape.o: Shape.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Shape.o Shape.cpp
+
+${OBJECTDIR}/TaskThresholdToken.o: TaskThresholdToken.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TaskThresholdToken.o TaskThresholdToken.cpp
 
 ${OBJECTDIR}/Text.o: Text.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -241,6 +247,19 @@ ${OBJECTDIR}/Shape_nomain.o: ${OBJECTDIR}/Shape.o Shape.cpp
 	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Shape_nomain.o Shape.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/Shape.o ${OBJECTDIR}/Shape_nomain.o;\
+	fi
+
+${OBJECTDIR}/TaskThresholdToken_nomain.o: ${OBJECTDIR}/TaskThresholdToken.o TaskThresholdToken.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/TaskThresholdToken.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TaskThresholdToken_nomain.o TaskThresholdToken.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/TaskThresholdToken.o ${OBJECTDIR}/TaskThresholdToken_nomain.o;\
 	fi
 
 ${OBJECTDIR}/Text_nomain.o: ${OBJECTDIR}/Text.o Text.cpp 

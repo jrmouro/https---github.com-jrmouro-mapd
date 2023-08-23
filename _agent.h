@@ -15,6 +15,7 @@
 #include "_task.h"
 #include "_agent_state.h"
 #include "Drawable.h"
+#include "_agent_energy_system.h"
 
 
 class _token;
@@ -22,7 +23,7 @@ class _agent_state;
 class _agent : public Identifiable<int>, public Drawable{
 public:
         
-    _agent(int _id, const _stepSite& currentSite);
+    _agent(int _id, const _stepSite& currentSite, int amount_energy = 0);
     
     _agent(const _agent& other);
 
@@ -54,7 +55,7 @@ public:
         
     }
             
-    void undesignTask(){
+    void unassignTask(){
         _currentTaskIndex = -1;
     }
     
@@ -84,14 +85,20 @@ public:
         
     }
     
-    void designTask(const _task& task){
+    void assignTask(const _task& task){
         tasks.push_back(task);
         _currentTaskIndex = tasks.size() - 1;
     }
     
-    const bool isDesigned()const{
+    const bool isAssigned()const{
         
         return _currentTaskIndex > -1;
+        
+    }
+    
+    const bool isGoindToRest()const{
+        
+        return !isAssigned() && _currentPath.size() > 1;
         
     }
     
@@ -123,10 +130,10 @@ public:
         
         if (_currentPath.size() > 1) {
 
-        _currentPath.pop();       
+            this->_previousSite = _currentPath.pop();       
 
         } else {
-
+        
             try {
                 std::ostringstream stream;
                 stream << "invalid path size - agent: " << std::endl << *this;
@@ -135,9 +142,9 @@ public:
                 std::cout << e.what() << std::endl;
                 std::abort();
             }
-
-        }
         
+        }
+       
     }
     
     void progressPath(const _stepPath& path){
@@ -149,25 +156,12 @@ public:
     virtual void move(_system& system);
     
     virtual void receive(_system& system);
-    
-    virtual void updatePath(_system& system);
-    virtual bool updateTaskPath(_system& system);
-    virtual bool updateRestPath(_system& system);
-    
-    virtual bool selectNewRestEndpoint(_system& system, _site& selectNewSite);
-          
-    virtual bool selectNewTask(_system& system, _task& selectedTask) const;
-    
-    virtual bool isConflictingRestEndpoint(_token& token, _task& conflitTask) const;
-    
-    virtual bool restEndpointPath(const _stepMap& map, const _site& endpoint, _stepPath& path);
-        
-    virtual bool taskPath(const _stepMap& map, const _task& task, _stepPath& path) const;
         
     virtual void draw(const Render& render) const;    
     
     friend std::ostream& operator<<(std::ostream& os, const _agent& obj) {
         os <<"agent id: "<< obj._id << std::endl;
+        os << "energy " << obj.energy << std::endl;
         os <<"agent path: "<< obj._currentPath << std::endl;
         if(obj._currentTaskIndex > -1)
             os <<"agent current task: "<< obj.getCurrentTask() << std::endl;
@@ -192,6 +186,22 @@ public:
         return _task();
         
     }
+    
+    int amountEnergy(){
+        return energy.getAmount();
+    }
+    
+    void expendEnergy(AER aer) {
+        energy.expend(aer);       
+    }
+    
+    void provision(int value){
+        energy.provision(value);
+    }
+    
+    _stepSite previousSite() const {
+        return _previousSite;
+    }
         
         
 protected:
@@ -200,6 +210,8 @@ protected:
     _stepPath _currentPath;    
     std::vector<_task> tasks;
     int _currentTaskIndex = -1;
+    _agent_energy_system energy;
+    _stepSite _previousSite;
     
     const _task* const currentTask() const {
         

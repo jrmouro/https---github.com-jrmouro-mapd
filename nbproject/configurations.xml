@@ -1,19 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="HeaderFiles"
-                   displayName="Arquivos de Cabeçalho"
+    <logicalFolder name="ResourceFiles"
+                   displayName="Arquivos de Recurso"
                    projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="HeaderFiles" displayName="Library" projectFiles="true">
+      <logicalFolder name="f4" displayName="Agent" projectFiles="true">
+        <logicalFolder name="f1" displayName="Agent_State" projectFiles="true">
+          <itemPath>_agent_designed.cpp</itemPath>
+          <itemPath>_agent_designed.h</itemPath>
+          <itemPath>_agent_free.cpp</itemPath>
+          <itemPath>_agent_free.h</itemPath>
+          <itemPath>_agent_goingToRest.cpp</itemPath>
+          <itemPath>_agent_goingToRest.h</itemPath>
+          <itemPath>_agent_occupied.cpp</itemPath>
+          <itemPath>_agent_occupied.h</itemPath>
+          <itemPath>_agent_parked.cpp</itemPath>
+          <itemPath>_agent_parked.h</itemPath>
+          <itemPath>_agent_state.cpp</itemPath>
+          <itemPath>_agent_state.h</itemPath>
+        </logicalFolder>
+        <itemPath>_agent.cpp</itemPath>
+        <itemPath>_agent.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="Algorithm" projectFiles="true">
         <itemPath>ManhattanAlgorithm.h</itemPath>
         <itemPath>_astarAlgorithm.h</itemPath>
         <itemPath>_astarDistanceAlgorithm.h</itemPath>
         <itemPath>_distanceAlgorithm.h</itemPath>
         <itemPath>_endPointsDistanceAlgorithm.h</itemPath>
-        <itemPath>_fractioningRateAlgorithm.h</itemPath>
         <itemPath>_pathAlgorithm.h</itemPath>
         <itemPath>_stepAstarAlgorithm.h</itemPath>
         <itemPath>_stepPathAlgorithm.h</itemPath>
+        <itemPath>_thresholdAlgorithm.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Drawable" projectFiles="true">
         <itemPath>Circle.cpp</itemPath>
@@ -28,6 +48,11 @@
         <itemPath>Text.cpp</itemPath>
         <itemPath>Text.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f13" displayName="Energy" projectFiles="true">
+        <itemPath>_agent_energy_system.h</itemPath>
+        <itemPath>_energy_regime.h</itemPath>
+        <itemPath>_energy_system.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f3" displayName="Experiment" projectFiles="true">
         <itemPath>AstarExperiment.h</itemPath>
         <itemPath>Experiment.h</itemPath>
@@ -36,50 +61,49 @@
         <itemPath>RenderExperiment.h</itemPath>
         <itemPath>SystemExperiment.h</itemPath>
       </logicalFolder>
-      <itemPath>Identifiable.h</itemPath>
-      <itemPath>InstanceMAPD.h</itemPath>
-      <itemPath>InstanceMap.h</itemPath>
-      <itemPath>InstanceTask.h</itemPath>
-      <itemPath>MapdException.h</itemPath>
-      <itemPath>ReportAgent.h</itemPath>
-      <itemPath>ReportTask.h</itemPath>
-      <itemPath>Resetable.h</itemPath>
-      <itemPath>_agent.h</itemPath>
-      <itemPath>_agent_designed.h</itemPath>
-      <itemPath>_agent_free.h</itemPath>
-      <itemPath>_agent_goingToRest.h</itemPath>
-      <itemPath>_agent_occupied.h</itemPath>
-      <itemPath>_agent_parked.h</itemPath>
-      <itemPath>_agent_state.h</itemPath>
-      <itemPath>_c_task.h</itemPath>
-      <itemPath>_map.h</itemPath>
-      <itemPath>_path.h</itemPath>
-      <itemPath>_site.h</itemPath>
-      <itemPath>_stepMap.h</itemPath>
-      <itemPath>_stepPath.h</itemPath>
-      <itemPath>_stepSite.h</itemPath>
-      <itemPath>_system.h</itemPath>
-      <itemPath>_task.h</itemPath>
-      <itemPath>_taskMap.h</itemPath>
-      <itemPath>_token.h</itemPath>
+      <logicalFolder name="f11" displayName="Instance" projectFiles="true">
+        <itemPath>InstanceMAPD.h</itemPath>
+        <itemPath>InstanceMap.h</itemPath>
+        <itemPath>InstanceTask.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f8" displayName="Map" projectFiles="true">
+        <itemPath>_map.cpp</itemPath>
+        <itemPath>_map.h</itemPath>
+        <itemPath>_stepMap.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f9" displayName="Path" projectFiles="true">
+        <itemPath>_path.h</itemPath>
+        <itemPath>_stepPath.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f7" displayName="Site" projectFiles="true">
+        <itemPath>_site.h</itemPath>
+        <itemPath>_stepSite.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f12" displayName="System" projectFiles="true">
+        <itemPath>_system.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f6" displayName="Task" projectFiles="true">
+        <itemPath>ReportTask.h</itemPath>
+        <itemPath>_c_task.h</itemPath>
+        <itemPath>_task.h</itemPath>
+        <itemPath>_taskMap.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f5" displayName="Token" projectFiles="true">
+        <itemPath>CarryThresholdToken.h</itemPath>
+        <itemPath>TaskCarryThresholdToken.h</itemPath>
+        <itemPath>TaskThresholdToken.cpp</itemPath>
+        <itemPath>TaskThresholdToken.h</itemPath>
+        <itemPath>_token.cpp</itemPath>
+        <itemPath>_token.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f10" displayName="Util" projectFiles="true">
+        <itemPath>Identifiable.h</itemPath>
+        <itemPath>MapdException.h</itemPath>
+        <itemPath>Resetable.h</itemPath>
+      </logicalFolder>
     </logicalFolder>
-    <logicalFolder name="SourceFiles"
-                   displayName="Arquivos de Código-Fonte"
-                   projectFiles="true">
-      <itemPath>_agent.cpp</itemPath>
-      <itemPath>_agent_designed.cpp</itemPath>
-      <itemPath>_agent_free.cpp</itemPath>
-      <itemPath>_agent_goingToRest.cpp</itemPath>
-      <itemPath>_agent_occupied.cpp</itemPath>
-      <itemPath>_agent_parked.cpp</itemPath>
-      <itemPath>_agent_state.cpp</itemPath>
-      <itemPath>_map.cpp</itemPath>
-      <itemPath>_token.cpp</itemPath>
+    <logicalFolder name="SourceFiles" displayName="Main" projectFiles="true">
       <itemPath>main.cpp</itemPath>
-    </logicalFolder>
-    <logicalFolder name="ResourceFiles"
-                   displayName="Arquivos de Recurso"
-                   projectFiles="true">
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Arquivos de Teste"
@@ -128,6 +152,8 @@
       </compileType>
       <item path="AstarExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="CarryThresholdToken.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Circle.h" ex="false" tool="3" flavor2="0">
@@ -162,8 +188,6 @@
       </item>
       <item path="RenderExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="ReportAgent.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="ReportTask.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Resetable.h" ex="false" tool="3" flavor2="0">
@@ -173,6 +197,12 @@
       <item path="Shape.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SystemExperiment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TaskCarryThresholdToken.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TaskThresholdToken.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="TaskThresholdToken.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Text.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -185,6 +215,8 @@
       <item path="_agent_designed.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_designed.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_energy_system.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_free.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -216,7 +248,9 @@
       </item>
       <item path="_endPointsDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_fractioningRateAlgorithm.h" ex="false" tool="3" flavor2="0">
+      <item path="_energy_regime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_energy_system.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_map.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -243,6 +277,8 @@
       <item path="_task.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_taskMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_thresholdAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_token.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -308,6 +344,8 @@
       </compileType>
       <item path="AstarExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="CarryThresholdToken.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Circle.h" ex="false" tool="3" flavor2="0">
@@ -342,8 +380,6 @@
       </item>
       <item path="RenderExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="ReportAgent.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="ReportTask.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Resetable.h" ex="false" tool="3" flavor2="0">
@@ -353,6 +389,12 @@
       <item path="Shape.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SystemExperiment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TaskCarryThresholdToken.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TaskThresholdToken.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="TaskThresholdToken.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Text.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -365,6 +407,8 @@
       <item path="_agent_designed.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_designed.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_energy_system.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_free.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -396,7 +440,9 @@
       </item>
       <item path="_endPointsDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_fractioningRateAlgorithm.h" ex="false" tool="3" flavor2="0">
+      <item path="_energy_regime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_energy_system.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_map.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -423,6 +469,8 @@
       <item path="_task.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_taskMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_thresholdAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_token.cpp" ex="false" tool="1" flavor2="0">
       </item>

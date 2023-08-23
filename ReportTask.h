@@ -16,7 +16,8 @@ public:
     
     enum PathType{
         task,
-        rest
+        rest,
+        c_task
     };
 
     
@@ -31,7 +32,8 @@ public:
             _task(other), 
             taskArrivalStep(other.taskArrivalStep), 
             taskMap(other.taskMap),
-            restMap(other.restMap){ }
+            restMap(other.restMap),
+            c_taskMap(other.c_taskMap){ }
 
         
     int GetTaskArrivalStep() const {
@@ -48,6 +50,9 @@ public:
             case PathType::rest:
                 restMap.insert(std::pair<unsigned, _stepPath>(agentId, path));
                 break;
+            case PathType::c_task:
+                c_taskMap.insert(std::pair<unsigned, _stepPath>(agentId, path));
+                break;
                 
         }
         
@@ -59,16 +64,28 @@ public:
         os << "Task: " << (_task&)obj << std::endl;
         os << "taskArrivalStep: " << obj.taskArrivalStep << std::endl;
         
-        os << "taskPaths:" << std::endl;
-        for(auto pair : obj.taskMap){
-            os << "agentId: " << pair.first << std::endl;
-            os << pair.second << std::endl;
+        if(!obj.taskMap.empty()){
+            os << "taskPaths:" << std::endl;
+            for(auto pair : obj.taskMap){
+                os << "agentId: " << pair.first << std::endl;
+                os << pair.second << std::endl;
+            }
         }
-                
-        os << "restPaths:" << std::endl;
-        for(auto pair : obj.restMap){
-            os << "agentId: " << pair.first << std::endl;
-            os << pair.second << std::endl;
+             
+        if(!obj.restMap.empty()){
+            os << "restPaths:" << std::endl;
+            for(auto pair : obj.restMap){
+                os << "agentId: " << pair.first << std::endl;
+                os << pair.second << std::endl;
+            }
+        }
+        
+        if(!obj.c_taskMap.empty()){
+            os << "c_taskPaths:" << std::endl;
+            for(auto pair : obj.c_taskMap){
+                os << "agentId: " << pair.first << std::endl;
+                os << pair.second << std::endl;
+            }
         }
                 
         return os;
@@ -78,7 +95,7 @@ private:
     
     unsigned taskArrivalStep;
     
-    std::map<unsigned, _stepPath> taskMap, restMap;
+    std::map<unsigned, _stepPath> taskMap, restMap, c_taskMap;
     
 };
 

@@ -79,7 +79,10 @@ public:
                 std::abort();
             }
             
-        }     
+        }  
+        
+        return _stepSite();
+        
     }
     
     const _stepSite& currentSite() const{
@@ -99,7 +102,35 @@ public:
                 std::abort();
             }
             
-        }     
+        }   
+        
+        return _stepSite();
+        
+    }
+    
+    _stepSite get(unsigned step) const {
+        
+        if(step <= goalSite().GetStep() && step >= currentSite().GetStep()){
+            
+            unsigned aux = goalSite().GetStep() - step;
+            
+            return sites.at(aux);
+            
+        } else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "invalid top on empty path";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }
+        
+        return _stepSite();
+        
     }
     
     _stepSite pop(){
@@ -119,7 +150,10 @@ public:
                 std::abort();
             }
             
-        }     
+        }   
+        
+        return _stepSite();
+        
     }
     
     unsigned size() const{
@@ -142,9 +176,11 @@ public:
         return this->sites.empty();
     }
         
-    void list(const std::function<bool(const _stepSite&)>& function) const {
+    void list(const std::function<bool(const _stepSite&)>& function, unsigned begin = 0) const {
         
-        for(std::vector<_stepSite>::const_iterator it = sites.cbegin(); it != sites.cend(); it++){
+        std::vector<_stepSite>::const_iterator it = sites.cbegin() + begin;
+        
+        for(; it != sites.cend(); it++){
             
             if(function(*it)) return;
             
@@ -152,9 +188,11 @@ public:
         
     }
     
-    void rlist(const std::function<bool(const _stepSite&)>& function) const {
+    void rlist(const std::function<bool(const _stepSite&)>& function, unsigned begin = 0) const {
         
-        for(std::vector<_stepSite>::const_reverse_iterator it = sites.crbegin(); it != sites.crend(); it++){
+        std::vector<_stepSite>::const_reverse_iterator it = sites.crbegin() + begin;
+        
+        for(; it != sites.crend(); it++){
             
             if(function(*it)) return;
             
@@ -162,9 +200,11 @@ public:
         
     }
     
-    void moveList(const std::function<bool(const _stepSite&, const _stepSite&)>& function) const {
+    void moveList(const std::function<bool(const _stepSite&, const _stepSite&)>& function, unsigned begin = 0) const {
         
-        for(std::vector<_stepSite>::const_reverse_iterator it = sites.crbegin(); it != sites.crend() - 1; it++){
+        std::vector<_stepSite>::const_reverse_iterator it = sites.crbegin() + begin;
+        
+        for(; it != sites.crend() - 1; it++){
             
             if(function(*it, *(it + 1))) return;
             

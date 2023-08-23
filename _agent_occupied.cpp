@@ -17,12 +17,22 @@
 _agent_state* _agent_occupied::_instance = nullptr;
 
 void _agent_occupied::onMoveUpdate(_system& system,  _agent* agent)const {
+    
+    if(agent->previousSite().GetStep() == agent->currentSite().GetStep()){ // parado
+        
+        agent->expendEnergy(AER::loaded);
+        
+    } else { // deslocando
+        
+        agent->expendEnergy(AER::carrying);
+        
+    }
 
    if (agent->isDelivering()){
        
        system.getToken().finishTask(agent->getCurrentTask());
 
-       agent->undesignTask();
+       agent->unassignTask();
        
        changeState(agent, _agent_parked::getInstance());
        
@@ -59,7 +69,7 @@ void _agent_occupied::onDraw(const Render& render, const _agent* const agent) co
             sf::Vector2f(render.GetCell().first / 4, 0),
             sf::Color::Cyan);
     
-    if (agent->isDesigned()) {
+    if (agent->isAssigned()) {
         
         Text textTaskId(
                 std::to_string(agent->getCurrentTask().id()),

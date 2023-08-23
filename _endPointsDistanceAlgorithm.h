@@ -194,7 +194,7 @@ public:
             
         }
         
-//        std::cout << *this << std::endl;
+        std::cout << *this << std::endl;
                
     }
     

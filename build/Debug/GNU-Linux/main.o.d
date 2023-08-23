@@ -5,8 +5,9 @@ build/Debug/GNU-Linux/main.o: main.cpp SystemExperiment.h Experiment.h \
  _c_task.h ReportTask.h ManhattanAlgorithm.h _distanceAlgorithm.h \
  _endPointsDistanceAlgorithm.h _astarDistanceAlgorithm.h _path.h \
  _astarAlgorithm.h _pathAlgorithm.h _stepAstarAlgorithm.h \
- _stepPathAlgorithm.h _agent.h _agent_state.h Text.h Shape.h \
- _agent_free.h
+ _stepPathAlgorithm.h _agent.h _agent_state.h _agent_energy_system.h \
+ _energy_system.h _energy_regime.h TaskCarryThresholdToken.h \
+ TaskThresholdToken.h CarryThresholdToken.h Text.h Shape.h _agent_free.h
 
 SystemExperiment.h:
 
@@ -71,6 +72,18 @@ _stepPathAlgorithm.h:
 _agent.h:
 
 _agent_state.h:
+
+_agent_energy_system.h:
+
+_energy_system.h:
+
+_energy_regime.h:
+
+TaskCarryThresholdToken.h:
+
+TaskThresholdToken.h:
+
+CarryThresholdToken.h:
 
 Text.h:
 

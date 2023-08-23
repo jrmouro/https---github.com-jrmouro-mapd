@@ -12,15 +12,30 @@
 #include "MapdException.h"
 #include "InstanceMAPD.h"
 #include "_token.h"
+#include "TaskCarryThresholdToken.h"
+#include "TaskThresholdToken.h"
+#include "CarryThresholdToken.h"
 #include "_agent.h"
 
 class _system {
 public:
     
+    enum TokenType{
+        tp,
+        taskThreshold_tp,
+        carryThreshold_tp,
+        taskCarryThreshold_tp
+    };
+    
     _system(){}
     
-    _system(const InstanceMAPD& instanceMAPD){        
-        reset(instanceMAPD);        
+    _system(
+            TokenType tokenType, 
+            const InstanceMAPD& instanceMAPD, 
+            float task_threshold = .0f, 
+            float carry_threshold = .0f,
+            int agent_amount_energy = 0){        
+        reset(tokenType, instanceMAPD, task_threshold, carry_threshold, agent_amount_energy);        
     }
     
     _system(const _system& other) :
@@ -41,7 +56,14 @@ public:
     
     }
     
-    void reset(const InstanceMAPD& instanceMAPD){
+    
+    
+    void reset(
+        TokenType tokenType, 
+        const InstanceMAPD& instanceMAPD, 
+        float task_threshold = .0f, 
+        float carry_threshold = .0f,
+        int agent_amount_energy = 0){
         
         if(token != nullptr) {
             delete token;
@@ -64,11 +86,24 @@ public:
         
         taskMap = new _taskMap(instanceMAPD.getTaskMap());
         
-        token = new _token(*map, *stepMap, *endpoints, *endpointsDistanceAlgorithm);
+        switch(tokenType){
+            case tp:
+                token = new _token(*map, *stepMap, *endpoints, *endpointsDistanceAlgorithm, task_threshold, carry_threshold);
+                break;
+            case taskThreshold_tp:
+                token = new TaskThresholdToken(*map, *stepMap, *endpoints, *endpointsDistanceAlgorithm, task_threshold, carry_threshold);
+                break;
+            case carryThreshold_tp:
+                token = new CarryThresholdToken(*map, *stepMap, *endpoints, *endpointsDistanceAlgorithm, task_threshold, carry_threshold);
+                break;
+            case taskCarryThreshold_tp:
+                token = new TaskCarryThresholdToken(*map, *stepMap, *endpoints, *endpointsDistanceAlgorithm, task_threshold, carry_threshold);
+                break;
+        }
         
-        instanceMAPD.listBotsEndPoints([this](unsigned id, const _site& site){
+        instanceMAPD.listBotsEndPoints([agent_amount_energy, this](unsigned id, const _site& site){
                         
-            this->token->addAgent(_agent(id, _stepSite(0, site.GetRow(), site.GetColunm())));
+            this->token->addAgent(_agent(id, _stepSite(0, site.GetRow(), site.GetColunm()), agent_amount_energy));
             
             return false;
             

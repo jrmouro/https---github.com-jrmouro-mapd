@@ -33,7 +33,7 @@ public:
         
         InstanceMAPD* instanceMAPD = InstanceMAPD::load(mapFilename, taskFilename);
                 
-        _system system(*instanceMAPD);
+        _system system(_system::TokenType::tp, *instanceMAPD, .9f, .9f, 100);
         
         Render render(
                     std::pair<unsigned, unsigned>(100,100),

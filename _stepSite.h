@@ -23,6 +23,15 @@ public:
     _site(row, colunm), step(step) {}
     
     _stepSite(const _stepSite& other) : _site(other), step(other.step) { }
+    
+    _stepSite& operator=(const _stepSite& right) {
+        if (this == &right)
+            return *this;
+        this->step = right.step;
+        this->row = right.row;
+        this->colunm = right.colunm;
+        return *this;
+    }
 
     virtual ~_stepSite(){}    
     

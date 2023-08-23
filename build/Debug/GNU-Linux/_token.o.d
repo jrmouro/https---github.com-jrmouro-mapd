@@ -4,7 +4,8 @@ build/Debug/GNU-Linux/_token.o: _token.cpp _token.h _map.h Drawable.h \
  _distanceAlgorithm.h _endPointsDistanceAlgorithm.h \
  _astarDistanceAlgorithm.h _path.h _astarAlgorithm.h _pathAlgorithm.h \
  _stepMap.h _stepAstarAlgorithm.h _stepPathAlgorithm.h _agent.h \
- _agent_state.h _fractioningRateAlgorithm.h
+ _agent_state.h _agent_energy_system.h _energy_system.h _energy_regime.h \
+ _thresholdAlgorithm.h
 
 _token.h:
 
@@ -54,4 +55,10 @@ _agent.h:
 
 _agent_state.h:
 
-_fractioningRateAlgorithm.h:
+_agent_energy_system.h:
+
+_energy_system.h:
+
+_energy_regime.h:
+
+_thresholdAlgorithm.h:

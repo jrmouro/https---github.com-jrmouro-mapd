@@ -23,17 +23,27 @@ class _agent;
 class _token : public Drawable{
 public:
     
-    _token(const _map& map, _stepMap& stepMap, std::vector<_site>& endpoints, const _endpointsDistanceAlgorithm& endpointsDistanceAlgorithm):
+    _token(
+            const _map& map, 
+            _stepMap& stepMap, 
+            std::vector<_site>& endpoints, 
+            const _endpointsDistanceAlgorithm& endpointsDistanceAlgorithm, 
+            float task_threshold = .0f,
+            float carry_threshold = .0f):
     map(map),
     stepMap(stepMap),
     endpoints(endpoints),
-    endpointsDistanceAlgorithm(endpointsDistanceAlgorithm){}            
+    endpointsDistanceAlgorithm(endpointsDistanceAlgorithm),
+    task_threshold(task_threshold),
+    carry_threshold(carry_threshold){}            
     
     _token(const _token& other) :
     map(other.map),
     stepMap(other.stepMap),
     endpoints(other.endpoints),
     endpointsDistanceAlgorithm(other.endpointsDistanceAlgorithm),
+    task_threshold(other.task_threshold),
+    carry_threshold(other.carry_threshold),
     assignTaskAgent(other.assignTaskAgent),
     reportTasks(other.reportTasks), 
     currentStep(other.currentStep) { 
@@ -110,7 +120,7 @@ public:
         for (auto ptask : finishedTasks) delete ptask.second;
     
     } 
-    
+        
     void assignTask(const _task& task, const _agent& agent){
         
         std::map<unsigned, _task*>::const_iterator it = pendingTasks.find(task.id());
@@ -254,21 +264,29 @@ public:
             
         }
         
-    }  
+    } 
+    
+    int tokenEnergy()const;
     
     friend std::ostream& operator<<(std::ostream& os, const _token& obj) {
         os << "current step: " << obj.currentStep << std::endl;
-        for(auto pair: obj.reportTasks){
-            
-            os << pair.second << std::endl;
-            
+        os  << std::endl << "energy: " << obj.tokenEnergy() << std::endl;
+        os  << std::endl << "agents: " << std::endl;
+        for (auto elem : obj.agents) {
+            os << *elem.second <<  std::endl;
+        }        
+        os  << std::endl << "reportTasks: " << std::endl;
+        for(auto pair: obj.reportTasks){            
+            os << pair.second << std::endl;            
         }
         return os;
     }
 
     virtual void draw(const Render& render) const;
     
-    void updatePath(_agent& agent);
+    virtual void updatePath(_agent& agent);
+    
+protected:
     
     void updateTrivialPathToAgent(_agent& agent);
         
@@ -278,13 +296,22 @@ public:
     bool updateRestPathToAgent(_agent& agent);
     
     bool selectNewTaskToAgent(const _agent& agent, _task& selectedTask) const;
-    bool taskPathToAgentToAgent(const _agent& agent, const _task& task, _stepPath& path) const;
-    bool selectNewTaskPathToAgent(const _agent& agent, _task& selectedTask, _stepPath& path) const;
+    
+    
+    bool taskPathToAgent(const _agent& agent, const _task& task, _stepPath& path, unsigned& pickupStep) const;
+    bool selectNewTaskPathToAgent(const _agent& agent, _task& selectedTask, _stepPath& path, unsigned& pickupStep) const;
+    bool selectNewTaskPathToAgentTaskThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
+    bool selectNewTaskPathToAgentCarryThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
+    bool selectNewTaskPathToAgentTaskCarryThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
+    
     bool updateTaskPathToAgent(_agent& agent);
+    bool updateTaskPathToAgentTaskThreshold(_agent& agent);
+    bool updateTaskPathToAgentCarryThreshold(_agent& agent);
+    bool updateTaskPathToAgentTaskCarryThreshold(_agent& agent);
+        
     
-    
-    
-    bool selectNewTaskPathToAgent(const _agent& agent, _task& origTask, _c_task& c_task, _stepPath& path, _stepPath& c_path, bool& c_taskFlag, float threshold) const;
+    bool selectNewTaskOrCtaskPathToAgent(const _agent& agent, _task& origTask, _c_task& firstC_task, _c_task& secondC_task, _stepPath& path, _stepPath& c_path, bool& c_taskFlag) const;
+    bool updateTaskOrCtaskPathToAgent(_agent& agent);
     
 private:
     
@@ -299,11 +326,12 @@ private:
         this->reportTasks.insert(std::pair<unsigned, ReportTask>(task.id(), ReportTask(task, currentStep)));
     }
     
-    void stepping() {
-        this->currentStep++;
+    void stepping() {        
+        reinsert_c_tasks(currentStep++);
     } 
             
 private:
+    float task_threshold = .0f, carry_threshold = .0f;
     int c_task_ids = -1;
     const _map& map;
     _stepMap& stepMap;
@@ -317,7 +345,7 @@ private:
     std::map<unsigned, ReportTask> reportTasks;
     unsigned currentStep = 0;
     
-    int new_C_TaskId(){
+    int getOneTaskId(){
         return c_task_ids--;
     }
     
