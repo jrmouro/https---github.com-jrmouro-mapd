@@ -8,9 +8,9 @@
 #ifndef _AGENT_PARKED_H
 #define _AGENT_PARKED_H
 
-#include "_agent_free.h"
+#include "_agent_state.h"
 
-class _agent_parked : public _agent_free {
+class _agent_parked : public _agent_state {
 public:
     
     static _agent_state * getInstance(){
@@ -25,14 +25,15 @@ public:
     virtual ~_agent_parked(){}
             
     virtual std::string stateName()const{
-        return "parked (" + _agent_free::stateName() + ")" ;
+        return "parked";
     }
-        
-    virtual void onUpdatePath(_system& system,  _agent* agent) const;
-    virtual void onMoveUpdate(_system& system,  _agent* agent) const;
+    
+    virtual void onUpdatePath(_token&, _agent&) const;
+    virtual void onBeforeStepping(_token&, _agent&) const;
+    virtual void onEnergyExpend(_token&, _agent&) const;
     
     protected:        
-        _agent_parked() : _agent_free() {}
+        _agent_parked() : _agent_state() {}
     
     private:
         static _agent_state* _instance;

@@ -2,7 +2,7 @@
 #include "_agent.h"
 #include "_thresholdAlgorithm.h"
 
-int _token::tokenEnergy()const{
+int _token::energy()const{
     int ret = 0;
     listAgents([&ret](_agent& agent){
         ret += agent.amountEnergy();
@@ -29,6 +29,64 @@ void _token::draw(const Render& render) const{
 
     }
     
+}
+
+bool _token::selectChargingEndpointToAgent(const _agent& agent, _site& selectNewSite) const {
+
+    unsigned min_distance = 0xffffffff;
+    
+    for (auto endpoint : chargingEndpoints) {
+        
+        bool flag = true;
+
+        this->listPendingTasks([endpoint, &flag](const _task & task) { // TODO isso nunca deve acontecer... testar e retirar
+
+            if (task.getDelivery().match(endpoint)) {
+
+                flag = false;
+                
+                return true;                
+
+            }
+
+            return false;
+
+        });
+        
+        if(flag){
+        
+            this->listAgents([endpoint, agent, &flag](_agent & otherAgent) {
+
+                if (agent.id() != otherAgent.id() && otherAgent.goalSite().match(endpoint)) { //other agents
+
+                    flag = false;
+                    
+                    return true;
+
+                } 
+
+                return false;
+
+            });
+                
+        }
+        
+        if(flag){
+            
+            unsigned distance = this->endpointsDistanceAlgorithm.solve(agent.currentSite(), endpoint);
+            
+            if (distance < min_distance) {
+                min_distance = distance;
+                selectNewSite = endpoint;
+            }
+            
+            
+        }       
+
+    }
+
+    return min_distance < 0xffffffff;
+
 }
 
 bool _token::selectNewRestEndpointToAgent(const _agent& agent, _site& selectNewSite) const {
@@ -86,6 +144,92 @@ bool _token::selectNewRestEndpointToAgent(const _agent& agent, _site& selectNewS
     }
 
     return min_distance < 0xffffffff;
+
+}
+
+bool _token::selectChargingEndpointPathToAgent(const _agent& agent, _stepPath& chargingPath) const {
+    
+    _stepAstarAlgorithm astar;
+    _site endpoint;
+    
+    if(selectChargingEndpointToAgent(agent, endpoint)){
+
+        if(astar.solve(stepMap, chargingPath, endpoint, agent.id())){
+
+            return true;
+
+        } else {
+
+            try {
+                std::ostringstream stream;
+                stream << "unsolved charging endpoint path";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+
+        }
+
+    } else {
+
+        try {
+            std::ostringstream stream;
+            stream << "unsolved charging endpoint selection";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+
+    }
+    
+    return false;
+
+}
+
+bool _token::selectChargingEndpointPathToAgent(const _agent& agent, _task& conflictTask, _stepPath& chargingPath) const {
+    
+    _stepAstarAlgorithm astar;
+    _site endpoint;
+    
+    if(isConflictingSiteWithAnyTaskDelivery(agent.currentSite(), conflictTask)){
+        
+        if(selectChargingEndpointToAgent(agent, endpoint)){
+
+            if(astar.solve(stepMap, chargingPath, endpoint, agent.id())){
+
+                return true;
+
+            } else {
+
+                try {
+                    std::ostringstream stream;
+                    stream << "unsolved charging endpoint path";
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
+                }
+
+            }
+
+        } else {
+
+            try {
+                std::ostringstream stream;
+                stream << "unsolved charging endpoint selection";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+
+        }
+    
+    }
+    
+    return false;
 
 }
 
@@ -386,6 +530,7 @@ bool _token::selectNewTaskPathToAgentTaskThreshold(const _agent& agent, _task& s
 
 }
 
+
 bool _token::selectNewTaskToAgent(const _agent& agent, _task& selectedTask) const{
 
     unsigned min_distance = 0xffffffff;
@@ -428,6 +573,73 @@ bool _token::selectNewTaskToAgent(const _agent& agent, _task& selectedTask) cons
     });
 
     return min_distance < 0xffffffff;
+
+}
+
+bool _token::chargingTaskPathToAgent(const _agent& agent, const _task& task, _stepPath& path, unsigned& pickupStep, unsigned& deliveryStep) const{
+    
+    _stepAstarAlgorithm astar;
+
+    bool flag = astar.solve(stepMap, path, task.getPickup(), agent.id());
+
+    if (flag) {
+        
+        pickupStep = path.goalSite().GetStep();
+        
+        flag = astar.solve(stepMap, path, task.getDelivery(), agent.id());
+
+        if (flag) {
+            
+            deliveryStep = path.goalSite().GetStep();  
+            
+            _stepSite chargingSite;
+            
+            flag = selectChargingEndpointPathToAgent(agent, path);
+            
+            if(flag){
+                
+                return true;                             
+                
+            } else {
+                
+                try {
+                    std::ostringstream stream;
+                    stream << "unsolved charging endpoint path: " << task;
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
+                }
+                
+            }
+            
+        } else {
+
+            try {
+                std::ostringstream stream;
+                stream << "unsolved task delivery endpoint path: " << task;
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+
+        }
+
+    } else {
+
+        try {
+            std::ostringstream stream;
+            stream << "unsolved task pickup endpoint path: " << task;
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+
+    }
+    
+    return false;
 
 }
 
@@ -477,6 +689,19 @@ bool _token::taskPathToAgent(const _agent& agent, const _task& task, _stepPath& 
 
 }
 
+bool _token::selectNewChargingTaskPathToAgent(const _agent& agent, _task& selectedTask, _stepPath& path, unsigned& pickupStep, unsigned& deliveryStep) const {
+    
+    bool flag = selectNewTaskToAgent(agent, selectedTask);
+    
+    if(flag){
+        
+        return chargingTaskPathToAgent(agent, selectedTask, path, pickupStep, deliveryStep);
+        
+    }
+    
+    return false;
+    
+}
 
 
 bool _token::selectNewTaskPathToAgent(const _agent& agent, _task& selectedTask, _stepPath& path, unsigned& pickupStep) const{
@@ -493,7 +718,7 @@ bool _token::selectNewTaskPathToAgent(const _agent& agent, _task& selectedTask, 
     
 }
 
-bool _token::updateTaskPathToAgentTaskThreshold(_agent& agent){
+bool _token::updateTaskPathToAgentTaskThreshold(_agent& agent, bool energyCheck){
     
     _task newTask;
     _stepPath path(agent.currentSite());
@@ -501,23 +726,57 @@ bool _token::updateTaskPathToAgentTaskThreshold(_agent& agent){
     
     if(flag){
         
-        assignTask(newTask, agent);
-        reportTaskUpdate(newTask.id(), agent.id(), ReportTask::PathType::task, path);
+        AES aes = AES::none;
         
-        agent.assignTask(newTask);
-        agent.setPathMoving(path, stepMap);
+        if(energyCheck){
+                    
+            flag = agent.isAbleToFulfillTaskPath(map, newTask, path, aes);
         
-        if (agent.isParked()) {
+        }
+    
+        if(flag){
+        
+            assignTask(newTask, agent);
+            reportTaskUpdate(agent, newTask, ReportTask::PathType::task, path);
+
+            agent.assignTask(*this, newTask, path, aes);
+            stepMap.setMoving(path,agent.id());
+            
+            if (agent.isInFinishedPath()) {
+
+                runTask((newTask));
+                finishTask(newTask);
+
+                agent.unassignTask(*this, aes);
                 
-            runTask((newTask));
-            finishTask(newTask);
+//                flag = _stepPath::trivialSteppingPath(path);
+//                
+//                if(flag){
+//                    
+//                    agent.assignTrivialPath(*this, path, aes);   
+//                    stepMap.setMoving(path,agent.id());
+//                    
+//                } else {
+//                    
+//                    try {
+//                        std::ostringstream stream;
+//                        stream << "invalid trivialSteppingPath: " << std::endl << agent;
+//                        MAPD_EXCEPTION(stream.str());
+//                    } catch (std::exception& e) {
+//                        std::cout << e.what() << std::endl;
+//                        std::abort();
+//                    }                    
+//                    
+//                }
+                
+                return false;
+                
 
-            agent.unassignTask();
-            agent.setTrivialPathMoving(stepMap);   
+            } 
 
-        } 
+            return true;
 
-        return true;
+        }
         
     }
     
@@ -526,7 +785,7 @@ bool _token::updateTaskPathToAgentTaskThreshold(_agent& agent){
     
 }
 
-bool _token::updateTaskPathToAgentCarryThreshold(_agent& agent){
+bool _token::updateTaskPathToAgentCarryThreshold(_agent& agent, bool energyCheck){
     
     _task newTask;
     _stepPath path(agent.currentSite());
@@ -534,23 +793,56 @@ bool _token::updateTaskPathToAgentCarryThreshold(_agent& agent){
     
     if(flag){
         
-        assignTask(newTask, agent);
-        reportTaskUpdate(newTask.id(), agent.id(), ReportTask::PathType::task, path);
+        AES aes = AES::none;
         
-        agent.assignTask(newTask);
-        agent.setPathMoving(path, stepMap);
+        if(energyCheck){
         
-        if (agent.isParked()) {
+            flag = agent.isAbleToFulfillTaskPath(map, newTask, path, aes);
+        
+        }
+    
+        if(flag){
+
+            assignTask(newTask, agent);
+            reportTaskUpdate(agent, newTask, ReportTask::PathType::task, path);
+
+            agent.assignTask(*this, newTask, path, aes);
+            stepMap.setMoving(path,agent.id());
+
+            if (agent.isInFinishedPath()) {
+
+                runTask((newTask));
+                finishTask(newTask);
                 
-            runTask((newTask));
-            finishTask(newTask);
+                agent.unassignTask(*this, aes);
+                
+//                flag = _stepPath::trivialSteppingPath(path);
+//                
+//                if(flag){
+//                    
+//                    agent.assignTrivialPath(*this, path, aes);   
+//                    stepMap.setMoving(path,agent.id());
+//                    
+//                } else {
+//                    
+//                    try {
+//                        std::ostringstream stream;
+//                        stream << "invalid trivialSteppingPath: " << std::endl << agent;
+//                        MAPD_EXCEPTION(stream.str());
+//                    } catch (std::exception& e) {
+//                        std::cout << e.what() << std::endl;
+//                        std::abort();
+//                    }                    
+//                    
+//                }
+                
+                return false;
 
-            agent.unassignTask();
-            agent.setTrivialPathMoving(stepMap);   
+            } 
 
-        } 
+            return true;
 
-        return true;
+        }
         
     }
     
@@ -559,7 +851,7 @@ bool _token::updateTaskPathToAgentCarryThreshold(_agent& agent){
     
 }
 
-bool _token::updateTaskPathToAgentTaskCarryThreshold(_agent& agent){
+bool _token::updateTaskPathToAgentTaskCarryThreshold(_agent& agent, bool energyCheck){
     
     _task newTask;
     _stepPath path(agent.currentSite());
@@ -567,23 +859,56 @@ bool _token::updateTaskPathToAgentTaskCarryThreshold(_agent& agent){
     
     if(flag){
         
-        assignTask(newTask, agent);
-        reportTaskUpdate(newTask.id(), agent.id(), ReportTask::PathType::task, path);
+        AES aes = AES::none;
         
-        agent.assignTask(newTask);
-        agent.setPathMoving(path, stepMap);
+        if(energyCheck){
         
-        if (agent.isParked()) {
+            flag = agent.isAbleToFulfillTaskPath(map, newTask, path, aes);
+        
+        }
+        
+        if(flag){
+
+            assignTask(newTask, agent);
+            reportTaskUpdate(agent, newTask, ReportTask::PathType::task, path);
+            
+            agent.assignTask(*this, newTask, path, aes);
+            stepMap.setMoving(path,agent.id());
+
+            if (agent.isInFinishedPath()) {
+
+                runTask((newTask));
+                finishTask(newTask);
+
+                agent.unassignTask(*this, aes);
                 
-            runTask((newTask));
-            finishTask(newTask);
+//                flag = _stepPath::trivialSteppingPath(path);
+//                
+//                if(flag){
+//                    
+//                    agent.assignTrivialPath(*this, path, aes);   
+//                    stepMap.setMoving(path,agent.id());
+//                    
+//                } else {
+//                    
+//                    try {
+//                        std::ostringstream stream;
+//                        stream << "invalid trivialSteppingPath: " << std::endl << agent;
+//                        MAPD_EXCEPTION(stream.str());
+//                    } catch (std::exception& e) {
+//                        std::cout << e.what() << std::endl;
+//                        std::abort();
+//                    }                    
+//                    
+//                }
+                
+                return false;
 
-            agent.unassignTask();
-            agent.setTrivialPathMoving(stepMap);   
+            } 
 
-        } 
+            return true;
 
-        return true;
+        }
         
     }
     
@@ -592,7 +917,71 @@ bool _token::updateTaskPathToAgentTaskCarryThreshold(_agent& agent){
     
 }
 
-bool _token::updateTaskPathToAgent(_agent& agent){
+bool _token::updateChargingTaskPathToAgent(_agent& agent, bool energyCheck){
+    
+    unsigned pickupStep, deliveryStep;
+    _task newTask;
+    _stepPath path(agent.currentSite());
+    bool flag = selectNewChargingTaskPathToAgent(agent, newTask, path, pickupStep, deliveryStep);
+    
+    if(flag){
+        
+        AES aes = AES::none;
+        
+        if(energyCheck){
+        
+            flag = agent.isAbleToFulfillTaskPath(map, newTask, path, aes);
+        
+        }
+    
+        if(flag){
+
+            assignTask(newTask, agent);
+            reportTaskUpdate(agent, newTask, ReportTask::PathType::charging, path);
+
+            agent.assignChargingTask(*this, newTask, path, aes);
+            stepMap.setMoving(path,agent.id());
+            
+            if (agent.isInFinishedPath()) {
+
+                runTask((newTask));
+                finishTask(newTask);
+                
+                agent.unassignChargingTask(*this, aes);
+                
+                flag = _stepPath::trivialSteppingPath(path);
+                
+                if(flag){
+                    
+                    agent.assignChargingTrivialPath(*this, path, aes);   
+                    stepMap.setMoving(path,agent.id());
+                    
+                } else {
+                    
+                    try {
+                        std::ostringstream stream;
+                        stream << "invalid trivialSteppingPath: " << std::endl << agent;
+                        MAPD_EXCEPTION(stream.str());
+                    } catch (std::exception& e) {
+                        std::cout << e.what() << std::endl;
+                        std::abort();
+                    }                    
+                    
+                }
+                
+            } 
+
+            return true;
+
+        }
+    
+    }
+        
+    return false;
+    
+}
+
+bool _token::updateTaskPathToAgent(_agent& agent, bool energyCheck){
     
     unsigned pickupStep;
     _task newTask;
@@ -601,44 +990,159 @@ bool _token::updateTaskPathToAgent(_agent& agent){
     
     if(flag){
         
-        assignTask(newTask, agent);
-        reportTaskUpdate(newTask.id(), agent.id(), ReportTask::PathType::task, path);
+        AES aes = AES::none;
         
-        agent.assignTask(newTask);
-        agent.setPathMoving(path, stepMap);
+        if(energyCheck){
         
-        if (agent.isParked()) {
+            flag = agent.isAbleToFulfillTaskPath(map, newTask, path, aes);
+        
+        }
+    
+        if(flag){
+
+            assignTask(newTask, agent);
+            reportTaskUpdate(agent, newTask, ReportTask::PathType::task, path);
+
+            agent.assignTask(*this, newTask, path, aes);
+            stepMap.setMoving(path,agent.id());
+
+            if (agent.isInFinishedPath()) {
+
+                runTask((newTask));
+                finishTask(newTask);
+
+                agent.unassignTask(*this, aes);
                 
-            runTask((newTask));
-            finishTask(newTask);
+//                flag = _stepPath::trivialSteppingPath(path);
+//                
+//                if(flag){
+//                    
+//                    agent.assignTrivialPath(*this, path, aes);   
+//                    stepMap.setMoving(path,agent.id());
+//                    
+//                } else {
+//                    
+//                    try {
+//                        std::ostringstream stream;
+//                        stream << "invalid trivialSteppingPath: " << std::endl << agent;
+//                        MAPD_EXCEPTION(stream.str());
+//                    } catch (std::exception& e) {
+//                        std::cout << e.what() << std::endl;
+//                        std::abort();
+//                    }                    
+//                    
+//                } 
+                return false;
 
-            agent.unassignTask();
-            agent.setTrivialPathMoving(stepMap);   
+            } 
 
-        } 
+            return true;
 
-        return true;
+        }
         
     }
+        
+    return false;
     
+}
+
+bool _token::updateChargingPathToAgent(_agent& agent, bool energyCheck){
+    
+    _stepPath chargingPath(agent.currentSite());
+    
+    bool flag = selectChargingEndpointPathToAgent(agent, chargingPath);
+    
+    if(flag){
+        
+        AES aes = AES::none;
+        
+        if(energyCheck){            
+        
+            flag = agent.isAbleToFulfillNoCarryngPath(map, chargingPath, aes);
+        
+        }
+        
+        if(flag){
+        
+            agent.assignChargingPath(*this, chargingPath, aes);
+
+            stepMap.setMoving(chargingPath,agent.id());
+
+            return true;
+        
+        }
+        
+    }
     
     return false;
     
 }
 
-bool _token::updateRestPathToAgent(_agent& agent){
+bool _token::updateChargingConflictTaskToAgent(_agent& agent, bool energyCheck){
+    
+    _task conflict;
+    
+    _stepPath chargingPath(agent.currentSite());
+    
+    bool flag = selectChargingEndpointPathToAgent(agent, conflict, chargingPath);
+    
+    if(flag){
+    
+        AES aes = AES::none;
+        
+        if(energyCheck){            
+
+            flag = agent.isAbleToFulfillNoCarryngPath(map, chargingPath, aes);
+
+        }
+        
+        if(flag){
+      
+            reportTaskUpdate(agent, conflict, ReportTask::PathType::charging, chargingPath);  
+
+            agent.assignChargingPath(*this, chargingPath, aes);
+
+            stepMap.setMoving(chargingPath,agent.id());
+
+            return true;
+        
+        }
+            
+    }
+    
+    return false;
+    
+}
+
+bool _token::updateRestPathToAgent(_agent& agent, bool energyCheck = false){
     
     _task conflict;
     
     _stepPath restPath(agent.currentSite());
     
-    if(selectNewRestEndpointPathToAgent(agent, conflict, restPath)){
+    bool flag = selectNewRestEndpointPathToAgent(agent, conflict, restPath);
+    
+    if(flag){
         
-        reportTaskUpdate(conflict.id(), agent.id(), ReportTask::PathType::rest, restPath);  
+        AES aes = AES::none;
+        
+        if(energyCheck){            
 
-        agent.setPathMoving(restPath, stepMap);
+            flag = agent.isAbleToFulfillNoCarryngPath(map, restPath, aes);
+
+        }
         
-        return true;
+        if(flag){
+        
+            reportTaskUpdate(agent, conflict, ReportTask::PathType::rest, restPath);  
+
+            agent.assignRestPath(*this, restPath, aes);
+
+            stepMap.setMoving(restPath,agent.id());
+
+            return true;
+        
+        }
         
     }
     
@@ -646,15 +1150,31 @@ bool _token::updateRestPathToAgent(_agent& agent){
     
 }
 
-void _token::updatePath(_agent& agent){
+_token::TokenUpdateType _token::updateChargingPath(_agent& agent){
     
-    if(agent.isParked()){
+    TokenUpdateType ret = TokenUpdateType::none;
     
-//        if(!updateTaskPathToAgent(agent))
-//        if(!updateTaskPathToAgentThreshold(agent))
-        if(!updateTaskOrCtaskPathToAgent(agent))
-            if(!updateRestPathToAgent(agent))
-                this->updateTrivialPathToAgent(agent);
+    if(agent.isInFinishedPath()){
+    
+        if(updateChargingTaskPathToAgent(agent)) {
+            
+            ret = TokenUpdateType::charging_task;
+            
+        } else {
+            
+            if(updateChargingPathToAgent(agent)){
+                
+                ret = TokenUpdateType::charging_rest;
+                
+            } else {
+                
+                this->updateChargingTrivialPathToAgent(agent);
+                
+                ret = TokenUpdateType::charging_trivial;
+                
+            }
+            
+        }            
     
     } else {
         
@@ -669,72 +1189,249 @@ void _token::updatePath(_agent& agent){
         
     }
     
+    return ret;
+    
 }
 
-
-void _token::updateTrivialPathToAgent(_agent& agent){
-        
-    _stepSite site = agent.goalSite();
-    _stepPath path(site);
-    site.SetStep(site.GetStep() + 1);
-    path.progress(site);
-
-    agent.setPathMoving(path, stepMap);      
-
-}
-
-bool _token::updateTaskOrCtaskPathToAgent(_agent& agent){
+_token::TokenUpdateType _token::updatePath(_agent& agent){
     
-    bool c_taskFlag;
-    _task origTask;
-    _c_task firstC_task(getOneTaskId()), secondC_task(getOneTaskId());
-    _stepPath origTaskPath(agent.currentSite()), firstC_taskPath(agent.currentSite());
+    TokenUpdateType ret = TokenUpdateType::none;
     
-    bool flag = selectNewTaskOrCtaskPathToAgent(agent, origTask, firstC_task, secondC_task, origTaskPath, firstC_taskPath, c_taskFlag);
+    if(agent.isInFinishedPath()){
     
-    if(flag){
-        
-        _task& task = origTask;
-        _stepPath& path = origTaskPath;
-        
-        if(c_taskFlag){
+        if(updateTaskPathToAgent(agent)) {
             
-            task = firstC_task;
-            path = firstC_taskPath;
-                        
-            assignTask(origTask, agent);
-            runTask(origTask);
-            finishTask(origTask);
-            
-            reportTaskUpdate(firstC_task.id(), agent.id(), ReportTask::PathType::c_task, firstC_taskPath);
-            
-            add_c_task(currentStep + firstC_taskPath.size() + 1, secondC_task);
+            ret = TokenUpdateType::task;
             
         } else {
             
-            reportTaskUpdate(origTask.id(), agent.id(), ReportTask::PathType::task, origTaskPath);
+            if(updateRestPathToAgent(agent)){
+                
+                ret = TokenUpdateType::rest;
+                
+            } else {
+                
+                this->updateTrivialPathToAgent(agent);
+                
+                ret = TokenUpdateType::trivial;
+                
+            }
             
         }
+            
+    
+    } else {
         
-        assignTask(task, agent);
-        agent.assignTask(task);
-        agent.setPathMoving(path, stepMap);
-
-        if (agent.isParked()) {
-
-            runTask(task);
-            finishTask(task);
-
-            agent.unassignTask();
-            agent.setTrivialPathMoving(stepMap);   
-
-        } 
-         
-        return true;            
+        try {
+            std::ostringstream stream;
+            stream << "agent not parked: " << std::endl << agent << std::endl<< *this;
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
         
     }
     
-    return false;
+    return ret;
+    
+}
+
+
+void _token::updateTrivialPathToAgent(_agent& agent, bool energyCheck){
+        
+    _stepPath trivialPath(agent.currentSite());
+             
+    bool flag = _stepPath::trivialSteppingPath(trivialPath);
+    
+    if(flag){
+    
+        AES aes = AES::none;
+
+        if(energyCheck){
+
+            flag = agent.isAbleToFulfillNoCarryngPath(map, trivialPath, aes);
+
+        }
+
+        if(flag){
+
+            agent.assignTrivialPath(*this, trivialPath, aes);   
+            
+            stepMap.setMoving(trivialPath, agent.id());
+
+        }
+    
+    } else {
+                    
+        try {
+            std::ostringstream stream;
+            stream << "invalid trivialSteppingPath: " << std::endl << agent;
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }                    
+
+    }      
+
+}
+
+_token::TokenUpdateType _token::updateChargingTrivialPathToAgent(_agent& agent, bool energyCheck){
+           
+    _stepPath trivialPath(agent.currentSite());
+             
+    bool flag = _stepPath::trivialSteppingPath(trivialPath);
+    
+    if(flag){
+        
+        AES aes = AES::none;
+    
+        if(energyCheck){
+
+            flag = agent.isAbleToFulfillNoCarryngPath(map, trivialPath, aes);
+
+        }
+
+        if(flag){
+
+            agent.assignChargingTrivialPath(*this, trivialPath, aes);   
+            
+            stepMap.setMoving(trivialPath, agent.id());
+            
+            return _token::TokenUpdateType::charging_trivial;
+
+        }
+    
+    } else {
+                    
+        try {
+            std::ostringstream stream;
+            stream << "invalid trivialSteppingPath: " << std::endl << agent;
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }                    
+
+    } 
+    
+    return _token::TokenUpdateType::none;
+
+}
+
+bool _token::updateTaskOrCtaskPathToAgent(_agent& agent, bool energyCheck){
+    
+    bool c_taskFlag;
+    _task origTask;
+    _c_task firstC_task, secondC_task;
+    _stepPath origTaskPath(agent.currentSite()), firstC_taskPath(agent.currentSite());
+    
+    bool flag = selectNewTaskOrCtaskPathToAgent(agent, origTask, firstC_task, secondC_task, origTaskPath, firstC_taskPath, c_taskFlag);
+       
+    if(flag){
+        
+        AES aes = AES::none;
+        
+        if(c_taskFlag){
+            
+            if(energyCheck){
+
+                flag = agent.isAbleToFulfillTaskPath(map, firstC_task, firstC_taskPath, aes);
+
+            } 
+            
+            if(flag){
+                
+                agent.assignTask(*this, origTask, origTaskPath, AES::none);
+                agent.unassignTask(*this, AES::none);               
+                
+                reportTaskUpdate(agent, origTask, ReportTask::PathType::task, origTaskPath);                
+                assignTask(origTask, agent);
+                runTask(origTask);
+                finishTask(origTask);
+                
+                
+                firstC_task.setId(this->getOneTaskId());
+                secondC_task.setId(this->getOneTaskId());
+                
+                reportTaskUpdate(agent, firstC_task, ReportTask::PathType::c_task, firstC_taskPath);
+                addPendingTask(firstC_task);               
+                assignTask(firstC_task, agent);
+                
+                agent.assignTask(*this, firstC_task, firstC_taskPath, aes);
+                stepMap.setMoving(firstC_taskPath, agent.id());
+                
+                add_c_task(currentStep + firstC_taskPath.size() + 1, secondC_task);
+                
+            } 
+        
+        } else {
+            
+            if(energyCheck){
+
+                flag = agent.isAbleToFulfillTaskPath(map, origTask, origTaskPath, aes);
+
+            } 
+            
+            if(flag){
+                
+                reportTaskUpdate(agent, origTask, ReportTask::PathType::task, origTaskPath);
+                assignTask(origTask, agent);
+                
+                agent.assignTask(*this, origTask, origTaskPath, aes);                  
+                stepMap.setMoving(origTaskPath, agent.id());                
+                
+            } 
+            
+            
+        }
+        
+        if (flag && agent.isInFinishedPath()) {
+
+            agent.unassignTask(*this, aes);
+
+            if(c_taskFlag){
+
+                runTask(firstC_task);
+                finishTask(firstC_task);
+
+            }else{
+
+                runTask(origTask);
+                finishTask(origTask);
+
+            }
+            
+//            _stepPath path(agent.currentSite());
+//
+//            flag = _stepPath::trivialSteppingPath(path);
+//                
+//            if(flag){
+//
+//                agent.assignTrivialPath(*this, path, aes);   
+//                stepMap.setMoving(path, agent.id());
+//
+//            } else {
+//
+//                try {
+//                    std::ostringstream stream;
+//                    stream << "invalid trivialSteppingPath: " << std::endl << agent;
+//                    MAPD_EXCEPTION(stream.str());
+//                } catch (std::exception& e) {
+//                    std::cout << e.what() << std::endl;
+//                    std::abort();
+//                }                    
+//
+//            }      
+            
+            return false;
+
+        }                 
+
+    }   
+    
+    return flag;
     
 }
 
@@ -743,26 +1440,30 @@ bool _token::updateTaskOrCtaskPathToAgent(_agent& agent){
 // atende à razão de fracionamento. 
 // Se nenhum endpoint atender, retorna falso.
 // Nesse caso, a tarefa não será selecionada.
-bool _token::selectNewTaskOrCtaskPathToAgent(const _agent& agent, _task& origTask, _c_task& firstC_task, _c_task& secondC_task, _stepPath& path, _stepPath& c_path, bool& c_taskFlag) const{
+bool _token::selectNewTaskOrCtaskPathToAgent(const _agent& agent, _task& origTask, _c_task& firstC_task, _c_task& secondC_task, _stepPath& origPath, _stepPath& c_path, bool& c_taskFlag) const{
     
     _thresholdAlgorithm fractioningRateAlgorithm(endpointsDistanceAlgorithm);
     
     unsigned pickupStep;
-    bool flag = selectNewTaskPathToAgent(agent, origTask, path, pickupStep);
+    bool flag = selectNewTaskPathToAgent(agent, origTask, origPath, pickupStep);
     
     if(flag){
         
-        if(fractioningRateAlgorithm.solve(path, pickupStep, task_threshold)){
+        _stepSite pickupSite = origPath.get(pickupStep);
+                            
+        unsigned carry_size = origPath.goalSite().GetStep() - pickupSite.GetStep();
+        
+        if(fractioningRateAlgorithm.solve(origPath.goalSite(), pickupSite, carry_size, carry_threshold)){ // verifica se atende ao carry_threshold
             
             c_taskFlag = false;
-            return flag;
+            
+            return true;
             
         } else {
             
-            flag = false;
-        
-            int size = path.size();
-            path.list([&flag, fractioningRateAlgorithm, &size, agent, origTask, &firstC_task, &secondC_task, path,  &c_path, &c_taskFlag, this](const _stepSite& site){// voltando
+            flag = false;        
+            
+            origPath.backward([&flag, pickupSite, fractioningRateAlgorithm, agent, origTask, &firstC_task, &secondC_task, origPath,  &c_path, &c_taskFlag, this](const _stepSite& site){// voltando
 
                 if(!site.match(origTask.getPickup())){ // até pickup
 
@@ -788,9 +1489,12 @@ bool _token::selectNewTaskOrCtaskPathToAgent(const _agent& agent, _task& origTas
                         });
 
                         if(flag3){ // task endpoint válido (verificação ok)
+                                                        
+                            unsigned new_carry_size = site.GetStep() - pickupSite.GetStep();
                             
-                            if(fractioningRateAlgorithm.solve(path.currentSite(), site, size, this->task_threshold)){ // encontra um novo endpoint que atende ao threshold
-                                                                
+                            if(fractioningRateAlgorithm.solve(site, pickupSite, new_carry_size, carry_threshold)){ // verifica se o endpoint que atende ao carry_threshold
+                                                     
+//                                firstC_task.setId(this->getOneTaskId());
                                 firstC_task.setPickup(origTask.getPickup());
                                 firstC_task.setDelivery(site);
                                 firstC_task.SetConcernTaskId(origTask.id());
@@ -800,6 +1504,7 @@ bool _token::selectNewTaskOrCtaskPathToAgent(const _agent& agent, _task& origTas
                                 
                                 if(c_taskFlag){
                                     
+//                                    secondC_task.setId(this->getOneTaskId());
                                     secondC_task.setPickup(site);
                                     secondC_task.setDelivery(origTask.getDelivery());
                                     secondC_task.SetConcernTaskId(origTask.id());
@@ -832,8 +1537,6 @@ bool _token::selectNewTaskOrCtaskPathToAgent(const _agent& agent, _task& origTas
                     return true;
 
                 }  
-                
-                size--;
 
                 return false;
 

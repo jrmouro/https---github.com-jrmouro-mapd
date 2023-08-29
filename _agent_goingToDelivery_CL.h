@@ -1,44 +1,45 @@
 /* 
- * File:   _agent_occupied.h
+ * File:   _agent_goingToDelivery_CL.h
  * Author: ronaldo
  *
  * Created on 14 de agosto de 2023, 17:34
  */
 
-#ifndef _AGENT_OCCUPIED_H
-#define _AGENT_OCCUPIED_H
+#ifndef _AGENT_GOINGTODELIVERY_CL_H
+#define _AGENT_GOINGTODELIVERY_CL_H
 
 #include "_agent_state.h"
 
-class _agent_occupied : public _agent_state{
+class _agent_goingToDelivery_CL : public _agent_state{
     
 public:
     
     static _agent_state * getInstance(){
         
-        if(_agent_occupied::_instance == nullptr)
-            _agent_occupied::_instance = new _agent_occupied();
+        if(_agent_goingToDelivery_CL::_instance == nullptr)
+            _agent_goingToDelivery_CL::_instance = new _agent_goingToDelivery_CL();
         
-        return _agent_occupied::_instance;
+        return _agent_goingToDelivery_CL::_instance;
         
     }
     
-    virtual ~_agent_occupied(){}
+    virtual ~_agent_goingToDelivery_CL(){}
         
     virtual std::string stateName()const{
-        return "occupied";
+        return "goingToDelivery_CL";
     }
         
-    virtual void onMoveUpdate(_system& system,  _agent* agent) const;
-    virtual void onDraw(const Render& render, const _agent* const agent) const;
+    virtual void onAfterStepping(_token&, _agent&) const;
+    virtual void onEnergyExpend(_token&, _agent&) const;
+    virtual void onDraw(const Render&, const _agent&) const;
        
     protected:
-        _agent_occupied() : _agent_state() {}
+        _agent_goingToDelivery_CL() : _agent_state() {}
 
     private:
         static _agent_state* _instance;
     
 };
 
-#endif /* _AGENT_OCCUPIED_H */
+#endif /* _AGENT_GOINGTODELIVERY_CL_H */
 

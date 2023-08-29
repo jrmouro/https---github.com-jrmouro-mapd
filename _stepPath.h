@@ -52,7 +52,7 @@ public:
     
     void progress(const _stepPath& path){       
         
-        path.rlist([this](const _stepSite& site){
+        path.forward([this](const _stepSite& site){
             
             this->progress(site);
             
@@ -96,6 +96,29 @@ public:
              try {
                 std::ostringstream stream;
                 stream << "invalid top on empty path";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }   
+        
+        return _stepSite();
+        
+    }
+    
+    const _stepSite& futureSite() const{
+        
+        if(this->sites.size() > 1){   
+            
+            return this->sites[sites.size() - 2];
+            
+        } else {
+            
+             try {
+                std::ostringstream stream;
+                stream << "invalid future site";
                 MAPD_EXCEPTION(stream.str());
             } catch (std::exception& e) {
                 std::cout << e.what() << std::endl;
@@ -176,7 +199,7 @@ public:
         return this->sites.empty();
     }
         
-    void list(const std::function<bool(const _stepSite&)>& function, unsigned begin = 0) const {
+    void backward(const std::function<bool(const _stepSite&)>& function, unsigned begin = 0) const {
         
         std::vector<_stepSite>::const_iterator it = sites.cbegin() + begin;
         
@@ -188,7 +211,7 @@ public:
         
     }
     
-    void rlist(const std::function<bool(const _stepSite&)>& function, unsigned begin = 0) const {
+    void forward(const std::function<bool(const _stepSite&)>& function, unsigned begin = 0) const {
         
         std::vector<_stepSite>::const_reverse_iterator it = sites.crbegin() + begin;
         
@@ -209,6 +232,29 @@ public:
             if(function(*it, *(it + 1))) return;
             
         }
+        
+    }
+    
+    static bool trivialSteppingPath(_stepPath& path){
+        
+        if(path.size() == 1){
+            
+            _stepSite trivial(path.currentSite());
+            trivial.SetStep(trivial.GetStep() + 1);
+            path.progress(trivial);
+            return true;
+        } 
+        
+        try {
+            std::ostringstream stream;
+            stream << "invalid empty path" << std::endl;
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+        return false;
         
     }
           

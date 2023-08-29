@@ -42,6 +42,10 @@ public:
         return this->_id;
     }
     
+    void setId(int _id) {
+        this->_id = _id;
+    }
+    
     _site getDelivery() const {
         return delivery;
     }

@@ -65,19 +65,19 @@ public:
     
     virtual bool solve(const _site& s1, const _site& s2, unsigned size, float threshold) const {
         
-        return threshold < solve(s1, s2, size);
+        return threshold <= solve(s1, s2, size);
         
     }
     
     virtual bool solve(const _stepPath& path, float threshold) const {
         
-        return threshold < solve(path);
+        return threshold <= solve(path);
         
     }
     
     virtual bool solve(const _stepPath& path, unsigned midlerStep, float threshold) const {
         
-        return threshold < solve(path, midlerStep);
+        return threshold <= solve(path, midlerStep);
         
     }
     

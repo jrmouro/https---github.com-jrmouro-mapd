@@ -39,14 +39,20 @@ OBJECTFILES= \
 	${OBJECTDIR}/Rectangle.o \
 	${OBJECTDIR}/Render.o \
 	${OBJECTDIR}/Shape.o \
-	${OBJECTDIR}/TaskThresholdToken.o \
 	${OBJECTDIR}/Text.o \
 	${OBJECTDIR}/_agent.o \
-	${OBJECTDIR}/_agent_designed.o \
-	${OBJECTDIR}/_agent_free.o \
+	${OBJECTDIR}/_agent_charging.o \
+	${OBJECTDIR}/_agent_dead.o \
+	${OBJECTDIR}/_agent_goingToCharging.o \
+	${OBJECTDIR}/_agent_goingToCharging_CL.o \
+	${OBJECTDIR}/_agent_goingToDelivery.o \
+	${OBJECTDIR}/_agent_goingToDelivery_CL.o \
+	${OBJECTDIR}/_agent_goingToPickup.o \
+	${OBJECTDIR}/_agent_goingToPickup_CL.o \
 	${OBJECTDIR}/_agent_goingToRest.o \
-	${OBJECTDIR}/_agent_occupied.o \
+	${OBJECTDIR}/_agent_goingToRest_CL.o \
 	${OBJECTDIR}/_agent_parked.o \
+	${OBJECTDIR}/_agent_parken_CL.o \
 	${OBJECTDIR}/_agent_state.o \
 	${OBJECTDIR}/_map.o \
 	${OBJECTDIR}/_token.o \
@@ -109,11 +115,6 @@ ${OBJECTDIR}/Shape.o: Shape.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Shape.o Shape.cpp
 
-${OBJECTDIR}/TaskThresholdToken.o: TaskThresholdToken.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TaskThresholdToken.o TaskThresholdToken.cpp
-
 ${OBJECTDIR}/Text.o: Text.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -124,30 +125,65 @@ ${OBJECTDIR}/_agent.o: _agent.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent.o _agent.cpp
 
-${OBJECTDIR}/_agent_designed.o: _agent_designed.cpp
+${OBJECTDIR}/_agent_charging.o: _agent_charging.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_designed.o _agent_designed.cpp
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging.o _agent_charging.cpp
 
-${OBJECTDIR}/_agent_free.o: _agent_free.cpp
+${OBJECTDIR}/_agent_dead.o: _agent_dead.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_free.o _agent_free.cpp
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_dead.o _agent_dead.cpp
+
+${OBJECTDIR}/_agent_goingToCharging.o: _agent_goingToCharging.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToCharging.o _agent_goingToCharging.cpp
+
+${OBJECTDIR}/_agent_goingToCharging_CL.o: _agent_goingToCharging_CL.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToCharging_CL.o _agent_goingToCharging_CL.cpp
+
+${OBJECTDIR}/_agent_goingToDelivery.o: _agent_goingToDelivery.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToDelivery.o _agent_goingToDelivery.cpp
+
+${OBJECTDIR}/_agent_goingToDelivery_CL.o: _agent_goingToDelivery_CL.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToDelivery_CL.o _agent_goingToDelivery_CL.cpp
+
+${OBJECTDIR}/_agent_goingToPickup.o: _agent_goingToPickup.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToPickup.o _agent_goingToPickup.cpp
+
+${OBJECTDIR}/_agent_goingToPickup_CL.o: _agent_goingToPickup_CL.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToPickup_CL.o _agent_goingToPickup_CL.cpp
 
 ${OBJECTDIR}/_agent_goingToRest.o: _agent_goingToRest.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToRest.o _agent_goingToRest.cpp
 
-${OBJECTDIR}/_agent_occupied.o: _agent_occupied.cpp
+${OBJECTDIR}/_agent_goingToRest_CL.o: _agent_goingToRest_CL.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_occupied.o _agent_occupied.cpp
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToRest_CL.o _agent_goingToRest_CL.cpp
 
 ${OBJECTDIR}/_agent_parked.o: _agent_parked.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parked.o _agent_parked.cpp
+
+${OBJECTDIR}/_agent_parken_CL.o: _agent_parken_CL.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parken_CL.o _agent_parken_CL.cpp
 
 ${OBJECTDIR}/_agent_state.o: _agent_state.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -249,19 +285,6 @@ ${OBJECTDIR}/Shape_nomain.o: ${OBJECTDIR}/Shape.o Shape.cpp
 	    ${CP} ${OBJECTDIR}/Shape.o ${OBJECTDIR}/Shape_nomain.o;\
 	fi
 
-${OBJECTDIR}/TaskThresholdToken_nomain.o: ${OBJECTDIR}/TaskThresholdToken.o TaskThresholdToken.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/TaskThresholdToken.o`; \
-	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
-	then  \
-	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TaskThresholdToken_nomain.o TaskThresholdToken.cpp;\
-	else  \
-	    ${CP} ${OBJECTDIR}/TaskThresholdToken.o ${OBJECTDIR}/TaskThresholdToken_nomain.o;\
-	fi
-
 ${OBJECTDIR}/Text_nomain.o: ${OBJECTDIR}/Text.o Text.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/Text.o`; \
@@ -288,30 +311,108 @@ ${OBJECTDIR}/_agent_nomain.o: ${OBJECTDIR}/_agent.o _agent.cpp
 	    ${CP} ${OBJECTDIR}/_agent.o ${OBJECTDIR}/_agent_nomain.o;\
 	fi
 
-${OBJECTDIR}/_agent_designed_nomain.o: ${OBJECTDIR}/_agent_designed.o _agent_designed.cpp 
+${OBJECTDIR}/_agent_charging_nomain.o: ${OBJECTDIR}/_agent_charging.o _agent_charging.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_designed.o`; \
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_charging.o`; \
 	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_designed_nomain.o _agent_designed.cpp;\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging_nomain.o _agent_charging.cpp;\
 	else  \
-	    ${CP} ${OBJECTDIR}/_agent_designed.o ${OBJECTDIR}/_agent_designed_nomain.o;\
+	    ${CP} ${OBJECTDIR}/_agent_charging.o ${OBJECTDIR}/_agent_charging_nomain.o;\
 	fi
 
-${OBJECTDIR}/_agent_free_nomain.o: ${OBJECTDIR}/_agent_free.o _agent_free.cpp 
+${OBJECTDIR}/_agent_dead_nomain.o: ${OBJECTDIR}/_agent_dead.o _agent_dead.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_free.o`; \
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_dead.o`; \
 	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_free_nomain.o _agent_free.cpp;\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_dead_nomain.o _agent_dead.cpp;\
 	else  \
-	    ${CP} ${OBJECTDIR}/_agent_free.o ${OBJECTDIR}/_agent_free_nomain.o;\
+	    ${CP} ${OBJECTDIR}/_agent_dead.o ${OBJECTDIR}/_agent_dead_nomain.o;\
+	fi
+
+${OBJECTDIR}/_agent_goingToCharging_nomain.o: ${OBJECTDIR}/_agent_goingToCharging.o _agent_goingToCharging.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_goingToCharging.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToCharging_nomain.o _agent_goingToCharging.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_agent_goingToCharging.o ${OBJECTDIR}/_agent_goingToCharging_nomain.o;\
+	fi
+
+${OBJECTDIR}/_agent_goingToCharging_CL_nomain.o: ${OBJECTDIR}/_agent_goingToCharging_CL.o _agent_goingToCharging_CL.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_goingToCharging_CL.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToCharging_CL_nomain.o _agent_goingToCharging_CL.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_agent_goingToCharging_CL.o ${OBJECTDIR}/_agent_goingToCharging_CL_nomain.o;\
+	fi
+
+${OBJECTDIR}/_agent_goingToDelivery_nomain.o: ${OBJECTDIR}/_agent_goingToDelivery.o _agent_goingToDelivery.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_goingToDelivery.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToDelivery_nomain.o _agent_goingToDelivery.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_agent_goingToDelivery.o ${OBJECTDIR}/_agent_goingToDelivery_nomain.o;\
+	fi
+
+${OBJECTDIR}/_agent_goingToDelivery_CL_nomain.o: ${OBJECTDIR}/_agent_goingToDelivery_CL.o _agent_goingToDelivery_CL.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_goingToDelivery_CL.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToDelivery_CL_nomain.o _agent_goingToDelivery_CL.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_agent_goingToDelivery_CL.o ${OBJECTDIR}/_agent_goingToDelivery_CL_nomain.o;\
+	fi
+
+${OBJECTDIR}/_agent_goingToPickup_nomain.o: ${OBJECTDIR}/_agent_goingToPickup.o _agent_goingToPickup.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_goingToPickup.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToPickup_nomain.o _agent_goingToPickup.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_agent_goingToPickup.o ${OBJECTDIR}/_agent_goingToPickup_nomain.o;\
+	fi
+
+${OBJECTDIR}/_agent_goingToPickup_CL_nomain.o: ${OBJECTDIR}/_agent_goingToPickup_CL.o _agent_goingToPickup_CL.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_goingToPickup_CL.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToPickup_CL_nomain.o _agent_goingToPickup_CL.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_agent_goingToPickup_CL.o ${OBJECTDIR}/_agent_goingToPickup_CL_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_agent_goingToRest_nomain.o: ${OBJECTDIR}/_agent_goingToRest.o _agent_goingToRest.cpp 
@@ -327,17 +428,17 @@ ${OBJECTDIR}/_agent_goingToRest_nomain.o: ${OBJECTDIR}/_agent_goingToRest.o _age
 	    ${CP} ${OBJECTDIR}/_agent_goingToRest.o ${OBJECTDIR}/_agent_goingToRest_nomain.o;\
 	fi
 
-${OBJECTDIR}/_agent_occupied_nomain.o: ${OBJECTDIR}/_agent_occupied.o _agent_occupied.cpp 
+${OBJECTDIR}/_agent_goingToRest_CL_nomain.o: ${OBJECTDIR}/_agent_goingToRest_CL.o _agent_goingToRest_CL.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_occupied.o`; \
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_goingToRest_CL.o`; \
 	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_occupied_nomain.o _agent_occupied.cpp;\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToRest_CL_nomain.o _agent_goingToRest_CL.cpp;\
 	else  \
-	    ${CP} ${OBJECTDIR}/_agent_occupied.o ${OBJECTDIR}/_agent_occupied_nomain.o;\
+	    ${CP} ${OBJECTDIR}/_agent_goingToRest_CL.o ${OBJECTDIR}/_agent_goingToRest_CL_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_agent_parked_nomain.o: ${OBJECTDIR}/_agent_parked.o _agent_parked.cpp 
@@ -351,6 +452,19 @@ ${OBJECTDIR}/_agent_parked_nomain.o: ${OBJECTDIR}/_agent_parked.o _agent_parked.
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parked_nomain.o _agent_parked.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_parked.o ${OBJECTDIR}/_agent_parked_nomain.o;\
+	fi
+
+${OBJECTDIR}/_agent_parken_CL_nomain.o: ${OBJECTDIR}/_agent_parken_CL.o _agent_parken_CL.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_parken_CL.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parken_CL_nomain.o _agent_parken_CL.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_agent_parken_CL.o ${OBJECTDIR}/_agent_parken_CL_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_agent_state_nomain.o: ${OBJECTDIR}/_agent_state.o _agent_state.cpp 

@@ -1,58 +1,70 @@
 /* 
- * File:   _agent_occupied.cpp
+ * File:   _agent_goingToDelivery_CL.cpp
  * Author: ronaldo
  * 
  * Created on 14 de agosto de 2023, 17:34
  */
 
-#include "_agent_occupied.h"
+#include "_agent_goingToDelivery_CL.h"
+#include "_agent_goingToDelivery.h"
 #include "_agent.h"
+#include "_agent_goingToCharging.h"
 #include "_agent_parked.h"
+#include "_agent_parked_CL.h"
 #include "_token.h"
 #include "Circle.h"
 #include "Text.h"
 #include "Render.h"
 #include "_system.h"
 
-_agent_state* _agent_occupied::_instance = nullptr;
+_agent_state* _agent_goingToDelivery_CL::_instance = nullptr;
 
-void _agent_occupied::onMoveUpdate(_system& system,  _agent* agent)const {
+void _agent_goingToDelivery_CL::onAfterStepping(_token& token, _agent& agent) const{
     
-    if(agent->previousSite().GetStep() == agent->currentSite().GetStep()){ // parado
+    if(agent.isDelivering()){
         
-        agent->expendEnergy(AER::loaded);
+        changeState(agent, _agent_parked_CL::getInstance());       
         
-    } else { // deslocando
+    } else if(agent.isChargingDelivering()){
         
-        agent->expendEnergy(AER::carrying);
+        changeState(agent, _agent_goingToCharging_CL::getInstance());
         
     }
-
-   if (agent->isDelivering()){
-       
-       system.getToken().finishTask(agent->getCurrentTask());
-
-       agent->unassignTask();
-       
-       changeState(agent, _agent_parked::getInstance());
-       
-   }
-
+    
 }
 
-void _agent_occupied::onDraw(const Render& render, const _agent* const agent) const {
+void _agent_goingToDelivery_CL::onEnergyExpend(_token& token, _agent& agent) const {
+    
+    _agent_state::onEnergyExpend(token,  agent);
+    
+    AES aes = AES::none;
+    
+    agent.expendCarryngStepping(token.isChargingSite(agent), aes);
+    
+    switch(aes){
+        case AES::normal:
+            changeState(agent, _agent_goingToDelivery::getInstance());
+            break;
+        case AES::dead:
+            changeState(agent, _agent_dead::getInstance());
+            break;
+    }
+    
+}
+
+void _agent_goingToDelivery_CL::onDraw(const Render& render, const _agent& agent) const {
     
     sf::Vector2f position(
-            agent->currentSite().GetColunm() * render.GetCell().first,
-            agent->currentSite().GetRow() * render.GetCell().second);
+            agent.currentSite().GetColunm() * render.GetCell().first,
+            agent.currentSite().GetRow() * render.GetCell().second);
 
     Circle background(
             position,
             sf::Vector2f(render.GetCell().first / 2, 0),
-            sf::Color::Black);
+            sf::Color::Red);
 
     Text textAgentId(
-            std::to_string(agent->id()),
+            std::to_string(agent.id()),
             position,
             sf::Vector2f(
             render.GetCell().first / 2,
@@ -72,7 +84,7 @@ void _agent_occupied::onDraw(const Render& render, const _agent* const agent) co
     if (agent->isAssigned()) {
         
         Text textTaskId(
-                std::to_string(agent->getCurrentTask().id()),
+                std::to_string(agent.getCurrentTask().id()),
                 position,
                 sf::Vector2f(render.GetCell().first / 2, 0),
                 sf::Color::Black);

@@ -13,18 +13,46 @@
 #include "_system.h"
 #include "Render.h"
 #include "Text.h"
-#include "_agent_free.h"
 
 
 
 class SystemExperiment : public Experiment{
 public:
     
-    SystemExperiment(std::string taskFilename, std::string mapFilename) :
-    taskFilename(taskFilename), mapFilename(mapFilename) {}
+    SystemExperiment(
+            std::string taskFilename, 
+            std::string mapFilename, 
+            _system::TokenType tokenType, 
+            float taskThreshold, 
+            float carryThreshold, 
+            int currentEnergyLevelAgent, 
+            int maximumEnergyLevelAgent, 
+            int chargingEnergyLevelAgent,
+            int criticalEnergyLevelAgent) :
+    taskFilename(taskFilename), 
+            mapFilename(mapFilename), 
+            tokenType(tokenType), 
+            taskThreshold(taskThreshold), 
+            carryThreshold(carryThreshold), 
+            maximumEnergyLevelAgent(maximumEnergyLevelAgent), 
+            chargingEnergyLevelAgent(chargingEnergyLevelAgent), 
+            currentEnergyLevelAgent(currentEnergyLevelAgent), 
+            criticalEnergyLevelAgent(criticalEnergyLevelAgent) {
+    }
+
     
     SystemExperiment(const SystemExperiment& other) :
-    taskFilename(other.taskFilename), mapFilename(other.mapFilename) {}
+            taskFilename(other.taskFilename), 
+            mapFilename(other.mapFilename), 
+            tokenType(other.tokenType), 
+            taskThreshold(other.taskThreshold), 
+            carryThreshold(other.carryThreshold), 
+            maximumEnergyLevelAgent(other.maximumEnergyLevelAgent),
+            chargingEnergyLevelAgent(other.chargingEnergyLevelAgent),
+            currentEnergyLevelAgent(other.currentEnergyLevelAgent), 
+            criticalEnergyLevelAgent(other.criticalEnergyLevelAgent) {
+    }
+
 
 
     virtual ~SystemExperiment(){}
@@ -33,10 +61,18 @@ public:
         
         InstanceMAPD* instanceMAPD = InstanceMAPD::load(mapFilename, taskFilename);
                 
-        _system system(_system::TokenType::tp, *instanceMAPD, .9f, .9f, 100);
+        _system system(
+                tokenType, 
+                *instanceMAPD, 
+                taskThreshold, 
+                carryThreshold, 
+                currentEnergyLevelAgent, 
+                maximumEnergyLevelAgent, 
+                chargingEnergyLevelAgent, 
+                criticalEnergyLevelAgent);
         
         Render render(
-                    std::pair<unsigned, unsigned>(100,100),
+                    std::pair<unsigned, unsigned>(16,16),
                     std::pair<unsigned, unsigned>(
                         instanceMAPD->getMapColumn_size(),
                         instanceMAPD->getMapRow_size()),
@@ -57,13 +93,13 @@ public:
         render.add(&textStep);
           
         
-        render.loop(200, [&system, &textStep](){
+        render.loop(10, [&system, &textStep](){
             system.step();
             textStep.setDrawText(std::to_string(system.getToken().getCurrentStep())); 
-//            std::cout << __token << std::endl;
         });
-        
-        std::cout << system.getToken() << std::endl;
+        std::cout << "steps: " << system.getToken() << std::endl;
+        std::cout << "steps: " << system.getToken().getCurrentStep() << std::endl;
+        std::cout << "energy: " << system.getToken().energy() << std::endl;
         
         delete instanceMAPD;
         
@@ -71,7 +107,17 @@ public:
     
 private:
     
-    std::string taskFilename, mapFilename;
+    std::string taskFilename, 
+            mapFilename;
+    
+    _system::TokenType tokenType;
+    
+    float taskThreshold, 
+            carryThreshold;
+    const int maximumEnergyLevelAgent, 
+            chargingEnergyLevelAgent, 
+            currentEnergyLevelAgent, 
+            criticalEnergyLevelAgent;
 
 };
 

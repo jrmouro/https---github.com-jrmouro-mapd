@@ -348,9 +348,8 @@ public:
     }
     
     void setNodeType(const _stepSite& site, int type) {
-
-        if (site.GetStep() < step_size && site.GetRow() < row_size && site.GetColunm() < colunm_size)
-            this->nodes[site.GetStep() * nodes_product + site.GetRow() * colunm_size + site.GetColunm()] = type;
+        
+        setNodeType(site.GetStep(), site.GetRow(), site.GetColunm(), type);
 
     }
     
@@ -362,11 +361,23 @@ public:
 
     }
     
+    void setTypesUntil(unsigned fromStep, unsigned row, unsigned column, int type) {
+
+        if (row < row_size && column < colunm_size)
+            for (int step = 0; step <= fromStep; step++)
+                this->nodes[step * nodes_product + row * colunm_size + column] = type;
+
+    }
+    
     void setTypesFrom(const _stepSite& site, int type) {
 
-        if (site.GetRow() < row_size && site.GetColunm() < colunm_size)
-            for (int step = site.GetStep(); step < this->step_size; step++)
-                this->nodes[step * nodes_product + site.GetRow() * colunm_size + site.GetColunm()] = type;
+        setTypesFrom(site.GetStep(), site.GetRow(), site.GetColunm(), type);
+
+    }
+    
+    void setTypesUntil(const _stepSite& site, int type) {
+
+        setTypesUntil(site.GetStep(), site.GetRow(), site.GetColunm(), type);
 
     }
     
@@ -374,16 +385,20 @@ public:
         
         auto current = path.currentSite();
         this->setTypesFrom(current.GetStep() + 1, current.GetRow(), current.GetColunm(), NodeType::freeNode);
-        auto goal = path.goalSite();
-        this->setTypesFrom(goal.GetStep(), goal.GetRow(), goal.GetColunm(), type);
+//        auto goal = path.goalSite();
+//        this->setTypesFrom(goal.GetStep(), goal.GetRow(), goal.GetColunm(), type);
+        this->setTypesFrom(path.goalSite(), type);
         
         
         
         path.moveList([this,type](const _stepSite& s, const _stepSite& g){
-            this->setNodeType(s, type);
+            this->setTypesUntil(s, type);
             this->setEdgeType(s.GetStep(), s, g, type);
             return false;
         });
+        
+        auto goal = path.goalSite();
+        this->setTypesFrom(goal.GetStep() - 1, goal.GetRow(), goal.GetColunm(), type);
         
     }
     

@@ -133,6 +133,12 @@ public:
         return Type::none;
 
     }
+    
+    Type getType(const _site& site) const {
+
+        return getType(site.GetRow(), site.GetColunm());
+
+    }
        
     friend std::ostream& operator<<(std::ostream& os, const _map& obj) {
         

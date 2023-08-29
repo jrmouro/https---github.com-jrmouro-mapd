@@ -72,7 +72,7 @@ public:
         return instanceMap->getStepMap();
     }
         
-    void listBotsEndPoints(std::function<bool(unsigned, const _site&)> function) const {
+    void listBotsEndPoints(const std::function<bool(unsigned, const _site&)>& function) const {
         
         instanceMap->listBotsEndPoints(function);
         

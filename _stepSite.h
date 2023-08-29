@@ -11,6 +11,7 @@
 #include <iostream>
 #include <vector>
 #include "_site.h"
+#include "_stepPath.h"
 
 
 class _stepSite : public _site{
@@ -69,6 +70,12 @@ public:
         
         
     }
+    
+    bool step_match(const _stepSite other) const {
+        return step == other.step && match(other);
+    }
+    
+    
     
 protected:
     

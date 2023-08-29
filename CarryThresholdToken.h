@@ -15,12 +15,14 @@ public:
     CarryThresholdToken(const _map& map, 
             _stepMap& stepMap, 
             std::vector<_site>& endpoints, 
+            std::vector<_site>& chargingEndpoints,  
             const _endpointsDistanceAlgorithm& endpointsDistanceAlgorithm, 
             float task_threshold, 
             float carry_threshold) :
     _token(map, 
             stepMap, 
             endpoints, 
+            chargingEndpoints, 
             endpointsDistanceAlgorithm, 
             task_threshold, 
             carry_threshold) {
@@ -30,13 +32,32 @@ public:
 
     virtual ~CarryThresholdToken(){}
     
-    virtual void updatePath(_agent& agent){
+    virtual _token::TokenUpdateType updatePath(_agent& agent){
+        
+        TokenUpdateType ret = TokenUpdateType::none;
     
-        if(agent.isParked()){
+        if(agent.isInFinishedPath()){
 
-            if(!updateTaskPathToAgentCarryThreshold(agent))
-                if(!updateRestPathToAgent(agent))
+            if(updateTaskPathToAgentCarryThreshold(agent)) {
+
+                ret = TokenUpdateType::task;
+
+            } else {
+
+                if(updateRestPathToAgent(agent)){
+
+                    ret = TokenUpdateType::rest;
+
+                } else {
+
                     this->updateTrivialPathToAgent(agent);
+
+                    ret = TokenUpdateType::trivial;
+
+                }
+
+            }
+
 
         } else {
 
@@ -50,8 +71,8 @@ public:
             }
 
         }
-
-    }
+    
+        return ret;
 
 };
 

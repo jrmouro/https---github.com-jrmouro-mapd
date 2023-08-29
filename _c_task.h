@@ -14,7 +14,7 @@
 class _c_task : public _task{
 public:
     
-    _c_task(int id = 0) : _task(id), concernTaskId(INT_MIN) {}
+    _c_task(int id = INT_MIN) : _task(id), concernTaskId(INT_MIN) {}
     
     _c_task(int id, _site pickup, _site delivery, int concernTaskId = INT_MIN) :
     _task(id, pickup, delivery), concernTaskId(concernTaskId) {}

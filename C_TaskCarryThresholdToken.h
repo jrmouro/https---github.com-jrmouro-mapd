@@ -1,42 +1,63 @@
 /* 
- * File:   TaskCarryThresholdToken.h
+ * File:   C_TaskCarryThresholdToken.h
  * Author: ronaldo
  *
  * Created on 23 de agosto de 2023, 09:06
  */
 
-#ifndef TASKCARRYTHRESHOLDTOKEN_H
-#define TASKCARRYTHRESHOLDTOKEN_H
+#ifndef C_TASKCARRYTHRESHOLDTOKEN_H
+#define C_TASKCARRYTHRESHOLDTOKEN_H
 
 #include "_token.h"
 
-class TaskCarryThresholdToken : public _token{
+class C_TaskCarryThresholdToken : public _token{
 public:
-    TaskCarryThresholdToken(const _map& map, 
+    
+    C_TaskCarryThresholdToken(const _map& map, 
             _stepMap& stepMap, 
-            std::vector<_site>& endpoints, 
+            std::vector<_site>& endpoints,  
+            std::vector<_site>& chargingEndpoints, 
             const _endpointsDistanceAlgorithm& endpointsDistanceAlgorithm, 
             float task_threshold, 
             float carry_threshold) :
     _token(map, 
             stepMap, 
             endpoints, 
+            chargingEndpoints, 
             endpointsDistanceAlgorithm, 
             task_threshold, 
             carry_threshold) {
     }
     
-    TaskCarryThresholdToken(const TaskCarryThresholdToken& other) : _token(other) { }
+    C_TaskCarryThresholdToken(const C_TaskCarryThresholdToken& other) : _token(other) { }
 
-    virtual ~TaskCarryThresholdToken(){}
+    virtual ~C_TaskCarryThresholdToken(){}
     
-    virtual void updatePath(_agent& agent){
+    virtual _token::TokenUpdateType updatePath(_agent& agent){
+        
+        TokenUpdateType ret = TokenUpdateType::none;
     
-        if(agent.isParked()){
+        if(agent.isInFinishedPath()){
 
-            if(!updateTaskPathToAgentTaskCarryThreshold(agent))
-                if(!updateRestPathToAgent(agent))
+            if(updateTaskOrCtaskPathToAgent(agent)) {
+
+                ret = TokenUpdateType::task;
+
+            } else {
+
+                if(updateRestPathToAgent(agent)){
+
+                    ret = TokenUpdateType::rest;
+
+                } else {
+
                     this->updateTrivialPathToAgent(agent);
+
+                    ret = TokenUpdateType::trivial;
+
+                }
+
+            }
 
         } else {
 
@@ -50,10 +71,12 @@ public:
             }
 
         }
+    
+        return ret;
 
     }
 
 };
 
-#endif /* TASKCARRYTHRESHOLDTOKEN_H */
+#endif /* C_TASKCARRYTHRESHOLDTOKEN_H */
 

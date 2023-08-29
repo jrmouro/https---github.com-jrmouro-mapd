@@ -8,16 +8,30 @@
     <logicalFolder name="HeaderFiles" displayName="Library" projectFiles="true">
       <logicalFolder name="f4" displayName="Agent" projectFiles="true">
         <logicalFolder name="f1" displayName="Agent_State" projectFiles="true">
-          <itemPath>_agent_designed.cpp</itemPath>
-          <itemPath>_agent_designed.h</itemPath>
-          <itemPath>_agent_free.cpp</itemPath>
-          <itemPath>_agent_free.h</itemPath>
+          <itemPath>_agent_charging.cpp</itemPath>
+          <itemPath>_agent_charging.h</itemPath>
+          <itemPath>_agent_dead.cpp</itemPath>
+          <itemPath>_agent_dead.h</itemPath>
+          <itemPath>_agent_goingToCharging.cpp</itemPath>
+          <itemPath>_agent_goingToCharging.h</itemPath>
+          <itemPath>_agent_goingToCharging_CL.cpp</itemPath>
+          <itemPath>_agent_goingToCharging_CL.h</itemPath>
+          <itemPath>_agent_goingToDelivery.cpp</itemPath>
+          <itemPath>_agent_goingToDelivery.h</itemPath>
+          <itemPath>_agent_goingToDelivery_CL.cpp</itemPath>
+          <itemPath>_agent_goingToDelivery_CL.h</itemPath>
+          <itemPath>_agent_goingToPickup.cpp</itemPath>
+          <itemPath>_agent_goingToPickup.h</itemPath>
+          <itemPath>_agent_goingToPickup_CL.cpp</itemPath>
+          <itemPath>_agent_goingToPickup_CL.h</itemPath>
           <itemPath>_agent_goingToRest.cpp</itemPath>
           <itemPath>_agent_goingToRest.h</itemPath>
-          <itemPath>_agent_occupied.cpp</itemPath>
-          <itemPath>_agent_occupied.h</itemPath>
+          <itemPath>_agent_goingToRest_CL.cpp</itemPath>
+          <itemPath>_agent_goingToRest_CL.h</itemPath>
           <itemPath>_agent_parked.cpp</itemPath>
           <itemPath>_agent_parked.h</itemPath>
+          <itemPath>_agent_parked_CL.h</itemPath>
+          <itemPath>_agent_parken_CL.cpp</itemPath>
           <itemPath>_agent_state.cpp</itemPath>
           <itemPath>_agent_state.h</itemPath>
         </logicalFolder>
@@ -84,14 +98,15 @@
       </logicalFolder>
       <logicalFolder name="f6" displayName="Task" projectFiles="true">
         <itemPath>ReportTask.h</itemPath>
+        <itemPath>ReportTaskMap.h</itemPath>
         <itemPath>_c_task.h</itemPath>
         <itemPath>_task.h</itemPath>
         <itemPath>_taskMap.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="Token" projectFiles="true">
+        <itemPath>C_TaskCarryThresholdToken.h</itemPath>
         <itemPath>CarryThresholdToken.h</itemPath>
         <itemPath>TaskCarryThresholdToken.h</itemPath>
-        <itemPath>TaskThresholdToken.cpp</itemPath>
         <itemPath>TaskThresholdToken.h</itemPath>
         <itemPath>_token.cpp</itemPath>
         <itemPath>_token.h</itemPath>
@@ -152,6 +167,8 @@
       </compileType>
       <item path="AstarExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="C_TaskCarryThresholdToken.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="CarryThresholdToken.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
@@ -190,6 +207,8 @@
       </item>
       <item path="ReportTask.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="ReportTaskMap.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Resetable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Shape.cpp" ex="false" tool="1" flavor2="0">
@@ -199,8 +218,6 @@
       <item path="SystemExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="TaskCarryThresholdToken.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="TaskThresholdToken.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="TaskThresholdToken.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -212,27 +229,55 @@
       </item>
       <item path="_agent.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_agent_designed.cpp" ex="false" tool="1" flavor2="0">
+      <item path="_agent_charging.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="_agent_designed.h" ex="false" tool="3" flavor2="0">
+      <item path="_agent_charging.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_dead.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_dead.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_energy_system.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_agent_free.cpp" ex="false" tool="1" flavor2="0">
+      <item path="_agent_goingToCharging.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="_agent_free.h" ex="false" tool="3" flavor2="0">
+      <item path="_agent_goingToCharging.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_goingToCharging_CL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_goingToCharging_CL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_goingToDelivery.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_goingToDelivery.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_goingToDelivery_CL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_goingToDelivery_CL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_goingToPickup.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_goingToPickup.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_goingToPickup_CL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_goingToPickup_CL.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_goingToRest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_goingToRest.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_agent_occupied.cpp" ex="false" tool="1" flavor2="0">
+      <item path="_agent_goingToRest_CL.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="_agent_occupied.h" ex="false" tool="3" flavor2="0">
+      <item path="_agent_goingToRest_CL.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_parked.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_parked.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_parked_CL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_parken_CL.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_state.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -344,6 +389,8 @@
       </compileType>
       <item path="AstarExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="C_TaskCarryThresholdToken.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="CarryThresholdToken.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
@@ -382,6 +429,8 @@
       </item>
       <item path="ReportTask.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="ReportTaskMap.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Resetable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Shape.cpp" ex="false" tool="1" flavor2="0">
@@ -391,8 +440,6 @@
       <item path="SystemExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="TaskCarryThresholdToken.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="TaskThresholdToken.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="TaskThresholdToken.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -404,27 +451,55 @@
       </item>
       <item path="_agent.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_agent_designed.cpp" ex="false" tool="1" flavor2="0">
+      <item path="_agent_charging.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="_agent_designed.h" ex="false" tool="3" flavor2="0">
+      <item path="_agent_charging.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_dead.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_dead.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_energy_system.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_agent_free.cpp" ex="false" tool="1" flavor2="0">
+      <item path="_agent_goingToCharging.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="_agent_free.h" ex="false" tool="3" flavor2="0">
+      <item path="_agent_goingToCharging.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_goingToCharging_CL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_goingToCharging_CL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_goingToDelivery.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_goingToDelivery.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_goingToDelivery_CL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_goingToDelivery_CL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_goingToPickup.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_goingToPickup.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_goingToPickup_CL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_goingToPickup_CL.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_goingToRest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_goingToRest.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_agent_occupied.cpp" ex="false" tool="1" flavor2="0">
+      <item path="_agent_goingToRest_CL.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="_agent_occupied.h" ex="false" tool="3" flavor2="0">
+      <item path="_agent_goingToRest_CL.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_parked.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_parked.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_parked_CL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_parken_CL.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_state.cpp" ex="false" tool="1" flavor2="0">
       </item>

@@ -193,8 +193,6 @@ public:
             }
             
         }
-        
-        std::cout << *this << std::endl;
                
     }
     

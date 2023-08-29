@@ -200,7 +200,7 @@ public:
         return os;
     }
     
-    void listBotsEndPoints(std::function<bool(unsigned, const _site&)> function) const {
+    void listBotsEndPoints(const std::function<bool(unsigned, const _site&)>& function) const {
         
         for (auto elem : botMap) {
             
@@ -210,7 +210,17 @@ public:
         
     }
     
-    void listNoBotsEndpoints(std::function<bool(unsigned, const _site&)> function)const {
+    void listBotsEndPoints(const std::function<bool(const _site&)>& function) const {
+        
+        for (auto elem : botMap) {
+            
+            if(function(elem.second)) return;
+
+        }
+        
+    }    
+    
+    void listNoBotsEndpoints(const std::function<bool(unsigned, const _site&)>& function)const {
         
         for (auto elem : endpointMap) {
             
@@ -220,7 +230,7 @@ public:
         
     }
     
-    void listEndpoints(const std::function<bool(const _site&)> function){
+    void listEndpoints(const std::function<bool(const _site&)>& function){
         
         for (auto endpoint : endpoints) {
             
