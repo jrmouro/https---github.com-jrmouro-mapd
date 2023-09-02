@@ -8,9 +8,9 @@
 #ifndef _AGENT_GOINGTOCHARGING_CL_H
 #define _AGENT_GOINGTOCHARGING_CL_H
 
-#include "_agent_state.h"
+#include "_agent_goingToCharging.h"
 
-class _agent_goingToCharging_CL : public _agent_state {
+class _agent_goingToCharging_CL : public _agent_goingToCharging {
 public:
     
     static _agent_state * getInstance(){
@@ -30,10 +30,9 @@ public:
         
     virtual void onAfterStepping(_token&, _agent&) const;
     virtual void onEnergyExpend(_token&, _agent&) const;
-    virtual void onDraw(const Render&, const _agent&) const; 
     
     protected:        
-        _agent_goingToCharging_CL() : _agent_state() {}
+        _agent_goingToCharging_CL() : _agent_goingToCharging() {}
     
     private:
         static _agent_state* _instance;

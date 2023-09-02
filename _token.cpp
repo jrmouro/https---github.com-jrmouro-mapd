@@ -726,11 +726,9 @@ bool _token::updateTaskPathToAgentTaskThreshold(_agent& agent, bool energyCheck)
     
     if(flag){
         
-        AES aes = AES::none;
-        
         if(energyCheck){
                     
-            flag = agent.isAbleToFulfillTaskPath(map, newTask, path, aes);
+            flag = agent.isAbleToFulfillTaskPath(map, newTask, path);
         
         }
     
@@ -739,7 +737,8 @@ bool _token::updateTaskPathToAgentTaskThreshold(_agent& agent, bool energyCheck)
             assignTask(newTask, agent);
             reportTaskUpdate(agent, newTask, ReportTask::PathType::task, path);
 
-            agent.assignTask(*this, newTask, path, aes);
+            agent.assignTask(newTask, path);
+            
             stepMap.setMoving(path,agent.id());
             
             if (agent.isInFinishedPath()) {
@@ -747,7 +746,7 @@ bool _token::updateTaskPathToAgentTaskThreshold(_agent& agent, bool energyCheck)
                 runTask((newTask));
                 finishTask(newTask);
 
-                agent.unassignTask(*this, aes);
+                agent.unassignTask();
                 
 //                flag = _stepPath::trivialSteppingPath(path);
 //                
@@ -793,11 +792,9 @@ bool _token::updateTaskPathToAgentCarryThreshold(_agent& agent, bool energyCheck
     
     if(flag){
         
-        AES aes = AES::none;
-        
         if(energyCheck){
         
-            flag = agent.isAbleToFulfillTaskPath(map, newTask, path, aes);
+            flag = agent.isAbleToFulfillTaskPath(map, newTask, path);
         
         }
     
@@ -806,7 +803,7 @@ bool _token::updateTaskPathToAgentCarryThreshold(_agent& agent, bool energyCheck
             assignTask(newTask, agent);
             reportTaskUpdate(agent, newTask, ReportTask::PathType::task, path);
 
-            agent.assignTask(*this, newTask, path, aes);
+            agent.assignTask(newTask, path);
             stepMap.setMoving(path,agent.id());
 
             if (agent.isInFinishedPath()) {
@@ -814,7 +811,7 @@ bool _token::updateTaskPathToAgentCarryThreshold(_agent& agent, bool energyCheck
                 runTask((newTask));
                 finishTask(newTask);
                 
-                agent.unassignTask(*this, aes);
+                agent.unassignTask();
                 
 //                flag = _stepPath::trivialSteppingPath(path);
 //                
@@ -859,11 +856,9 @@ bool _token::updateTaskPathToAgentTaskCarryThreshold(_agent& agent, bool energyC
     
     if(flag){
         
-        AES aes = AES::none;
-        
         if(energyCheck){
         
-            flag = agent.isAbleToFulfillTaskPath(map, newTask, path, aes);
+            flag = agent.isAbleToFulfillTaskPath(map, newTask, path);
         
         }
         
@@ -872,7 +867,7 @@ bool _token::updateTaskPathToAgentTaskCarryThreshold(_agent& agent, bool energyC
             assignTask(newTask, agent);
             reportTaskUpdate(agent, newTask, ReportTask::PathType::task, path);
             
-            agent.assignTask(*this, newTask, path, aes);
+            agent.assignTask(newTask, path);
             stepMap.setMoving(path,agent.id());
 
             if (agent.isInFinishedPath()) {
@@ -880,7 +875,7 @@ bool _token::updateTaskPathToAgentTaskCarryThreshold(_agent& agent, bool energyC
                 runTask((newTask));
                 finishTask(newTask);
 
-                agent.unassignTask(*this, aes);
+                agent.unassignTask();
                 
 //                flag = _stepPath::trivialSteppingPath(path);
 //                
@@ -926,11 +921,9 @@ bool _token::updateChargingTaskPathToAgent(_agent& agent, bool energyCheck){
     
     if(flag){
         
-        AES aes = AES::none;
-        
         if(energyCheck){
         
-            flag = agent.isAbleToFulfillTaskPath(map, newTask, path, aes);
+            flag = agent.isAbleToFulfillChargingTaskPath(map, newTask, path);
         
         }
     
@@ -939,7 +932,7 @@ bool _token::updateChargingTaskPathToAgent(_agent& agent, bool energyCheck){
             assignTask(newTask, agent);
             reportTaskUpdate(agent, newTask, ReportTask::PathType::charging, path);
 
-            agent.assignChargingTask(*this, newTask, path, aes);
+            agent.assignTask(newTask, path);
             stepMap.setMoving(path,agent.id());
             
             if (agent.isInFinishedPath()) {
@@ -947,27 +940,30 @@ bool _token::updateChargingTaskPathToAgent(_agent& agent, bool energyCheck){
                 runTask((newTask));
                 finishTask(newTask);
                 
-                agent.unassignChargingTask(*this, aes);
+//                agent.unassignChargingTask(*this, aes);
+                agent.unassignTask();
                 
-                flag = _stepPath::trivialSteppingPath(path);
+//                flag = _stepPath::trivialSteppingPath(path);
+//                
+//                if(flag){
+//                    
+//                    agent.setPath(path);   
+//                    stepMap.setMoving(path,agent.id());
+//                    
+//                } else {
+//                    
+//                    try {
+//                        std::ostringstream stream;
+//                        stream << "invalid trivialSteppingPath: " << std::endl << agent;
+//                        MAPD_EXCEPTION(stream.str());
+//                    } catch (std::exception& e) {
+//                        std::cout << e.what() << std::endl;
+//                        std::abort();
+//                    }                    
+//                    
+//                }
                 
-                if(flag){
-                    
-                    agent.assignChargingTrivialPath(*this, path, aes);   
-                    stepMap.setMoving(path,agent.id());
-                    
-                } else {
-                    
-                    try {
-                        std::ostringstream stream;
-                        stream << "invalid trivialSteppingPath: " << std::endl << agent;
-                        MAPD_EXCEPTION(stream.str());
-                    } catch (std::exception& e) {
-                        std::cout << e.what() << std::endl;
-                        std::abort();
-                    }                    
-                    
-                }
+                return false;
                 
             } 
 
@@ -990,11 +986,9 @@ bool _token::updateTaskPathToAgent(_agent& agent, bool energyCheck){
     
     if(flag){
         
-        AES aes = AES::none;
-        
         if(energyCheck){
         
-            flag = agent.isAbleToFulfillTaskPath(map, newTask, path, aes);
+            flag = agent.isAbleToFulfillTaskPath(map, newTask, path);
         
         }
     
@@ -1003,15 +997,15 @@ bool _token::updateTaskPathToAgent(_agent& agent, bool energyCheck){
             assignTask(newTask, agent);
             reportTaskUpdate(agent, newTask, ReportTask::PathType::task, path);
 
-            agent.assignTask(*this, newTask, path, aes);
+            agent.assignTask(newTask, path);
             stepMap.setMoving(path,agent.id());
 
             if (agent.isInFinishedPath()) {
 
                 runTask((newTask));
                 finishTask(newTask);
-
-                agent.unassignTask(*this, aes);
+                
+                agent.unassignTask();
                 
 //                flag = _stepPath::trivialSteppingPath(path);
 //                
@@ -1032,6 +1026,7 @@ bool _token::updateTaskPathToAgent(_agent& agent, bool energyCheck){
 //                    }                    
 //                    
 //                } 
+                
                 return false;
 
             } 
@@ -1054,23 +1049,25 @@ bool _token::updateChargingPathToAgent(_agent& agent, bool energyCheck){
     
     if(flag){
         
-        AES aes = AES::none;
+        if (!chargingPath.isTrivial()){
         
-        if(energyCheck){            
-        
-            flag = agent.isAbleToFulfillNoCarryngPath(map, chargingPath, aes);
-        
-        }
-        
-        if(flag){
-        
-            agent.assignChargingPath(*this, chargingPath, aes);
+            if(energyCheck){            
 
-            stepMap.setMoving(chargingPath,agent.id());
+                flag = agent.isAbleToFulfillNoCarryngPath(map, chargingPath);
 
-            return true;
+            }
+
+            if(flag){
+
+                agent.setPath(chargingPath);
+
+                stepMap.setMoving(chargingPath,agent.id());
+
+                return true;
+
+            }
         
-        }
+        } 
         
     }
     
@@ -1088,11 +1085,9 @@ bool _token::updateChargingConflictTaskToAgent(_agent& agent, bool energyCheck){
     
     if(flag){
     
-        AES aes = AES::none;
-        
         if(energyCheck){            
 
-            flag = agent.isAbleToFulfillNoCarryngPath(map, chargingPath, aes);
+            flag = agent.isAbleToFulfillNoCarryngPath(map, chargingPath);
 
         }
         
@@ -1100,7 +1095,7 @@ bool _token::updateChargingConflictTaskToAgent(_agent& agent, bool energyCheck){
       
             reportTaskUpdate(agent, conflict, ReportTask::PathType::charging, chargingPath);  
 
-            agent.assignChargingPath(*this, chargingPath, aes);
+            agent.setPath(chargingPath);
 
             stepMap.setMoving(chargingPath,agent.id());
 
@@ -1124,11 +1119,9 @@ bool _token::updateRestPathToAgent(_agent& agent, bool energyCheck = false){
     
     if(flag){
         
-        AES aes = AES::none;
-        
         if(energyCheck){            
 
-            flag = agent.isAbleToFulfillNoCarryngPath(map, restPath, aes);
+            flag = agent.isAbleToFulfillNoCarryngPath(map, restPath);
 
         }
         
@@ -1136,7 +1129,7 @@ bool _token::updateRestPathToAgent(_agent& agent, bool energyCheck = false){
         
             reportTaskUpdate(agent, conflict, ReportTask::PathType::rest, restPath);  
 
-            agent.assignRestPath(*this, restPath, aes);
+            agent.setPath(restPath);
 
             stepMap.setMoving(restPath,agent.id());
 
@@ -1150,27 +1143,25 @@ bool _token::updateRestPathToAgent(_agent& agent, bool energyCheck = false){
     
 }
 
-_token::TokenUpdateType _token::updateChargingPath(_agent& agent){
+_token::TokenUpdateType _token::updateChargingPath(_agent& agent, bool energyCheck){
     
     TokenUpdateType ret = TokenUpdateType::none;
     
     if(agent.isInFinishedPath()){
     
-        if(updateChargingTaskPathToAgent(agent)) {
+        if(updateChargingTaskPathToAgent(agent, energyCheck)) {
             
             ret = TokenUpdateType::charging_task;
             
         } else {
             
-            if(updateChargingPathToAgent(agent)){
+            if(updateChargingPathToAgent(agent, energyCheck)){
                 
                 ret = TokenUpdateType::charging_rest;
                 
-            } else {
+            } else {               
                 
-                this->updateChargingTrivialPathToAgent(agent);
-                
-                ret = TokenUpdateType::charging_trivial;
+                ret = this->updateChargingTrivialPathToAgent(agent, energyCheck);
                 
             }
             
@@ -1193,38 +1184,35 @@ _token::TokenUpdateType _token::updateChargingPath(_agent& agent){
     
 }
 
-_token::TokenUpdateType _token::updatePath(_agent& agent){
+_token::TokenUpdateType _token::updatePath(_agent& agent, bool energyCheck){
     
     TokenUpdateType ret = TokenUpdateType::none;
     
     if(agent.isInFinishedPath()){
     
-        if(updateTaskPathToAgent(agent)) {
+        if(updateTaskPathToAgent(agent, energyCheck)) {
             
             ret = TokenUpdateType::task;
             
         } else {
             
-            if(updateRestPathToAgent(agent)){
+            if(updateRestPathToAgent(agent, energyCheck)){
                 
                 ret = TokenUpdateType::rest;
                 
             } else {
-                
-                this->updateTrivialPathToAgent(agent);
-                
-                ret = TokenUpdateType::trivial;
+                                
+                ret = this->updateTrivialPathToAgent(agent, energyCheck);
                 
             }
             
-        }
-            
+        }            
     
     } else {
         
         try {
             std::ostringstream stream;
-            stream << "agent not parked: " << std::endl << agent << std::endl<< *this;
+            stream << "agent is not finished path: " << std::endl << agent << std::endl<< *this;
             MAPD_EXCEPTION(stream.str());
         } catch (std::exception& e) {
             std::cout << e.what() << std::endl;
@@ -1238,27 +1226,27 @@ _token::TokenUpdateType _token::updatePath(_agent& agent){
 }
 
 
-void _token::updateTrivialPathToAgent(_agent& agent, bool energyCheck){
-        
+_token::TokenUpdateType _token::updateTrivialPathToAgent(_agent& agent, bool energyCheck){
+                
     _stepPath trivialPath(agent.currentSite());
              
     bool flag = _stepPath::trivialSteppingPath(trivialPath);
     
     if(flag){
     
-        AES aes = AES::none;
-
         if(energyCheck){
 
-            flag = agent.isAbleToFulfillNoCarryngPath(map, trivialPath, aes);
+            flag = agent.isAbleToFulfillNoCarryngPath(map, trivialPath);
 
         }
 
         if(flag){
 
-            agent.assignTrivialPath(*this, trivialPath, aes);   
+            agent.setPath(trivialPath);   
             
             stepMap.setMoving(trivialPath, agent.id());
+            
+            return _token::TokenUpdateType::trivial;
 
         }
     
@@ -1273,7 +1261,9 @@ void _token::updateTrivialPathToAgent(_agent& agent, bool energyCheck){
             std::abort();
         }                    
 
-    }      
+    } 
+    
+    return _token::TokenUpdateType::none;
 
 }
 
@@ -1285,17 +1275,15 @@ _token::TokenUpdateType _token::updateChargingTrivialPathToAgent(_agent& agent, 
     
     if(flag){
         
-        AES aes = AES::none;
-    
         if(energyCheck){
 
-            flag = agent.isAbleToFulfillNoCarryngPath(map, trivialPath, aes);
+            flag = agent.isAbleToFulfillNoCarryngPath(map, trivialPath);
 
         }
 
         if(flag){
 
-            agent.assignChargingTrivialPath(*this, trivialPath, aes);   
+            agent.setPath(trivialPath);   
             
             stepMap.setMoving(trivialPath, agent.id());
             
@@ -1331,21 +1319,19 @@ bool _token::updateTaskOrCtaskPathToAgent(_agent& agent, bool energyCheck){
        
     if(flag){
         
-        AES aes = AES::none;
-        
         if(c_taskFlag){
             
             if(energyCheck){
 
-                flag = agent.isAbleToFulfillTaskPath(map, firstC_task, firstC_taskPath, aes);
+                flag = agent.isAbleToFulfillTaskPath(map, firstC_task, firstC_taskPath);
 
             } 
             
             if(flag){
                 
-                agent.assignTask(*this, origTask, origTaskPath, AES::none);
-                agent.unassignTask(*this, AES::none);               
-                
+                agent.assignTask(origTask, origTaskPath);
+//                agent.unassignTask(*this, AES::none);               
+                agent.unassignTask();
                 reportTaskUpdate(agent, origTask, ReportTask::PathType::task, origTaskPath);                
                 assignTask(origTask, agent);
                 runTask(origTask);
@@ -1359,7 +1345,7 @@ bool _token::updateTaskOrCtaskPathToAgent(_agent& agent, bool energyCheck){
                 addPendingTask(firstC_task);               
                 assignTask(firstC_task, agent);
                 
-                agent.assignTask(*this, firstC_task, firstC_taskPath, aes);
+                agent.assignTask(firstC_task, firstC_taskPath);
                 stepMap.setMoving(firstC_taskPath, agent.id());
                 
                 add_c_task(currentStep + firstC_taskPath.size() + 1, secondC_task);
@@ -1370,7 +1356,7 @@ bool _token::updateTaskOrCtaskPathToAgent(_agent& agent, bool energyCheck){
             
             if(energyCheck){
 
-                flag = agent.isAbleToFulfillTaskPath(map, origTask, origTaskPath, aes);
+                flag = agent.isAbleToFulfillTaskPath(map, origTask, origTaskPath);
 
             } 
             
@@ -1379,7 +1365,7 @@ bool _token::updateTaskOrCtaskPathToAgent(_agent& agent, bool energyCheck){
                 reportTaskUpdate(agent, origTask, ReportTask::PathType::task, origTaskPath);
                 assignTask(origTask, agent);
                 
-                agent.assignTask(*this, origTask, origTaskPath, aes);                  
+                agent.assignTask(origTask, origTaskPath);                  
                 stepMap.setMoving(origTaskPath, agent.id());                
                 
             } 
@@ -1389,7 +1375,7 @@ bool _token::updateTaskOrCtaskPathToAgent(_agent& agent, bool energyCheck){
         
         if (flag && agent.isInFinishedPath()) {
 
-            agent.unassignTask(*this, aes);
+            agent.unassignTask();
 
             if(c_taskFlag){
 

@@ -8,9 +8,9 @@
 #ifndef _AGENT_PARKED_CL_H
 #define _AGENT_PARKED_CL_H
 
-#include "_agent_state.h"
+#include "_agent_parked.h"
 
-class _agent_parked_CL : public _agent_state {
+class _agent_parked_CL : public _agent_parked {
     
 public:
     
@@ -30,12 +30,11 @@ public:
     }
 
     virtual void onUpdatePath(_token&, _agent&) const;
-    virtual void onBeforeStepping(_token&, _agent&) const;
     virtual void onEnergyExpend(_token&, _agent&) const;
-    virtual void onDraw(const Render& render, const _agent&) const; 
+    virtual void onAfterStepping(_token&,  _agent&) const;
     
     protected:        
-        _agent_parked_CL() : _agent_state() {}
+        _agent_parked_CL() : _agent_parked() {}
     
     private:
         static _agent_state* _instance;

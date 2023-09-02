@@ -26,7 +26,7 @@ public:
     virtual ~_agent_goingToDelivery(){}
         
     virtual std::string stateName()const{
-        return "occupied";
+        return "goingToDelivery";
     }
         
     virtual void onAfterStepping(_token&, _agent&) const;

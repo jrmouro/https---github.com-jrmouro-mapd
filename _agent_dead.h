@@ -29,9 +29,12 @@ public:
         return "dead";
     }
 
-    virtual void onDraw(const Render& render, const _agent* const agent) const; 
-    virtual void onUpdatePath(_system& system,  _agent* agent) const;
-    virtual void onAfterStepping(_system& system,  _agent* agent) const;
+    virtual void onUpdatePath(_token&,  _agent&) const;    
+    virtual void onBeforeStepping(_token&,  _agent&) const;
+    virtual void onEnergyExpend(_token&,  _agent&) const;
+    virtual void onStepping(_token&,  _agent&) const;
+    virtual void onAfterStepping(_token&,  _agent&) const;    
+    virtual void onDraw(const Render&, const _agent&) const;
     
     protected:        
         _agent_dead() : _agent_state() {}

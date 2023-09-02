@@ -17,8 +17,9 @@
 
 #include "_map.h"
 #include "_stepMap.h"
+#include "Writable.h"
 
-class InstanceMap : public Drawable{
+class InstanceMap : public Drawable, public Writable{
 public:
     
     friend class InstanceMAPD;
@@ -41,6 +42,22 @@ public:
         num_endpoints(orig.num_endpoints){ }
 
     virtual ~InstanceMap() { }
+    
+    virtual void writeHeader(std::ostream& fs) const {
+        Writable::strWrite(*this, fs, "step_size", true); 
+        Writable::strWrite(*this, fs, "row_size", true);
+        Writable::strWrite(*this, fs, "col_size", true);
+        Writable::strWrite(*this, fs, "num_bots", true);
+        Writable::strWrite(*this, fs, "num_endpoints");
+    }   
+    
+    virtual void writeRow(std::ostream& fs) const {
+        Writable::uintWrite(*this, fs, stepMap.getStep_size(), true); 
+        Writable::uintWrite(*this, fs, stepMap.getRow_size(), true);
+        Writable::uintWrite(*this, fs, stepMap.getColumn_size(), true);
+        Writable::uintWrite(*this, fs, num_bots, true);
+        Writable::uintWrite(*this, fs, num_endpoints);
+    }
     
     static InstanceMap* load(std::string filename_instance) {
 

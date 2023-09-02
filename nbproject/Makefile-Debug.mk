@@ -42,6 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Text.o \
 	${OBJECTDIR}/_agent.o \
 	${OBJECTDIR}/_agent_charging.o \
+	${OBJECTDIR}/_agent_charging_CL.o \
 	${OBJECTDIR}/_agent_dead.o \
 	${OBJECTDIR}/_agent_goingToCharging.o \
 	${OBJECTDIR}/_agent_goingToCharging_CL.o \
@@ -129,6 +130,11 @@ ${OBJECTDIR}/_agent_charging.o: _agent_charging.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging.o _agent_charging.cpp
+
+${OBJECTDIR}/_agent_charging_CL.o: _agent_charging_CL.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging_CL.o _agent_charging_CL.cpp
 
 ${OBJECTDIR}/_agent_dead.o: _agent_dead.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -322,6 +328,19 @@ ${OBJECTDIR}/_agent_charging_nomain.o: ${OBJECTDIR}/_agent_charging.o _agent_cha
 	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging_nomain.o _agent_charging.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_charging.o ${OBJECTDIR}/_agent_charging_nomain.o;\
+	fi
+
+${OBJECTDIR}/_agent_charging_CL_nomain.o: ${OBJECTDIR}/_agent_charging_CL.o _agent_charging_CL.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_charging_CL.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging_CL_nomain.o _agent_charging_CL.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_agent_charging_CL.o ${OBJECTDIR}/_agent_charging_CL_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_agent_dead_nomain.o: ${OBJECTDIR}/_agent_dead.o _agent_dead.cpp 

@@ -8,9 +8,9 @@
 #ifndef _AGENT_GOINGTOPICKUP_CL_H
 #define _AGENT_GOINGTOPICKUP_CL_H
 
-#include "_agent_state.h"
+#include "_agent_goingToPickup.h"
 
-class _agent_goingToPickup_CL : public _agent_state {
+class _agent_goingToPickup_CL : public _agent_goingToPickup {
 public:
     
     static _agent_state * getInstance(){
@@ -30,10 +30,9 @@ public:
             
     virtual void onAfterStepping(_token&, _agent&) const;
     virtual void onEnergyExpend(_token&, _agent&) const;
-    virtual void onDraw(const Render&, const _agent&) const; 
     
     protected:        
-        _agent_goingToPickup_CL() : _agent_state() {}
+        _agent_goingToPickup_CL() : _agent_goingToPickup() {}
     
     private:
         static _agent_state* _instance;

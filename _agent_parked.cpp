@@ -9,6 +9,7 @@
 #include "_agent.h"
 #include "_agent_goingToPickup.h"
 #include "_agent_goingToDelivery.h"
+#include "_agent_dead.h"
 #include "_agent_goingToRest.h"
 #include "_agent_parked_CL.h"
 #include "_token.h"
@@ -20,16 +21,24 @@
 _agent_state* _agent_parked::_instance = nullptr;
 
 void _agent_parked::onUpdatePath(_token& token, _agent& agent) const {
-    
-    _agent_state::onUpdatePath(token,  agent); // retirar depois
         
-    _token::TokenUpdateType tut = token.updatePath(*agent);
+    _token::TokenUpdateType tut = token.updatePath(agent, true);
     
     switch(tut){
         
         case _token::TokenUpdateType::task:
             
-            changeState(agent, _agent_goingToPickup::getInstance());
+            if(agent.isPickupping()){
+        
+                token.runTask(agent.currentTask());
+
+                changeState(agent, _agent_goingToDelivery::getInstance());       
+
+            } else {
+            
+                changeState(agent, _agent_goingToPickup::getInstance());
+            
+            }
             
             break;
             
@@ -40,6 +49,12 @@ void _agent_parked::onUpdatePath(_token& token, _agent& agent) const {
             break;
             
         case _token::TokenUpdateType::trivial:
+            break;
+            
+        case _token::TokenUpdateType::none:
+            
+            changeState(agent, _agent_dead::getInstance());
+            
             break;
             
         default:
@@ -57,28 +72,16 @@ void _agent_parked::onUpdatePath(_token& token, _agent& agent) const {
     
 }
 
-void _agent_parked::onBeforeStepping(_token& token, _agent& agent)const {
+void _agent_parked::onEnergyExpend(_token& token,  _agent& agent) const {
     
-    _agent_state::onBeforeStepping(token,  agent); // retirar depois
-    
-    if (agent->isPickupping()) { // caso do agente já se encontrar em pickup site
-
-        token.runTask(agent->getCurrentTask());
-
-        changeState(agent, _agent_goingToDelivery::getInstance());
-
-    }
+    agent.expendNoCarryngStepping(token.isChargingSite(agent));
     
 }
 
-void _agent_parked::onEnergyExpend(_token& token,  _agent& agent) const {
-
-    _agent_state::onEnergyExpend(token,  agent);
+void _agent_parked::onAfterStepping(_token& token,  _agent& agent) const {
     
-    AES aes = AES::none;
-    
-    agent.expendNoCarryngStepping(token.isChargingSite(agent), aes);
-    
+    AES aes = agent.energyState();
+        
     switch(aes){
         case AES::critical:
             changeState(agent, _agent_parked_CL::getInstance());

@@ -17,13 +17,13 @@
 #include "_taskMap.h"
 #include "_map.h"
 
-class InstanceTask {
+class InstanceTask : public Writable{
 public:
     
     friend class InstanceMAPD;
 
-    InstanceTask(unsigned numTask, unsigned totalStep) : numTask(numTask), lastStep(totalStep) { }
-    InstanceTask(const InstanceTask& orig) : taskMap(orig.taskMap), numTask(orig.numTask), lastStep(orig.lastStep) { }
+    InstanceTask(unsigned numTask, unsigned totalStep) : numTasks(numTask), lastStep(totalStep) { }
+    InstanceTask(const InstanceTask& orig) : taskMap(orig.taskMap), numTasks(orig.numTasks), lastStep(orig.lastStep) { }
 
     
     virtual ~InstanceTask() { }
@@ -56,6 +56,16 @@ public:
         return nullptr;
 
     }
+    
+    virtual void writeHeader(std::ostream& fs) const {
+        Writable::strWrite(*this, fs, "last_step", true); 
+        Writable::strWrite(*this, fs, "num_tasks");
+    }   
+    
+    virtual void writeRow(std::ostream& fs) const {
+        Writable::uintWrite(*this, fs, lastStep, true); 
+        Writable::uintWrite(*this, fs, numTasks);
+    }
 
     friend std::ostream& operator<<(std::ostream& os, const InstanceTask& obj) {
         
@@ -80,7 +90,7 @@ public:
     
 private:
 
-    unsigned lastStep, numTask;
+    unsigned lastStep, numTasks;
     _taskMap taskMap;
 
 };

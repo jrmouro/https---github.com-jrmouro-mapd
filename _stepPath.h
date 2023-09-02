@@ -257,7 +257,10 @@ public:
         return false;
         
     }
-          
+    
+    bool isTrivial()const{
+        return sites.size() == 1;
+    }          
         
 private:
         

@@ -6,8 +6,11 @@
  */
 
 #include "_agent_goingToCharging.h"
+#include "_agent_goingToCharging_CL.h"
 #include "_agent.h"
-#include "_agent_parked.h"
+#include "_agent_charging.h"
+#include "_agent_charging_CL.h"
+#include "_agent_dead.h"
 #include "_token.h"
 #include "Render.h"
 #include "Circle.h"
@@ -18,30 +21,45 @@ _agent_state* _agent_goingToCharging::_instance = nullptr;
 
 void _agent_goingToCharging::onAfterStepping(_token& token, _agent& agent) const{
     
-    if(agent.isInFinishedPath()){
+    AES aes = agent.energyState();    
         
-        changeState(agent, _agent_charging::getInstance());       //trocar para agent_charging
+    switch(aes){
         
+        case AES::normal:
+        case AES::charged:
+            
+            if(agent.isInFinishedPath()){
+        
+                changeState(agent, _agent_charging::getInstance()); 
+
+            }            
+            
+            break;        
+        
+        case AES::critical:
+            
+            if(agent.isInFinishedPath()){
+        
+                changeState(agent, _agent_charging_CL::getInstance()); 
+
+            } else {
+                
+                changeState(agent, _agent_goingToCharging_CL::getInstance());
+            
+            }
+            
+            break;
+            
+        case AES::dead:
+            changeState(agent, _agent_dead::getInstance());
+            break;
     }
     
 }
 
 void _agent_goingToCharging::onEnergyExpend(_token& token, _agent& agent) const {
     
-    _agent_state::onEnergyExpend(token,  agent);
-    
-    AES aes = AES::none;
-    
-    agent.expendNoCarryngStepping(token.isChargingSite(agent), aes);
-    
-    switch(aes){
-        case AES::critical:
-            changeState(agent, _agent_goingToCharging_CL::getInstance());
-            break;
-        case AES::dead:
-            changeState(agent, _agent_dead::getInstance());
-            break;
-    }
+    agent.expendNoCarryngStepping(token.isChargingSite(agent));    
     
 }
 

@@ -8,8 +8,8 @@
 #include "_agent.h"
 #include "_agent_state.h"
 #include "_token.h"
-#include "_agent_parked.h"
-#include "_agent_parked_CL.h"
+#include "_agent_charging.h"
+#include "_agent_charging_CL.h"
 #include "Render.h"
 #include "Circle.h"
 #include "Text.h"
@@ -33,11 +33,11 @@ _agent::_agent(
 
     if(energy_system.isAtCriticalLevel()) {
         
-        this->changeState(_agent_parked_CL::getInstance());
+        this->changeState(_agent_charging_CL::getInstance());
         
     } else {
         
-        this->changeState(_agent_parked::getInstance());
+        this->changeState(_agent_charging::getInstance());
         
     }
 
@@ -64,8 +64,6 @@ void _agent::receive(_system& system) {
 
 void _agent::expendEnergy(_token& token) {
         
-    
-    
     this->_state->onEnergyExpend(token, *this);
 
 }
@@ -75,136 +73,6 @@ void _agent::stepping(_token& token) {
     this->_state->onStepping(token, *this);
 
 }
-
-//void _agent::trivialPathEnergy(_system& system) {
-//
-//    if(energy_system.isAtDeadLevel()){
-//
-//        _state->onTrivialPathInEnergyDeadLevel(system, this);
-//
-//    } else if(energy_system.isAtCriticalLevel()){
-//
-//        _state->onTrivialPathInEnergyCriticalLevel(system, this);
-//
-//    } else {
-//
-//        _state->onTrivialPathInEnergyNormalLevel(system, this);
-//
-//    }
-//
-//}
-//
-//void _agent::taskPickupEnergy(_system& system){
-//    
-//    if(energy_system.isAtDeadLevel()){
-//
-//        _state->onPickupInEnergyDeadLevel(system, this);
-//
-//    } else if(energy_system.isAtCriticalLevel()){
-//
-//        _state->onPickupInEnergyCriticalLevel(system, this);
-//
-//    } else {
-//
-//        _state->onPickupInEnergyNormalLevel(system, this);
-//
-//    }
-//
-//}
-//void _agent::taskDeliveryEnergy(_system& system){
-//
-//    if(energy_system.isAtDeadLevel()){
-//
-//        _state->onDeliveryInEnergyDeadLevel(system, this);
-//
-//    } else if(energy_system.isAtCriticalLevel()){
-//
-//        _state->onDeliveryInEnergyCriticalLevel(system, this);
-//
-//    } else {
-//
-//        _state->onDeliveryInEnergyNormalLevel(system, this);
-//
-//    }
-//
-//}
-//
-//void _agent::chargingTaskPickupEnergy(_system& system){
-//
-//
-//    if(energy_system.isAtDeadLevel()){
-//
-//        _state->onChargingPickupInEnergyDeadLevel(system, this);
-//
-//    } else if(energy_system.isAtCriticalLevel()){
-//
-//        _state->onChargingPickupInEnergyCriticalLevel(system, this);
-//
-//    } else {
-//
-//        _state->onChargingPickupInEnergyNormalLevel(system, this);
-//
-//    }
-//    
-//}
-//
-//void _agent::chargingTaskDeliveryEnergy(_system& system){
-//
-//    if(energy_system.isAtDeadLevel()){
-//
-//        _state->onChargingDeliveryInEnergyDeadLevel(system, this);
-//
-//    } else if(energy_system.isAtCriticalLevel()){
-//
-//        _state->onChargingDeliveryInEnergyCriticalLevel(system, this);
-//
-//    } else {
-//
-//        _state->onChargingDeliveryInEnergyNormalLevel(system, this);
-//
-//    }
-//    
-//}
-//
-//
-//void _agent::chargingEndpointTaskEnergy(_system& system){
-//
-//    if(energy_system.isAtDeadLevel()){
-//
-//        _state->onChargingEndpointInEnergyDeadLevel(system, this);
-//
-//    } else if(energy_system.isAtCriticalLevel()){
-//
-//        _state->onChargingEndpointInEnergyCriticalLevel(system, this);
-//
-//    } else {
-//
-//        _state->onChargingEndpointInEnergyNormalLevel(system, this);
-//
-//    }
-//
-//}
-//
-//void _agent::beforeSteppingEnergy(_system& system){
-//    
-//    if(energy_system.isAtDeadLevel()){
-//
-//        _state->onChargingEndpointInEnergyDeadLevel(system, this);
-//
-//    } else if(energy_system.isAtCriticalLevel()){
-//
-//        _state->onChargingEndpointInEnergyCriticalLevel(system, this);
-//
-//    } else {
-//
-//        _state->onChargingEndpointInEnergyNormalLevel(system, this);
-//
-//    }
-//
-//}
-//
-//void _agent::afterSteppingEnergy(_system& system){}
-
 
 void _agent::move(_system& system) {
     

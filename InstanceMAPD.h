@@ -13,7 +13,7 @@
 #include "InstanceTask.h"
 
 
-class InstanceMAPD {
+class InstanceMAPD : public Writable{
 public:
     
         
@@ -31,6 +31,18 @@ public:
         if(instanceMap != nullptr) delete instanceMap;
         if(instanceTask != nullptr) delete instanceTask;
     
+    }
+    
+    virtual void writeHeader(std::ostream& fs) const {
+        instanceMap->writeHeader(fs);
+        Writable::sepWrite(*this, fs);
+        instanceTask->writeHeader(fs);
+    }   
+    
+    virtual void writeRow(std::ostream& fs) const {
+        instanceMap->writeRow(fs);
+        Writable::sepWrite(*this, fs);
+        instanceTask->writeRow(fs);
     }
     
     static InstanceMAPD* load(

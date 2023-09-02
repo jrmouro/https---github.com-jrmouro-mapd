@@ -18,24 +18,74 @@
 
 _agent_state* _agent_dead::_instance = nullptr;
 
-void _agent_dead::onUpdatePath(_system& system,  _agent* agent) const{
-    
-    try {
-            std::ostringstream stream;
-            stream << "dead agent: " << std::endl << *agent;
-            MAPD_EXCEPTION(stream.str());
-        } catch (std::exception& e) {
-            std::cout << e.what() << std::endl;
-            std::abort();
-        }
-    
-}
-
-void _agent_dead::onAfterStepping(_system& system,  _agent* agent) const{
+void _agent_dead::onUpdatePath(_token& token,  _agent& agent) const{
     
     try {
         std::ostringstream stream;
-        stream << "dead agent: " << std::endl << *agent;
+        stream << "dead agent: " << std::endl << agent;
+        MAPD_EXCEPTION(stream.str());
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+        std::abort();
+    }
+    
+}
+
+void _agent_dead::onBeforeStepping(_token& token,  _agent& agent) const {    
+
+    try {
+        std::ostringstream stream;
+        stream << "dead agent: " << std::endl << agent;
+        MAPD_EXCEPTION(stream.str());
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+        std::abort();
+    }
+}
+
+void _agent_dead::onEnergyExpend(_token& token,  _agent& agent) const{
+    
+    try {
+        std::ostringstream stream;
+        stream << "dead agent: " << std::endl << agent;
+        MAPD_EXCEPTION(stream.str());
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+        std::abort();
+    }
+}
+
+void _agent_dead::onStepping(_token& token,  _agent& agent) const {
+    
+    try {
+        std::ostringstream stream;
+        stream << "dead agent: " << std::endl << agent;
+        MAPD_EXCEPTION(stream.str());
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+        std::abort();
+    }
+    
+}
+
+void _agent_dead::onAfterStepping(_token& token,  _agent& agent) const {
+
+    try {
+        std::ostringstream stream;
+        stream << "dead agent: " << std::endl << agent;
+        MAPD_EXCEPTION(stream.str());
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+        std::abort();
+    }
+    
+}
+
+void _agent_dead::onDraw(const Render& render, const _agent& agent) const {
+   
+    try {
+        std::ostringstream stream;
+        stream << "dead agent: " << std::endl << agent;
         MAPD_EXCEPTION(stream.str());
     } catch (std::exception& e) {
         std::cout << e.what() << std::endl;

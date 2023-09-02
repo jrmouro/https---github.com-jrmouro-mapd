@@ -29,8 +29,8 @@ public:
     }
     
     virtual void onUpdatePath(_token&, _agent&) const;
-    virtual void onBeforeStepping(_token&, _agent&) const;
     virtual void onEnergyExpend(_token&, _agent&) const;
+    virtual void onAfterStepping(_token&,  _agent&) const;
     
     protected:        
         _agent_parked() : _agent_state() {}

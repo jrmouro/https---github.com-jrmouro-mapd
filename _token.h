@@ -10,6 +10,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include "Writable.h"
 #include "_map.h"
 #include "_c_task.h"
 #include "ReportTask.h"
@@ -21,7 +22,7 @@
 #include "ReportTaskMap.h"
 
 class _agent;
-class _token : public Drawable{
+class _token : public Identifiable<std::string>, public Drawable, public Writable{
 public:
     
     enum TokenUpdateType{
@@ -134,6 +135,26 @@ public:
         for (auto ptask : finishedTasks) delete ptask.second;
     
     } 
+    
+    virtual void writeHeader(std::ostream& fs) const {
+        Writable::strWrite(*this, fs, "token_id", true); 
+        Writable::strWrite(*this, fs, "current_step", true);
+        Writable::strWrite(*this, fs, "energy", true);
+        Writable::strWrite(*this, fs, "finished_tasks", true);
+    }   
+    
+    virtual void writeRow(std::ostream& fs) const {
+        Writable::strWrite(*this, fs, id(), true); 
+        Writable::uintWrite(*this, fs, currentStep, true);
+        Writable::intWrite(*this, fs, energy(), true);
+        Writable::uintWrite(*this, fs, finishedTasks.size());
+    }
+        
+    virtual std::string id() const {
+        
+        return "tp";
+        
+    }
     
     bool isChargingSite(const _agent& agent)const{
         return isChargingSite(agent.currentSite());
@@ -287,31 +308,30 @@ public:
 
     virtual void draw(const Render& render) const;
     
-    virtual _token::TokenUpdateType updatePath(_agent& agent);
-    virtual _token::TokenUpdateType updateChargingPath(_agent& agent);
-    virtual _token::TokenUpdateType updateChargingTrivialPathToAgent(_agent& agent, bool energyCheck = false);
+    virtual _token::TokenUpdateType updatePath(_agent& agent, bool energyCheck);
+    virtual _token::TokenUpdateType updateChargingPath(_agent& agent, bool energyCheck);
+    virtual _token::TokenUpdateType updateChargingTrivialPathToAgent(_agent& agent, bool energyCheck);
+    virtual _token::TokenUpdateType updateTrivialPathToAgent(_agent& agent, bool energyCheck);
     
 protected:
     
     bool selectChargingEndpointToAgent(const _agent& agent, _site& selectNewSite) const;
     
     bool selectChargingEndpointPathToAgent(const _agent& agent, _stepPath& chargingPath) const;
-    bool updateChargingPathToAgent(_agent& agent, bool energyCheck = false);
+    bool updateChargingPathToAgent(_agent& agent, bool energyCheck);
     
     bool selectChargingEndpointPathToAgent(const _agent& agent, _task& conflictTask, _stepPath& chargingPath) const;
-    bool updateChargingConflictTaskToAgent(_agent& agent, bool energyCheck = false);
+    bool updateChargingConflictTaskToAgent(_agent& agent, bool energyCheck);
     
     bool chargingTaskPathToAgent(const _agent& agent, const _task& task, _stepPath& path, unsigned& pickupStep, unsigned& deliveryStep) const;
     bool selectNewChargingTaskPathToAgent(const _agent& agent, _task& selectedTask, _stepPath& path, unsigned& pickupStep, unsigned& deliveryStep) const;
     
-    bool updateChargingTaskPathToAgent(_agent& agent, bool energyCheck = false);
-    
-    void updateTrivialPathToAgent(_agent& agent, bool energyCheck = false);
-        
+    bool updateChargingTaskPathToAgent(_agent& agent, bool energyCheck);
+            
     bool isConflictingSiteWithAnyTaskDelivery(const _site& site, _task& conflitTask) const;
     bool selectNewRestEndpointToAgent(const _agent& agent, _site& selectNewSite) const;
     bool selectNewRestEndpointPathToAgent(const _agent& agent, _task& conflictTask, _stepPath& restPath) const;
-    bool updateRestPathToAgent(_agent& agent, bool energyCheck = false);
+    bool updateRestPathToAgent(_agent& agent, bool energyCheck);
     
     bool selectNewTaskToAgent(const _agent& agent, _task& selectedTask) const;    
     
@@ -321,14 +341,14 @@ protected:
     bool selectNewTaskPathToAgentCarryThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
     bool selectNewTaskPathToAgentTaskCarryThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
     
-    bool updateTaskPathToAgent(_agent& agent, bool energyCheck = false);
-    bool updateTaskPathToAgentTaskThreshold(_agent& agent, bool energyCheck = false);
-    bool updateTaskPathToAgentCarryThreshold(_agent& agent, bool energyCheck = false);
-    bool updateTaskPathToAgentTaskCarryThreshold(_agent& agent, bool energyCheck = false);
+    bool updateTaskPathToAgent(_agent& agent, bool energyCheck);
+    bool updateTaskPathToAgentTaskThreshold(_agent& agent, bool energyCheck);
+    bool updateTaskPathToAgentCarryThreshold(_agent& agent, bool energyCheck);
+    bool updateTaskPathToAgentTaskCarryThreshold(_agent& agent, bool energyCheck);
         
     
     bool selectNewTaskOrCtaskPathToAgent(const _agent& agent, _task& origTask, _c_task& firstC_task, _c_task& secondC_task, _stepPath& path, _stepPath& c_path, bool& c_taskFlag) const;
-    bool updateTaskOrCtaskPathToAgent(_agent& agent, bool energyCheck = false);
+    bool updateTaskOrCtaskPathToAgent(_agent& agent, bool energyCheck);
     
 private:
     

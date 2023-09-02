@@ -18,7 +18,7 @@
 #include "C_TaskCarryThresholdToken.h"
 #include "_agent.h"
 
-class _system {
+class _system : public Writable{
 public:
     
     enum TokenType{
@@ -28,22 +28,33 @@ public:
         taskCarryThreshold_tp,
         c_taskCarryThreshold_tp,
     };
-    
-    _system(){}
-    
+        
     _system(
             TokenType tokenType, 
-            const InstanceMAPD& instanceMAPD, 
-            float task_threshold = .0f, 
-            float carry_threshold = .0f,
+            std::string taskFilename, 
+            std::string mapFilename, 
+            float task_threshold, 
+            float carry_threshold,
             int currentEnergyLevel, 
             int maximumEnergyLevel,
-            int chargingEnergyLevel,
+            int chargedEnergyLevel,
             int criticalEnergyLevel){        
-        reset(tokenType, instanceMAPD, task_threshold, carry_threshold, currentEnergyLevel, maximumEnergyLevel, chargingEnergyLevel, criticalEnergyLevel);        
+        reset(
+                tokenType, 
+                taskFilename, 
+                mapFilename, 
+                task_threshold, 
+                carry_threshold, 
+                currentEnergyLevel, 
+                maximumEnergyLevel, 
+                chargedEnergyLevel, 
+                criticalEnergyLevel);        
     }
     
     _system(const _system& other) :
+        taskFilename(other.taskFilename), 
+        mapFilename(other.mapFilename), 
+        instanceMAPD(new InstanceMAPD(*other.instanceMAPD)),
         map(new _map(*other.map)), 
         stepMap(new _stepMap(*other.stepMap)), 
         taskMap(new _taskMap(*other.taskMap)), 
@@ -56,6 +67,7 @@ public:
     virtual ~_system(){
     
         if(token != nullptr) {
+            delete instanceMAPD;
             delete token;
             delete map;
             delete taskMap;
@@ -67,19 +79,80 @@ public:
     
     }
     
+    InstanceMAPD& getInstanceMAPD() const {
+        return *instanceMAPD;
+    }
+
+    
+    virtual void writeHeader(std::ostream& fs) const {
+        
+        if(token != nullptr && this->instanceMAPD != nullptr){
+            
+            Writable::strWrite(*this, fs, "mapFilename", true); 
+            Writable::strWrite(*this, fs, "taskFilename", true);
+            this->instanceMAPD->writeHeader(fs);
+            Writable::sepWrite(*this, fs);
+            this->token->writeHeader(fs);
+                        
+        }else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "uninitialized instance";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }
+                
+    }   
+    
+    virtual void writeRow(std::ostream& fs) const {
+        
+        if(token != nullptr && this->instanceMAPD != nullptr){
+            
+            Writable::strWrite(*this, fs, mapFilename, true); 
+            Writable::strWrite(*this, fs, taskFilename, true);
+            this->instanceMAPD->writeRow(fs);
+            Writable::sepWrite(*this, fs);
+            this->token->writeRow(fs);
+                        
+        }else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "uninitialized instance";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }
+                
+    } 
     
     
     void reset(
         TokenType tokenType, 
-        const InstanceMAPD& instanceMAPD, 
-        float task_threshold = .0f, 
-        float carry_threshold = .0f,
+        std::string taskFilename, 
+        std::string mapFilename,
+        float task_threshold, 
+        float carry_threshold,
         int currentEnergyLevel, 
         int maximumEnergyLevel,
-        int chargingEnergyLevel,
+        int chargedEnergyLevel,
         int criticalEnergyLevel){
         
+        this->mapFilename = mapFilename;
+        this->taskFilename = taskFilename;
+        
+        
+        
         if(token != nullptr) {
+            delete instanceMAPD;
             delete token;
             delete map;
             delete taskMap;
@@ -89,19 +162,21 @@ public:
             delete botsEndpoints;
         }
         
+        this->instanceMAPD = InstanceMAPD::load(mapFilename, taskFilename);
+        
         botsEndpoints = new std::vector<_site>();
         
-        endpoints = new std::vector<_site>(instanceMAPD.getEndpoints());
+        endpoints = new std::vector<_site>(instanceMAPD->getEndpoints());
         
-        endpointsDistanceAlgorithm = new _endpointsDistanceAlgorithm(instanceMAPD.getMap(), instanceMAPD.getEndpoints());
+        endpointsDistanceAlgorithm = new _endpointsDistanceAlgorithm(instanceMAPD->getMap(), instanceMAPD->getEndpoints());
         
-        lastStepTask = instanceMAPD.getLastStepTask();
+        lastStepTask = instanceMAPD->getLastStepTask();
         
-        map = new _map(instanceMAPD.getMap());
+        map = new _map(instanceMAPD->getMap());
         
-        stepMap = new _stepMap(instanceMAPD.getStepMap());
+        stepMap = new _stepMap(instanceMAPD->getStepMap());
         
-        taskMap = new _taskMap(instanceMAPD.getTaskMap());
+        taskMap = new _taskMap(instanceMAPD->getTaskMap());
         
         switch(tokenType){
             case tp:
@@ -121,11 +196,11 @@ public:
                 break;
         }
         
-        instanceMAPD.listBotsEndPoints(
-                [currentEnergyLevel, maximumEnergyLevel, chargingEnergyLevel, criticalEnergyLevel, this]
+        instanceMAPD->listBotsEndPoints(
+                [currentEnergyLevel, maximumEnergyLevel, chargedEnergyLevel, criticalEnergyLevel, this]
                 (unsigned id, const _site& site){
                         
-            this->token->addAgent(_agent(id, _stepSite(0, site.GetRow(), site.GetColunm()), currentEnergyLevel, maximumEnergyLevel, chargingEnergyLevel, criticalEnergyLevel));
+            this->token->addAgent(_agent(id, _stepSite(0, site.GetRow(), site.GetColunm()), currentEnergyLevel, maximumEnergyLevel, chargedEnergyLevel, criticalEnergyLevel));
             this->botsEndpoints->push_back(site);
             
             return false;
@@ -134,11 +209,11 @@ public:
         
     }
     
-    void step(){ 
+    bool step(){ 
         
         if(token!=nullptr){
             
-            _step();
+            return _step();
             
         } else {
             
@@ -153,13 +228,15 @@ public:
             
         }
         
+        return false;
+        
     }
     
     void run(){
       
         if(token != nullptr){
             
-            run();
+            _run();
             
         }else{
             
@@ -211,11 +288,14 @@ public:
         }
         
     }
-         
-
+    
+    
     
 private:
-    unsigned lastStepTask = 0;
+    
+    std::string taskFilename, mapFilename;
+    
+    InstanceMAPD* instanceMAPD = nullptr;
     _map* map = nullptr;
     _stepMap* stepMap = nullptr;
     _taskMap* taskMap = nullptr;
@@ -223,7 +303,9 @@ private:
     std::vector<_site> *endpoints = nullptr, *botsEndpoints = nullptr;
     _endpointsDistanceAlgorithm *endpointsDistanceAlgorithm = nullptr;
     
-    void _step(){ 
+    unsigned lastStepTask = 0;
+    
+    bool _step(){ 
         
         if(
             token->getCurrentStep() < stepMap->getStep_size() &&
@@ -259,8 +341,12 @@ private:
             });
             
             token->stepping();
+            
+            return true;
                         
         }
+        
+        return false;
         
     }
     

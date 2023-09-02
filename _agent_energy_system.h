@@ -28,8 +28,9 @@ typedef
 enum _agent_energy_state : int{
     
     dead,
-    normal,
     critical,
+    normal,
+    charged,
     none
     
 } AES;
@@ -58,22 +59,24 @@ public:
     }
     
     virtual bool isAtDeadLevel() const{
-        return 0 > this->current_level;
+        return 0 >= this->current_level;
     }
     
     virtual AES energyState() const {        
         if(isAtDeadLevel()) return AES::dead;
         if(this->isAtCriticalLevel()) return AES::critical;
+        if(this->isAtChargedLevel()) return AES::charged;
         return AES::normal;        
     }   
     
     virtual AES energyState(int estimative) const {        
-        if(0 > this->current_level - estimative) return AES::dead;
-        if(this->critical_level > this->current_level - estimative) return AES::critical;
+        if(0 >= this->current_level - estimative) return AES::dead;
+        if(this->critical_level >= this->current_level - estimative) return AES::critical;
+        if(this->charged_level <= this->current_level - estimative) return AES::charged;
         return AES::normal;        
     }   
     
-    virtual int appraiseTaskPath(const _map& map, const _task& task, const _stepPath& path, AES& aes) const {
+    virtual int appraiseTaskPath(const _map& map, const _task& task, const _stepPath& path) const {
         
         int ret = 0;
         int moving_value = regime.get(AER::moving);
@@ -81,6 +84,7 @@ public:
         int unloaded_value = regime.get(AER::unloaded);
         int carrying_value = regime.get(AER::carrying);
         int charging_value = regime.get(AER::charging);
+        
         bool pickup_flag = true, delivery_flag = true;
         
         path.moveList([map, task, moving_value, loaded_value, unloaded_value, carrying_value, charging_value, &pickup_flag, &delivery_flag, &ret](const _stepSite& orig, const _stepSite& dest){
@@ -89,7 +93,9 @@ public:
                 
                 pickup_flag = false;
                                 
-            } else if(!pickup_flag && delivery_flag && orig.match(task.getDelivery())){
+            } 
+            
+            if(!pickup_flag && delivery_flag && orig.match(task.getDelivery())){
                 
                 delivery_flag = false;
                 
@@ -97,23 +103,19 @@ public:
                         
             if(map.getType(orig.GetRow(), orig.GetColunm()) == _map::Type::bot){
                 
-                ret -= charging_value;
+                ret += charging_value;
                 
             } 
             
             if(pickup_flag){
                     
-                if(delivery_flag){ // moving
+                if(orig.match(dest)){
 
-                    if(orig.match(dest)){
+                    ret += unloaded_value;
 
-                        ret += unloaded_value;
+                } else {
 
-                    } else {
-
-                        ret += moving_value;
-
-                    }
+                    ret += moving_value;
 
                 }
 
@@ -151,13 +153,11 @@ public:
             
         });
         
-        aes = energyState(ret);
-        
         return ret;
         
     }
     
-    virtual int appraiseNoCarryngPath(const _map& map, const _stepPath& path, AES& aes) const {
+    virtual int appraiseNoCarryngPath(const _map& map, const _stepPath& path) const {
         
         int ret = 0;
         int moving_value = regime.get(AER::moving);
@@ -168,7 +168,7 @@ public:
             
             if(map.getType(orig.GetRow(), orig.GetColunm()) == _map::Type::bot){
                 
-                ret -= charging_value;
+                ret += charging_value;
                 
             } 
                 
@@ -185,14 +185,12 @@ public:
             return false;
             
         });
-        
-        aes = energyState(ret);
-        
+                
         return ret;
         
     }
     
-    virtual int appraiseNoCarryngStepping(const _map& map, const _stepSite& orig, const _stepSite dest, AES& aes) const {
+    virtual int appraiseNoCarryngStepping(const _map& map, const _stepSite& orig, const _stepSite dest) const {
         
         int ret = 0;
         int moving_value = regime.get(AER::moving);
@@ -201,7 +199,7 @@ public:
                             
         if(map.getType(orig.GetRow(), orig.GetColunm()) == _map::Type::bot){
 
-            ret -= charging_value;
+            ret += charging_value;
 
         }         
 
@@ -214,14 +212,12 @@ public:
             ret += moving_value;
 
         }
-       
-        aes = energyState(ret);
-        
+               
         return ret;
         
     }
     
-    virtual int appraiseCarryngStepping(const _map& map, const _stepSite& orig, const _stepSite dest, AES& aes) const {
+    virtual int appraiseCarryngStepping(const _map& map, const _stepSite& orig, const _stepSite dest) const {
         
         int ret = 0;
         int carrying_value = regime.get(AER::carrying);
@@ -230,7 +226,7 @@ public:
                             
         if(map.getType(orig.GetRow(), orig.GetColunm()) == _map::Type::bot){
 
-            ret -= charging_value;
+            ret += charging_value;
 
         }         
 
@@ -243,14 +239,12 @@ public:
             ret += carrying_value;
 
         }
-       
-        aes = energyState(ret);
-        
+               
         return ret;
         
     }
     
-    void expendCarryngStepping(bool isChargingSite, const _stepSite& orig, const _stepSite dest, AES& aes){
+    void expendCarryngStepping(bool isChargingSite, const _stepSite& orig, const _stepSite dest){
                                     
         if(isChargingSite){
 
@@ -267,12 +261,10 @@ public:
             expend(AER::carrying);
 
         }
-       
-        aes = energyState();
-        
+               
     }
     
-    void expendNoCarryngStepping(bool isChargingSite, const _stepSite& orig, const _stepSite dest, AES& aes){
+    void expendNoCarryngStepping(bool isChargingSite, const _stepSite& orig, const _stepSite dest){
                                     
         if(isChargingSite){
 
@@ -289,9 +281,7 @@ public:
             expend(AER::moving);
 
         }
-       
-        aes = energyState();
-        
+               
     }
 
 };

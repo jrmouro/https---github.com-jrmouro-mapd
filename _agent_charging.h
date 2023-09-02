@@ -29,8 +29,8 @@ public:
     }
         
     virtual void onUpdatePath(_token&, _agent&) const;
-    virtual void onAfterStepping(_token&, _agent&) const;
     virtual void onEnergyExpend(_token&, _agent&) const;
+    virtual void onAfterStepping(_token&, _agent&) const;
     virtual void onDraw(const Render&, const _agent&) const; 
     
     protected:        
@@ -41,5 +41,5 @@ public:
 
 };
 
-#endif /* _AGENT_PARKED_H */
+#endif /* _AGENT_CHARGING_H */
 

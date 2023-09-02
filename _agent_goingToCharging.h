@@ -16,7 +16,7 @@ public:
     static _agent_state * getInstance(){
         
         if(_agent_goingToCharging::_instance == nullptr)
-            _agent_goingToCharging::_instance = new _agent_goingToCharging_CL();
+            _agent_goingToCharging::_instance = new _agent_goingToCharging();
         
         return _agent_goingToCharging::_instance;
         

@@ -10,6 +10,8 @@
         <logicalFolder name="f1" displayName="Agent_State" projectFiles="true">
           <itemPath>_agent_charging.cpp</itemPath>
           <itemPath>_agent_charging.h</itemPath>
+          <itemPath>_agent_charging_CL.cpp</itemPath>
+          <itemPath>_agent_charging_CL.h</itemPath>
           <itemPath>_agent_dead.cpp</itemPath>
           <itemPath>_agent_dead.h</itemPath>
           <itemPath>_agent_goingToCharging.cpp</itemPath>
@@ -72,6 +74,7 @@
         <itemPath>Experiment.h</itemPath>
         <itemPath>InstanceMapExperiment.h</itemPath>
         <itemPath>InstanceTaskExperiment.h</itemPath>
+        <itemPath>MultiSystemExperiment.h</itemPath>
         <itemPath>RenderExperiment.h</itemPath>
         <itemPath>SystemExperiment.h</itemPath>
       </logicalFolder>
@@ -115,6 +118,7 @@
         <itemPath>Identifiable.h</itemPath>
         <itemPath>MapdException.h</itemPath>
         <itemPath>Resetable.h</itemPath>
+        <itemPath>Writable.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="SourceFiles" displayName="Main" projectFiles="true">
@@ -195,6 +199,8 @@
       </item>
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="MultiSystemExperiment.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Rectangle.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Rectangle.h" ex="false" tool="3" flavor2="0">
@@ -225,6 +231,8 @@
       </item>
       <item path="Text.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Writable.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_agent.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent.h" ex="false" tool="3" flavor2="0">
@@ -232,6 +240,10 @@
       <item path="_agent_charging.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_charging.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_charging_CL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_charging_CL.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_dead.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -417,6 +429,8 @@
       </item>
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="MultiSystemExperiment.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Rectangle.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Rectangle.h" ex="false" tool="3" flavor2="0">
@@ -447,6 +461,8 @@
       </item>
       <item path="Text.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Writable.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_agent.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent.h" ex="false" tool="3" flavor2="0">
@@ -454,6 +470,10 @@
       <item path="_agent_charging.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_charging.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_charging_CL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agent_charging_CL.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_dead.cpp" ex="false" tool="1" flavor2="0">
       </item>

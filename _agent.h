@@ -39,13 +39,18 @@ public:
         return new _agent(*this);
     }
     
-    bool isAbleToFulfillTaskPath(const _map& map, const _task& task, const _stepPath& taskPath, AES& aes)const{
-        int need = this->energy_system.appraiseTaskPath(map, task, taskPath, aes);
+    bool isAbleToFulfillTaskPath(const _map& map, const _task& task, const _stepPath& taskPath)const{
+        int need = this->energy_system.appraiseTaskPath(map, task, taskPath);
+        return need  + this->energy_system.criticalLevel() <= this->energy_system.currentLevel();
+    }
+    
+    bool isAbleToFulfillChargingTaskPath(const _map& map, const _task& task, const _stepPath& taskPath)const{
+        int need = this->energy_system.appraiseTaskPath(map, task, taskPath);
         return need <= this->energy_system.currentLevel();
     }
     
-    bool isAbleToFulfillNoCarryngPath(const _map& map, const _stepPath& path, AES& aes)const{
-        int need = this->energy_system.appraiseNoCarryngPath(map, path, aes);
+    bool isAbleToFulfillNoCarryngPath(const _map& map, const _stepPath& path)const{
+        int need = this->energy_system.appraiseNoCarryngPath(map, path);
         return need <= this->energy_system.currentLevel();
     }
      
@@ -57,12 +62,6 @@ public:
     const _stepSite& currentSite()const{
         
         return _currentPath.currentSite();
-        
-    }
-    
-    const _stepSite& futureSite()const{
-        
-        return _currentPath.futureSite();
         
     }
     
@@ -84,39 +83,15 @@ public:
         
     const bool isAssigned()const{
         
-        return _currentTaskIndex > -1 && !_charging_task;
+        return _currentTaskIndex > -1;// && !_charging_task;
         
     }
-    
-    const bool isChargingTaskAssigned()const{
-        
-        return _currentTaskIndex > -1  && _charging_task;
-        
-    }
-    
-    const bool wasSendToRest()const{
-        
-        return !isAssigned() && _currentPath.size() > 2 && !_charging_path;
-        
-    }
-    
-    const bool wasSendToCharging()const{
-        
-        return !isAssigned() && _currentPath.size() > 2 && energy_system.isAtCriticalLevel();
-        
-    }
-    
-//    const bool isParkedCharging()const{
-//        
-//        return _currentPath.size() == 1 && !energy_system.isMaximumLevel();
-//        
-//    }
     
     const bool isDelivering()const{
         
         if(_currentTaskIndex > -1){
             
-            return isInFinishedPath() && currentTask()->getDelivery().match(_currentPath.goalSite());
+            return isInFinishedPath() && currentTask().getDelivery().match(_currentPath.goalSite());
             
         }
         
@@ -126,9 +101,9 @@ public:
     
     const bool isChargingDelivering()const{
         
-        if(_currentTaskIndex > -1 && !currentTask()->getDelivery().match(_currentPath.goalSite())){
+        if(_currentTaskIndex > -1 && !currentTask().getDelivery().match(_currentPath.goalSite())){
             
-            return !isInFinishedPath() &&  currentTask()->getDelivery().match(_currentPath.currentSite());
+            return !isInFinishedPath() &&  currentTask().getDelivery().match(_currentPath.currentSite());
             
         }
         
@@ -140,19 +115,7 @@ public:
         
         if(_currentTaskIndex > -1){
             
-            return currentTask()->getPickup().match(_currentPath.currentSite());
-            
-        }
-        
-        return false;
-        
-    }
-    
-    const bool isChargingPickupping()const{
-        
-        if(_currentTaskIndex > -1 && !currentTask()->getDelivery().match(_currentPath.goalSite())){
-            
-            return currentTask()->getPickup().match(_currentPath.currentSite());
+            return currentTask().getPickup().match(_currentPath.currentSite());
             
         }
         
@@ -167,14 +130,15 @@ public:
         os << "energy " << obj.energy_system << std::endl;
         os <<"agent path: "<< obj._currentPath << std::endl;
         if(obj._currentTaskIndex > -1)
-            os <<"agent current task: "<< obj.getCurrentTask() << std::endl;
+            os <<"agent current task: "<< obj.currentTask() << std::endl;
         os <<"agent state: "<< obj._state->stateName() << std::endl;
         return os;
     }
     
-    _task getCurrentTask() const{
+    const _task& currentTask() const{
         
         if(_currentTaskIndex > -1)
+            
             return tasks.at(_currentTaskIndex);
         
         try {
@@ -190,12 +154,10 @@ public:
         
     }
     
-    int amountEnergy() const {
-        return energy_system.currentLevel();
-    }
     
-    bool isAtEnergyChargingLevel()const{
-        return energy_system.isAtChargingLevel();
+    
+    bool isAtEnergyChargedLevel()const{
+        return energy_system.isAtChargedLevel();
     }
         
     bool isAtEnergyCriticalLevel()const{
@@ -210,6 +172,23 @@ public:
         return currentSite().match(_previousSite);
     }
     
+    void expendCarryngStepping(bool isChargingSite){
+        
+        energy_system.expendCarryngStepping(isChargingSite, _currentPath.currentSite(), _currentPath.futureSite());
+        
+    }
+    
+    void expendNoCarryngStepping(bool isChargingSite){
+        
+        energy_system.expendNoCarryngStepping(isChargingSite, _currentPath.currentSite(), _currentPath.futureSite());
+        
+    } 
+    
+    AES energyState()const{
+        
+        return energy_system.energyState();
+        
+    }
        
         
 protected:
@@ -220,15 +199,7 @@ protected:
     int _currentTaskIndex = -1;
     _agent_energy_system energy_system;
     _stepSite _previousSite;
-    bool _charging_task = false, _charging_path = true;
-    
-    const _task* const currentTask() const {
-        
-        if(_currentTaskIndex > -1)
-            return &tasks.at(_currentTaskIndex);
-        return nullptr;
-    }
-    
+            
 private:
     friend class _system;
     virtual void move(_system& system);
@@ -247,14 +218,6 @@ private:
     
     void expendEnergy(AER aer) {
         energy_system.expend(aer);       
-    }
-    
-    void expendCarryngStepping(bool isChargingSite, AES& aes){
-        energy_system.expendCarryngStepping(isChargingSite, _currentPath.currentSite(), _currentPath.futureSite(), aes);
-    }
-    
-    void expendNoCarryngStepping(bool isChargingSite, AES& aes){
-        energy_system.expendNoCarryngStepping(isChargingSite, _currentPath.currentSite(), _currentPath.futureSite(), aes);
     }
     
     _stepSite previousSite() const {
@@ -282,242 +245,28 @@ private:
        
     }
     
-private: // events    
-    
+private:       
     
     friend class _token;
     
-    void pickup(_token& token, AES aes){
-        
-        switch(aes){
-            case AES::critical:
-                _state->onPickupInEnergyCriticalLevel(token, *this);
-                break;
-            case AES::normal:
-                _state->onPickupInEnergyNormalLevel(token, *this);
-                break;
-            case AES::dead:
-                _state->onPickupInEnergyDeadLevel(token, *this);
-                break;
-        }
-
+    int amountEnergy() const {
+        return energy_system.currentLevel();
     }
     
-    void delivery(_token& token, AES aes){
+    void setPath(const _stepPath& path){
         
-        switch(aes){
-            case AES::critical:
-                _state->onDeliveryInEnergyCriticalLevel(token, *this);
-                break;
-            case AES::normal:
-                _state->onDeliveryInEnergyNormalLevel(token, *this);
-                break;
-            case AES::dead:
-                _state->onDeliveryInEnergyDeadLevel(token, *this);
-                break;
-        }
-
+        this->_currentPath = path;
+        
     }
     
-    void chargingPickup(_token& token, AES aes){
-        
-        switch(aes){
-            case AES::critical:
-                _state->onChargingPickupInEnergyCriticalLevel(token, *this);
-                break;
-            case AES::normal:
-                _state->onChargingPickupInEnergyNormalLevel(token, *this);
-                break;
-            case AES::dead:
-                _state->onChargingPickupInEnergyDeadLevel(token, *this);
-                break;
-        }
-
-    }
-    
-    void chargingDelivery(_token& token, AES aes){
-        
-        switch(aes){
-            case AES::critical:
-                _state->onChargingDeliveryInEnergyCriticalLevel(token, *this);
-                break;
-            case AES::normal:
-                _state->onChargingDeliveryInEnergyNormalLevel(token, *this);
-                break;
-            case AES::dead:
-                _state->onChargingDeliveryInEnergyDeadLevel(token, *this);
-                break;
-        }
-
-    }
-    
-    void chargingTaskEndpoint(_token& token, AES aes){
-        
-        switch(aes){
-            case AES::critical:
-                _state->onChargingTaskEndpointInEnergyCriticalLevel(token, *this);
-                break;
-            case AES::normal:
-                _state->onChargingTaskEndpointInEnergyNormalLevel(token, *this);
-                break;
-            case AES::dead:
-                _state->onChargingTaskEndpointInEnergyDeadLevel(token, *this);
-                break;
-        }
-
-    }
-    
-    
-    void assignTask(_token& token, const _task& task, const _stepPath& path, AES aes){
+    void assignTask(const _task& task, const _stepPath& path){
         this->_currentPath = path;
         tasks.push_back(task);
         _currentTaskIndex = tasks.size() - 1;
-        _charging_task = false; 
-        
-        switch(aes){
-            case AES::critical:
-                _state->onAssignedTaskInEnergyCriticalLevel(token, *this);
-                break;
-            case AES::normal:
-                _state->onAssignedTaskInEnergyNormalLevel(token, *this);
-                break;
-            case AES::dead:
-                _state->onAssignedTaskInEnergyDeadLevel(token, *this);
-                break;
-        }
-        
     }
     
-    void assignChargingTask(_token& token, const _task& task, const _stepPath& path, AES aes){
-        this->_currentPath = path;
-        tasks.push_back(task);
-        _currentTaskIndex = tasks.size() - 1;
-        _charging_task = true;   
-        
-        switch(aes){
-            case AES::critical:
-                _state->onAssignedChargingTaskInEnergyCriticalLevel(token, *this);
-                break;
-            case AES::normal:
-                _state->onAssignedChargingTaskInEnergyNormalLevel(token, *this);
-                break;
-            case AES::dead:
-                _state->onAssignedChargingTaskInEnergyDeadLevel(token, *this);
-                break;
-        }
-    }
-    
-    void assignRestPath(_token& token, const _stepPath& path, AES aes){
-        this->_currentPath = path;
-        _charging_task = false; 
-        _charging_path = false;
-        
-        switch(aes){
-            case AES::critical:
-                _state->onAssignedRestPathInEnergyCriticalLevel(token, *this);
-                break;
-            case AES::normal:
-                _state->onAssignedRestPathInEnergyNormalLevel(token, *this);
-                break;
-            case AES::dead:
-                _state->onAssignedRestPathInEnergyDeadLevel(token, *this);
-                break;
-        }
-    }
-    
-    void assignChargingPath(_token& token, const _stepPath& path, AES aes){
-        this->_currentPath = path; 
-        _charging_task = false; 
-        _charging_path = true;
-        
-        switch(aes){
-            case AES::critical:
-                _state->onAssignedChargingPathInEnergyCriticalLevel(token, *this);
-                break;
-            case AES::normal:
-                _state->onAssignedChargingPathInEnergyNormalLevel(token, *this);
-                break;
-            case AES::dead:
-                _state->onAssignedChargingPathInEnergyDeadLevel(token, *this);
-                break;
-        }
-    }
-    
-    void assignTrivialPath(_token& token, const _stepPath& path, AES aes){
-        
-        this->_currentPath = path;        
-        _charging_task = false; 
-        _charging_path = false;  
-        
-        switch(aes){
-            case AES::critical:
-                _state->onAssignedTrivialPathInEnergyCriticalLevel(token, *this);
-                break;
-            case AES::normal:
-                _state->onAssignedTrivialPathInEnergyNormalLevel(token, *this);
-                break;
-            case AES::dead:
-                _state->onAssignedTrivialPathInEnergyDeadLevel(token, *this);
-                break;
-        }
-    }
-    
-    void assignChargingTrivialPath(_token& token, const _stepPath& path, AES aes){
-        
-        this->_currentPath = path;
-        
-        _charging_task = false; 
-        _charging_path = true; 
-        
-        switch(aes){
-            case AES::critical:
-                _state->onAssignedChargingTrivialPathInEnergyCriticalLevel(token, *this);
-                break;
-            case AES::normal:
-                _state->onAssignedChargingTrivialPathInEnergyNormalLevel(token, *this);
-                break;
-            case AES::dead:
-                _state->onAssignedChargingTrivialPathInEnergyDeadLevel(token, *this);
-                break;
-        }
-    }
-                
-    void unassignTask(_token& token, AES aes){
+    void unassignTask(){
         _currentTaskIndex = -1;
-        _charging_task = false; 
-        _charging_path = false;
-        
-        switch(aes){
-            case AES::critical:
-                _state->onUnassignedTaskInEnergyCriticalLevel(token, *this);
-                break;
-            case AES::normal:
-                _state->onUnassignedTaskInEnergyNormalLevel(token, *this);
-                break;
-            case AES::dead:
-                _state->onUnassignedTaskInEnergyDeadLevel(token, *this);
-                break;
-        }
-        
-    }
-    
-    void unassignChargingTask(_token& token, AES aes){
-        _currentTaskIndex = -1;
-        _charging_task = true; 
-        _charging_path = true;
-        
-        switch(aes){
-            case AES::critical:
-                _state->onUnassignedChargingTaskInEnergyCriticalLevel(token, *this);
-                break;
-            case AES::normal:
-                _state->onUnassignedChargingTaskInEnergyNormalLevel(token, *this);
-                break;
-            case AES::dead:
-                _state->onUnassignedChargingTaskInEnergyDeadLevel(token, *this);
-                break;
-        }
-        
     }
         
 };

@@ -8,6 +8,7 @@
 #include "_agent_goingToRest_CL.h"
 #include "_agent_goingToRest.h"
 #include "_agent.h"
+#include "_agent_dead.h"
 #include "_agent_parked.h"
 #include "_agent_parked_CL.h"
 #include "_token.h"
@@ -20,69 +21,45 @@ _agent_state* _agent_goingToRest_CL::_instance = nullptr;
 
 void _agent_goingToRest_CL::onAfterStepping(_token& token, _agent& agent) const{
     
-    if(agent.isInFinishedPath()){
+    AES aes = agent.energyState();
+    
+    switch(aes){
         
-        changeState(agent, _agent_parked_CL::getInstance());       
+        case AES::charged:
+        case AES::normal:
+            
+            if(agent.isInFinishedPath()){
         
+                changeState(agent, _agent_parked::getInstance());       
+
+            }  else {
+                
+                changeState(agent, _agent_goingToRest::getInstance());
+                
+            }         
+            
+            break;
+        
+        case AES::critical:
+            
+            if(agent.isInFinishedPath()){
+        
+                changeState(agent, _agent_parked_CL::getInstance());       
+
+            } 
+            
+            break;
+            
+        case AES::dead:
+            changeState(agent, _agent_dead::getInstance());
+            break;
     } 
     
 }
 
 void _agent_goingToRest_CL::onEnergyExpend(_token& token, _agent& agent) const {
     
-    _agent_state::onEnergyExpend(token,  agent);
-    
-    AES aes = AES::none;
-    
-    agent.expendNoCarryngStepping(token.isChargingSite(agent), aes);
-    
-    switch(aes){
-        case AES::normal:
-            changeState(agent, _agent_goingToRest::getInstance());
-            break;
-        case AES::dead:
-            changeState(agent, _agent_dead::getInstance());
-            break;
-    }
-    
+    agent.expendNoCarryngStepping(token.isChargingSite(agent));   
+        
 }
 
-void _agent_goingToRest_CL::onDraw(const Render& render, const _agent& agent) const {
-
-    sf::Vector2f position(
-            agent.currentSite().GetColunm() * render.GetCell().first,
-            agent.currentSite().GetRow() * render.GetCell().second);
-
-    Circle background(
-            position,
-            sf::Vector2f(render.GetCell().first / 2, 0),
-            sf::Color::Red);
-
-    Text textAgentId(
-            std::to_string(agent.id()),
-            position,
-            sf::Vector2f(
-            render.GetCell().first / 2,
-            0),
-            sf::Color::White);
-
-    textAgentId.draw(render);
-
-    background.draw(render);
-    textAgentId.draw(render);   
-    
-    position += sf::Vector2f(render.GetCell().first / 2, render.GetCell().first / 2);
-
-//    sf::Vector2f position(
-//            agent->currentSite().GetColunm() * render.GetCell().first + render.GetCell().first / 2,
-//            agent->currentSite().GetRow() * render.GetCell().second + render.GetCell().first / 2);
-
-    Text textTaskId(
-            "R",
-            position,
-            sf::Vector2f(render.GetCell().first / 2, 0),
-            sf::Color::Yellow);
-
-    textTaskId.draw(render);
-
-}

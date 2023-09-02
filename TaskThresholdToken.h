@@ -32,27 +32,31 @@ public:
 
     virtual ~TaskThresholdToken(){}
     
-    virtual _token::TokenUpdateType updatePath(_agent& agent){
+    virtual std::string id() const {
+        
+        return "tttp";
+        
+    }
+    
+    virtual _token::TokenUpdateType updatePath(_agent& agent, bool energyCheck){
         
         TokenUpdateType ret = TokenUpdateType::none;
     
         if(agent.isInFinishedPath()){
 
-            if(updateTaskPathToAgentTaskThreshold(agent)) {
+            if(updateTaskPathToAgentTaskThreshold(agent, energyCheck)) {
 
                 ret = TokenUpdateType::task;
 
             } else {
 
-                if(updateRestPathToAgent(agent)){
+                if(updateRestPathToAgent(agent, energyCheck)){
 
                     ret = TokenUpdateType::rest;
 
                 } else {
 
-                    this->updateTrivialPathToAgent(agent);
-
-                    ret = TokenUpdateType::trivial;
+                    ret = this->updateTrivialPathToAgent(agent, energyCheck);
 
                 }
 

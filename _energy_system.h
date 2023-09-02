@@ -16,15 +16,15 @@ class _energy_system {
     
 public:
     
-    _energy_system(UNIT current_level, const UNIT maximum_level, const UNIT charging_level, const UNIT critical_level, _energy_regime<ID, UNIT> regime) :
-    current_level(current_level), critical_level(critical_level), maximum_level(maximum_level), charging_level(charging_level), regime(regime) {}
+    _energy_system(UNIT current_level, const UNIT maximum_level, const UNIT charged_level, const UNIT critical_level, _energy_regime<ID, UNIT> regime) :
+    current_level(current_level), critical_level(critical_level), maximum_level(maximum_level), charged_level(charged_level), regime(regime) {}
     
-    _energy_system(UNIT current_level, const UNIT maximum_level, const UNIT charging_level, const UNIT critical_level) :
-    current_level(current_level), critical_level(critical_level), maximum_level(maximum_level), charging_level(charging_level), regime(regime) {}
+    _energy_system(UNIT current_level, const UNIT maximum_level, const UNIT charged_level, const UNIT critical_level) :
+    current_level(current_level), critical_level(critical_level), maximum_level(maximum_level), charged_level(charged_level), regime(regime) {}
 
     
     _energy_system(const _energy_system<ID, UNIT>& other) :
-    current_level(other.current_level), critical_level(other.critical_level), charging_level(other.charging_level), maximum_level(other.maximum_level), regime(other.regime) { }
+    current_level(other.current_level), critical_level(other.critical_level), charged_level(other.charged_level), maximum_level(other.maximum_level), regime(other.regime) { }
     
     void expend(ID id) {        
         current_level -= regime.get(id);        
@@ -39,12 +39,16 @@ public:
         return current_level;
     }
     
-    bool isAtCriticalLevel()const{
-        return critical_level > current_level;
+    const UNIT criticalLevel() const {
+        return critical_level;
     }
     
-    bool isAtChargingLevel()const{
-        return charging_level >= current_level;
+    bool isAtCriticalLevel()const{
+        return critical_level >= current_level;
+    }
+    
+    bool isAtChargedLevel()const{
+        return charged_level <= current_level;
     }
     
     bool isMaximumLevel()const{
@@ -56,7 +60,7 @@ public:
 protected:
     
     UNIT current_level;
-    const UNIT critical_level, charging_level, maximum_level;    
+    const UNIT critical_level, charged_level, maximum_level;    
     _energy_regime<ID,UNIT> regime;
     
 };
