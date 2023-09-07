@@ -81,8 +81,6 @@ public:
             
         }  
         
-        return _stepSite();
-        
     }
     
     const _stepSite& currentSite() const{
@@ -103,8 +101,6 @@ public:
             }
             
         }   
-        
-        return _stepSite();
         
     }
     
@@ -127,7 +123,6 @@ public:
             
         }   
         
-        return _stepSite();
         
     }
     

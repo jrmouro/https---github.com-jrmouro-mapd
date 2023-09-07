@@ -34,6 +34,22 @@ public:
     int id() const {
         return _id;
     }
+        
+    void setPath(const _stepPath& path){
+        
+        this->_currentPath = path;
+        
+    }
+    
+    void assignTask(const _task& task, const _stepPath& path){
+        this->_currentPath = path;
+        tasks.push_back(task);
+        _currentTaskIndex = tasks.size() - 1;
+    }
+    
+    void unassignTask(){
+        _currentTaskIndex = -1;
+    }
     
     virtual _agent* instance()const{
         return new _agent(*this);
@@ -149,9 +165,7 @@ public:
             std::cout << e.what() << std::endl;
             std::abort();
         }
-        
-        return _task();
-        
+                
     }
     
     
@@ -189,8 +203,7 @@ public:
         return energy_system.energyState();
         
     }
-       
-        
+      
 protected:
     const int _id;
     _agent_state* _state;
@@ -215,11 +228,7 @@ private:
     void changeState(_agent_state* state){
         _state = state;
     }
-    
-    void expendEnergy(AER aer) {
-        energy_system.expend(aer);       
-    }
-    
+        
     _stepSite previousSite() const {
         return _previousSite;
     }
@@ -249,25 +258,15 @@ private:
     
     friend class _token;
     
-    int amountEnergy() const {
+    int currentEnergyLevel() const {
         return energy_system.currentLevel();
     }
     
-    void setPath(const _stepPath& path){
-        
-        this->_currentPath = path;
-        
+    int energyCharging() const {
+        return energy_system.getCharging();
     }
     
-    void assignTask(const _task& task, const _stepPath& path){
-        this->_currentPath = path;
-        tasks.push_back(task);
-        _currentTaskIndex = tasks.size() - 1;
-    }
     
-    void unassignTask(){
-        _currentTaskIndex = -1;
-    }
         
 };
 

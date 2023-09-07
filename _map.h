@@ -107,7 +107,7 @@ public:
 
     virtual ~_map() {
 
-        if (nodes != nullptr) delete nodes;
+        if (nodes != nullptr) delete [] nodes;
 
     }
     

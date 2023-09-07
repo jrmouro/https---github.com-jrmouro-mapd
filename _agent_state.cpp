@@ -11,43 +11,9 @@
 #include "Render.h"
 #include "_agent.h"
 
-void _agent_state::onUpdatePath(_token& token,  _agent& agent) const {
+void _agent_state::onUpdatePath(_token& token,  _agent& agent) const { }
 
-//    if(!agent.isInFinishedPath()){
-//        
-//        try {
-//            std::ostringstream stream;
-//            stream << "agent is not in finished path: " << agent << std::endl;
-//            MAPD_EXCEPTION(stream.str());
-//        } catch (std::exception& e) {
-//            std::cout << e.what() << std::endl;
-//            std::abort();
-//        }
-//        
-//    } 
-    
-    // ---> derive here or replace
-
-}
-
-void _agent_state::onBeforeStepping(_token& token,  _agent& agent) const {
-   
-//    if(agent.isInFinishedPath()){
-//        
-//        try {
-//            std::ostringstream stream;
-//            stream << "agent is in finished path: " << agent << std::endl;
-//            MAPD_EXCEPTION(stream.str());
-//        } catch (std::exception& e) {
-//            std::cout << e.what() << std::endl;
-//            std::abort();
-//        }
-//        
-//    } 
-    
-    // ---> derive here        
-
-}
+void _agent_state::onBeforeStepping(_token& token,  _agent& agent) const { }
 
 void _agent_state::onStepping(_token& token,  _agent& agent) const {
     

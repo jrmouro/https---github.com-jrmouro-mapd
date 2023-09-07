@@ -35,7 +35,7 @@ public:
         auto bstart = _site(start.GetRow(), start.GetColunm());
         
         AstarState* startState = new AstarState(.0f, this->heuristic(start, goal), bstart, nullptr);        
-        AstarState* solved = this->solveAux(startState, map, goal, closedStates, priorityStates, visitedStates);
+        AstarState* solved = this->solveAux_iterative(startState, map, goal, closedStates, priorityStates, visitedStates);
                   
 //        std::cout << map << std::endl;
         
@@ -204,7 +204,7 @@ private:
         
     }    
     
-    AstarState* solveAux(
+    AstarState* solveAux_recursive(
         AstarState* current,
         const _map& map,
         const _site& goal,
@@ -240,11 +240,62 @@ private:
             
             auto state = priorityStates.pop();
             
-            return this->solveAux(state, map, goal, closedStates, priorityStates, visitedStates);
+            return this->solveAux_recursive(state, map, goal, closedStates, priorityStates, visitedStates);
             
         }  
                    
         return nullptr;
+        
+    }
+    
+    AstarState* solveAux_iterative(
+        AstarState* current,
+        const _map& map,
+        const _site& goal,
+        ClosedStates& closedStates,
+        PriorityStates& priorityStates,
+        std::vector<AstarState*>& visitedStates) const {
+        
+        while(current != nullptr){
+            
+            visitedStates.push_back(current);
+            
+            if(goal.GetRow() == current->getSite().GetRow() && goal.GetColunm() == current->getSite().GetColunm()){
+                        
+                return current;
+
+            }
+            
+            map.listNeighborFreeSites(current->getSite(), [current, goal, &closedStates, &priorityStates, this](const _site& site){
+            
+            
+                if(!closedStates.closed(site)){
+
+                    auto state = new AstarState(current->getTraveled() + 1, this->heuristic(site, goal), site, current);
+                    
+                    closedStates.add(state);
+                    
+                    priorityStates.push(state);
+                    
+                }
+
+                return false;
+
+            });
+            
+            if(!priorityStates.empty()){
+            
+                current = priorityStates.pop();
+                                
+            }  else {
+                
+                current = nullptr;
+                
+            }
+                        
+        }
+                               
+        return nullptr;               
         
     }
     

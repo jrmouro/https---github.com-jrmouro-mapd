@@ -326,6 +326,10 @@ private:
             
             token->listAgents([this](_agent& agent){
                 
+                if(agent.id() == 19){
+                    std::cout << agent << std::endl;
+                }
+                
                 agent.receive(*this);
                 
                 return false;
@@ -341,6 +345,10 @@ private:
             });
             
             token->stepping();
+            
+            if(token->currentStep == 782){
+                std::cout << *token << std::endl;
+            }
             
             return true;
                         

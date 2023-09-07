@@ -2,10 +2,25 @@
 #include "_agent.h"
 #include "_thresholdAlgorithm.h"
 
-int _token::energy()const{
+void _token::setMoving(const _agent& agent, const _stepPath& path){
+    
+    stepMap.setMoving(path, agent.id());
+    
+}
+
+int _token::currentEnergy()const{
     int ret = 0;
     listAgents([&ret](_agent& agent){
-        ret += agent.amountEnergy();
+        ret += agent.currentEnergyLevel();
+        return false;
+    });
+    return ret;
+}
+
+int _token::energyExpenditure()const{
+    int ret = 0;
+    listAgents([&ret](_agent& agent){
+        ret += (agent.energyCharging() - agent.currentEnergyLevel());
         return false;
     });
     return ret;
@@ -345,7 +360,7 @@ bool _token::selectNewTaskPathToAgentTaskCarryThreshold(const _agent& agent, _ta
                 
                     pickupStep = path.goalSite().GetStep() - pickupStep;
 
-                    if(thresholdAlgorithm.solve(task.getPickup(), task.getDelivery(), pickupStep, task_threshold)){ // threshold do carregamento
+                    if(thresholdAlgorithm.solve(task.getPickup(), task.getDelivery(), pickupStep, carry_threshold)){ // threshold do carregamento
 
                         unsigned distance = this->endpointsDistanceAlgorithm.solve(agent.currentSite(), task.getPickup());
 
@@ -748,26 +763,6 @@ bool _token::updateTaskPathToAgentTaskThreshold(_agent& agent, bool energyCheck)
 
                 agent.unassignTask();
                 
-//                flag = _stepPath::trivialSteppingPath(path);
-//                
-//                if(flag){
-//                    
-//                    agent.assignTrivialPath(*this, path, aes);   
-//                    stepMap.setMoving(path,agent.id());
-//                    
-//                } else {
-//                    
-//                    try {
-//                        std::ostringstream stream;
-//                        stream << "invalid trivialSteppingPath: " << std::endl << agent;
-//                        MAPD_EXCEPTION(stream.str());
-//                    } catch (std::exception& e) {
-//                        std::cout << e.what() << std::endl;
-//                        std::abort();
-//                    }                    
-//                    
-//                }
-                
                 return false;
                 
 
@@ -1005,27 +1000,7 @@ bool _token::updateTaskPathToAgent(_agent& agent, bool energyCheck){
                 runTask((newTask));
                 finishTask(newTask);
                 
-                agent.unassignTask();
-                
-//                flag = _stepPath::trivialSteppingPath(path);
-//                
-//                if(flag){
-//                    
-//                    agent.assignTrivialPath(*this, path, aes);   
-//                    stepMap.setMoving(path,agent.id());
-//                    
-//                } else {
-//                    
-//                    try {
-//                        std::ostringstream stream;
-//                        stream << "invalid trivialSteppingPath: " << std::endl << agent;
-//                        MAPD_EXCEPTION(stream.str());
-//                    } catch (std::exception& e) {
-//                        std::cout << e.what() << std::endl;
-//                        std::abort();
-//                    }                    
-//                    
-//                } 
+                agent.unassignTask(); 
                 
                 return false;
 

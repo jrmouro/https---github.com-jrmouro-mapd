@@ -36,10 +36,11 @@ enum _agent_energy_state : int{
 } AES;
 
 class _agent_energy_system : public _energy_system<AER, int>{
+    
 public:
     
     _agent_energy_system(int current_level, const int maximum_level, const int energyChargingLevel, const int critical_level) :
-    _energy_system<AER, int>(current_level, maximum_level, energyChargingLevel, critical_level) {
+    _energy_system<AER, int>(current_level, maximum_level, energyChargingLevel, critical_level), charging(current_level) {
         
         addRegime(AER::charging, AER::charging);
         addRegime(AER::unloaded, AER::unloaded);
@@ -49,12 +50,12 @@ public:
         
     }
         
-    _agent_energy_system(const _agent_energy_system& other):_energy_system<AER, int>(other){}
+    _agent_energy_system(const _agent_energy_system& other):_energy_system<AER, int>(other), charging(other.current_level){}
     
     virtual ~_agent_energy_system(){}
     
     friend std::ostream& operator<<(std::ostream& os, const _agent_energy_system& obj) {
-        os << "current level: " << obj.currentLevel() << " / critical level: " << obj.critical_level;
+        os << "current level: " << obj.currentLevel() << " / charging: " << obj.charging;
         return os;
     }
     
@@ -249,6 +250,7 @@ public:
         if(isChargingSite){
 
             expend(AER::charging);
+            charging -= AER::charging;
 
         }         
 
@@ -269,6 +271,7 @@ public:
         if(isChargingSite){
 
             expend(AER::charging);
+            charging -= AER::charging;
 
         }         
 
@@ -283,6 +286,14 @@ public:
         }
                
     }
+    
+    int getCharging() const {
+        return charging;
+    }
+    
+private:
+    
+    int charging = 0;
 
 };
 

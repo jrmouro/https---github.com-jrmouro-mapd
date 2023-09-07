@@ -20,7 +20,7 @@ class _endpointsDistanceAlgorithm : public _distanceAlgorithm{
     
 public:
     
-    _endpointsDistanceAlgorithm(){}
+//    _endpointsDistanceAlgorithm(){}
     
     _endpointsDistanceAlgorithm(const _map& map, const std::vector<_site>& endpoints){
         reset(map, endpoints);

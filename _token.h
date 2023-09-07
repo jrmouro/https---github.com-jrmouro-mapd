@@ -146,7 +146,7 @@ public:
     virtual void writeRow(std::ostream& fs) const {
         Writable::strWrite(*this, fs, id(), true); 
         Writable::uintWrite(*this, fs, currentStep, true);
-        Writable::intWrite(*this, fs, energy(), true);
+        Writable::intWrite(*this, fs, energyExpenditure(), true);
         Writable::uintWrite(*this, fs, finishedTasks.size());
     }
         
@@ -157,11 +157,15 @@ public:
     }
     
     bool isChargingSite(const _agent& agent)const{
+        
         return isChargingSite(agent.currentSite());
+        
     }
     
     bool isChargingSite(const _site& site)const{
+        
         return map.getType(site) == _map::Type::bot;
+        
     }
         
     void assignTask(const _task& task, const _agent& agent){
@@ -240,12 +244,18 @@ public:
         
     }
     
-//    std::vector<_site>& getEndpoints() const {
-//        return endpoints;
-//    }
-
+    void setMoving(const _agent& agent, const _stepPath& path);
+    
     _stepMap& getStepMap() const {
         return stepMap;
+    }
+
+    const _map& getMap() const {
+        return map;
+    }
+    
+    const _endpointsDistanceAlgorithm& getEndpointsDistanceAlgorithm() const {
+        return endpointsDistanceAlgorithm;
     }
     
     bool anyPendingTask()const{
@@ -261,6 +271,28 @@ public:
     }
         
     void listAgents(const std::function<bool(_agent&)> function)const;
+    
+    void listEndpoints(const std::function<bool(const _site&)>& function) const{
+        
+        for (auto ep : endpoints) {
+            
+            if(function(ep)) return;
+
+        }
+
+        
+    }
+    
+    void listChargingEndpoints(const std::function<bool(const _site&)>& function) const{
+        
+        for (auto ep : chargingEndpoints) {
+            
+            if(function(ep)) return;
+
+        }
+
+        
+    }
     
     void listPendingTasks(const std::function<bool(const _task&)> function)const{
         
@@ -292,11 +324,12 @@ public:
         
     }
     
-    int energy()const;
+    int currentEnergy()const;
+    int energyExpenditure()const;
     
     friend std::ostream& operator<<(std::ostream& os, const _token& obj) {
         os << "current step: " << obj.currentStep << std::endl;
-        os  << std::endl << "energy: " << obj.energy() << std::endl;
+        os  << std::endl << "energy: " << obj.currentEnergy() << std::endl;
         os  << std::endl << "agents: " << std::endl;
         for (auto elem : obj.agents) {
             os << *elem.second <<  std::endl;
@@ -314,6 +347,8 @@ public:
     virtual _token::TokenUpdateType updateTrivialPathToAgent(_agent& agent, bool energyCheck);
     
 protected:
+    
+    
     
     bool selectChargingEndpointToAgent(const _agent& agent, _site& selectNewSite) const;
     

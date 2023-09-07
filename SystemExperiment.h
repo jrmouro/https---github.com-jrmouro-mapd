@@ -125,6 +125,11 @@ public:
                 chargedEnergyLevelAgent, 
                 criticalEnergyLevelAgent);
         
+        std::cout << "Experiment: " << std::endl;
+        std::cout << " - mapFilename: " << mapFilename << std::endl;
+        std::cout << " - taskFilename: " << taskFilename << std::endl;
+        std::cout << " - token: " << system->getToken().id() << std::endl;
+        
         if(timestep == 0 || cell_size == 0){
             
             system->run();
@@ -165,9 +170,9 @@ public:
             
         }
                 
-        std::cout << "token: " << system->getToken() << std::endl;
-        std::cout << "steps: " << system->getToken().getCurrentStep() << std::endl;
-        std::cout << "energy: " << system->getToken().energy() << std::endl;
+//        std::cout << "token: " << system->getToken() << std::endl;
+//        std::cout << "steps: " << system->getToken().getCurrentStep() << std::endl;
+//        std::cout << "energy expenditure: " << system->getToken().energyExpenditure() << std::endl;
         
                         
     }

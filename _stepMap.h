@@ -186,9 +186,9 @@ public:
 
     virtual ~_stepMap() {
 
-        if (nodes != nullptr) delete nodes;
-        if (row_edge != nullptr) delete row_edge;
-        if (colunm_edge != nullptr) delete colunm_edge;
+        if (nodes != nullptr) delete [] nodes;
+        if (row_edge != nullptr) delete [] row_edge;
+        if (colunm_edge != nullptr) delete [] colunm_edge;
 
     }
     
