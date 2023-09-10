@@ -1,4 +1,5 @@
 #include "_selectChargingEndpointToAgentAlgorithm.h"
+#include "_taskPathToAgentAlgorithm.h"
 
 bool _selectChargingEndpointToAgentAlgorithm::solve(
         const _token& token,
@@ -8,7 +9,7 @@ bool _selectChargingEndpointToAgentAlgorithm::solve(
 
     std::vector<_site> vsite;
 
-    token.listChargingEndpoints([&vsite, token, agent, this](const _site & endpoint) {
+    token.listChargingEndpoints([&vsite, &token, agent, this](const _site & endpoint) {
 
         this->endpointIndexerAlgorithm.solve(token, endpoint, agent, vsite);
 
@@ -20,19 +21,19 @@ bool _selectChargingEndpointToAgentAlgorithm::solve(
 
         bool flag = true;
 
-        token.listPendingTasks([endpoint, &flag](const _task & task) {
-
-            if (task.getDelivery().match(endpoint)) {
-
-                flag = false;
-
-                return true;
-
-            }
-
-            return false;
-
-        });
+//        token.listPendingTasks([endpoint, &flag](const _task & task) {
+//
+//            if (task.getDelivery().match(endpoint)) {
+//
+//                flag = false;
+//
+//                return true;
+//
+//            }
+//
+//            return false;
+//
+//        });
 
         if (flag) {
 
@@ -59,27 +60,35 @@ bool _selectChargingEndpointToAgentAlgorithm::solve(
             flag = pathToAgentAlgorithm.solve(token, agent, selectedNewSite, selectedPath);
 
             if (flag) {
+                
+//                flag = token.getStepMap().isPathDefinitelyFree(selectedPath.goalSite());
+//
+//                if (flag) {
 
-                flag = agent.isAbleToFulfillNoCarryngPath(token.getMap(), selectedPath);
+                    flag = agent.isAbleToFulfillNoCarryngPath(token.getMap(), selectedPath);
 
-                if (flag) {
+                    if (flag) {
 
-                    return true;
+                        return true;
 
-                }
+                    }
+                
+//                }
 
-            } else {
-
-                try {
-                    std::ostringstream stream;
-                    stream << "unsolved endpoint path: " << endpoint;
-                    MAPD_EXCEPTION(stream.str());
-                } catch (std::exception& e) {
-                    std::cout << e.what() << std::endl;
-                    std::abort();
-                }
-
-            }
+            } 
+            
+//            else {
+//
+//                try {
+//                    std::ostringstream stream;
+//                    stream << "unsolved endpoint path: " << endpoint;
+//                    MAPD_EXCEPTION(stream.str());
+//                } catch (std::exception& e) {
+//                    std::cout << e.what() << std::endl;
+//                    std::abort();
+//                }
+//
+//            }
 
         }
 

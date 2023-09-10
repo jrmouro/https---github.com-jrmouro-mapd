@@ -7,8 +7,15 @@ build/Debug/GNU-Linux/_agent.o: _agent.cpp _agent.h Identifiable.h \
  _astarAlgorithm.h _pathAlgorithm.h _stepAstarAlgorithm.h \
  _stepPathAlgorithm.h ReportTaskMap.h _agent_charging.h \
  _agent_charging_CL.h Circle.h Shape.h Text.h _system.h InstanceMAPD.h \
- InstanceMap.h InstanceTask.h _taskMap.h TaskCarryThresholdToken.h \
- TaskThresholdToken.h CarryThresholdToken.h C_TaskCarryThresholdToken.h
+ InstanceMap.h InstanceTask.h _taskMap.h ThresholdTokenPass.h \
+ _updateTokenAlgorithms.h _updateTrivialPathToAgentAlgorithm.h \
+ _selectTrivialPathToAgentAlgorithm.h _taskPathToAgentAlgorithm.h \
+ _taskIndexerAlgorithm.h _endpointIndexerAlgorithm.h \
+ _updateTaskToAgentAlgorithm.h _updateEndpointToAgentAlgorithm.h \
+ _selectEndpointToAgentAlgorithm.h \
+ _selectChargingTaskToAgentThresholdAlgorithm.h \
+ _selectTaskToAgentThresholdAlgorithm.h _selectTaskToAgentAlgorithm.h \
+ TokenPass.h CarryThresholdToken.h
 
 _agent.h:
 
@@ -88,10 +95,32 @@ InstanceTask.h:
 
 _taskMap.h:
 
-TaskCarryThresholdToken.h:
+ThresholdTokenPass.h:
 
-TaskThresholdToken.h:
+_updateTokenAlgorithms.h:
+
+_updateTrivialPathToAgentAlgorithm.h:
+
+_selectTrivialPathToAgentAlgorithm.h:
+
+_taskPathToAgentAlgorithm.h:
+
+_taskIndexerAlgorithm.h:
+
+_endpointIndexerAlgorithm.h:
+
+_updateTaskToAgentAlgorithm.h:
+
+_updateEndpointToAgentAlgorithm.h:
+
+_selectEndpointToAgentAlgorithm.h:
+
+_selectChargingTaskToAgentThresholdAlgorithm.h:
+
+_selectTaskToAgentThresholdAlgorithm.h:
+
+_selectTaskToAgentAlgorithm.h:
+
+TokenPass.h:
 
 CarryThresholdToken.h:
-
-C_TaskCarryThresholdToken.h:

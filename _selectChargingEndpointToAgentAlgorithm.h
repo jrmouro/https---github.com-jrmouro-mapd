@@ -9,23 +9,22 @@
 #define _SELECTCHARGINGRESTENDPOINTTOAGENTALGORITHM_H
 
 #include "_endpointIndexerAlgorithm.h"
+#include "_selectRestEndpointToAgentAlgorithm.h"
 #include "_pathToAgentAlgorithm.h"
 
 
-class _selectChargingEndpointToAgentAlgorithm{
+class _selectChargingEndpointToAgentAlgorithm  : public _selectRestEndpointToAgentAlgorithm{
 public:
     
     _selectChargingEndpointToAgentAlgorithm(
-            const _endpointIndexerAlgorithm& endpointIndexerAlgorithm,
+            _endpointIndexerAlgorithm& endpointIndexerAlgorithm,
             const _pathToAgentAlgorithm& pathToAgentAlgorithm) :
-        endpointIndexerAlgorithm(endpointIndexerAlgorithm),
-        pathToAgentAlgorithm(pathToAgentAlgorithm){ }
+        _selectRestEndpointToAgentAlgorithm(endpointIndexerAlgorithm, pathToAgentAlgorithm){ }
 
         
     _selectChargingEndpointToAgentAlgorithm(
             const _selectChargingEndpointToAgentAlgorithm& other) :
-        endpointIndexerAlgorithm(other.endpointIndexerAlgorithm),
-        pathToAgentAlgorithm(other.pathToAgentAlgorithm){ }
+            _selectRestEndpointToAgentAlgorithm(other){ }
 
 
     virtual ~_selectChargingEndpointToAgentAlgorithm(){}
@@ -35,12 +34,7 @@ public:
             const _agent& agent, 
             _site& selectedNewSite, 
             _stepPath& selectedPath) const;
-    
-private:
-    
-    const _endpointIndexerAlgorithm& endpointIndexerAlgorithm;
-    const _pathToAgentAlgorithm& pathToAgentAlgorithm;
-    
+            
 };
 
 #endif /* _SELECTCHARGINGRESTENDPOINTTOAGENTALGORITHM_H */

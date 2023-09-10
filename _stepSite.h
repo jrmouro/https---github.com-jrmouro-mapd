@@ -75,6 +75,9 @@ public:
         return step == other.step && match(other);
     }
     
+    _stepSite nextSite() const{
+        return _stepSite(this->step, this->row, this->colunm);
+    }    
     
     
 protected:

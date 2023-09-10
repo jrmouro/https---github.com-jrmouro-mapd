@@ -110,6 +110,10 @@ public:
         return instanceMap->getEndpoints();
     }
     
+    unsigned getNumBots() const {
+        return instanceMap->getNumBots();
+    }
+    
 private:
     
     InstanceMap* instanceMap = nullptr;

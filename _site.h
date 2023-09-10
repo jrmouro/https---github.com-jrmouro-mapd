@@ -15,7 +15,7 @@
 class _site{
     
 public:
-        
+    
     _site(unsigned row = 0, unsigned colunm = 0) :
     row(row), colunm(colunm) {}
     
@@ -29,6 +29,24 @@ public:
         this->row = right.row;
         this->colunm = right.colunm;
         return *this;
+    }
+    
+    bool operator==(const _site& right) const {
+        return this->match(right);
+    }
+    
+    bool operator>(const _site& right) const {
+        
+        return right < *this;
+        
+    }
+    
+    bool operator<(const _site& right) const {
+        
+        bool ret = this->row < right.row || (this->row == right.row && this->colunm < right.colunm);
+        
+        return ret;
+        
     }
 
     virtual ~_site(){}
@@ -68,6 +86,10 @@ public:
         function(_site(this->row, this->colunm));         
         
         
+    }
+    
+    unsigned linearIndex(unsigned colunm_size) const{
+        return row * colunm_size + colunm;
     }
         
 protected:

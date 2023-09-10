@@ -10,12 +10,27 @@
 #include "Text.h"
 #include "Render.h"
 #include "_agent.h"
+#include "_token.h"
 
 void _agent_state::onUpdatePath(_token& token,  _agent& agent) const { }
 
 void _agent_state::onBeforeStepping(_token& token,  _agent& agent) const { }
 
 void _agent_state::onStepping(_token& token,  _agent& agent) const {
+    
+    if(token.getCurrentStep() > 913 && agent.id() == 1){
+        
+        int i = 0;
+        for (; i < 10; i++) {
+            
+            token.getStepMap().stepView(token.getCurrentStep()+i);
+
+        }
+        token.getStepMap().stepView(token.getCurrentStep()+i);
+
+            
+
+    }
     
     agent.stepping();
 
@@ -40,6 +55,7 @@ void _agent_state::onDraw(const Render& render, const _agent& agent) const {
             agent.currentSite().GetColunm() * render.GetCell().first,
             agent.currentSite().GetRow() * render.GetCell().second);
 
+    
     Circle background(
             position,
             sf::Vector2f(render.GetCell().first / 2, 0),

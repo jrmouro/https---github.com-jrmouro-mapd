@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <map>
+#include <unordered_set>
 #include <iostream>
 #include "Writable.h"
 #include "_map.h"
@@ -22,6 +23,7 @@
 #include "ReportTaskMap.h"
 
 class _agent;
+class _updateTokenAlgorithms;
 class _token : public Identifiable<std::string>, public Drawable, public Writable{
 public:
     
@@ -46,15 +48,30 @@ public:
     map(map),
     stepMap(stepMap),
     endpoints(endpoints),
+    nonTaskDeliveryEndpoints(),
+    taskDeliveryEndpoints(),
     chargingEndpoints(chargingEndpoints),
     endpointsDistanceAlgorithm(endpointsDistanceAlgorithm),
     task_threshold(task_threshold),
-    carry_threshold(carry_threshold){}            
+    carry_threshold(carry_threshold){
+    
+        for (auto endpoint : endpoints) {
+
+            nonTaskDeliveryEndpoints.insert(std::pair<unsigned, _site>(
+                endpoint.linearIndex(map.getColumn_size()), 
+                endpoint));
+            
+        }
+
+    
+    }            
     
     _token(const _token& other) :
     map(other.map),
     stepMap(other.stepMap),
     endpoints(other.endpoints),
+    nonTaskDeliveryEndpoints(other.nonTaskDeliveryEndpoints),
+    taskDeliveryEndpoints(other.taskDeliveryEndpoints),
     chargingEndpoints(other.chargingEndpoints),
     endpointsDistanceAlgorithm(other.endpointsDistanceAlgorithm),
     task_threshold(other.task_threshold),
@@ -110,7 +127,8 @@ public:
 
     
     }
-
+    
+    virtual _token* getInstance() const = 0;
     
     virtual ~_token(){ 
         
@@ -304,14 +322,40 @@ public:
 
     }
     
-    void listPending_ptr_Tasks(const std::function<bool(_task*)> function)const{
+    void listTaskDeliveryEndpoints(const std::function<bool(const _site&)> function)const{
         
-        for (auto taskPair : pendingTasks) {
+        for (auto pendpoint : taskDeliveryEndpoints) {
             
-            if(function(taskPair.second))return;
+            if(function(pendpoint.second))return;
 
         }
 
+    }
+    
+    void listNonTaskDeliveryEndpoints(const std::function<bool(const _site&)> function)const{
+        
+        for (auto pendpoint : nonTaskDeliveryEndpoints) {
+            
+            if(function(pendpoint.second))return;
+
+        }
+
+    }
+    
+    bool isTaskDeliveryEndpoint(const _site& site) const {
+        
+        std::map<unsigned, _site>::const_iterator it = taskDeliveryEndpoints.find(site.linearIndex(map.getColumn_size()));
+        
+        return it != taskDeliveryEndpoints.cend();
+        
+    }
+    
+    bool isNonTaskDeliveryEndpoint(const _site& site)const{
+        
+        std::map<unsigned, _site>::const_iterator it = nonTaskDeliveryEndpoints.find(site.linearIndex(map.getColumn_size()));
+        
+        return it != nonTaskDeliveryEndpoints.cend();
+        
     }
        
     unsigned getCurrentStep() const {
@@ -341,49 +385,54 @@ public:
 
     virtual void draw(const Render& render) const;
     
-    virtual _token::TokenUpdateType updatePath(_agent& agent, bool energyCheck);
-    virtual _token::TokenUpdateType updateChargingPath(_agent& agent, bool energyCheck);
+    virtual _token::TokenUpdateType updatePath(_agent& agent, bool energyCheck) = 0;
+    virtual _token::TokenUpdateType updateChargingPath(_agent& agent, bool energyCheck) = 0;
+    
+    virtual _token::TokenUpdateType updateTrivialPathToAgent(_agent& agent, bool energyCheck);    
     virtual _token::TokenUpdateType updateChargingTrivialPathToAgent(_agent& agent, bool energyCheck);
-    virtual _token::TokenUpdateType updateTrivialPathToAgent(_agent& agent, bool energyCheck);
+    
+    
+    void error_site_collision_check() const;
+    void error_edge_collision_check() const;
     
 protected:
     
-    
-    
-    bool selectChargingEndpointToAgent(const _agent& agent, _site& selectNewSite) const;
-    
-    bool selectChargingEndpointPathToAgent(const _agent& agent, _stepPath& chargingPath) const;
-    bool updateChargingPathToAgent(_agent& agent, bool energyCheck);
-    
-    bool selectChargingEndpointPathToAgent(const _agent& agent, _task& conflictTask, _stepPath& chargingPath) const;
-    bool updateChargingConflictTaskToAgent(_agent& agent, bool energyCheck);
-    
-    bool chargingTaskPathToAgent(const _agent& agent, const _task& task, _stepPath& path, unsigned& pickupStep, unsigned& deliveryStep) const;
-    bool selectNewChargingTaskPathToAgent(const _agent& agent, _task& selectedTask, _stepPath& path, unsigned& pickupStep, unsigned& deliveryStep) const;
-    
-    bool updateChargingTaskPathToAgent(_agent& agent, bool energyCheck);
-            
-    bool isConflictingSiteWithAnyTaskDelivery(const _site& site, _task& conflitTask) const;
-    bool selectNewRestEndpointToAgent(const _agent& agent, _site& selectNewSite) const;
-    bool selectNewRestEndpointPathToAgent(const _agent& agent, _task& conflictTask, _stepPath& restPath) const;
-    bool updateRestPathToAgent(_agent& agent, bool energyCheck);
-    
-    bool selectNewTaskToAgent(const _agent& agent, _task& selectedTask) const;    
-    
-    bool taskPathToAgent(const _agent& agent, const _task& task, _stepPath& path, unsigned& pickupStep) const;
-    bool selectNewTaskPathToAgent(const _agent& agent, _task& selectedTask, _stepPath& path, unsigned& pickupStep) const;
-    bool selectNewTaskPathToAgentTaskThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
-    bool selectNewTaskPathToAgentCarryThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
-    bool selectNewTaskPathToAgentTaskCarryThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
-    
-    bool updateTaskPathToAgent(_agent& agent, bool energyCheck);
-    bool updateTaskPathToAgentTaskThreshold(_agent& agent, bool energyCheck);
-    bool updateTaskPathToAgentCarryThreshold(_agent& agent, bool energyCheck);
-    bool updateTaskPathToAgentTaskCarryThreshold(_agent& agent, bool energyCheck);
-        
-    
-    bool selectNewTaskOrCtaskPathToAgent(const _agent& agent, _task& origTask, _c_task& firstC_task, _c_task& secondC_task, _stepPath& path, _stepPath& c_path, bool& c_taskFlag) const;
-    bool updateTaskOrCtaskPathToAgent(_agent& agent, bool energyCheck);
+//    virtual _token::TokenUpdateType updateTrivialPathToAgent(_agent& agent, bool energyCheck);
+//    
+//    bool selectChargingEndpointToAgent(const _agent& agent, _site& selectNewSite) const;
+//    
+//    bool selectChargingEndpointPathToAgent(const _agent& agent, _stepPath& chargingPath) const;
+//    bool updateChargingPathToAgent(_agent& agent, bool energyCheck);
+//    
+//    bool selectChargingEndpointPathToAgent(const _agent& agent, _task& conflictTask, _stepPath& chargingPath) const;
+//    bool updateChargingConflictTaskToAgent(_agent& agent, bool energyCheck);
+//    
+//    bool chargingTaskPathToAgent(const _agent& agent, const _task& task, _stepPath& path, unsigned& pickupStep, unsigned& deliveryStep) const;
+//    bool selectNewChargingTaskPathToAgent(const _agent& agent, _task& selectedTask, _stepPath& path, unsigned& pickupStep, unsigned& deliveryStep) const;
+//    
+//    bool updateChargingTaskPathToAgent(_agent& agent, bool energyCheck);
+//            
+//    bool isConflictingSiteWithAnyTaskDelivery(const _site& site, _task& conflitTask) const;
+//    bool selectNewRestEndpointToAgent(const _agent& agent, _site& selectNewSite) const;
+//    bool selectNewRestEndpointPathToAgent(const _agent& agent, _task& conflictTask, _stepPath& restPath) const;
+//    bool updateRestPathToAgent(_agent& agent, bool energyCheck);
+//    
+//    bool selectNewTaskToAgent(const _agent& agent, _task& selectedTask) const;    
+//    
+//    bool taskPathToAgent(const _agent& agent, const _task& task, _stepPath& path, unsigned& pickupStep) const;
+//    bool selectNewTaskPathToAgent(const _agent& agent, _task& selectedTask, _stepPath& path, unsigned& pickupStep) const;
+//    bool selectNewTaskPathToAgentTaskThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
+//    bool selectNewTaskPathToAgentCarryThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
+//    bool selectNewTaskPathToAgentTaskCarryThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
+//    
+//    bool updateTaskPathToAgent(_agent& agent, bool energyCheck);
+//    bool updateTaskPathToAgentTaskThreshold(_agent& agent, bool energyCheck);
+//    bool updateTaskPathToAgentCarryThreshold(_agent& agent, bool energyCheck);
+//    bool updateTaskPathToAgentTaskCarryThreshold(_agent& agent, bool energyCheck);
+//        
+//    
+//    bool selectNewTaskOrCtaskPathToAgent(const _agent& agent, _task& origTask, _c_task& firstC_task, _c_task& secondC_task, _stepPath& path, _stepPath& c_path, bool& c_taskFlag) const;
+//    bool updateTaskOrCtaskPathToAgent(_agent& agent, bool energyCheck);
     
 private:
     
@@ -396,6 +445,10 @@ private:
     void addPendingTask(const _task& task){
         this->pendingTasks.insert(std::pair<unsigned, _task*>(task.id(), task.instance()));
         this->reportTaskMap.addTask(task, currentStep);
+        
+        this->taskDeliveryEndpoints.insert(std::pair<unsigned, _site>(task.getDelivery().linearIndex(map.getColumn_size()), task.getDelivery()));  
+        
+        this->nonTaskDeliveryEndpoints.erase(task.getDelivery().linearIndex(map.getColumn_size()));        
     }
     
     void stepping() {        
@@ -408,6 +461,9 @@ private:
     const _map& map;
     _stepMap& stepMap;
     std::vector<_site> &endpoints, &chargingEndpoints;
+    
+    std::map<unsigned,_site> nonTaskDeliveryEndpoints, taskDeliveryEndpoints;
+    
     const _endpointsDistanceAlgorithm& endpointsDistanceAlgorithm;
     
     std::map<unsigned, std::vector<_task*>> c_tasks;//step->task

@@ -28,28 +28,36 @@ public:
         const _token& token, 
         const _agent& agent, 
         const _site& goalSite, 
-        _stepPath& path) const {
+        _stepPath& selectedPath) const {
         
-        bool flag = stepPathAlgorithm.solve(token, agent, path, goalSite);
+        return stepPathAlgorithm.solve(token, agent, selectedPath, goalSite);
         
-        if(flag){
-                        
-            return true;            
-            
-        } else {
-            
-            try {
-                std::ostringstream stream;
-                stream << "unsolved goal site path: " << goalSite;
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
-            
-        }
-        
-        return false;
+//        bool flag = stepPathAlgorithm.solve(token, agent, selectedPath, goalSite);
+//        
+//        if(flag){
+//            
+//            if (flag) {
+//                
+//                flag = token.getStepMap().isPathDefinitelyFree(selectedPath.goalSite());
+//                        
+//                return true;    
+//            
+//            }
+//            
+//        } else {
+//            
+//            try {
+//                std::ostringstream stream;
+//                stream << "unsolved goal site path: " << goalSite;
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            }
+//            
+//        }
+//        
+//        return false;
         
     }
     

@@ -15,7 +15,7 @@ void _closerTaskIndexerAlgorithm::solve(
 
         const unsigned dist = token.getEndpointsDistanceAlgorithm().solve(endPointReference, it->getPickup());
 
-        if (taskDistance > dist) {
+        if (taskDistance < dist) {
 
             it = taskIndex.insert(it, task);
 

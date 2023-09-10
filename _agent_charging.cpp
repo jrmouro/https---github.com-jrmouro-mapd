@@ -91,13 +91,12 @@ void _agent_charging::onUpdatePath(_token& token, _agent& agent) const{
         case AES::dead:
             changeState(agent, _agent_dead::getInstance());
             break;
-        
-        
+                
         default:   
     
-            _token::TokenUpdateType tutr = token.updateChargingTrivialPathToAgent(agent, true);
+            tut = token.updateTrivialPathToAgent(agent, true);
 
-            if(tutr != _token::TokenUpdateType::charging_trivial){
+            if(tut != _token::TokenUpdateType::trivial){
 
                 try {
                     std::ostringstream stream;

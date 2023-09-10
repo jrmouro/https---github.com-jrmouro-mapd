@@ -17,11 +17,10 @@ public:
     
     MultiSystemExperiment(
             std::string resultFilename, 
+            std::vector<std::pair<float, float>> thresholds,
             std::vector<std::string> taskFilenames,             
             std::vector<std::string> mapFilenames,
-            std::vector<_system::TokenType> tokenTypes, 
-            float taskThreshold, 
-            float carryThreshold,             
+            std::vector<_system::TokenType> tokenTypes,             
             const int currentEnergyLevelAgent,
             const int maximumEnergyLevelAgent, 
             const int chargedEnergyLevelAgent,  
@@ -29,11 +28,10 @@ public:
             const unsigned cell_size = 0, 
             const unsigned timestep = 0) :
                     resultFilename(resultFilename),
+                    thresholds(thresholds),
                     mapFilenames(mapFilenames), 
                     taskFilenames(taskFilenames), 
-                    tokenTypes(tokenTypes), 
-                    taskThreshold(taskThreshold), 
-                    carryThreshold(carryThreshold), 
+                    tokenTypes(tokenTypes),  
                     maximumEnergyLevelAgent(maximumEnergyLevelAgent), 
                     chargedEnergyLevelAgent(chargedEnergyLevelAgent), 
                     currentEnergyLevelAgent(currentEnergyLevelAgent), 
@@ -43,11 +41,10 @@ public:
 
     MultiSystemExperiment(const MultiSystemExperiment& other) :
             resultFilename(other.resultFilename),
+            thresholds(other.thresholds),
             mapFilenames(other.mapFilenames), 
             taskFilenames(other.taskFilenames), 
             tokenTypes(other.tokenTypes), 
-            taskThreshold(other.taskThreshold), 
-            carryThreshold(other.carryThreshold), 
             maximumEnergyLevelAgent(other.maximumEnergyLevelAgent), 
             chargedEnergyLevelAgent(other.chargedEnergyLevelAgent), 
             currentEnergyLevelAgent(other.currentEnergyLevelAgent), 
@@ -64,36 +61,77 @@ public:
         
         for (auto tokenType : tokenTypes) {
             
-            for (auto mapFilename : mapFilenames) {
+            if(tokenType == _system::TokenType::threshold_tokenPass){
                 
-                for (auto taskFilename : taskFilenames) {
+                for (auto tpair : thresholds) {
                     
-                    SystemExperiment experiment(
-                            taskFilename,
-                            mapFilename,
-                            tokenType,
-                            taskThreshold, 
-                            carryThreshold, 
-                            currentEnergyLevelAgent, 
-                            maximumEnergyLevelAgent, 
-                            chargedEnergyLevelAgent,
-                            criticalEnergyLevelAgent,
-                            cell_size, 
-                            timestep);  
-                    
-                    experiment.run();
-                    
-                    if(headerFlag){
-                        headerFlag = false;
-                        experiment.writeHeader(ofs);
-                        Writable::endlWrite(experiment, ofs);                      
+                    for (auto mapFilename : mapFilenames) {
+                
+                        for (auto taskFilename : taskFilenames) {
+
+                            SystemExperiment experiment(
+                                    taskFilename,
+                                    mapFilename,
+                                    tokenType,                             
+                                    currentEnergyLevelAgent, 
+                                    maximumEnergyLevelAgent, 
+                                    chargedEnergyLevelAgent,
+                                    criticalEnergyLevelAgent,
+                                    cell_size, 
+                                    timestep,
+                                    tpair.first, 
+                                    tpair.second);  
+
+                            experiment.run();
+
+                            if(headerFlag){
+                                headerFlag = false;
+                                experiment.writeHeader(ofs);
+                                Writable::endlWrite(experiment, ofs);                      
+                            }
+
+                            experiment.writeRow(ofs);
+                            Writable::endlWrite(experiment, ofs);
+
+                        }
+
                     }
-                    
-                    experiment.writeRow(ofs);
-                    Writable::endlWrite(experiment, ofs);
 
                 }
 
+                
+            } else {
+            
+                for (auto mapFilename : mapFilenames) {
+
+                    for (auto taskFilename : taskFilenames) {
+
+                        SystemExperiment experiment(
+                                taskFilename,
+                                mapFilename,
+                                tokenType,                             
+                                currentEnergyLevelAgent, 
+                                maximumEnergyLevelAgent, 
+                                chargedEnergyLevelAgent,
+                                criticalEnergyLevelAgent,
+                                cell_size, 
+                                timestep);  
+
+                        experiment.run();
+
+                        if(headerFlag){
+                            headerFlag = false;
+                            experiment.writeHeader(ofs);
+                            Writable::endlWrite(experiment, ofs);                      
+                        }
+
+                        experiment.writeRow(ofs);
+                        Writable::endlWrite(experiment, ofs);
+
+                    }
+
+                }
+            
             }
 
         }
@@ -108,12 +146,10 @@ private:
     
     std::string resultFilename;
     
+    std::vector<std::pair<float, float>> thresholds;
     std::vector<std::string> mapFilenames, taskFilenames;
     std::vector<_system::TokenType> tokenTypes;
-    
-    float taskThreshold, 
-            carryThreshold;
-        
+            
     const int maximumEnergyLevelAgent, 
             chargedEnergyLevelAgent, 
             currentEnergyLevelAgent, 

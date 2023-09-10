@@ -32,6 +32,10 @@ public:
 
     virtual ~CarryThresholdToken(){}
     
+    virtual _token* getInstance() const {
+        return new CarryThresholdToken(*this);
+    }
+    
     virtual std::string id() const {
         
         return "cttp";
@@ -42,39 +46,81 @@ public:
         
         TokenUpdateType ret = TokenUpdateType::none;
     
-        if(agent.isInFinishedPath()){
-
-            if(updateTaskPathToAgentCarryThreshold(agent, energyCheck)) {
-
-                ret = TokenUpdateType::task;
-
-            } else {
-
-                if(updateRestPathToAgent(agent, energyCheck)){
-
-                    ret = TokenUpdateType::rest;
-
-                } else {
-
-                    ret = this->updateTrivialPathToAgent(agent, energyCheck);
-                    
-                }
-
-            }
-
-
-        } else {
-
-            try {
-                std::ostringstream stream;
-                stream << "agent not parked: " << std::endl << agent << std::endl<< *this;
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
-
-        }
+//        if(agent.isInFinishedPath()){
+//
+//            if(updateTaskPathToAgentCarryThreshold(agent, energyCheck)) {
+//
+//                ret = TokenUpdateType::task;
+//
+//            } else {
+//
+//                if(updateRestPathToAgent(agent, energyCheck)){
+//
+//                    ret = TokenUpdateType::rest;
+//
+//                } else {
+//
+//                    ret = this->updateTrivialPathToAgent(agent, energyCheck);
+//                    
+//                }
+//
+//            }
+//
+//
+//        } else {
+//
+//            try {
+//                std::ostringstream stream;
+//                stream << "agent not parked: " << std::endl << agent << std::endl<< *this;
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            }
+//
+//        }
+    
+        return ret;
+        
+    }
+    
+    virtual _token::TokenUpdateType updateChargingPath(_agent& agent, bool energyCheck){
+        
+        TokenUpdateType ret = TokenUpdateType::none;
+    
+//        if(agent.isInFinishedPath()){
+//
+//            if(updateTaskPathToAgentCarryThreshold(agent, energyCheck)) {
+//
+//                ret = TokenUpdateType::task;
+//
+//            } else {
+//
+//                if(updateRestPathToAgent(agent, energyCheck)){
+//
+//                    ret = TokenUpdateType::rest;
+//
+//                } else {
+//
+//                    ret = this->updateTrivialPathToAgent(agent, energyCheck);
+//                    
+//                }
+//
+//            }
+//
+//
+//        } else {
+//
+//            try {
+//                std::ostringstream stream;
+//                stream << "agent not parked: " << std::endl << agent << std::endl<< *this;
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            }
+//
+//        }
     
         return ret;
         

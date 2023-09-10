@@ -8,35 +8,32 @@
 #ifndef _SELECTTASKTOAGENTALGORITHM_H
 #define _SELECTTASKTOAGENTALGORITHM_H
 
-#include "_taskPathToAgentAlgorithm.h"
-#include "_taskIndexerAlgorithm.h"
+class _token;
+class _agent; 
+class _task;
+class _stepPath;
+class _thresholdAlgorithm;
+class _taskPathToAgentAlgorithm;
+class _taskIndexerAlgorithm;
 
 class _selectTaskToAgentAlgorithm {
     
 public:
     
-    _selectTaskToAgentAlgorithm(
-            const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm,
-            const _taskIndexerAlgorithm& taskIndexerAlgorithm) :
-        taskPathToAgentAlgorithm(taskPathToAgentAlgorithm),
-        taskIndexerAlgorithm(taskIndexerAlgorithm){ }
+    _selectTaskToAgentAlgorithm(const _taskPathToAgentAlgorithm&, _taskIndexerAlgorithm&);
         
-    _selectTaskToAgentAlgorithm(const _selectTaskToAgentAlgorithm& other) : 
-        taskPathToAgentAlgorithm(other.taskPathToAgentAlgorithm),
-        taskIndexerAlgorithm(other.taskIndexerAlgorithm){ }
+    _selectTaskToAgentAlgorithm(const _selectTaskToAgentAlgorithm&);
     
     virtual ~_selectTaskToAgentAlgorithm(){}
     
-    virtual bool solve(
-            const _token& token, 
-            const _agent& agent, 
-            _task& selectedTask, 
-            _stepPath& selectedPath) const;
+    virtual bool solve(const _token&, const _agent&, _task&, _stepPath&) const;
+    
+    void setTaskIndexerAlgorithm(_taskIndexerAlgorithm& taskIndexerAlgorithm);
     
 protected:
     
     const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm;
-    const _taskIndexerAlgorithm& taskIndexerAlgorithm;
+    _taskIndexerAlgorithm& taskIndexerAlgorithm;
 
 };
 

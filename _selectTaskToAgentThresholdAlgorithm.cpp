@@ -1,5 +1,36 @@
 #include "_selectTaskToAgentThresholdAlgorithm.h"
 #include "_token.h"
+#include "_thresholdAlgorithm.h"
+
+#include "_taskPathToAgentAlgorithm.h"
+#include "_taskIndexerAlgorithm.h"
+
+_selectTaskToAgentThresholdAlgorithm::_selectTaskToAgentThresholdAlgorithm(
+        const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm,
+        _taskIndexerAlgorithm& taskIndexerAlgorithm,
+        float pickup_threshold,
+        float delivery_threshold) :
+_selectTaskToAgentAlgorithm(
+taskPathToAgentAlgorithm,
+taskIndexerAlgorithm),
+pickup_threshold(pickup_threshold),
+delivery_threshold(delivery_threshold) {
+}
+
+_selectTaskToAgentThresholdAlgorithm::_selectTaskToAgentThresholdAlgorithm(
+        const _selectTaskToAgentThresholdAlgorithm& other) :
+_selectTaskToAgentAlgorithm(other),
+pickup_threshold(other.pickup_threshold),
+delivery_threshold(other.delivery_threshold) {
+}
+
+void _selectTaskToAgentThresholdAlgorithm::setDelivery_threshold(float delivery_threshold) {
+    this->delivery_threshold = delivery_threshold;
+}
+
+void _selectTaskToAgentThresholdAlgorithm::setPickup_threshold(float pickup_threshold) {
+    this->pickup_threshold = pickup_threshold;
+}
 
 bool _selectTaskToAgentThresholdAlgorithm::solve(
         const _token& token,
@@ -11,10 +42,10 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
 
     std::vector<_task> vtask;
 
-    token.listPendingTasks([&vtask, token, agent, this](const _task & task) {
+    token.listPendingTasks([&vtask, &token, agent, this](const _task & task) {
 
         this->taskIndexerAlgorithm.solve(token, task, agent, vtask);
-        
+
         return false;
 
     });
@@ -44,12 +75,14 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
         if (flag) {
 
             selectedTask = task;
-            
+
             _stepSite pickupSite, deliverySite;
 
-//            _stepPath path(agent.currentSite());
-
             flag = taskPathToAgentAlgorithm.solve(token, agent, selectedTask, selectedPath, pickupSite, deliverySite);
+
+            //            if (flag) {
+            //                
+            //                flag = token.getStepMap().isPathDefinitelyFree(selectedPath.goalSite());
 
             if (flag) {
 
@@ -75,18 +108,22 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
 
                 }
 
-            } else {
-
-                try {
-                    std::ostringstream stream;
-                    stream << "unsolved task path: " << task;
-                    MAPD_EXCEPTION(stream.str());
-                } catch (std::exception& e) {
-                    std::cout << e.what() << std::endl;
-                    std::abort();
-                }
-
             }
+
+            //            } 
+
+            //            else {
+            //
+            //                try {
+            //                    std::ostringstream stream;
+            //                    stream << "unsolved task path: " << task;
+            //                    MAPD_EXCEPTION(stream.str());
+            //                } catch (std::exception& e) {
+            //                    std::cout << e.what() << std::endl;
+            //                    std::abort();
+            //                }
+            //
+            //            }
 
         }
 

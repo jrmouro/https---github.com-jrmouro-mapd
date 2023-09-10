@@ -1,24 +1,24 @@
 /* 
- * File:   _updateTrivialPathToAgent.h
+ * File:   _updateTrivialPathToAgentAlgorithm.h
  * Author: ronaldo
  *
  * Created on 6 de setembro de 2023, 16:29
  */
 
-#ifndef _UPDATETRIVIALPATHTOAGENT_H
-#define _UPDATETRIVIALPATHTOAGENT_H
+#ifndef _UPDATETRIVIALPATHTOAGENTALGORITHM_H
+#define _UPDATETRIVIALPATHTOAGENTALGORITHM_H
 
 #include "_agent.h"
 #include "_selectTrivialPathToAgentAlgorithm.h"
 
 class _token;
-class _updateTrivialPathToAgent {
+class _updateTrivialPathToAgentAlgorithm {
     
 public:
     
-    _updateTrivialPathToAgent(){}
-    _updateTrivialPathToAgent(const _updateTrivialPathToAgent& orig){}
-    virtual ~_updateTrivialPathToAgent(){ }
+    _updateTrivialPathToAgentAlgorithm(){}
+    _updateTrivialPathToAgentAlgorithm(const _updateTrivialPathToAgentAlgorithm& orig){}
+    virtual ~_updateTrivialPathToAgentAlgorithm(){ }
     
     virtual bool solve(
             _token& token, 
@@ -30,5 +30,5 @@ private:
     
 };
 
-#endif /* _UPDATETRIVIALPATHTOAGENT_H */
+#endif /* _UPDATETRIVIALPATHTOAGENTALGORITHM_H */
 

@@ -41,18 +41,35 @@ public:
             AstarState* solved = this->solveAux_iterative(startState, map, goal, closedStates, priorityStates, visitedStates, type);
                   
             if(solved != nullptr){
+                
+                bool flag = map.isPathDefinitelyFree(solved->getSite().nextSite());
+                
+                if(flag){
 
-                _stepPath auxPath;
+                    _stepPath auxPath;
 
-                while(solved->getPrevious() != nullptr){            
-                    auxPath.add(solved->getSite());
-                    solved = solved->getPrevious();
+                    while(solved->getPrevious() != nullptr){            
+                        auxPath.add(solved->getSite());
+                        solved = solved->getPrevious();
+                    } 
+
+                    path.progress(auxPath);
+
+                    ret = true;
+                
+                }
+
+            } else {
+                
+                try {
+                    std::ostringstream stream;
+                    stream << "unsolved path";
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
                 } 
                 
-                path.progress(auxPath);
-
-                ret = true;
-
             }
             
             for (auto elem : visitedStates) {
@@ -78,47 +95,64 @@ public:
         
     }
     
-    virtual bool solve(const _stepMap& map, const _site& start, const _site& goal, _stepPath& path, unsigned step, int type) const {
-        
-        bool ret = false;  
-        unsigned rowColunm = map.getRow_size()*map.getColumn_size();
-        ClosedStates closedStates(rowColunm, map.getColumn_size() ,map.getStep_size() * rowColunm);
-        PriorityStates priorityStates;
-        std::vector<AstarState*> visitedStates;
-        
-        auto bstart = _stepSite(step, start.GetRow(), start.GetColunm());
-        
-        AstarState* startState = new AstarState(.0f, this->heuristic(start, goal), bstart, nullptr);        
-        AstarState* solved = this->solveAux_iterative(startState, map, goal, closedStates, priorityStates, visitedStates, type);
-                  
-//        std::cout << map << std::endl;
-        
-        if(solved != nullptr){
-            
-            path.clear();
-        
-            while(solved != nullptr){            
-                path.add(solved->getSite());
-                solved = solved->getPrevious();
-            } 
-            
-//            path.pop(); // retira o site inicial
-            
-            ret = true;
-        
-        }
-        
-        for (auto elem : visitedStates) {
-            
-            delete elem;
-
-        }
-        
-        
-                
-        return ret;
-        
-    }
+//    virtual bool solve(const _stepMap& map, const _site& start, const _site& goal, _stepPath& path, unsigned step, int type) const {
+//        
+//        bool ret = false;  
+//        unsigned rowColunm = map.getRow_size()*map.getColumn_size();
+//        ClosedStates closedStates(rowColunm, map.getColumn_size() ,map.getStep_size() * rowColunm);
+//        PriorityStates priorityStates;
+//        std::vector<AstarState*> visitedStates;
+//        
+//        auto bstart = _stepSite(step, start.GetRow(), start.GetColunm());
+//        
+//        AstarState* startState = new AstarState(.0f, this->heuristic(start, goal), bstart, nullptr);        
+//        AstarState* solved = this->solveAux_iterative(startState, map, goal, closedStates, priorityStates, visitedStates, type);
+//                  
+////        std::cout << map << std::endl;
+//        
+//        if(solved != nullptr){
+//            
+//            bool flag = map.isPathDefinitelyFree(solved->getSite());
+//                
+//            if(flag){
+//            
+//                path.clear();
+//
+//                while(solved != nullptr){            
+//                    path.add(solved->getSite());
+//                    solved = solved->getPrevious();
+//                } 
+//
+//    //            path.pop(); // retira o site inicial
+//
+//                ret = true;
+//            
+//            }
+//        
+//        } else {
+//                
+//            try {
+//                std::ostringstream stream;
+//                stream << "unsolved path";
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            } 
+//
+//        }
+//        
+//        for (auto elem : visitedStates) {
+//            
+//            delete elem;
+//
+//        }
+//        
+//        
+//                
+//        return ret;
+//        
+//    }
     
     virtual ~_stepAstarAlgorithm(){ }
     

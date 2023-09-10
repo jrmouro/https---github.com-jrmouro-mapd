@@ -85,6 +85,11 @@
           <logicalFolder name="f1" displayName="Select" projectFiles="true">
             <itemPath>_selectChargingEndpointToAgentAlgorithm.cpp</itemPath>
             <itemPath>_selectChargingEndpointToAgentAlgorithm.h</itemPath>
+            <itemPath>_selectChargingTaskToAgentAlgorithm.cpp</itemPath>
+            <itemPath>_selectChargingTaskToAgentAlgorithm.h</itemPath>
+            <itemPath>_selectChargingTaskToAgentThresholdAlgorithm.cpp</itemPath>
+            <itemPath>_selectChargingTaskToAgentThresholdAlgorithm.h</itemPath>
+            <itemPath>_selectEndpointToAgentAlgorithm.h</itemPath>
             <itemPath>_selectRestEndpointToAgentAlgorithm.cpp</itemPath>
             <itemPath>_selectRestEndpointToAgentAlgorithm.h</itemPath>
             <itemPath>_selectTaskToAgentAlgorithm.cpp</itemPath>
@@ -95,22 +100,18 @@
             <itemPath>_selectTrivialPathToAgentAlgorithm.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="TaskPath" projectFiles="true">
-            <itemPath>_chargingTaskPathToAgentAlgorithm.h</itemPath>
-            <itemPath>_conflictEndpointTaskDeliveryAlgorithm.h</itemPath>
             <itemPath>_taskPathToAgentAlgorithm.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="Update" projectFiles="true">
-            <itemPath>_updateChargingEndpointToAgentAlgorithm.cpp</itemPath>
-            <itemPath>_updateChargingEndpointToAgentAlgorithm.h</itemPath>
-            <itemPath>_updateRestEndpointToAgentAlgorithm.cpp</itemPath>
-            <itemPath>_updateRestEndpointToAgentAlgorithm.h</itemPath>
+            <itemPath>_updateEndpointToAgentAlgorithm.cpp</itemPath>
+            <itemPath>_updateEndpointToAgentAlgorithm.h</itemPath>
             <itemPath>_updateTaskToAgentAlgorithm.cpp</itemPath>
             <itemPath>_updateTaskToAgentAlgorithm.h</itemPath>
-            <itemPath>_updateTaskToAgentThresholdAlgorithm.cpp</itemPath>
-            <itemPath>_updateTaskToAgentThresholdAlgorithm.h</itemPath>
-            <itemPath>_updateTrivialPathToAgent.cpp</itemPath>
-            <itemPath>_updateTrivialPathToAgent.h</itemPath>
+            <itemPath>_updateTrivialPathToAgentAlgorithm.cpp</itemPath>
+            <itemPath>_updateTrivialPathToAgentAlgorithm.h</itemPath>
           </logicalFolder>
+          <itemPath>_updateTokenAlgorithms.cpp</itemPath>
+          <itemPath>_updateTokenAlgorithms.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Drawable" projectFiles="true">
@@ -169,10 +170,9 @@
         <itemPath>_taskMap.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="Token" projectFiles="true">
-        <itemPath>C_TaskCarryThresholdToken.h</itemPath>
         <itemPath>CarryThresholdToken.h</itemPath>
-        <itemPath>TaskCarryThresholdToken.h</itemPath>
-        <itemPath>TaskThresholdToken.h</itemPath>
+        <itemPath>ThresholdTokenPass.h</itemPath>
+        <itemPath>TokenPass.h</itemPath>
         <itemPath>_token.cpp</itemPath>
         <itemPath>_token.h</itemPath>
       </logicalFolder>
@@ -233,8 +233,6 @@
       </compileType>
       <item path="AstarExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="C_TaskCarryThresholdToken.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="CarryThresholdToken.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
@@ -285,13 +283,13 @@
       </item>
       <item path="SystemExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="TaskCarryThresholdToken.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="TaskThresholdToken.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Text.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Text.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ThresholdTokenPass.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TokenPass.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Writable.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -363,11 +361,6 @@
       </item>
       <item path="_c_task.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_chargingTaskPathToAgentAlgorithm.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="_closerEndpointIndexerAlgorithm.cpp"
             ex="false"
             tool="1"
@@ -378,11 +371,6 @@
       <item path="_closerTaskIndexerAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_closerTaskIndexerAlgorithm.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="_conflictEndpointTaskDeliveryAlgorithm.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="_distanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -415,6 +403,28 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="_selectChargingTaskToAgentAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_selectChargingTaskToAgentAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="_selectChargingTaskToAgentThresholdAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_selectChargingTaskToAgentThresholdAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="_selectEndpointToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_selectRestEndpointToAgentAlgorithm.cpp"
             ex="false"
@@ -484,43 +494,30 @@
       </item>
       <item path="_trivialPathAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_updateChargingEndpointToAgentAlgorithm.cpp"
+      <item path="_updateEndpointToAgentAlgorithm.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="_updateChargingEndpointToAgentAlgorithm.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="_updateRestEndpointToAgentAlgorithm.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="_updateRestEndpointToAgentAlgorithm.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="_updateEndpointToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_updateTaskToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_updateTaskToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_updateTaskToAgentThresholdAlgorithm.cpp"
+      <item path="_updateTokenAlgorithms.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_updateTokenAlgorithms.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_updateTrivialPathToAgentAlgorithm.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="_updateTaskToAgentThresholdAlgorithm.h"
+      <item path="_updateTrivialPathToAgentAlgorithm.h"
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="_updateTrivialPathToAgent.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="_updateTrivialPathToAgent.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
         <cTool>
@@ -582,8 +579,6 @@
       </compileType>
       <item path="AstarExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="C_TaskCarryThresholdToken.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="CarryThresholdToken.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
@@ -634,13 +629,13 @@
       </item>
       <item path="SystemExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="TaskCarryThresholdToken.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="TaskThresholdToken.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Text.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Text.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ThresholdTokenPass.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TokenPass.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Writable.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -712,11 +707,6 @@
       </item>
       <item path="_c_task.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_chargingTaskPathToAgentAlgorithm.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="_closerEndpointIndexerAlgorithm.cpp"
             ex="false"
             tool="1"
@@ -727,11 +717,6 @@
       <item path="_closerTaskIndexerAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_closerTaskIndexerAlgorithm.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="_conflictEndpointTaskDeliveryAlgorithm.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="_distanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -764,6 +749,28 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="_selectChargingTaskToAgentAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_selectChargingTaskToAgentAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="_selectChargingTaskToAgentThresholdAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_selectChargingTaskToAgentThresholdAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="_selectEndpointToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_selectRestEndpointToAgentAlgorithm.cpp"
             ex="false"
@@ -833,43 +840,30 @@
       </item>
       <item path="_trivialPathAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_updateChargingEndpointToAgentAlgorithm.cpp"
+      <item path="_updateEndpointToAgentAlgorithm.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="_updateChargingEndpointToAgentAlgorithm.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="_updateRestEndpointToAgentAlgorithm.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="_updateRestEndpointToAgentAlgorithm.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="_updateEndpointToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_updateTaskToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_updateTaskToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_updateTaskToAgentThresholdAlgorithm.cpp"
+      <item path="_updateTokenAlgorithms.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_updateTokenAlgorithms.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_updateTrivialPathToAgentAlgorithm.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="_updateTaskToAgentThresholdAlgorithm.h"
+      <item path="_updateTrivialPathToAgentAlgorithm.h"
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="_updateTrivialPathToAgent.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="_updateTrivialPathToAgent.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
         <cTool>

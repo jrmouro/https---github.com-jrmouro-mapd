@@ -57,14 +57,14 @@ public:
     
     bool isAbleToFulfillTaskPath(const _map& map, const _task& task, const _stepPath& taskPath)const{
         int need = this->energy_system.appraiseTaskPath(map, task, taskPath);
-        return need  + this->energy_system.criticalLevel() <= this->energy_system.currentLevel();
+        return need  /*+ this->energy_system.criticalLevel()/2*/ <= this->energy_system.currentLevel();
     }
     
     bool isAbleToFulfillChargingTaskPath(const _map& map, const _task& task, const _stepPath& taskPath)const{
         int need = this->energy_system.appraiseTaskPath(map, task, taskPath);
-        return need <= this->energy_system.currentLevel();
+        return need  <= this->energy_system.currentLevel();
     }
-    
+        
     bool isAbleToFulfillNoCarryngPath(const _map& map, const _stepPath& path)const{
         int need = this->energy_system.appraiseNoCarryngPath(map, path);
         return need <= this->energy_system.currentLevel();

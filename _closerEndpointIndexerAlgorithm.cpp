@@ -14,7 +14,7 @@ void _closerEndpointIndexerAlgorithm::solve(
 
         const unsigned dist = token.getEndpointsDistanceAlgorithm().solve(endpointReference, *it);
 
-        if (siteDistance > dist) {
+        if (siteDistance < dist) {
 
             it = siteIndex.insert(it, endpoint);
 

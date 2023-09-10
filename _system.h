@@ -8,47 +8,45 @@
 #ifndef _SYSTEM_H
 #define _SYSTEM_H
 
+#include <cmath>
 #include <vector>
 #include "MapdException.h"
 #include "InstanceMAPD.h"
 #include "_token.h"
-#include "TaskCarryThresholdToken.h"
-#include "TaskThresholdToken.h"
+#include "ThresholdTokenPass.h"
+#include "TokenPass.h"
 #include "CarryThresholdToken.h"
-#include "C_TaskCarryThresholdToken.h"
 #include "_agent.h"
 
 class _system : public Writable{
 public:
     
     enum TokenType{
-        tp,
-        taskThreshold_tp,
-        carryThreshold_tp,
-        taskCarryThreshold_tp,
+        tokenPass,
+        threshold_tokenPass,
         c_taskCarryThreshold_tp,
     };
         
     _system(
             TokenType tokenType, 
             std::string taskFilename, 
-            std::string mapFilename, 
-            float task_threshold, 
-            float carry_threshold,
+            std::string mapFilename,             
             int currentEnergyLevel, 
             int maximumEnergyLevel,
             int chargedEnergyLevel,
-            int criticalEnergyLevel){        
+            int criticalEnergyLevel,
+            float pickup_threshold, 
+            float delivery_threshold){        
         reset(
                 tokenType, 
                 taskFilename, 
-                mapFilename, 
-                task_threshold, 
-                carry_threshold, 
+                mapFilename,                  
                 currentEnergyLevel, 
                 maximumEnergyLevel, 
                 chargedEnergyLevel, 
-                criticalEnergyLevel);        
+                criticalEnergyLevel,
+                pickup_threshold, 
+                delivery_threshold);        
     }
     
     _system(const _system& other) :
@@ -58,7 +56,7 @@ public:
         map(new _map(*other.map)), 
         stepMap(new _stepMap(*other.stepMap)), 
         taskMap(new _taskMap(*other.taskMap)), 
-        token(new _token(*other.token)),
+        token(other.token->getInstance()),
         endpointsDistanceAlgorithm(new _endpointsDistanceAlgorithm(*other.endpointsDistanceAlgorithm)),
         endpoints(new std::vector<_site>(*other.endpoints)),
         botsEndpoints(new std::vector<_site>(*other.botsEndpoints)){ }
@@ -138,13 +136,13 @@ public:
     void reset(
         TokenType tokenType, 
         std::string taskFilename, 
-        std::string mapFilename,
-        float task_threshold, 
-        float carry_threshold,
+        std::string mapFilename,        
         int currentEnergyLevel, 
         int maximumEnergyLevel,
         int chargedEnergyLevel,
-        int criticalEnergyLevel){
+        int criticalEnergyLevel,
+        float pickup_threshold, 
+        float delivery_threshold){
         
         this->mapFilename = mapFilename;
         this->taskFilename = taskFilename;
@@ -179,29 +177,29 @@ public:
         taskMap = new _taskMap(instanceMAPD->getTaskMap());
         
         switch(tokenType){
-            case tp:
-                token = new _token(*map, *stepMap, *endpoints, *botsEndpoints, *endpointsDistanceAlgorithm, task_threshold, carry_threshold);
+            case tokenPass:
+                token = new TokenPass(*map, *stepMap, *endpoints, *botsEndpoints, *endpointsDistanceAlgorithm);
                 break;
-            case taskThreshold_tp:
-                token = new TaskThresholdToken(*map, *stepMap, *endpoints, *botsEndpoints, *endpointsDistanceAlgorithm, task_threshold, carry_threshold);
+            case threshold_tokenPass:
+                token = new ThresholdTokenPass(*map, *stepMap, *endpoints, *botsEndpoints, *endpointsDistanceAlgorithm, pickup_threshold, delivery_threshold);
                 break;
-            case carryThreshold_tp:
-                token = new CarryThresholdToken(*map, *stepMap, *endpoints, *botsEndpoints, *endpointsDistanceAlgorithm, task_threshold, carry_threshold);
-                break;
-            case taskCarryThreshold_tp:
-                token = new TaskCarryThresholdToken(*map, *stepMap, *endpoints, *botsEndpoints, *endpointsDistanceAlgorithm, task_threshold, carry_threshold);
-                break;
-            case c_taskCarryThreshold_tp:
-                token = new C_TaskCarryThresholdToken(*map, *stepMap, *endpoints, *botsEndpoints, *endpointsDistanceAlgorithm, task_threshold, carry_threshold);
-                break;
+//            case c_taskCarryThreshold_tp:
+//                token = new C_TaskCarryThresholdToken(*map, *stepMap, *endpoints, *botsEndpoints, *endpointsDistanceAlgorithm, pickup_threshold, delivery_threshold);
+//                break;
         }
         
+        int inc = (maximumEnergyLevel - chargedEnergyLevel) / instanceMAPD->getNumBots();
+        int count = 0;
+        
         instanceMAPD->listBotsEndPoints(
-                [currentEnergyLevel, maximumEnergyLevel, chargedEnergyLevel, criticalEnergyLevel, this]
+                [currentEnergyLevel, maximumEnergyLevel, chargedEnergyLevel, criticalEnergyLevel, inc, &count, this]
                 (unsigned id, const _site& site){
                         
-            this->token->addAgent(_agent(id, _stepSite(0, site.GetRow(), site.GetColunm()), currentEnergyLevel, maximumEnergyLevel, chargedEnergyLevel, criticalEnergyLevel));
+            int ecurrent = std::min<int>(maximumEnergyLevel, currentEnergyLevel + inc*count);    
+            this->token->addAgent(_agent(id, _stepSite(0, site.GetRow(), site.GetColunm()), ecurrent, maximumEnergyLevel, chargedEnergyLevel, criticalEnergyLevel));
             this->botsEndpoints->push_back(site);
+            
+            count++;
             
             return false;
             
@@ -316,6 +314,9 @@ private:
                 || !token->anyRunningTask()
             )){
             
+            token->error_site_collision_check();
+            token->error_edge_collision_check();
+            
             taskMap->listTasksByStep(token->getCurrentStep(), [this](const _task& task){
                 
                 this->token->addPendingTask(task);
@@ -346,10 +347,6 @@ private:
             
             token->stepping();
             
-            if(token->currentStep == 782){
-                std::cout << *token << std::endl;
-            }
-            
             return true;
                         
         }
@@ -370,6 +367,9 @@ private:
                 || !token->anyAssignedTask()
                 || !token->anyRunningTask()
             )){
+            
+            token->error_site_collision_check();
+            token->error_edge_collision_check();
             
                 taskMap->listTasksByStep(token->getCurrentStep(), [this](const _task& task){
 

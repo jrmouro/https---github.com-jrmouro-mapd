@@ -1,14 +1,14 @@
 /* 
- * File:   _updateTrivialPathToAgent.cpp
+ * File:   _updateTrivialPathToAgentAlgorithm.cpp
  * Author: ronaldo
  * 
  * Created on 6 de setembro de 2023, 16:29
  */
 
-#include "_updateTrivialPathToAgent.h"
+#include "_updateTrivialPathToAgentAlgorithm.h"
 #include "_token.h"
 
-bool _updateTrivialPathToAgent::solve(
+bool _updateTrivialPathToAgentAlgorithm::solve(
         _token& token,
         _agent& agent) const {
     

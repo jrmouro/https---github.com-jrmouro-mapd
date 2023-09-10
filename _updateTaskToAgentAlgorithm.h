@@ -8,33 +8,28 @@
 #ifndef _UPDATETASKTOAGENTALGORITHM_H
 #define _UPDATETASKTOAGENTALGORITHM_H
 
-#include "_selectTaskToAgentAlgorithm.h"
 
 class _token;
+class _agent;
+class _selectTaskToAgentAlgorithm;
+class _taskIndexerAlgorithm;
 class _updateTaskToAgentAlgorithm {
     
 public:
     
-    _updateTaskToAgentAlgorithm( 
-            const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm,
-            const _taskIndexerAlgorithm& taskIndexerAlgorithm):
-                selectTaskToAgentAlgorithm(
-                    taskPathToAgentAlgorithm,
-                    taskIndexerAlgorithm){}
-                
+    _updateTaskToAgentAlgorithm(_selectTaskToAgentAlgorithm&);                
     
-    _updateTaskToAgentAlgorithm(const _updateTaskToAgentAlgorithm& orig):
-        selectTaskToAgentAlgorithm(orig.selectTaskToAgentAlgorithm){ }
+    _updateTaskToAgentAlgorithm(const _updateTaskToAgentAlgorithm& orig);
     
-    virtual ~_updateTaskToAgentAlgorithm(){ }
+    virtual ~_updateTaskToAgentAlgorithm(){}
     
-    virtual bool solve(
-            _token& token, 
-            _agent& agent) const;
+    virtual bool solve(_token&, _agent&) const;
+    
+    void setTaskIndexerAlgorithm(_taskIndexerAlgorithm& taskIndexerAlgorithm);
     
 private:
     
-    _selectTaskToAgentAlgorithm selectTaskToAgentAlgorithm;
+    _selectTaskToAgentAlgorithm& selectTaskToAgentAlgorithm;
 
 };
 

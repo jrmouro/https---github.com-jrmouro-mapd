@@ -32,12 +32,16 @@ void _agent_goingToDelivery::onAfterStepping(_token& token, _agent& agent) const
             if(agent.isDelivering()){
         
                 token.finishTask(agent.currentTask());
+                
+                agent.unassignTask();
 
                 changeState(agent, _agent_parked::getInstance());       
 
             } else if(agent.isChargingDelivering()){
 
                 token.finishTask(agent.currentTask());
+                
+                agent.unassignTask();
 
                 changeState(agent, _agent_goingToCharging::getInstance());
 
@@ -50,12 +54,16 @@ void _agent_goingToDelivery::onAfterStepping(_token& token, _agent& agent) const
             if(agent.isDelivering()){
         
                 token.finishTask(agent.currentTask());
+                
+                agent.unassignTask();
 
                 changeState(agent, _agent_parked_CL::getInstance());       
 
             } else if(agent.isChargingDelivering()){
 
                 token.finishTask(agent.currentTask());
+                
+                agent.unassignTask();
 
                 changeState(agent, _agent_goingToCharging_CL::getInstance());
 

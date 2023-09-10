@@ -94,7 +94,7 @@ void _agent_charging_CL::onUpdatePath(_token& token, _agent& agent) const{
         
         default:   
     
-            _token::TokenUpdateType tut = token.updateChargingTrivialPathToAgent(agent, true);
+            tut = token.updateChargingTrivialPathToAgent(agent, true);
 
             if(tut != _token::TokenUpdateType::charging_trivial){
 

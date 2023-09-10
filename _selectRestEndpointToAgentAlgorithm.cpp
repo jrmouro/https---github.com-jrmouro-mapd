@@ -1,20 +1,20 @@
 #include "_selectRestEndpointToAgentAlgorithm.h"
 #include "_token.h"
 
+
 bool _selectRestEndpointToAgentAlgorithm::solve(
         const _token& token,
         const _agent& agent,
         _site& selectedNewSite,
-        _stepPath& selectedPath,
-        _task& conflitTask) const {
+        _stepPath& selectedPath) const {
 
-    bool flag = conflictEndpointTaskDeliveryAlgorithm.solve(token, selectedNewSite, conflitTask);
+    bool flag = token.isTaskDeliveryEndpoint(agent.currentSite());
 
     if (flag) {
 
         std::vector<_site> vsite;
 
-        token.listEndpoints([&vsite, token, agent, this](const _site & endpoint) {
+        token.listNonTaskDeliveryEndpoints([&vsite, &token, agent, this](const _site & endpoint) {
 
             this->endpointIndexerAlgorithm.solve(token, endpoint, agent, vsite);
 
@@ -26,19 +26,19 @@ bool _selectRestEndpointToAgentAlgorithm::solve(
 
             flag = true;
 
-            token.listPendingTasks([endpoint, &flag](const _task & task) {
-
-                if (task.getDelivery().match(endpoint)) {
-
-                    flag = false;
-
-                    return true;
-
-                }
-
-                return false;
-
-            });
+//            token.listPendingTasks([endpoint, &flag](const _task & task) {
+//
+//                if (task.getDelivery().match(endpoint)) {
+//
+//                    flag = false;
+//
+//                    return true;
+//
+//                }
+//
+//                return false;
+//
+//            });
 
             if (flag) {
 
@@ -63,29 +63,35 @@ bool _selectRestEndpointToAgentAlgorithm::solve(
                 selectedNewSite = endpoint;
 
                 flag = pathToAgentAlgorithm.solve(token, agent, selectedNewSite, selectedPath);
+                                
+//                if (flag) {
+//                    
+//                    flag = token.getStepMap().isPathDefinitelyFree(selectedPath.goalSite());
 
-                if (flag) {
+                    if(flag){
 
-                    flag = agent.isAbleToFulfillNoCarryngPath(token.getMap(), selectedPath);
+                        flag = agent.isAbleToFulfillNoCarryngPath(token.getMap(), selectedPath);
 
-                    if (flag) {
+                        if (flag) {
 
-                        return true;
+                            return true;
 
+                        }
+                    
                     }
 
-                } else {
-
-                    try {
-                        std::ostringstream stream;
-                        stream << "unsolved endpoint path: " << endpoint;
-                        MAPD_EXCEPTION(stream.str());
-                    } catch (std::exception& e) {
-                        std::cout << e.what() << std::endl;
-                        std::abort();
-                    }
-
-                }
+//                } else {
+//
+//                    try {
+//                        std::ostringstream stream;
+//                        stream << "unsolved endpoint path: " << endpoint;
+//                        MAPD_EXCEPTION(stream.str());
+//                    } catch (std::exception& e) {
+//                        std::cout << e.what() << std::endl;
+//                        std::abort();
+//                    }
+//
+//                }
 
             }
 

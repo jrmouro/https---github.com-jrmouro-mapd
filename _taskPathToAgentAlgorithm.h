@@ -36,45 +36,66 @@ public:
                 
         bool flag = stepPathAlgorithm.solve(token, agent, path, task.getPickup());
 
-        if (flag) {
-
-            pickupSite = path.goalSite();
-
-            flag = stepPathAlgorithm.solve(token, agent, path, task.getDelivery());
-
-            if (flag) {
+        if (flag) {                       
                 
-                deliverySite = path.goalSite();
+//            flag = token.getStepMap().isPathDefinitelyFree(path.goalSite());
+//
+//            if (flag) {
 
-                return true;
+                pickupSite = path.goalSite();
 
-            } else {
+                flag = stepPathAlgorithm.solve(token, agent, path, task.getDelivery());
 
-                try {
-                    std::ostringstream stream;
-                    stream << "unsolved task delivery endpoint path: " << task;
-                    MAPD_EXCEPTION(stream.str());
-                } catch (std::exception& e) {
-                    std::cout << e.what() << std::endl;
-                    std::abort();
-                }
+//                if (flag) {
+//                    
+//                    flag = token.getStepMap().isPathDefinitelyFree(path.goalSite());
+                    
+                    if(flag){
 
-            }
+                        deliverySite = path.goalSite();
 
-        } else {
+                        return true;
+                    
+                    }
 
-            try {
-                std::ostringstream stream;
-                stream << "unsolved task pickup endpoint path: " << task;
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
+//                } 
+                
+//                else {
+//
+//                    try {
+//                        std::ostringstream stream;
+//                        stream << "unsolved task delivery endpoint path: " << task;
+//                        MAPD_EXCEPTION(stream.str());
+//                    } catch (std::exception& e) {
+//                        std::cout << e.what() << std::endl;
+//                        std::abort();
+//                    }
+//
+//                }
 
-        }
+//            }
+
+        } 
+        
+//        else {
+//
+//            try {
+//                std::ostringstream stream;
+//                stream << "unsolved task pickup endpoint path: " << task;
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            }
+//
+//        }
 
         return false;
+        
+    }
+    
+    const _stepPathAlgorithm& getStepPathAlgorithm() const {
+        return stepPathAlgorithm;
     }
     
 protected:

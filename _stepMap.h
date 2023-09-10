@@ -192,6 +192,41 @@ public:
 
     }
     
+    
+    void stepView(unsigned step)const{
+        
+        unsigned p = step * nodes_product;
+        
+        std::cout << "step: " << step << std::endl;
+        
+        for (int r = 0; r < row_size; r++) {
+            
+            for (int c = 0; c < colunm_size; c++) {
+                
+                unsigned index = p + r * colunm_size + c;
+                
+                if(nodes[index] < 0){
+                
+                    std::cout << nodes[index] << " ";
+                
+                } else {
+                    
+                    std::cout << " " << nodes[index] << " ";
+                    
+                }
+
+            }
+            
+            std::cout << std::endl;
+
+        }
+        
+        std::cout << std::endl;
+
+        
+    }
+    
+    
     void setRowEdgeType(unsigned step, unsigned row, unsigned column, int type)const {
 
         int _size_colunm = colunm_size - 1;
@@ -353,6 +388,34 @@ public:
 
     }
     
+    bool isPathDefinitelyFree(unsigned step, unsigned row, unsigned column) const {
+                
+        if (row < row_size && column < colunm_size){
+            
+            for (int s = step; s < this->step_size; s++){
+                
+                int t = this->nodes[s * nodes_product + row * colunm_size + column];
+                if(t != NodeType::freeNode){
+                    
+                    return false;
+                    
+                }
+                    
+                
+            }
+            
+        }
+        
+        return true;
+        
+    }
+    
+    bool isPathDefinitelyFree(const _stepSite& site) const {
+        
+        return isPathDefinitelyFree(site.GetStep(), site.GetRow(), site.GetColunm());
+        
+    }
+    
     void setTypesFrom(unsigned fromStep, unsigned row, unsigned column, int type) {
 
         if (row < row_size && column < colunm_size)
@@ -392,13 +455,14 @@ public:
         
         
         path.moveList([this,type](const _stepSite& s, const _stepSite& g){
-            this->setTypesUntil(s, type);
+//            this->setTypesUntil(s, type);
+            this->setNodeType(s, type);
             this->setEdgeType(s.GetStep(), s, g, type);
             return false;
         });
         
-        auto goal = path.goalSite();
-        this->setTypesFrom(goal.GetStep() - 1, goal.GetRow(), goal.GetColunm(), type);
+//        auto goal = path.goalSite();
+//        this->setTypesFrom(goal.GetStep() - 1, goal.GetRow(), goal.GetColunm(), type);
         
     }
     

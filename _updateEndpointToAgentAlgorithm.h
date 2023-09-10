@@ -1,42 +1,40 @@
 /* 
- * File:   _updateRestEndpointToAgentAlgorithm.h
+ * File:   _updateEndpointToAgentAlgorithm.h
  * Author: ronaldo
  *
  * Created on 6 de setembro de 2023, 18:52
  */
 
-#ifndef _UPDATERESTENDPOINTTOAGENTALGORITHM_H
-#define _UPDATERESTENDPOINTTOAGENTALGORITHM_H
+#ifndef _UPDATEENDPOINTTOAGENTALGORITHM_H
+#define _UPDATEENDPOINTTOAGENTALGORITHM_H
 
-#include "_selectRestEndpointToAgentAlgorithm.h"
+#include "_selectEndpointToAgentAlgorithm.h"
 
-class _updateCloserRestEndpointToAgentAlgorithm {
+class _selectEndpointToAgentAlgorithm;
+class _updateEndpointToAgentAlgorithm {
     
 public:
     
-    _updateCloserRestEndpointToAgentAlgorithm( 
-            const _endpointIndexerAlgorithm& endpointIndexerAlgorithm,
-            const _pathToAgentAlgorithm& pathToAgentAlgorithm,
-            const _conflictEndpointTaskDeliveryAlgorithm& conflictEndpointTaskDeliveryAlgorithm):
-                selectRestEndpointToAgentAlgorithm(
-                    endpointIndexerAlgorithm,
-                    pathToAgentAlgorithm,
-                    conflictEndpointTaskDeliveryAlgorithm){}
+    _updateEndpointToAgentAlgorithm( 
+            _selectEndpointToAgentAlgorithm& selectEndpointToAgentAlgorithm):
+                selectEndpointToAgentAlgorithm(selectEndpointToAgentAlgorithm){}
     
-    _updateCloserRestEndpointToAgentAlgorithm(const _updateCloserRestEndpointToAgentAlgorithm& orig):
-    selectRestEndpointToAgentAlgorithm(orig.selectRestEndpointToAgentAlgorithm){}
+    _updateEndpointToAgentAlgorithm(const _updateEndpointToAgentAlgorithm& orig):
+    selectEndpointToAgentAlgorithm(orig.selectEndpointToAgentAlgorithm){}
     
-    virtual ~_updateCloserRestEndpointToAgentAlgorithm(){}
+    virtual ~_updateEndpointToAgentAlgorithm(){}
     
     virtual bool solve(
             _token& token, 
             _agent& agent) const;
     
+    void setEndpointIndexerAlgorithm(_endpointIndexerAlgorithm& endpointIndexerAlgorithm);
+    
 private:
     
-    _selectRestEndpointToAgentAlgorithm selectRestEndpointToAgentAlgorithm;
+    _selectEndpointToAgentAlgorithm& selectEndpointToAgentAlgorithm;
     
 };
 
-#endif /* _UPDATECLOSERRESTENDPOINTTOAGENTALGORITHM_H */
+#endif /* _UPDATEENDPOINTTOAGENTALGORITHM_H */
 

@@ -22,22 +22,22 @@ public:
     SystemExperiment(
             std::string taskFilename, 
             std::string mapFilename, 
-            _system::TokenType tokenType, 
-            float taskThreshold, 
-            float carryThreshold, 
+            _system::TokenType tokenType,              
             int currentEnergyLevelAgent, 
             int maximumEnergyLevelAgent, 
             int chargedEnergyLevelAgent,
             int criticalEnergyLevelAgent,
             unsigned cell_size = 0, 
-            unsigned timestep = 0) :
+            unsigned timestep = 0,
+            float pickup_threshold = .0f, 
+            float delivery_threshold = .0f) :
         cell_size(cell_size),
         timestep(timestep),
         taskFilename(taskFilename), 
         mapFilename(mapFilename), 
         tokenType(tokenType), 
-        taskThreshold(taskThreshold), 
-        carryThreshold(carryThreshold), 
+        pickup_threshold(pickup_threshold), 
+        delivery_threshold(delivery_threshold), 
         maximumEnergyLevelAgent(maximumEnergyLevelAgent), 
         chargedEnergyLevelAgent(chargedEnergyLevelAgent), 
         currentEnergyLevelAgent(currentEnergyLevelAgent), 
@@ -51,8 +51,8 @@ public:
             taskFilename(other.taskFilename), 
             mapFilename(other.mapFilename), 
             tokenType(other.tokenType), 
-            taskThreshold(other.taskThreshold), 
-            carryThreshold(other.carryThreshold), 
+            pickup_threshold(other.pickup_threshold), 
+            delivery_threshold(other.delivery_threshold), 
             maximumEnergyLevelAgent(other.maximumEnergyLevelAgent),
             chargedEnergyLevelAgent(other.chargedEnergyLevelAgent),
             currentEnergyLevelAgent(other.currentEnergyLevelAgent), 
@@ -117,13 +117,13 @@ public:
         system = new _system(
                 tokenType, 
                 taskFilename,
-                mapFilename,                
-                taskThreshold, 
-                carryThreshold, 
+                mapFilename,                  
                 currentEnergyLevelAgent, 
                 maximumEnergyLevelAgent, 
                 chargedEnergyLevelAgent, 
-                criticalEnergyLevelAgent);
+                criticalEnergyLevelAgent,
+                pickup_threshold, 
+                delivery_threshold);
         
         std::cout << "Experiment: " << std::endl;
         std::cout << " - mapFilename: " << mapFilename << std::endl;
@@ -187,8 +187,8 @@ private:
     
     _system::TokenType tokenType;
     
-    float taskThreshold, 
-            carryThreshold;
+    float pickup_threshold, 
+            delivery_threshold;
     
     const unsigned cell_size = 0, timestep = 0;
     

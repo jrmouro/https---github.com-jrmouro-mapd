@@ -9,28 +9,25 @@
 #define _SELECTRESTENDPOINTTOAGENTALGORITHM_H
 
 #include "_selectRestEndpointToAgentAlgorithm.h"
+#include "_selectEndpointToAgentAlgorithm.h"
 #include "_pathToAgentAlgorithm.h"
-#include "_conflictEndpointTaskDeliveryAlgorithm.h"
 #include "_endpointIndexerAlgorithm.h"
 
 
-class _selectRestEndpointToAgentAlgorithm{
+class _selectRestEndpointToAgentAlgorithm : public _selectEndpointToAgentAlgorithm{
 public:
     
     _selectRestEndpointToAgentAlgorithm(
-            const _endpointIndexerAlgorithm& endpointIndexerAlgorithm, 
-            const _pathToAgentAlgorithm& pathToAgentAlgorithm,
-            const _conflictEndpointTaskDeliveryAlgorithm& conflictEndpointTaskDeliveryAlgorithm) :
-        endpointIndexerAlgorithm(endpointIndexerAlgorithm),
-        pathToAgentAlgorithm(pathToAgentAlgorithm),
-        conflictEndpointTaskDeliveryAlgorithm(conflictEndpointTaskDeliveryAlgorithm){ }
+            _endpointIndexerAlgorithm& endpointIndexerAlgorithm, 
+            const _pathToAgentAlgorithm& pathToAgentAlgorithm) :
+        _selectEndpointToAgentAlgorithm(endpointIndexerAlgorithm),
+        pathToAgentAlgorithm(pathToAgentAlgorithm){ }
 
         
     _selectRestEndpointToAgentAlgorithm(
             const _selectRestEndpointToAgentAlgorithm& other) :
-        endpointIndexerAlgorithm(other.endpointIndexerAlgorithm),
-        pathToAgentAlgorithm(other.pathToAgentAlgorithm),
-        conflictEndpointTaskDeliveryAlgorithm(other.conflictEndpointTaskDeliveryAlgorithm){ }
+        _selectEndpointToAgentAlgorithm(other),
+        pathToAgentAlgorithm(other.pathToAgentAlgorithm){ }
 
     virtual ~_selectRestEndpointToAgentAlgorithm(){}
 
@@ -38,14 +35,11 @@ public:
             const _token& token, 
             const _agent& agent, 
             _site& selectedNewSite, 
-            _stepPath& selectedPath, 
-            _task& conflitTask) const;
+            _stepPath& selectedPath) const;
+        
+protected:
     
-private:
-    
-    const _endpointIndexerAlgorithm& endpointIndexerAlgorithm;
     const _pathToAgentAlgorithm& pathToAgentAlgorithm;
-    const _conflictEndpointTaskDeliveryAlgorithm& conflictEndpointTaskDeliveryAlgorithm;
 
 };
 
