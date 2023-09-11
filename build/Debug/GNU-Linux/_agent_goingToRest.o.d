@@ -17,6 +17,7 @@ build/Debug/GNU-Linux/_agent_goingToRest.o: _agent_goingToRest.cpp \
  _selectEndpointToAgentAlgorithm.h \
  _selectChargingTaskToAgentThresholdAlgorithm.h \
  _selectTaskToAgentThresholdAlgorithm.h _selectTaskToAgentAlgorithm.h \
+ _closerTaskIndexerThresholdAlgorithm.h _closerTaskIndexerAlgorithm.h \
  TokenPass.h CarryThresholdToken.h
 
 _agent_goingToRest.h:
@@ -128,6 +129,10 @@ _selectChargingTaskToAgentThresholdAlgorithm.h:
 _selectTaskToAgentThresholdAlgorithm.h:
 
 _selectTaskToAgentAlgorithm.h:
+
+_closerTaskIndexerThresholdAlgorithm.h:
+
+_closerTaskIndexerAlgorithm.h:
 
 TokenPass.h:
 

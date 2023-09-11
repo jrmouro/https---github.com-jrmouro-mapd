@@ -9,18 +9,25 @@
         <group>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agent_state.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agent.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_stepMap.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/TokenPass.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_system.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_stepMap.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/ThresholdTokenPass.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_updateTokenAlgorithms.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_closerTaskIndexerAlgorithm.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agent_charging_CL.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/Instances/small/kiva-10-500-5.map</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_system.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_closerTaskIndexerThresholdAlgorithm.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_updateTokenAlgorithms.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_closerTaskIndexerThresholdAlgorithm.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_token.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_selectChargingTaskToAgentAlgorithm.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/main.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/MultiSystemExperiment.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_closerTaskIndexerAlgorithm.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/SystemExperiment.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_closerTaskIndexerAlgorithm.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_taskIndexerAlgorithm.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_stepAstarAlgorithm.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_map.h</file>
         </group>
     </open-files>
 </project-private>

@@ -16,6 +16,8 @@ class _token;
 class _taskIndexerAlgorithm {
 public:
     
+    virtual _taskIndexerAlgorithm* getInstance() const = 0;
+    
     virtual void solve(
         const _token& token,
         const _task& task, 

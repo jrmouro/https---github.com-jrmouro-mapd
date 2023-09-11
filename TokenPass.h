@@ -12,6 +12,7 @@
 #include "_updateTokenAlgorithms.h"
 #include "_updateTaskToAgentAlgorithm.h"
 #include "_updateEndpointToAgentAlgorithm.h"
+#include "_closerTaskIndexerThresholdAlgorithm.h"
 
 class TokenPass : public _token{
 public:
@@ -43,8 +44,10 @@ public:
     
     virtual _token::TokenUpdateType updatePath(_agent& agent, bool energyCheck){
         
-        auto uta = _updateTokenAlgorithms::getInstance();
+        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
         
+        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerThresholdAlgorithm);
+                        
         TokenUpdateType ret = TokenUpdateType::none;
     
         if(agent.isInFinishedPath()){

@@ -8,6 +8,11 @@
 #ifndef SYSTEMEXPERIMENT_H
 #define SYSTEMEXPERIMENT_H
 
+
+#include <ctime>
+#include <ratio>
+#include <chrono>
+
 #include "Experiment.h"
 #include "InstanceMAPD.h"
 #include "_system.h"
@@ -125,10 +130,14 @@ public:
                 pickup_threshold, 
                 delivery_threshold);
         
+        
+        
         std::cout << "Experiment: " << std::endl;
         std::cout << " - mapFilename: " << mapFilename << std::endl;
         std::cout << " - taskFilename: " << taskFilename << std::endl;
         std::cout << " - token: " << system->getToken().id() << std::endl;
+        
+        std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
         
         if(timestep == 0 || cell_size == 0){
             
@@ -169,11 +178,14 @@ public:
             });
             
         }
-                
-//        std::cout << "token: " << system->getToken() << std::endl;
-//        std::cout << "steps: " << system->getToken().getCurrentStep() << std::endl;
-//        std::cout << "energy expenditure: " << system->getToken().energyExpenditure() << std::endl;
         
+        std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+
+        std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+        
+        std::cout << " - makespan: " << system->getToken().getCurrentStep() << std::endl;
+        std::cout << " - energy expenditure: " << system->getToken().energyExpenditure() << std::endl;
+        std::cout << " - duration: " << time_span.count() << " seconds." << std::endl << std::endl;                        
                         
     }
     

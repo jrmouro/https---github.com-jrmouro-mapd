@@ -15,6 +15,7 @@ build/Debug/GNU-Linux/main.o: main.cpp MultiSystemExperiment.h \
  _selectEndpointToAgentAlgorithm.h \
  _selectChargingTaskToAgentThresholdAlgorithm.h \
  _selectTaskToAgentThresholdAlgorithm.h _selectTaskToAgentAlgorithm.h \
+ _closerTaskIndexerThresholdAlgorithm.h _closerTaskIndexerAlgorithm.h \
  TokenPass.h CarryThresholdToken.h Text.h Shape.h
 
 MultiSystemExperiment.h:
@@ -118,6 +119,10 @@ _selectChargingTaskToAgentThresholdAlgorithm.h:
 _selectTaskToAgentThresholdAlgorithm.h:
 
 _selectTaskToAgentAlgorithm.h:
+
+_closerTaskIndexerThresholdAlgorithm.h:
+
+_closerTaskIndexerAlgorithm.h:
 
 TokenPass.h:
 

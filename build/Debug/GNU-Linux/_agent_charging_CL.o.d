@@ -17,6 +17,7 @@ build/Debug/GNU-Linux/_agent_charging_CL.o: _agent_charging_CL.cpp \
  _selectEndpointToAgentAlgorithm.h \
  _selectChargingTaskToAgentThresholdAlgorithm.h \
  _selectTaskToAgentThresholdAlgorithm.h _selectTaskToAgentAlgorithm.h \
+ _closerTaskIndexerThresholdAlgorithm.h _closerTaskIndexerAlgorithm.h \
  TokenPass.h CarryThresholdToken.h
 
 _agent_charging_CL.h:
@@ -132,6 +133,10 @@ _selectChargingTaskToAgentThresholdAlgorithm.h:
 _selectTaskToAgentThresholdAlgorithm.h:
 
 _selectTaskToAgentAlgorithm.h:
+
+_closerTaskIndexerThresholdAlgorithm.h:
+
+_closerTaskIndexerAlgorithm.h:
 
 TokenPass.h:
 

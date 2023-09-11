@@ -16,6 +16,7 @@ build/Debug/GNU-Linux/_agent_parked.o: _agent_parked.cpp _agent_parked.h \
  _selectEndpointToAgentAlgorithm.h \
  _selectChargingTaskToAgentThresholdAlgorithm.h \
  _selectTaskToAgentThresholdAlgorithm.h _selectTaskToAgentAlgorithm.h \
+ _closerTaskIndexerThresholdAlgorithm.h _closerTaskIndexerAlgorithm.h \
  TokenPass.h CarryThresholdToken.h
 
 _agent_parked.h:
@@ -129,6 +130,10 @@ _selectChargingTaskToAgentThresholdAlgorithm.h:
 _selectTaskToAgentThresholdAlgorithm.h:
 
 _selectTaskToAgentAlgorithm.h:
+
+_closerTaskIndexerThresholdAlgorithm.h:
+
+_closerTaskIndexerAlgorithm.h:
 
 TokenPass.h:
 

@@ -73,7 +73,8 @@ public:
 
     }
 
-    _map(const _map& orig) : colunm_size(orig.colunm_size), row_size(orig.row_size){
+    _map(const _map& orig) : colunm_size(orig.colunm_size), row_size(orig.row_size),
+    num_bots(orig.num_bots), num_endpoints(orig.num_endpoints){
 
         unsigned size = orig.row_size * orig.colunm_size;
         
@@ -96,6 +97,8 @@ public:
         unsigned size = right.row_size * right.colunm_size;
         this->colunm_size = right.colunm_size;
         this->row_size = right.row_size;
+        this->num_bots = right.num_bots;
+        this->num_endpoints = right.num_endpoints;
         if(size > 0){            
             this->nodes = new Type[size];
             for (unsigned i = 0; i < size; i++)
@@ -179,6 +182,9 @@ public:
 
     void load(std::ifstream& filestream, std::function<bool(unsigned, unsigned, Type)> func) {
 
+        num_bots = 0;
+        num_endpoints = 0;
+        
         for (unsigned r = 0; r < this->row_size; r++) {
 
             std::string line;
@@ -192,8 +198,11 @@ public:
                     t = Type::none;
                 } else if (line[c] == 'r') {
                     t = Type::bot;
+                    num_bots++;
+                    num_endpoints++;
                 } else if (line[c] == 'e') {
                     t = Type::endpoint;
+                    num_endpoints++;
                 } 
                 
                 this->nodes[r * colunm_size + c] = t;
@@ -212,6 +221,14 @@ public:
 
     unsigned getRow_size() const {
         return row_size;
+    }
+    
+    unsigned getNum_bots() const {
+        return num_bots;
+    }
+
+    unsigned getNum_endpoints() const {
+        return num_endpoints;
     }
     
     virtual bool isNodeBelonging(const _site& site) const {
@@ -260,7 +277,12 @@ public:
 private:
 
     Type* nodes = nullptr;
-    unsigned colunm_size = 0, row_size = 0;
+    
+    unsigned 
+            colunm_size = 0, 
+            row_size = 0,
+            num_bots = 0, 
+            num_endpoints = 0;
 
 };
 

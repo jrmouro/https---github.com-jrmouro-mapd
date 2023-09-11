@@ -75,6 +75,8 @@
             <logicalFolder name="f1" displayName="Task" projectFiles="true">
               <itemPath>_closerTaskIndexerAlgorithm.cpp</itemPath>
               <itemPath>_closerTaskIndexerAlgorithm.h</itemPath>
+              <itemPath>_closerTaskIndexerThresholdAlgorithm.cpp</itemPath>
+              <itemPath>_closerTaskIndexerThresholdAlgorithm.h</itemPath>
               <itemPath>_taskIndexerAlgorithm.cpp</itemPath>
               <itemPath>_taskIndexerAlgorithm.h</itemPath>
             </logicalFolder>
@@ -371,6 +373,16 @@
       <item path="_closerTaskIndexerAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_closerTaskIndexerAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_closerTaskIndexerThresholdAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_closerTaskIndexerThresholdAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="_distanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -717,6 +729,16 @@
       <item path="_closerTaskIndexerAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_closerTaskIndexerAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_closerTaskIndexerThresholdAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_closerTaskIndexerThresholdAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="_distanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>

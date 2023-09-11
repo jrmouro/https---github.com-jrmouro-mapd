@@ -1,6 +1,10 @@
 #include "_closerTaskIndexerAlgorithm.h"
 #include "_token.h"
 
+_taskIndexerAlgorithm* _closerTaskIndexerAlgorithm::getInstance() const{
+    return new _closerTaskIndexerAlgorithm();
+}
+
 void _closerTaskIndexerAlgorithm::solve(
         const _token& token,
         const _task& task,

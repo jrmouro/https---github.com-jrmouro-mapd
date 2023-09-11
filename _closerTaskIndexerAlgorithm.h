@@ -19,6 +19,8 @@ public:
             
     _closerTaskIndexerAlgorithm(const _closerTaskIndexerAlgorithm& other) { }
     
+    virtual _taskIndexerAlgorithm* getInstance() const;
+    
     virtual void solve(
             const _token& token,
             const _task& task, 

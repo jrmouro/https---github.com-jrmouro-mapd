@@ -17,6 +17,15 @@
 _updateTokenAlgorithms* _updateTokenAlgorithms::instance = nullptr;
 
 _updateTokenAlgorithms::_updateTokenAlgorithms(
+        const _taskIndexerAlgorithm& taskIndexerAlgorithm,
+        float pickup_threshold,
+        float delivery_threshold) : _updateTokenAlgorithms(pickup_threshold, delivery_threshold){
+
+    delete this->taskIndexerAlgorithm;
+    this->taskIndexerAlgorithm = taskIndexerAlgorithm.getInstance();
+}
+
+_updateTokenAlgorithms::_updateTokenAlgorithms(
         float pickup_threshold,
         float delivery_threshold) :
 stepPathAlgorithm(new _stepAstarAlgorithm()),

@@ -57,6 +57,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_agent_state.o \
 	${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o \
 	${OBJECTDIR}/_closerTaskIndexerAlgorithm.o \
+	${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o \
 	${OBJECTDIR}/_endpointIndexerAlgorithm.o \
 	${OBJECTDIR}/_map.o \
 	${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm.o \
@@ -221,6 +222,11 @@ ${OBJECTDIR}/_closerTaskIndexerAlgorithm.o: _closerTaskIndexerAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerTaskIndexerAlgorithm.o _closerTaskIndexerAlgorithm.cpp
+
+${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o: _closerTaskIndexerThresholdAlgorithm.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o _closerTaskIndexerThresholdAlgorithm.cpp
 
 ${OBJECTDIR}/_endpointIndexerAlgorithm.o: _endpointIndexerAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -619,6 +625,19 @@ ${OBJECTDIR}/_closerTaskIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_closerTaskIndex
 	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerTaskIndexerAlgorithm_nomain.o _closerTaskIndexerAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_closerTaskIndexerAlgorithm.o ${OBJECTDIR}/_closerTaskIndexerAlgorithm_nomain.o;\
+	fi
+
+${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm_nomain.o: ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o _closerTaskIndexerThresholdAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm_nomain.o _closerTaskIndexerThresholdAlgorithm.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_endpointIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_endpointIndexerAlgorithm.o _endpointIndexerAlgorithm.cpp 

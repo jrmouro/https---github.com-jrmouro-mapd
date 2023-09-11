@@ -11,6 +11,7 @@
 #include <sstream>
 #include "_token.h"
 #include "_updateTokenAlgorithms.h"
+#include "_closerTaskIndexerThresholdAlgorithm.h"
 
 class ThresholdTokenPass : public _token{
 public:
@@ -50,7 +51,9 @@ public:
     
     virtual _token::TokenUpdateType updatePath(_agent& agent, bool energyCheck){
         
-        auto uta = _updateTokenAlgorithms::getInstance(pickup_threshold, delivery_threshold);
+        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
+        
+        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerThresholdAlgorithm, pickup_threshold, delivery_threshold);
         
         TokenUpdateType ret = TokenUpdateType::none;
     

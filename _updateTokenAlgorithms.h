@@ -48,6 +48,27 @@ public:
         return instance;
         
     }
+            
+    static _updateTokenAlgorithms* getInstance(
+            const _taskIndexerAlgorithm& taskIndexerAlgorithm,
+            float pickup_threshold = .0f,
+            float delivery_threshold = .0f){
+        
+        if(instance == nullptr){
+            
+            instance = new _updateTokenAlgorithms(taskIndexerAlgorithm, pickup_threshold, delivery_threshold);
+            
+        }
+        
+        instance->selectTaskToAgentThresholdAlgorithm->setDelivery_threshold(delivery_threshold);
+        instance->selectTaskToAgentThresholdAlgorithm->setPickup_threshold(pickup_threshold);
+        
+        instance->selectChargingTaskToAgentThresholdAlgorithm->setDelivery_threshold(delivery_threshold);
+        instance->selectChargingTaskToAgentThresholdAlgorithm->setPickup_threshold(pickup_threshold);
+                        
+        return instance;
+        
+    }
     
     static void deleteInstance(){
         
@@ -79,11 +100,17 @@ private:
     _updateTokenAlgorithms(
             float pickup_threshold,
             float delivery_threshold);
+    
+    _updateTokenAlgorithms(
+            const _taskIndexerAlgorithm& taskIndexerAlgorithm,
+            float pickup_threshold,
+            float delivery_threshold);
         
     static _updateTokenAlgorithms* instance;
     
     
-    _taskIndexerAlgorithm* taskIndexerAlgorithm;
+    _taskIndexerAlgorithm *taskIndexerAlgorithm; 
+    
     _endpointIndexerAlgorithm* endpointIndexerAlgorithm;
     
     _stepPathAlgorithm* stepPathAlgorithm; 
