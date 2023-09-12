@@ -62,16 +62,16 @@ void small(){
     std::vector<_system::TokenType> systemTokenTypes;
     std::vector<std::pair<float, float>> thresholds;
     
-    thresholds.push_back(std::make_pair(1.0f, 1.0f));
-    thresholds.push_back(std::make_pair(.75f, .75f));
-    thresholds.push_back(std::make_pair(.5f, 1.0f));
-    thresholds.push_back(std::make_pair(.5f, .5f));
+//    thresholds.push_back(std::make_pair(.75f, .8f));
+    thresholds.push_back(std::make_pair(.7f, .7f));
+//    thresholds.push_back(std::make_pair(.5f, .3f));
+    thresholds.push_back(std::make_pair(.3f, .5f));
     
     mapFilenames.push_back("./Instances/small/kiva-10-500-5.map");
-    mapFilenames.push_back("./Instances/small/kiva-20-500-5.map");
-    mapFilenames.push_back("./Instances/small/kiva-30-500-5.map");
-    mapFilenames.push_back("./Instances/small/kiva-40-500-5.map");
-    mapFilenames.push_back("./Instances/small/kiva-50-500-5.map");
+//    mapFilenames.push_back("./Instances/small/kiva-20-500-5.map");
+//    mapFilenames.push_back("./Instances/small/kiva-30-500-5.map");
+//    mapFilenames.push_back("./Instances/small/kiva-40-500-5.map");
+//    mapFilenames.push_back("./Instances/small/kiva-50-500-5.map");
     
     taskFilenames.push_back("./Instances/small/kiva-0.2.task");
     taskFilenames.push_back("./Instances/small/kiva-0.5.task");
@@ -91,13 +91,12 @@ void small(){
         taskFilenames,                      // instance tasks
         mapFilenames,                       // instance map
         systemTokenTypes,                   // type of token
-        5000,                                // current agent level energy
-        5000,                                // maximum agent level energy
-        3500,                                // charged agent level energy
-        500,                                // critical agent level energy
+        1000,                                // current agent level energy
+        1200,                                // maximum agent level energy
+        1000,                                // charged agent level energy
+        700,                                // critical agent level energy
         45,                                 // cell_size
-        0);                               // timestep
-           
+        0);                               // timestep           
 
     experiment.run();    
     

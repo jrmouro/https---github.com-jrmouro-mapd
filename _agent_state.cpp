@@ -18,10 +18,12 @@ void _agent_state::onBeforeStepping(_token& token,  _agent& agent) const { }
 
 void _agent_state::onStepping(_token& token,  _agent& agent) const {
     
-//    if(token.getCurrentStep() > 913 && agent.id() == 1){
+    agent.stepping();
+    
+//        if(token.getCurrentStep() > 1049 && agent.id() == 6){
 //        
 //        int i = 0;
-//        for (; i < 10; i++) {
+//        for (; i < 0; i++) {
 //            
 //            token.getStepMap().stepView(token.getCurrentStep()+i);
 //
@@ -31,8 +33,6 @@ void _agent_state::onStepping(_token& token,  _agent& agent) const {
 //            
 //
 //    }
-    
-    agent.stepping();
 
 }
 

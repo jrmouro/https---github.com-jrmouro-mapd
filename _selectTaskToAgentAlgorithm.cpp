@@ -60,42 +60,27 @@ bool _selectTaskToAgentAlgorithm::solve(
         if (flag) {
 
             selectedTask = task;
+            
+            _stepPath taskPath(selectedPath);
 
             _stepSite pickupSite, deliverySite;
 
-            flag = taskPathToAgentAlgorithm.solve(token, agent, selectedTask, selectedPath, pickupSite, deliverySite);
-
-            //            if (flag) {
-            //                
-            //                flag = token.getStepMap().isPathDefinitelyFree(selectedPath.goalSite());
+            flag = taskPathToAgentAlgorithm.solve(token, agent, selectedTask, taskPath, pickupSite, deliverySite);
 
             if (flag) {
 
-                flag = agent.isAbleToFulfillTaskPath(token.getMap(), selectedTask, selectedPath);
+                flag = agent.isAbleToFulfillTaskPath(token.getMap(), selectedTask, taskPath);
 
                 if (flag) {
+                    
+                    taskPath.pop();
+                    selectedPath.progress(taskPath);
 
                     return true;
 
                 }
 
             }
-
-            //            } 
-
-            //            else {
-            //
-            //                try {
-            //                    std::ostringstream stream;
-            //                    stream << "unsolved task path: " << task;
-            //                    MAPD_EXCEPTION(stream.str());
-            //                } catch (std::exception& e) {
-            //                    std::cout << e.what() << std::endl;
-            //                    std::abort();
-            //                }
-            //
-            //            }
-
 
         }
 

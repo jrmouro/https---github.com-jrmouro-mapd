@@ -218,7 +218,7 @@ public:
         
     }
     
-    void moveList(const std::function<bool(const _stepSite&, const _stepSite&)>& function, unsigned begin = 0) const {
+    void movingList(const std::function<bool(const _stepSite&, const _stepSite&)>& function, unsigned begin = 0) const {
         
         std::vector<_stepSite>::const_reverse_iterator it = sites.crbegin() + begin;
         

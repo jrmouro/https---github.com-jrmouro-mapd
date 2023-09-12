@@ -21,7 +21,7 @@ void _closerTaskIndexerAlgorithm::solve(
 
         if (taskDistance < dist) {
 
-            it = taskIndex.insert(it, task);
+            taskIndex.insert(it, task);
 
             return;
 

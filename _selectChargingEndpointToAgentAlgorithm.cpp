@@ -21,20 +21,6 @@ bool _selectChargingEndpointToAgentAlgorithm::solve(
 
         bool flag = true;
 
-//        token.listPendingTasks([endpoint, &flag](const _task & task) {
-//
-//            if (task.getDelivery().match(endpoint)) {
-//
-//                flag = false;
-//
-//                return true;
-//
-//            }
-//
-//            return false;
-//
-//        });
-
         if (flag) {
 
             token.listAgents([endpoint, agent, &flag](_agent & otherAgent) {
@@ -56,39 +42,25 @@ bool _selectChargingEndpointToAgentAlgorithm::solve(
         if (flag) {
 
             selectedNewSite = endpoint;
+            
+            _stepPath chargingPath(selectedPath);
 
-            flag = pathToAgentAlgorithm.solve(token, agent, selectedNewSite, selectedPath);
+            flag = pathToAgentAlgorithm.solve(token, agent, selectedNewSite, chargingPath);
 
             if (flag) {
-                
-//                flag = token.getStepMap().isPathDefinitelyFree(selectedPath.goalSite());
-//
-//                if (flag) {
 
-                    flag = agent.isAbleToFulfillNoCarryngPath(token.getMap(), selectedPath);
+                flag = agent.isAbleToFulfillNoCarryngPath(token.getMap(), chargingPath);
 
-                    if (flag) {
+                if (flag) {
+                    
+                    chargingPath.pop();
+                    selectedPath.progress(chargingPath);
 
-                        return true;
+                    return true;
 
-                    }
-                
-//                }
+                }
 
             } 
-            
-//            else {
-//
-//                try {
-//                    std::ostringstream stream;
-//                    stream << "unsolved endpoint path: " << endpoint;
-//                    MAPD_EXCEPTION(stream.str());
-//                } catch (std::exception& e) {
-//                    std::cout << e.what() << std::endl;
-//                    std::abort();
-//                }
-//
-//            }
 
         }
 

@@ -454,7 +454,7 @@ public:
         
         
         
-        path.moveList([this,type](const _stepSite& s, const _stepSite& g){
+        path.movingList([this,type](const _stepSite& s, const _stepSite& g){
 //            this->setTypesUntil(s, type);
             this->setNodeType(s, type);
             this->setEdgeType(s.GetStep(), s, g, type);
@@ -474,71 +474,73 @@ public:
     
     virtual void listNeighborFreePaths(const _stepSite& site, int type, const std::function<bool(const _stepSite&)>& function) const {
         
-        if(this->isNodeBelonging(site)){
+        _stepSite size = _stepSite(step_size, row_size, colunm_size);
         
-            site.listNeighbors([this, type, &function, site](const _stepSite& neigh){
+//        if(this->isNodeBelonging(site)){
+        
+            site.listNeighbors(size, [this, type, &function, site](const _stepSite& neigh){
 
-                if(this->isNodeBelonging(neigh)){ 
+//                if(this->isNodeBelonging(neigh)){ 
                 
                     unsigned index = neigh.GetStep() * nodes_product + neigh.GetRow() * colunm_size + neigh.GetColunm();
 
                     if((this->nodes[index] == type || this->nodes[index] == NodeType::freeNode) && this->hasPath(site, neigh)) 
                         if(function(neigh)) return true;
 
-                } 
+//                } 
 
                 return false;
                 
             });
         
-        } else {
-            
-            try {
-                std::ostringstream stream;
-                stream << "invalid site";
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
-            
-        }
+//        } else {
+//            
+//            try {
+//                std::ostringstream stream;
+//                stream << "invalid site";
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            }
+//            
+//        }
                 
     }
     
-    virtual void listNeighborFreeSites(const _stepSite& site, int type, const std::function<bool(const _stepSite&)>& function) const {
-        
-        if(this->isNodeBelonging(site)){
-        
-            site.listNeighbors([this, type, &function](const _stepSite& neigh){
-
-                if(this->isNodeBelonging(neigh)){ 
-                
-                    unsigned index = neigh.GetStep() * nodes_product + neigh.GetRow() * colunm_size + neigh.GetColunm();
-
-                    if(this->nodes[index] == type || this->nodes[index] == NodeType::freeNode) 
-                        if(function(neigh)) return true;
-
-                } 
-
-                return false;
-                
-            });
-        
-        } else {
-            
-            try {
-                std::ostringstream stream;
-                stream << "invalid site";
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
-            
-        }
-                
-    }
+//    virtual void listNeighborFreeSites(const _stepSite& site, int type, const std::function<bool(const _stepSite&)>& function) const {
+//        
+//        if(this->isNodeBelonging(site)){
+//        
+//            site.listNeighbors([this, type, &function](const _stepSite& neigh){
+//
+//                if(this->isNodeBelonging(neigh)){ 
+//                
+//                    unsigned index = neigh.GetStep() * nodes_product + neigh.GetRow() * colunm_size + neigh.GetColunm();
+//
+//                    if(this->nodes[index] == type || this->nodes[index] == NodeType::freeNode) 
+//                        if(function(neigh)) return true;
+//
+//                } 
+//
+//                return false;
+//                
+//            });
+//        
+//        } else {
+//            
+//            try {
+//                std::ostringstream stream;
+//                stream << "invalid site";
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            }
+//            
+//        }
+//                
+//    }
     
     
     int nodoType(const _stepSite& site) const {

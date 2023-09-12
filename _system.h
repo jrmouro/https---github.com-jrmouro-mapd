@@ -327,10 +327,6 @@ private:
             
             token->listAgents([this](_agent& agent){
                 
-                if(agent.id() == 19){
-                    std::cout << agent << std::endl;
-                }
-                
                 agent.receive(*this);
                 
                 return false;

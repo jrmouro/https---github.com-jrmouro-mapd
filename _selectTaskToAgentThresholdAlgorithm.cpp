@@ -75,30 +75,33 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
         if (flag) {
 
             selectedTask = task;
+            
+            _stepPath taskPath(selectedPath);
 
             _stepSite pickupSite, deliverySite;
 
-            flag = taskPathToAgentAlgorithm.solve(token, agent, selectedTask, selectedPath, pickupSite, deliverySite);
-
-            //            if (flag) {
-            //                
-            //                flag = token.getStepMap().isPathDefinitelyFree(selectedPath.goalSite());
+            flag = taskPathToAgentAlgorithm.solve(token, agent, selectedTask, taskPath, pickupSite, deliverySite);
 
             if (flag) {
+                
+                unsigned step = pickupSite.GetStep() - taskPath.currentSite().GetStep();
 
-                flag = thresholdAlgorithm.solve(selectedPath, pickupSite.GetStep(), pickup_threshold);
+                flag = thresholdAlgorithm.solve(taskPath.currentSite(), selectedTask.getPickup(), step, pickup_threshold);
 
                 if (flag) {
 
-                    unsigned step = selectedPath.goalSite().GetStep() - pickupSite.GetStep();
+                    step = taskPath.goalSite().GetStep() - pickupSite.GetStep();
 
                     flag = thresholdAlgorithm.solve(selectedTask.getPickup(), selectedTask.getDelivery(), step, delivery_threshold);
 
                     if (flag) {
 
-                        flag = agent.isAbleToFulfillTaskPath(token.getMap(), selectedTask, selectedPath);
+                        flag = agent.isAbleToFulfillTaskPath(token.getMap(), selectedTask, taskPath);
 
                         if (flag) {
+                            
+                            taskPath.pop();
+                            selectedPath.progress(taskPath);
 
                             return true;
 

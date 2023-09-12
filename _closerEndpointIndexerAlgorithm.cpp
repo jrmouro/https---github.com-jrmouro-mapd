@@ -16,7 +16,7 @@ void _closerEndpointIndexerAlgorithm::solve(
 
         if (siteDistance < dist) {
 
-            it = siteIndex.insert(it, endpoint);
+            siteIndex.insert(it, endpoint);
 
             return;
 

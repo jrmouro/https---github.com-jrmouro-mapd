@@ -60,7 +60,7 @@ public:
     }
     
     virtual bool isAtDeadLevel() const{
-        return 0 >= this->current_level;
+        return 0 > this->current_level;
     }
     
     virtual AES energyState() const {        
@@ -88,7 +88,7 @@ public:
         
         bool pickup_flag = true, delivery_flag = true;
         
-        path.moveList([map, task, moving_value, loaded_value, unloaded_value, carrying_value, charging_value, &pickup_flag, &delivery_flag, &ret](const _stepSite& orig, const _stepSite& dest){
+        path.movingList([map, task, moving_value, loaded_value, unloaded_value, carrying_value, charging_value, &pickup_flag, &delivery_flag, &ret](const _stepSite& orig, const _stepSite& dest){
                                    
             if(pickup_flag && orig.match(task.getPickup())){
                 
@@ -153,7 +153,7 @@ public:
             return false;
             
         });
-        
+                        
         return ret;
         
     }
@@ -165,7 +165,7 @@ public:
         int unloaded_value = regime.get(AER::unloaded);
         int charging_value = regime.get(AER::charging);
         
-        path.moveList([map, charging_value, moving_value, unloaded_value, &ret](const _stepSite& orig, const _stepSite& dest){
+        path.movingList([map, charging_value, moving_value, unloaded_value, &ret](const _stepSite& orig, const _stepSite& dest){
             
             if(map.getType(orig.GetRow(), orig.GetColunm()) == _map::Type::bot){
                 

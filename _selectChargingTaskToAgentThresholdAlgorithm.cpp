@@ -47,20 +47,24 @@ bool _selectChargingTaskToAgentThresholdAlgorithm::solve(
         if (flag) {
 
             selectedTask = task;
+            
+            _stepPath taskPath(selectedPath);
 
             _stepSite pickupSite, deliverySite;
 
-            flag = taskPathToAgentAlgorithm.solve(token, agent, selectedTask, selectedPath, pickupSite, deliverySite);
+            flag = taskPathToAgentAlgorithm.solve(token, agent, selectedTask, taskPath, pickupSite, deliverySite);
 
             if (flag) {
 
                 if (flag) {
 
-                    flag = thresholdAlgorithm.solve(selectedPath, pickupSite.GetStep(), pickup_threshold);
+                    unsigned step = pickupSite.GetStep() - taskPath.currentSite().GetStep();
+
+                    flag = thresholdAlgorithm.solve(taskPath.currentSite(), selectedTask.getPickup(), step, pickup_threshold);
 
                     if (flag) {
 
-                        unsigned step = selectedPath.goalSite().GetStep() - pickupSite.GetStep();
+                        step = taskPath.goalSite().GetStep() - pickupSite.GetStep();
 
                         flag = thresholdAlgorithm.solve(selectedTask.getPickup(), selectedTask.getDelivery(), step, delivery_threshold);
 
@@ -104,42 +108,24 @@ bool _selectChargingTaskToAgentThresholdAlgorithm::solve(
 
                                     flag = taskPathToAgentAlgorithm.getStepPathAlgorithm().solve(token, agent, chargingPath, endpoint);
 
-//                                    if (flag) {
-//
-//                                        flag = token.getStepMap().isPathDefinitelyFree(chargingPath.goalSite());
+                                    if (flag) {
+
+                                        chargingPath.pop();
+                                        _stepPath path(taskPath);
+                                        path.progress(chargingPath);
+
+                                        flag = agent.isAbleToFulfillChargingTaskPath(token.getMap(), selectedTask, path);
 
                                         if (flag) {
 
-                                            chargingPath.pop();
-                                            _stepPath path(selectedPath);
-                                            path.progress(chargingPath);
+                                            path.pop();
+                                            selectedPath.progress(path);
 
-                                            flag = agent.isAbleToFulfillChargingTaskPath(token.getMap(), selectedTask, path);
-
-                                            if (flag) {
-
-                                                selectedPath.progress(chargingPath);
-
-                                                return true;
-
-                                            }
+                                            return true;
 
                                         }
 
-//                                    } 
-                                    
-//                                    else {
-//
-//                                        try {
-//                                            std::ostringstream stream;
-//                                            stream << "unsolved charging endpoint path: " << endpoint;
-//                                            MAPD_EXCEPTION(stream.str());
-//                                        } catch (std::exception& e) {
-//                                            std::cout << e.what() << std::endl;
-//                                            std::abort();
-//                                        }
-//
-//                                    }
+                                    }
 
                                 }
 
@@ -152,20 +138,6 @@ bool _selectChargingTaskToAgentThresholdAlgorithm::solve(
                 }
 
             } 
-            
-//            else {
-//
-//                try {
-//                    std::ostringstream stream;
-//                    stream << "unsolved task path: " << task;
-//                    MAPD_EXCEPTION(stream.str());
-//                } catch (std::exception& e) {
-//                    std::cout << e.what() << std::endl;
-//                    std::abort();
-//                }
-//
-//            }
-
 
         }
 

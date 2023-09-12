@@ -43,10 +43,11 @@ bool _selectChargingTaskToAgentAlgorithm::solve(
         if (flag) {
 
             selectedTask = task;
+            _stepPath taskPath(selectedPath);
 
             _stepSite pickupSite, deliverySite;
 
-            flag = taskPathToAgentAlgorithm.solve(token, agent, selectedTask, selectedPath, pickupSite, deliverySite);
+            flag = taskPathToAgentAlgorithm.solve(token, agent, selectedTask, taskPath, pickupSite, deliverySite);
 
             if (flag) {
 
@@ -88,62 +89,30 @@ bool _selectChargingTaskToAgentAlgorithm::solve(
 
                         flag = taskPathToAgentAlgorithm.getStepPathAlgorithm().solve(token, agent, chargingPath, endpoint);
                         
-//                        if(flag){
-//                            
-//                            flag = token.getStepMap().isPathDefinitelyFree(chargingPath.goalSite());
+                        if (flag) {
+
+                            chargingPath.pop();
+                            _stepPath path(taskPath);
+                            path.progress(chargingPath);
+
+                            flag = agent.isAbleToFulfillChargingTaskPath(token.getMap(), selectedTask, path);
 
                             if (flag) {
 
-                                chargingPath.pop();
-                                _stepPath path(selectedPath);
-                                path.progress(chargingPath);
-                                
-                                flag = agent.isAbleToFulfillChargingTaskPath(token.getMap(), selectedTask, path);
+                                path.pop();
+                                selectedPath.progress(path);
 
-                                if (flag) {
-                                    
-                                    selectedPath.progress(chargingPath);
+                                return true;
 
-                                    return true;
+                            }
 
-                                }
-
-                            } 
-                            
-//                        } 
-                        
-//                        else {
-//
-//                            try {
-//                                std::ostringstream stream;
-//                                stream << "unsolved charging endpoint path: " << endpoint;
-//                                MAPD_EXCEPTION(stream.str());
-//                            } catch (std::exception& e) {
-//                                std::cout << e.what() << std::endl;
-//                                std::abort();
-//                            }
-//
-//                        }
+                        } 
 
                     }
 
                 }            
 
             } 
-            
-//            else {
-//
-//                try {
-//                    std::ostringstream stream;
-//                    stream << "unsolved task path: " << task;
-//                    MAPD_EXCEPTION(stream.str());
-//                } catch (std::exception& e) {
-//                    std::cout << e.what() << std::endl;
-//                    std::abort();
-//                }
-//
-//            }
-
 
         }
 

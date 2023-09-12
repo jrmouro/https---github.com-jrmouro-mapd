@@ -12,6 +12,7 @@
 #include <vector>
 #include "_site.h"
 #include "_stepPath.h"
+#include "MapdException.h"
 
 
 class _stepSite : public _site{
@@ -49,25 +50,49 @@ public:
         return os;
     }
         
-    virtual void listNeighbors(const std::function<bool(const _stepSite& site)> function) const {
-        
-        const unsigned step = this->step + 1;
+    virtual void listNeighbors(const _stepSite& size, const std::function<bool(const _stepSite& site)> function) const {
                 
-        int neighbor_row = (int)this->row - 1;
-        if(neighbor_row > -1){
-            if(function(_stepSite(step, neighbor_row, this->colunm))) return;
-        }
-        if(function(_stepSite(step, this->row + 1, this->colunm))) return;
-
-
-        int neighbor_colunm = (int)this->colunm - 1;
-        if(neighbor_colunm > -1 ){
-            if(function(_stepSite(step, this->row, neighbor_colunm))) return;
-        }
-        if(function(_stepSite(step, this->row, this->colunm + 1))) return;
-
-        function(_stepSite(step, this->row, this->colunm));            
+        const unsigned step = this->step + 1;
         
+        if(step < size.step && this->row < size.row && this->colunm < size.colunm){
+                
+            int neighbor_row = (int)this->row - 1;
+            if(neighbor_row > -1 && neighbor_row < size.row){
+                if(function(_stepSite(step, neighbor_row, this->colunm))) return;
+            }
+            
+            neighbor_row = (int)this->row + 1;
+            if(neighbor_row < size.row){
+                if(function(_stepSite(step, neighbor_row, this->colunm))) return;
+            }
+
+
+            int neighbor_colunm = (int)this->colunm - 1;
+            if(neighbor_colunm > -1 && neighbor_colunm < size.colunm){
+                if(function(_stepSite(step, this->row, neighbor_colunm))) return;
+            }
+            
+            neighbor_colunm = (int)this->colunm + 1;
+            if(neighbor_colunm < size.colunm){
+                if(function(_stepSite(step, this->row, neighbor_colunm))) return;
+            }
+
+            if(this->row < size.row && this->colunm < size.colunm){
+                function(_stepSite(step, this->row, this->colunm));  
+            }
+        
+        } else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "invalid neighbor site";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }        
         
     }
     

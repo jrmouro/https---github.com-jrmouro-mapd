@@ -82,6 +82,8 @@
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f3" displayName="Path" projectFiles="true">
+            <itemPath>_backwardTaskDeliveryEndpointAlgorithm.cpp</itemPath>
+            <itemPath>_backwardTaskDeliveryEndpointAlgorithm.h</itemPath>
             <itemPath>_pathToAgentAlgorithm.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f1" displayName="Select" projectFiles="true">
@@ -360,6 +362,16 @@
       <item path="_astarAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_astarDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_backwardTaskDeliveryEndpointAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_backwardTaskDeliveryEndpointAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="_c_task.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -716,6 +728,16 @@
       <item path="_astarAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_astarDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_backwardTaskDeliveryEndpointAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_backwardTaskDeliveryEndpointAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="_c_task.h" ex="false" tool="3" flavor2="0">
       </item>

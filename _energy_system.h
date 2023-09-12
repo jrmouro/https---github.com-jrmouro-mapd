@@ -44,11 +44,11 @@ public:
     }
     
     bool isAtCriticalLevel()const{
-        return critical_level >= current_level;
+        return critical_level > current_level;
     }
     
     bool isAtChargedLevel()const{
-        return charged_level <= current_level;
+        return charged_level < current_level;
     }
     
     bool isMaximumLevel()const{

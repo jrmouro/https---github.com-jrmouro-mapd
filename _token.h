@@ -195,7 +195,7 @@ public:
             assignTaskAgent.insert(std::pair<unsigned, unsigned>(task.id(), agent.id()));
             assignedTasks.insert(std::pair<unsigned, _task*>(task.id(), it->second));
             
-            pendingTasks.erase(task.id());
+            pendingTasks.erase(it);
             
         } else {
             
@@ -220,7 +220,7 @@ public:
             
             runningTasks.insert(std::pair<unsigned, _task*>(task.id(), it->second));
             
-            assignedTasks.erase(task.id());
+            assignedTasks.erase(it);
             
         } else {
             
@@ -245,7 +245,7 @@ public:
             
             finishedTasks.insert(std::pair<unsigned, _task*>(task.id(), it->second));
             
-            runningTasks.erase(task.id());
+            runningTasks.erase(it);
             
         } else {
             
@@ -371,6 +371,14 @@ public:
     int currentEnergy()const;
     int energyExpenditure()const;
     
+    unsigned getPendingTaskAmount()const{
+        return pendingTasks.size();
+    }
+    
+    unsigned getFinishedTaskAmount()const{
+        return finishedTasks.size();
+    }
+    
     friend std::ostream& operator<<(std::ostream& os, const _token& obj) {
         os << "current step: " << obj.currentStep << std::endl;
         os  << std::endl << "energy: " << obj.currentEnergy() << std::endl;
@@ -395,45 +403,7 @@ public:
     void error_site_collision_check() const;
     void error_edge_collision_check() const;
     
-protected:
-    
-//    virtual _token::TokenUpdateType updateTrivialPathToAgent(_agent& agent, bool energyCheck);
-//    
-//    bool selectChargingEndpointToAgent(const _agent& agent, _site& selectNewSite) const;
-//    
-//    bool selectChargingEndpointPathToAgent(const _agent& agent, _stepPath& chargingPath) const;
-//    bool updateChargingPathToAgent(_agent& agent, bool energyCheck);
-//    
-//    bool selectChargingEndpointPathToAgent(const _agent& agent, _task& conflictTask, _stepPath& chargingPath) const;
-//    bool updateChargingConflictTaskToAgent(_agent& agent, bool energyCheck);
-//    
-//    bool chargingTaskPathToAgent(const _agent& agent, const _task& task, _stepPath& path, unsigned& pickupStep, unsigned& deliveryStep) const;
-//    bool selectNewChargingTaskPathToAgent(const _agent& agent, _task& selectedTask, _stepPath& path, unsigned& pickupStep, unsigned& deliveryStep) const;
-//    
-//    bool updateChargingTaskPathToAgent(_agent& agent, bool energyCheck);
-//            
-//    bool isConflictingSiteWithAnyTaskDelivery(const _site& site, _task& conflitTask) const;
-//    bool selectNewRestEndpointToAgent(const _agent& agent, _site& selectNewSite) const;
-//    bool selectNewRestEndpointPathToAgent(const _agent& agent, _task& conflictTask, _stepPath& restPath) const;
-//    bool updateRestPathToAgent(_agent& agent, bool energyCheck);
-//    
-//    bool selectNewTaskToAgent(const _agent& agent, _task& selectedTask) const;    
-//    
-//    bool taskPathToAgent(const _agent& agent, const _task& task, _stepPath& path, unsigned& pickupStep) const;
-//    bool selectNewTaskPathToAgent(const _agent& agent, _task& selectedTask, _stepPath& path, unsigned& pickupStep) const;
-//    bool selectNewTaskPathToAgentTaskThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
-//    bool selectNewTaskPathToAgentCarryThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
-//    bool selectNewTaskPathToAgentTaskCarryThreshold(const _agent& agent, _task& selectedTask, _stepPath& selectedPath) const;
-//    
-//    bool updateTaskPathToAgent(_agent& agent, bool energyCheck);
-//    bool updateTaskPathToAgentTaskThreshold(_agent& agent, bool energyCheck);
-//    bool updateTaskPathToAgentCarryThreshold(_agent& agent, bool energyCheck);
-//    bool updateTaskPathToAgentTaskCarryThreshold(_agent& agent, bool energyCheck);
-//        
-//    
-//    bool selectNewTaskOrCtaskPathToAgent(const _agent& agent, _task& origTask, _c_task& firstC_task, _c_task& secondC_task, _stepPath& path, _stepPath& c_path, bool& c_taskFlag) const;
-//    bool updateTaskOrCtaskPathToAgent(_agent& agent, bool energyCheck);
-    
+
 private:
     
     friend class _system;
@@ -447,8 +417,10 @@ private:
         this->reportTaskMap.addTask(task, currentStep);
         
         this->taskDeliveryEndpoints.insert(std::pair<unsigned, _site>(task.getDelivery().linearIndex(map.getColumn_size()), task.getDelivery()));  
+//        this->taskDeliveryEndpoints.insert(std::pair<unsigned, _site>(task.getPickup().linearIndex(map.getColumn_size()), task.getPickup()));
         
-        this->nonTaskDeliveryEndpoints.erase(task.getDelivery().linearIndex(map.getColumn_size()));        
+        this->nonTaskDeliveryEndpoints.erase(task.getDelivery().linearIndex(map.getColumn_size()));    
+//        this->nonTaskDeliveryEndpoints.erase(task.getPickup().linearIndex(map.getColumn_size()));
     }
     
     void stepping() {        

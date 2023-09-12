@@ -55,6 +55,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_agent_parked.o \
 	${OBJECTDIR}/_agent_parken_CL.o \
 	${OBJECTDIR}/_agent_state.o \
+	${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm.o \
 	${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o \
 	${OBJECTDIR}/_closerTaskIndexerAlgorithm.o \
 	${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o \
@@ -212,6 +213,11 @@ ${OBJECTDIR}/_agent_state.o: _agent_state.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_state.o _agent_state.cpp
+
+${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm.o: _backwardTaskDeliveryEndpointAlgorithm.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm.o _backwardTaskDeliveryEndpointAlgorithm.cpp
 
 ${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o: _closerEndpointIndexerAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -599,6 +605,19 @@ ${OBJECTDIR}/_agent_state_nomain.o: ${OBJECTDIR}/_agent_state.o _agent_state.cpp
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_state_nomain.o _agent_state.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_state.o ${OBJECTDIR}/_agent_state_nomain.o;\
+	fi
+
+${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm_nomain.o: ${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm.o _backwardTaskDeliveryEndpointAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm_nomain.o _backwardTaskDeliveryEndpointAlgorithm.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm.o ${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_closerEndpointIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o _closerEndpointIndexerAlgorithm.cpp 

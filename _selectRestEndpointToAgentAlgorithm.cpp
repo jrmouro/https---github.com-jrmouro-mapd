@@ -26,20 +26,6 @@ bool _selectRestEndpointToAgentAlgorithm::solve(
 
             flag = true;
 
-//            token.listPendingTasks([endpoint, &flag](const _task & task) {
-//
-//                if (task.getDelivery().match(endpoint)) {
-//
-//                    flag = false;
-//
-//                    return true;
-//
-//                }
-//
-//                return false;
-//
-//            });
-
             if (flag) {
 
                 token.listAgents([endpoint, agent, &flag](_agent & otherAgent) {
@@ -61,37 +47,25 @@ bool _selectRestEndpointToAgentAlgorithm::solve(
             if (flag) {
 
                 selectedNewSite = endpoint;
+                
+                _stepPath restPath(selectedPath);
 
-                flag = pathToAgentAlgorithm.solve(token, agent, selectedNewSite, selectedPath);
-                                
-//                if (flag) {
-//                    
-//                    flag = token.getStepMap().isPathDefinitelyFree(selectedPath.goalSite());
+                flag = pathToAgentAlgorithm.solve(token, agent, selectedNewSite, restPath);
 
-                    if(flag){
+                if(flag){
 
-                        flag = agent.isAbleToFulfillNoCarryngPath(token.getMap(), selectedPath);
+                    flag = agent.isAbleToFulfillNoCarryngPath(token.getMap(), restPath);
 
-                        if (flag) {
+                    if (flag) {
+                        
+                        restPath.pop();
+                        selectedPath.progress(restPath);
 
-                            return true;
+                        return true;
 
-                        }
-                    
                     }
 
-//                } else {
-//
-//                    try {
-//                        std::ostringstream stream;
-//                        stream << "unsolved endpoint path: " << endpoint;
-//                        MAPD_EXCEPTION(stream.str());
-//                    } catch (std::exception& e) {
-//                        std::cout << e.what() << std::endl;
-//                        std::abort();
-//                    }
-//
-//                }
+                }
 
             }
 
