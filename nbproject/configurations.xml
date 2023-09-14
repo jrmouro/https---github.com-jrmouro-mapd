@@ -82,11 +82,13 @@
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f3" displayName="Path" projectFiles="true">
-            <itemPath>_backwardTaskDeliveryEndpointAlgorithm.cpp</itemPath>
-            <itemPath>_backwardTaskDeliveryEndpointAlgorithm.h</itemPath>
             <itemPath>_pathToAgentAlgorithm.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f1" displayName="Select" projectFiles="true">
+            <itemPath>_selectBackwardChargingTaskToAgentAlgorithm.cpp</itemPath>
+            <itemPath>_selectBackwardChargingTaskToAgentAlgorithm.h</itemPath>
+            <itemPath>_selectBackwardTaskToAgentAlgorithm.cpp</itemPath>
+            <itemPath>_selectBackwardTaskToAgentAlgorithm.h</itemPath>
             <itemPath>_selectChargingEndpointToAgentAlgorithm.cpp</itemPath>
             <itemPath>_selectChargingEndpointToAgentAlgorithm.h</itemPath>
             <itemPath>_selectChargingTaskToAgentAlgorithm.cpp</itemPath>
@@ -107,10 +109,14 @@
             <itemPath>_taskPathToAgentAlgorithm.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="Update" projectFiles="true">
+            <itemPath>_updateBackwardTaskToAgentAlgorithm.cpp</itemPath>
+            <itemPath>_updateBackwardTaskToAgentAlgorithm.h</itemPath>
             <itemPath>_updateEndpointToAgentAlgorithm.cpp</itemPath>
             <itemPath>_updateEndpointToAgentAlgorithm.h</itemPath>
             <itemPath>_updateTaskToAgentAlgorithm.cpp</itemPath>
             <itemPath>_updateTaskToAgentAlgorithm.h</itemPath>
+            <itemPath>_updateToAgentAlgorithm.cpp</itemPath>
+            <itemPath>_updateToAgentAlgorithm.h</itemPath>
             <itemPath>_updateTrivialPathToAgentAlgorithm.cpp</itemPath>
             <itemPath>_updateTrivialPathToAgentAlgorithm.h</itemPath>
           </logicalFolder>
@@ -174,7 +180,7 @@
         <itemPath>_taskMap.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="Token" projectFiles="true">
-        <itemPath>CarryThresholdToken.h</itemPath>
+        <itemPath>BackwardTaskToken.h</itemPath>
         <itemPath>ThresholdTokenPass.h</itemPath>
         <itemPath>TokenPass.h</itemPath>
         <itemPath>_token.cpp</itemPath>
@@ -237,7 +243,7 @@
       </compileType>
       <item path="AstarExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CarryThresholdToken.h" ex="false" tool="3" flavor2="0">
+      <item path="BackwardTaskToken.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -363,16 +369,6 @@
       </item>
       <item path="_astarDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_backwardTaskDeliveryEndpointAlgorithm.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="_backwardTaskDeliveryEndpointAlgorithm.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="_c_task.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_closerEndpointIndexerAlgorithm.cpp"
@@ -417,6 +413,26 @@
       <item path="_pathAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_pathToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_selectBackwardChargingTaskToAgentAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_selectBackwardChargingTaskToAgentAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="_selectBackwardTaskToAgentAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_selectBackwardTaskToAgentAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="_selectChargingEndpointToAgentAlgorithm.cpp"
             ex="false"
@@ -518,6 +534,16 @@
       </item>
       <item path="_trivialPathAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_updateBackwardTaskToAgentAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_updateBackwardTaskToAgentAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="_updateEndpointToAgentAlgorithm.cpp"
             ex="false"
             tool="1"
@@ -528,6 +554,10 @@
       <item path="_updateTaskToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_updateTaskToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_updateToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_updateToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_updateTokenAlgorithms.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -603,7 +633,7 @@
       </compileType>
       <item path="AstarExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CarryThresholdToken.h" ex="false" tool="3" flavor2="0">
+      <item path="BackwardTaskToken.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -729,16 +759,6 @@
       </item>
       <item path="_astarDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_backwardTaskDeliveryEndpointAlgorithm.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="_backwardTaskDeliveryEndpointAlgorithm.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="_c_task.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_closerEndpointIndexerAlgorithm.cpp"
@@ -783,6 +803,26 @@
       <item path="_pathAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_pathToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_selectBackwardChargingTaskToAgentAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_selectBackwardChargingTaskToAgentAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="_selectBackwardTaskToAgentAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_selectBackwardTaskToAgentAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="_selectChargingEndpointToAgentAlgorithm.cpp"
             ex="false"
@@ -884,6 +924,16 @@
       </item>
       <item path="_trivialPathAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_updateBackwardTaskToAgentAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_updateBackwardTaskToAgentAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="_updateEndpointToAgentAlgorithm.cpp"
             ex="false"
             tool="1"
@@ -894,6 +944,10 @@
       <item path="_updateTaskToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_updateTaskToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_updateToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_updateToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_updateTokenAlgorithms.cpp" ex="false" tool="1" flavor2="0">
       </item>

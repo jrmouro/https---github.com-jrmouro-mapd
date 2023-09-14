@@ -31,7 +31,7 @@ void _agent_charging::onUpdatePath(_token& token, _agent& agent) const{
         
         case AES::charged:
                         
-            tut = token.updatePath(agent, true);
+            tut = token.updatePath(agent);
     
             switch(tut){
 
@@ -94,7 +94,7 @@ void _agent_charging::onUpdatePath(_token& token, _agent& agent) const{
                 
         default:   
     
-            tut = token.updateTrivialPathToAgent(agent, true);
+            tut = token.updateTrivialPathToAgent(agent);
 
             if(tut != _token::TokenUpdateType::trivial){
 

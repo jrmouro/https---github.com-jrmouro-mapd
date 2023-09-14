@@ -8,15 +8,18 @@ build/Debug/GNU-Linux/main.o: main.cpp MultiSystemExperiment.h \
  _astarDistanceAlgorithm.h _path.h _astarAlgorithm.h _pathAlgorithm.h \
  _stepAstarAlgorithm.h _stepPathAlgorithm.h ReportTaskMap.h \
  ThresholdTokenPass.h _updateTokenAlgorithms.h \
- _updateTrivialPathToAgentAlgorithm.h \
+ _updateTrivialPathToAgentAlgorithm.h _updateToAgentAlgorithm.h \
  _selectTrivialPathToAgentAlgorithm.h _taskPathToAgentAlgorithm.h \
  _taskIndexerAlgorithm.h _endpointIndexerAlgorithm.h \
  _updateTaskToAgentAlgorithm.h _updateEndpointToAgentAlgorithm.h \
  _selectEndpointToAgentAlgorithm.h \
  _selectChargingTaskToAgentThresholdAlgorithm.h \
  _selectTaskToAgentThresholdAlgorithm.h _selectTaskToAgentAlgorithm.h \
+ _selectBackwardTaskToAgentAlgorithm.h \
+ _selectBackwardChargingTaskToAgentAlgorithm.h \
+ _updateBackwardTaskToAgentAlgorithm.h \
  _closerTaskIndexerThresholdAlgorithm.h _closerTaskIndexerAlgorithm.h \
- TokenPass.h CarryThresholdToken.h Text.h Shape.h
+ TokenPass.h BackwardTaskToken.h Text.h Shape.h
 
 MultiSystemExperiment.h:
 
@@ -100,6 +103,8 @@ _updateTokenAlgorithms.h:
 
 _updateTrivialPathToAgentAlgorithm.h:
 
+_updateToAgentAlgorithm.h:
+
 _selectTrivialPathToAgentAlgorithm.h:
 
 _taskPathToAgentAlgorithm.h:
@@ -120,13 +125,19 @@ _selectTaskToAgentThresholdAlgorithm.h:
 
 _selectTaskToAgentAlgorithm.h:
 
+_selectBackwardTaskToAgentAlgorithm.h:
+
+_selectBackwardChargingTaskToAgentAlgorithm.h:
+
+_updateBackwardTaskToAgentAlgorithm.h:
+
 _closerTaskIndexerThresholdAlgorithm.h:
 
 _closerTaskIndexerAlgorithm.h:
 
 TokenPass.h:
 
-CarryThresholdToken.h:
+BackwardTaskToken.h:
 
 Text.h:
 

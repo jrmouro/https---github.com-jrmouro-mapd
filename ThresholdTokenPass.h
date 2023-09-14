@@ -49,7 +49,7 @@ public:
         
     }
     
-    virtual _token::TokenUpdateType updatePath(_agent& agent, bool energyCheck){
+    virtual _token::TokenUpdateType updatePath(_agent& agent){
         
         _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
         
@@ -110,9 +110,11 @@ public:
 
     }
     
-    virtual _token::TokenUpdateType updateChargingPath(_agent& agent, bool energyCheck){
+    virtual _token::TokenUpdateType updateChargingPath(_agent& agent){
         
-        auto uta = _updateTokenAlgorithms::getInstance(pickup_threshold, delivery_threshold);
+        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
+        
+        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerThresholdAlgorithm, pickup_threshold, delivery_threshold);
         
         TokenUpdateType ret = TokenUpdateType::none;
     

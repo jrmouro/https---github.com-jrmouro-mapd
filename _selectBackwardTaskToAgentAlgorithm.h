@@ -1,67 +1,58 @@
 /* 
- * File:   _bacwardTaskDeliveryEndpointAlgorithm.h
+ * File:   _selectBackwardTaskToAgentAlgorithm.h
  * Author: ronaldo
  *
  * Created on 12 de setembro de 2023, 10:00
  */
 
-#ifndef _BACKWARDTASKDELIVERYENDPOINTALGORITHM_H
-#define _BACKWARDTASKDELIVERYENDPOINTALGORITHM_H
+#ifndef _SELECTBACKWARDTASKTOAGENTALGORITHM_H
+#define _SELECTBACKWARDTASKTOAGENTALGORITHM_H
 
-#include <functional>
 #include "_token.h"
 #include "_site.h"
 #include "_stepPath.h"
 
-class _backwardTaskDeliveryEndpointAlgorithm {
+class _token;
+class _agent;
+class _task;
+class _stepPath;
+class _taskPathToAgentAlgorithm;
+class _taskIndexerAlgorithm;
+
+class _selectBackwardTaskToAgentAlgorithm{
     
 public:
     
-    _backwardTaskDeliveryEndpointAlgorithm(float delivery_threshold) :
-    delivery_threshold(delivery_threshold) { }
+    _selectBackwardTaskToAgentAlgorithm(    
+        const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm, 
+        _taskIndexerAlgorithm& taskIndexerAlgorithm,
+        float delivery_threshold);
+
+    _selectBackwardTaskToAgentAlgorithm(const _selectBackwardTaskToAgentAlgorithm& other);
     
-    _backwardTaskDeliveryEndpointAlgorithm(const _backwardTaskDeliveryEndpointAlgorithm& other) :
-    delivery_threshold(other.delivery_threshold) { }
-
-    virtual bool solve(const _token& token, const _stepSite& pickup, const _stepPath& taskPath, _site& endpoint) const {
-        
-        _thresholdAlgorithm thresholdAlgorithm(token.getEndpointsDistanceAlgorithm());
-        
-        bool ret = false;
-        
-        taskPath.backward([&ret, token, pickup, &endpoint](const _stepSite& site){
-            
-            if(site.step_match(pickup)) return true;
-            
-            if(token.isTaskDeliveryEndpoint(site)){
+    virtual ~_selectBackwardTaskToAgentAlgorithm(){}
+    
+    virtual bool solve(
+        const _token& token, 
+        const _agent& agent, 
+        _task& originalTask, 
+        _task& selectedTask, 
+        _task& pendingTask,
+        _stepPath& selectedPath) const;
                 
-                unsigned step = site.GetStep() - pickup.GetStep();
-
-                ret = thresholdAlgorithm.solve(pickup, site, step, delivery_threshold);
-
-                if (ret) {
-
-                    endpoint = site;
-
-                    return true;
-
-                }
-                    
-            }
-                            
-            return false;
-            
-        });
-        
-        return ret;
-        
+    
+    void setTaskIndexerAlgorithm(_taskIndexerAlgorithm& taskIndexerAlgorithm);
+    
+    void setDelivery_threshold(float delivery_threshold) {
+        this->delivery_threshold = delivery_threshold;
     }
     
-private:
-    
-    float   delivery_threshold = .0f;
+protected:
+    float   delivery_threshold;
+    const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm;
+    _taskIndexerAlgorithm& taskIndexerAlgorithm;
     
 };
 
-#endif /* _BACKWARDTASKDELIVERYENDPOINTALGORITHM_H */
+#endif /* _SELECTBACKWARDTASKTOAGENTALGORITHM_H */
 

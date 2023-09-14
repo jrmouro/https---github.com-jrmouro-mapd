@@ -18,6 +18,9 @@
 #include "_selectChargingTaskToAgentThresholdAlgorithm.h"
 #include "_selectTaskToAgentThresholdAlgorithm.h"
 #include "_selectTaskToAgentAlgorithm.h"
+#include "_selectBackwardTaskToAgentAlgorithm.h"
+#include "_selectBackwardChargingTaskToAgentAlgorithm.h"
+#include "_updateBackwardTaskToAgentAlgorithm.h"
 
 class _pathToAgentAlgorithm;
 class _taskPathToAgentAlgorithm;
@@ -25,6 +28,7 @@ class _selectChargingTaskToAgentAlgorithm;
 class _selectEndpointToAgentAlgorithm;
 class _selectEndpointToAgentAlgorithm;
 class _updateEndpointToAgentAlgorithm;
+class _updateToAgentAlgorithm;
 
 class _updateTokenAlgorithms {
 public:
@@ -44,6 +48,9 @@ public:
         
         instance->selectChargingTaskToAgentThresholdAlgorithm->setDelivery_threshold(delivery_threshold);
         instance->selectChargingTaskToAgentThresholdAlgorithm->setPickup_threshold(pickup_threshold);
+        
+        instance->selectBackwardTaskToAgentAlgorithm->setDelivery_threshold(delivery_threshold);
+        instance->selectBackwardChargingTaskToAgentAlgorithm->setDelivery_threshold(delivery_threshold);
                         
         return instance;
         
@@ -65,6 +72,9 @@ public:
         
         instance->selectChargingTaskToAgentThresholdAlgorithm->setDelivery_threshold(delivery_threshold);
         instance->selectChargingTaskToAgentThresholdAlgorithm->setPickup_threshold(pickup_threshold);
+        
+        instance->selectBackwardTaskToAgentAlgorithm->setDelivery_threshold(delivery_threshold);
+        instance->selectBackwardChargingTaskToAgentAlgorithm->setDelivery_threshold(delivery_threshold);
                         
         return instance;
         
@@ -83,16 +93,19 @@ public:
     
     virtual ~_updateTokenAlgorithms();
     
-    const _updateTrivialPathToAgentAlgorithm& getUpdateTrivialPathToAgentAlgorithm() const;    
+    const _updateToAgentAlgorithm& getUpdateTrivialPathToAgentAlgorithm() const;    
     
-    const _updateEndpointToAgentAlgorithm& getUpdateRestEndpointToAgentAlgorithm() const;
-    const _updateEndpointToAgentAlgorithm& getUpdateChargingEndpointToAgentAlgorithm() const;
+    const _updateToAgentAlgorithm& getUpdateRestEndpointToAgentAlgorithm() const;
+    const _updateToAgentAlgorithm& getUpdateChargingEndpointToAgentAlgorithm() const;
     
-    const _updateTaskToAgentAlgorithm& getUpdateTaskToAgentAlgorithm() const;    
-    const _updateTaskToAgentAlgorithm& getUpdateChargingTaskToAgentAlgorithm() const;
+    const _updateToAgentAlgorithm& getUpdateTaskToAgentAlgorithm() const;    
+    const _updateToAgentAlgorithm& getUpdateChargingTaskToAgentAlgorithm() const;
     
-    const _updateTaskToAgentAlgorithm& getUpdateTaskToAgentThresholdAlgorithm() const;    
-    const _updateTaskToAgentAlgorithm& getUpdateChargingTaskToAgentThresholdAlgorithm() const;
+    const _updateToAgentAlgorithm& getUpdateTaskToAgentThresholdAlgorithm() const;    
+    const _updateToAgentAlgorithm& getUpdateChargingTaskToAgentThresholdAlgorithm() const;
+    
+    const _updateToAgentAlgorithm& getUpdateBackwardTaskToAgentAlgorithm() const;
+    const _updateToAgentAlgorithm& getUpdateBackwardChargingTaskToAgentAlgorithm() const;
     
 
 private:
@@ -124,22 +137,24 @@ private:
     _selectTaskToAgentThresholdAlgorithm* selectTaskToAgentThresholdAlgorithm;    
     _selectChargingTaskToAgentThresholdAlgorithm* selectChargingTaskToAgentThresholdAlgorithm;
     
+    _selectBackwardTaskToAgentAlgorithm* selectBackwardTaskToAgentAlgorithm;
+    _selectBackwardChargingTaskToAgentAlgorithm* selectBackwardChargingTaskToAgentAlgorithm;
+    
     _selectEndpointToAgentAlgorithm
             * selectRestEndpointToAgentAlgorithm,
             * selectChargingEndpointToAgentAlgorithm;
     
     
-    _updateTrivialPathToAgentAlgorithm* updateTrivialPathToAgentAlgorithm;  
-    
-    _updateTaskToAgentAlgorithm
+    _updateToAgentAlgorithm
+            * updateTrivialPathToAgentAlgorithm,
             *updateTaskToAgentAlgorithm, 
             *updateChargingTaskToAgentAlgorithm, 
             *updateTaskToAgentThresholdAlgorithm,
-            *updateChargingTaskToAgentThresholdAlgorithm;
-    
-    _updateEndpointToAgentAlgorithm
+            *updateChargingTaskToAgentThresholdAlgorithm,
             * updateRestEndpointToAgentAlgorithm,
-            * updateChargingEndpointToAgentAlgorithm;
+            * updateChargingEndpointToAgentAlgorithm, 
+            *updateBackwardTaskToAgentAlgorithm,
+            *updateBackwardChargingTaskToAgentAlgorithm;
     
     
 };

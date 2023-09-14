@@ -18,7 +18,7 @@ public:
     enum PathType{
         task,
         rest,
-        c_task,
+        backward_task,
         charging
     };
 
@@ -53,7 +53,7 @@ public:
             case PathType::rest:
                 restMap.insert(std::pair<unsigned, _stepPath>(agent.id(), path));
                 break;
-            case PathType::c_task:
+            case PathType::backward_task:
                 c_taskMap.insert(std::pair<unsigned, _stepPath>(agent.id(), path));
                 break;
             case PathType::charging:
@@ -154,7 +154,7 @@ public:
                     
                     pair.second.backward([pair, function, &flag](const _stepSite& site){
                 
-                        flag = function(pair.first, PathType::c_task, site);
+                        flag = function(pair.first, PathType::backward_task, site);
 
                         return flag;
 

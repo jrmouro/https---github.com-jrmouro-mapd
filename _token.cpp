@@ -134,7 +134,7 @@ void _token::draw(const Render& render) const {
 
 }
 
-_token::TokenUpdateType _token::updateTrivialPathToAgent(_agent& agent, bool energyCheck) {
+_token::TokenUpdateType _token::updateTrivialPathToAgent(_agent& agent) {
 
     auto uta = _updateTokenAlgorithms::getInstance();
 
@@ -163,7 +163,7 @@ _token::TokenUpdateType _token::updateTrivialPathToAgent(_agent& agent, bool ene
 
 }
 
-_token::TokenUpdateType _token::updateChargingTrivialPathToAgent(_agent& agent, bool energyCheck) {
+_token::TokenUpdateType _token::updateChargingTrivialPathToAgent(_agent& agent) {
 
     auto uta = _updateTokenAlgorithms::getInstance();
 

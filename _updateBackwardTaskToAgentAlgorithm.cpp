@@ -1,58 +1,85 @@
 /* 
- * File:   _updateCloserTaskToAgentAlgorithm.cpp
+ * File:   _updateBackwardTaskToAgentAlgorithm.cpp
  * Author: ronaldo
  * 
  * Created on 6 de setembro de 2023, 18:40
  */
 
-#include "_updateTaskToAgentAlgorithm.h"
+#include "_updateBackwardTaskToAgentAlgorithm.h"
 #include "ReportTask.h"
 #include "_token.h"
 #include "_taskIndexerAlgorithm.h"
 #include "_selectTaskToAgentAlgorithm.h"
+#include "_selectBackwardTaskToAgentAlgorithm.h"
 
-_updateTaskToAgentAlgorithm::_updateTaskToAgentAlgorithm(
-        _selectTaskToAgentAlgorithm& selectTaskToAgentAlgorithm) :
-                selectTaskToAgentAlgorithm(selectTaskToAgentAlgorithm) {}
+_updateBackwardTaskToAgentAlgorithm::_updateBackwardTaskToAgentAlgorithm(
+        _selectBackwardTaskToAgentAlgorithm& selectBackwardTaskToAgentAlgorithm) :
+                selectBackwardTaskToAgentAlgorithm(selectBackwardTaskToAgentAlgorithm) {}
 
-_updateTaskToAgentAlgorithm::_updateTaskToAgentAlgorithm(
-        const _updateTaskToAgentAlgorithm& orig) :
-                selectTaskToAgentAlgorithm(orig.selectTaskToAgentAlgorithm) {}
+_updateBackwardTaskToAgentAlgorithm::_updateBackwardTaskToAgentAlgorithm(
+        const _updateBackwardTaskToAgentAlgorithm& orig) :
+                selectBackwardTaskToAgentAlgorithm(orig.selectBackwardTaskToAgentAlgorithm) {}
 
-void _updateTaskToAgentAlgorithm::setTaskIndexerAlgorithm(
+void _updateBackwardTaskToAgentAlgorithm::setTaskIndexerAlgorithm(
         _taskIndexerAlgorithm& taskIndexerAlgorithm) {
     
-    selectTaskToAgentAlgorithm.setTaskIndexerAlgorithm(taskIndexerAlgorithm);
+    selectBackwardTaskToAgentAlgorithm.setTaskIndexerAlgorithm(taskIndexerAlgorithm);
     
 }
 
-bool _updateTaskToAgentAlgorithm::solve(
+bool _updateBackwardTaskToAgentAlgorithm::solve(
         _token& token,
         _agent& agent) const {
 
     if (agent.isInFinishedPath()) {
 
-        _task task;
-        _stepPath taskPath(agent.currentSite());
+        _task originalTask, selectedTask(token.getOneTaskId()), pendingTask(token.getOneTaskId());
+        _stepPath selectedPath(agent.currentSite());
 
-        bool flag = selectTaskToAgentAlgorithm.solve(
+        bool flag = selectBackwardTaskToAgentAlgorithm.solve(
                 token,
                 agent,
-                task,
-                taskPath);
+                originalTask,
+                selectedTask,
+                pendingTask,
+                selectedPath);
 
         if (flag) {
-
-            token.assignTask(task, agent);
-            token.reportTaskUpdate(agent, task, ReportTask::PathType::task, taskPath);
-
-            agent.assignTask(task, taskPath);
-            token.setMoving(agent, taskPath);
+            
+            bool orig = originalTask.getDelivery().match(selectedTask.getDelivery());
+            
+            token.assignTask(originalTask, agent);
+                        
+            if(orig){
+                
+                token.reportTaskUpdate(agent, originalTask, ReportTask::PathType::task, selectedPath);
+                agent.assignTask(originalTask, selectedPath);  
+                
+                token.giveBackOneTaskId();
+                token.giveBackOneTaskId();
+                
+            } else {
+                
+                token.runTask(originalTask);
+                token.finishTask(originalTask);
+                
+                token.addPendingTask(selectedTask);               
+                token.assignTask(selectedTask, agent);
+                token.reportTaskUpdate(agent, selectedTask, ReportTask::PathType::backward_task, selectedPath);                
+                agent.assignTask(selectedTask, selectedPath);
+                
+                token.addBackwardTask(selectedPath.size(), pendingTask);               
+                
+            }
+            
+            token.setMoving(agent, selectedPath);
 
             if (agent.isInFinishedPath()) {
+                
+                auto agentTask = agent.currentTask();
 
-                token.runTask(task);
-                token.finishTask(task);
+                token.runTask(agentTask);
+                token.finishTask(agentTask);
 
                 return false;
 
@@ -60,6 +87,11 @@ bool _updateTaskToAgentAlgorithm::solve(
 
             return true;
 
+        } else {
+            
+            token.giveBackOneTaskId();
+            token.giveBackOneTaskId();
+            
         }
 
     } else {

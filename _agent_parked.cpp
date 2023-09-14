@@ -22,7 +22,7 @@ _agent_state* _agent_parked::_instance = nullptr;
 
 void _agent_parked::onUpdatePath(_token& token, _agent& agent) const {
         
-    _token::TokenUpdateType tut = token.updatePath(agent, true);
+    _token::TokenUpdateType tut = token.updatePath(agent);
     
     switch(tut){
         

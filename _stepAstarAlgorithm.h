@@ -42,7 +42,7 @@ public:
                   
             if(solved != nullptr){
                 
-                bool flag = map.isPathDefinitelyFree(solved->getSite().nextSite());
+                bool flag = map.isPathDefinitelyFree(solved->getSite(), type);
                 
                 if(flag){
 

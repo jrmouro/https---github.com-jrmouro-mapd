@@ -388,19 +388,19 @@ public:
 
     }
     
-    bool isPathDefinitelyFree(unsigned step, unsigned row, unsigned column) const {
+    bool isPathDefinitelyFree(unsigned step, unsigned row, unsigned column, int type) const {
                 
         if (row < row_size && column < colunm_size){
             
             for (int s = step; s < this->step_size; s++){
                 
                 int t = this->nodes[s * nodes_product + row * colunm_size + column];
-                if(t != NodeType::freeNode){
+                
+                if(t != NodeType::freeNode && t != type){
                     
                     return false;
                     
-                }
-                    
+                }                    
                 
             }
             
@@ -410,9 +410,9 @@ public:
         
     }
     
-    bool isPathDefinitelyFree(const _stepSite& site) const {
+    bool isPathDefinitelyFree(const _stepSite& site, int type) const {
         
-        return isPathDefinitelyFree(site.GetStep(), site.GetRow(), site.GetColunm());
+        return isPathDefinitelyFree(site.GetStep(), site.GetRow(), site.GetColunm(), type);
         
     }
     

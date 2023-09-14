@@ -38,57 +38,19 @@ public:
 
         if (flag) {                       
                 
-//            flag = token.getStepMap().isPathDefinitelyFree(path.goalSite());
-//
-//            if (flag) {
+            pickupSite = path.goalSite();
 
-                pickupSite = path.goalSite();
+            flag = stepPathAlgorithm.solve(token, agent, path, task.getDelivery());
 
-                flag = stepPathAlgorithm.solve(token, agent, path, task.getDelivery());
+            if(flag){
 
-//                if (flag) {
-//                    
-//                    flag = token.getStepMap().isPathDefinitelyFree(path.goalSite());
-                    
-                    if(flag){
+                deliverySite = path.goalSite();
 
-                        deliverySite = path.goalSite();
+                return true;
 
-                        return true;
-                    
-                    }
-
-//                } 
-                
-//                else {
-//
-//                    try {
-//                        std::ostringstream stream;
-//                        stream << "unsolved task delivery endpoint path: " << task;
-//                        MAPD_EXCEPTION(stream.str());
-//                    } catch (std::exception& e) {
-//                        std::cout << e.what() << std::endl;
-//                        std::abort();
-//                    }
-//
-//                }
-
-//            }
+            }
 
         } 
-        
-//        else {
-//
-//            try {
-//                std::ostringstream stream;
-//                stream << "unsolved task pickup endpoint path: " << task;
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            }
-//
-//        }
 
         return false;
         

@@ -8,6 +8,7 @@
 #ifndef MULTISYSTEMEXPERIMENT_H
 #define MULTISYSTEMEXPERIMENT_H
 
+#include <set>
 #include "SystemExperiment.h"
 
 
@@ -55,15 +56,34 @@ public:
     
     virtual void run(){
         
+        std::set<float> delivery_threshold_set;
+        
         std::ofstream ofs (resultFilename, std::ofstream::out);
         
         bool headerFlag = true;
         
         for (auto tokenType : tokenTypes) {
             
-            if(tokenType == _system::TokenType::threshold_tokenPass){
-                
+            if( tokenType == _system::TokenType::threshold_tokenPass ||
+                tokenType == _system::TokenType::backwardTask_tokenPass){
+                                                
                 for (auto tpair : thresholds) {
+                    
+                    std::set<float>::iterator it = delivery_threshold_set.find(tpair.second);
+                    
+                    if(tokenType == _system::TokenType::backwardTask_tokenPass){
+                    
+                        if(it != delivery_threshold_set.end()){
+
+                            continue;
+
+                        } else {
+
+                            delivery_threshold_set.insert(tpair.second);
+
+                        }
+                    
+                    }
                     
                     for (auto mapFilename : mapFilenames) {
                 

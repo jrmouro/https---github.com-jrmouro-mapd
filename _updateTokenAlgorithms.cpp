@@ -67,6 +67,17 @@ endpointIndexerAlgorithm(new _closerEndpointIndexerAlgorithm()) {
             *endpointIndexerAlgorithm,
             pickup_threshold,
             delivery_threshold);
+    
+    selectBackwardTaskToAgentAlgorithm = new _selectBackwardTaskToAgentAlgorithm(
+            *taskPathToAgentAlgorithm, 
+            *taskIndexerAlgorithm, 
+            delivery_threshold);
+    
+    selectBackwardChargingTaskToAgentAlgorithm = new _selectBackwardChargingTaskToAgentAlgorithm(
+            *taskPathToAgentAlgorithm, 
+            *taskIndexerAlgorithm, 
+            *endpointIndexerAlgorithm,
+            delivery_threshold);
 
     updateTaskToAgentAlgorithm = new _updateTaskToAgentAlgorithm(
             *selectTaskToAgentAlgorithm);
@@ -85,6 +96,12 @@ endpointIndexerAlgorithm(new _closerEndpointIndexerAlgorithm()) {
 
     updateChargingEndpointToAgentAlgorithm = new _updateEndpointToAgentAlgorithm(
             *selectChargingEndpointToAgentAlgorithm);
+    
+    updateBackwardTaskToAgentAlgorithm = new _updateBackwardTaskToAgentAlgorithm(
+            *selectBackwardTaskToAgentAlgorithm);
+    
+    updateBackwardChargingTaskToAgentAlgorithm = new _updateBackwardTaskToAgentAlgorithm(
+            *selectBackwardChargingTaskToAgentAlgorithm);
 
     
 }
@@ -106,6 +123,9 @@ _updateTokenAlgorithms::~_updateTokenAlgorithms() {
     delete selectTaskToAgentThresholdAlgorithm;    
     delete selectChargingTaskToAgentThresholdAlgorithm;    
     
+    delete selectBackwardTaskToAgentAlgorithm;
+    delete selectBackwardChargingTaskToAgentAlgorithm;
+    
     
     delete updateTaskToAgentAlgorithm;
     delete updateChargingTaskToAgentAlgorithm;
@@ -113,33 +133,43 @@ _updateTokenAlgorithms::~_updateTokenAlgorithms() {
     delete updateChargingEndpointToAgentAlgorithm;
     delete updateTaskToAgentThresholdAlgorithm;
     delete updateChargingTaskToAgentThresholdAlgorithm;
+    delete updateBackwardTaskToAgentAlgorithm;
+    delete updateBackwardChargingTaskToAgentAlgorithm;
 
 }
 
-const _updateTrivialPathToAgentAlgorithm& _updateTokenAlgorithms::getUpdateTrivialPathToAgentAlgorithm() const {
+const _updateToAgentAlgorithm& _updateTokenAlgorithms::getUpdateTrivialPathToAgentAlgorithm() const {
     return *updateTrivialPathToAgentAlgorithm;
 }
 
-const _updateEndpointToAgentAlgorithm& _updateTokenAlgorithms::getUpdateRestEndpointToAgentAlgorithm() const {
+const _updateToAgentAlgorithm& _updateTokenAlgorithms::getUpdateRestEndpointToAgentAlgorithm() const {
     return *updateRestEndpointToAgentAlgorithm;
 }
 
-const _updateEndpointToAgentAlgorithm& _updateTokenAlgorithms::getUpdateChargingEndpointToAgentAlgorithm() const {
+const _updateToAgentAlgorithm& _updateTokenAlgorithms::getUpdateChargingEndpointToAgentAlgorithm() const {
     return *updateChargingEndpointToAgentAlgorithm;
 }
 
-const _updateTaskToAgentAlgorithm& _updateTokenAlgorithms::getUpdateTaskToAgentAlgorithm() const {
+const _updateToAgentAlgorithm& _updateTokenAlgorithms::getUpdateTaskToAgentAlgorithm() const {
     return *updateTaskToAgentAlgorithm;
 }
 
-const _updateTaskToAgentAlgorithm& _updateTokenAlgorithms::getUpdateChargingTaskToAgentAlgorithm() const {
+const _updateToAgentAlgorithm& _updateTokenAlgorithms::getUpdateChargingTaskToAgentAlgorithm() const {
     return *updateChargingTaskToAgentAlgorithm;
 }
 
-const _updateTaskToAgentAlgorithm& _updateTokenAlgorithms::getUpdateTaskToAgentThresholdAlgorithm() const {
+const _updateToAgentAlgorithm& _updateTokenAlgorithms::getUpdateTaskToAgentThresholdAlgorithm() const {
     return *updateTaskToAgentThresholdAlgorithm;
 }
 
-const _updateTaskToAgentAlgorithm& _updateTokenAlgorithms::getUpdateChargingTaskToAgentThresholdAlgorithm() const {
+const _updateToAgentAlgorithm& _updateTokenAlgorithms::getUpdateChargingTaskToAgentThresholdAlgorithm() const {
     return *updateChargingTaskToAgentThresholdAlgorithm;
+}
+
+const _updateToAgentAlgorithm& _updateTokenAlgorithms::getUpdateBackwardTaskToAgentAlgorithm() const {
+    return *updateBackwardTaskToAgentAlgorithm;
+}
+
+const _updateToAgentAlgorithm& _updateTokenAlgorithms::getUpdateBackwardChargingTaskToAgentAlgorithm() const {
+    return *updateBackwardChargingTaskToAgentAlgorithm;
 }

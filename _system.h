@@ -15,7 +15,7 @@
 #include "_token.h"
 #include "ThresholdTokenPass.h"
 #include "TokenPass.h"
-#include "CarryThresholdToken.h"
+#include "BackwardTaskToken.h"
 #include "_agent.h"
 
 class _system : public Writable{
@@ -24,7 +24,7 @@ public:
     enum TokenType{
         tokenPass,
         threshold_tokenPass,
-        c_taskCarryThreshold_tp,
+        backwardTask_tokenPass,
     };
         
     _system(
@@ -183,9 +183,9 @@ public:
             case threshold_tokenPass:
                 token = new ThresholdTokenPass(*map, *stepMap, *endpoints, *botsEndpoints, *endpointsDistanceAlgorithm, pickup_threshold, delivery_threshold);
                 break;
-//            case c_taskCarryThreshold_tp:
-//                token = new C_TaskCarryThresholdToken(*map, *stepMap, *endpoints, *botsEndpoints, *endpointsDistanceAlgorithm, pickup_threshold, delivery_threshold);
-//                break;
+            case backwardTask_tokenPass:
+                token = new BackwardTaskToken(*map, *stepMap, *endpoints, *botsEndpoints, *endpointsDistanceAlgorithm, delivery_threshold);
+                break;
         }
         
         int inc = (maximumEnergyLevel - chargedEnergyLevel) / instanceMAPD->getNumBots();

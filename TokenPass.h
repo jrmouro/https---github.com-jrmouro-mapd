@@ -42,7 +42,7 @@ public:
         return new TokenPass(*this);
     }
     
-    virtual _token::TokenUpdateType updatePath(_agent& agent, bool energyCheck){
+    virtual _token::TokenUpdateType updatePath(_agent& agent){
         
         _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
         
@@ -103,9 +103,11 @@ public:
 
     }
     
-    virtual _token::TokenUpdateType updateChargingPath(_agent& agent, bool energyCheck){
+    virtual _token::TokenUpdateType updateChargingPath(_agent& agent){
         
-        auto uta = _updateTokenAlgorithms::getInstance();
+        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
+        
+        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerThresholdAlgorithm);
         
         TokenUpdateType ret = TokenUpdateType::none;
     
@@ -116,14 +118,6 @@ public:
                 ret = TokenUpdateType::charging_task;
 
             } else {
-                
-//                if(agent.id()==3){
-//                    for (int i = 0; i < 20; i++){
-//                        this->getStepMap().stepView(this->getCurrentStep() + i);
-//                        
-//                    }
-//                    
-//                }
 
                 if(uta->getUpdateChargingEndpointToAgentAlgorithm().solve(*this, agent)){
 
@@ -151,7 +145,6 @@ public:
                 }
 
             }
-
 
         } else {
 

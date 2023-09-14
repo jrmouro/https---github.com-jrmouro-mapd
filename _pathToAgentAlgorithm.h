@@ -32,33 +32,6 @@ public:
         
         return stepPathAlgorithm.solve(token, agent, selectedPath, goalSite);
         
-//        bool flag = stepPathAlgorithm.solve(token, agent, selectedPath, goalSite);
-//        
-//        if(flag){
-//            
-//            if (flag) {
-//                
-//                flag = token.getStepMap().isPathDefinitelyFree(selectedPath.goalSite());
-//                        
-//                return true;    
-//            
-//            }
-//            
-//        } else {
-//            
-//            try {
-//                std::ostringstream stream;
-//                stream << "unsolved goal site path: " << goalSite;
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            }
-//            
-//        }
-//        
-//        return false;
-        
     }
     
 private:

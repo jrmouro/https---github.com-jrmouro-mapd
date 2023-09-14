@@ -42,18 +42,14 @@ public:
             _stepMap& stepMap, 
             std::vector<_site>& endpoints, 
             std::vector<_site>& chargingEndpoints, 
-            const _endpointsDistanceAlgorithm& endpointsDistanceAlgorithm, 
-            float task_threshold = .0f,
-            float carry_threshold = .0f):
+            const _endpointsDistanceAlgorithm& endpointsDistanceAlgorithm):
     map(map),
     stepMap(stepMap),
     endpoints(endpoints),
     nonTaskDeliveryEndpoints(),
     taskDeliveryEndpoints(),
     chargingEndpoints(chargingEndpoints),
-    endpointsDistanceAlgorithm(endpointsDistanceAlgorithm),
-    task_threshold(task_threshold),
-    carry_threshold(carry_threshold){
+    endpointsDistanceAlgorithm(endpointsDistanceAlgorithm){
     
         for (auto endpoint : endpoints) {
 
@@ -74,13 +70,11 @@ public:
     taskDeliveryEndpoints(other.taskDeliveryEndpoints),
     chargingEndpoints(other.chargingEndpoints),
     endpointsDistanceAlgorithm(other.endpointsDistanceAlgorithm),
-    task_threshold(other.task_threshold),
-    carry_threshold(other.carry_threshold),
     assignTaskAgent(other.assignTaskAgent),
     reportTaskMap(other.reportTaskMap), 
     currentStep(other.currentStep) { 
         
-        for (auto p_c_task : c_tasks) {
+        for (auto p_c_task : backwardTasks) {
             
             std::vector<_task*> vtask;
             
@@ -90,7 +84,7 @@ public:
 
             }
 
-            c_tasks.insert(std::pair<unsigned, std::vector<_task*>>(p_c_task.first, vtask));
+            backwardTasks.insert(std::pair<unsigned, std::vector<_task*>>(p_c_task.first, vtask));
             
         }
 
@@ -132,7 +126,7 @@ public:
     
     virtual ~_token(){ 
         
-        for (auto p_c_task : c_tasks) {
+        for (auto p_c_task : backwardTasks) {
                         
             for (auto task : p_c_task.second) {
                 
@@ -393,25 +387,24 @@ public:
 
     virtual void draw(const Render& render) const;
     
-    virtual _token::TokenUpdateType updatePath(_agent& agent, bool energyCheck) = 0;
-    virtual _token::TokenUpdateType updateChargingPath(_agent& agent, bool energyCheck) = 0;
+    virtual _token::TokenUpdateType updatePath(_agent& agent) = 0;
+    virtual _token::TokenUpdateType updateChargingPath(_agent& agent) = 0;
     
-    virtual _token::TokenUpdateType updateTrivialPathToAgent(_agent& agent, bool energyCheck);    
-    virtual _token::TokenUpdateType updateChargingTrivialPathToAgent(_agent& agent, bool energyCheck);
+    virtual _token::TokenUpdateType updateTrivialPathToAgent(_agent& agent);    
+    virtual _token::TokenUpdateType updateChargingTrivialPathToAgent(_agent& agent);
     
     
     void error_site_collision_check() const;
     void error_edge_collision_check() const;
     
-
-private:
-    
-    friend class _system;
-    
-    void addAgent(const _agent& agent){
-        this->agents.insert(std::pair<unsigned, _agent*>(agent.id(), agent.instance()));
+    int getOneTaskId(){
+        return c_task_ids--;
     }
-        
+    
+    int giveBackOneTaskId(){
+        return c_task_ids++;
+    }
+    
     void addPendingTask(const _task& task){
         this->pendingTasks.insert(std::pair<unsigned, _task*>(task.id(), task.instance()));
         this->reportTaskMap.addTask(task, currentStep);
@@ -421,60 +414,66 @@ private:
         
         this->nonTaskDeliveryEndpoints.erase(task.getDelivery().linearIndex(map.getColumn_size()));    
 //        this->nonTaskDeliveryEndpoints.erase(task.getPickup().linearIndex(map.getColumn_size()));
+    }  
+    
+    void addBackwardTask(unsigned step, const _task& task) {
+        
+        std::map<unsigned, std::vector<_task*>>::iterator it;
+        it = this->backwardTasks.find(step);
+
+        if (it != this->backwardTasks.end()) {
+
+            (*it).second.push_back(task.instance());
+
+        } else {
+            
+            auto it2 = this->backwardTasks.insert(std::pair<unsigned, std::vector<_task*>>(step, std::vector<_task*>()));
+            
+            it2.first->second.push_back(task.instance());
+            
+        }
+
     }
+
+private:
+    
+    friend class _system;
+    
+    void addAgent(const _agent& agent){
+        this->agents.insert(std::pair<unsigned, _agent*>(agent.id(), agent.instance()));
+    }
+        
+    
     
     void stepping() {        
         reinsert_c_tasks(currentStep++);
     } 
                
 private:
-    float task_threshold = .0f, carry_threshold = .0f;
+    unsigned currentStep = 0;
     int c_task_ids = -1;
+    
     const _map& map;
     _stepMap& stepMap;
-    std::vector<_site> &endpoints, &chargingEndpoints;
     
-    std::map<unsigned,_site> nonTaskDeliveryEndpoints, taskDeliveryEndpoints;
-    
+    std::vector<_site> &endpoints, &chargingEndpoints;    
+    std::map<unsigned,_site> nonTaskDeliveryEndpoints, taskDeliveryEndpoints;    
     const _endpointsDistanceAlgorithm& endpointsDistanceAlgorithm;
     
-    std::map<unsigned, std::vector<_task*>> c_tasks;//step->task
+    std::map<unsigned, std::vector<_task*>> backwardTasks;//step->task
     std::map<unsigned, _agent*> agents;
     std::map<unsigned, _task*> pendingTasks, assignedTasks, runningTasks, finishedTasks;
     std::map<unsigned, unsigned> assignTaskAgent; // task.id()->agent.id()
     ReportTaskMap reportTaskMap;
     
-    unsigned currentStep = 0;
     
-    int getOneTaskId(){
-        return c_task_ids--;
-    }
-    
-    void add_c_task(unsigned step, const _c_task& c_task) {
-        
-        std::map<unsigned, std::vector<_task*>>::iterator it;
-        it = this->c_tasks.find(step);
-
-        if (it != this->c_tasks.end()) {
-
-            (*it).second.push_back(c_task.instance());
-
-        } else {
-            
-            auto it2 = this->c_tasks.insert(std::pair<unsigned, std::vector<_task*>>(step, std::vector<_task*>()));
-            
-            it2.first->second.push_back(c_task.instance());
-            
-        }
-
-    }
     
     void reinsert_c_tasks(unsigned step) {
         
         std::map<unsigned, std::vector<_task*>>::iterator it;
-        it = this->c_tasks.find(step);
+        it = this->backwardTasks.find(step);
 
-        if (it != this->c_tasks.end()) {
+        if (it != this->backwardTasks.end()) {
 
             for (auto task : it->second) {
                 
@@ -482,7 +481,7 @@ private:
 
             }
             
-            this->c_tasks.erase(it);            
+            this->backwardTasks.erase(it);            
 
         } 
 

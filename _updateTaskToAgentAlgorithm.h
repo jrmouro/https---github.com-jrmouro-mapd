@@ -9,11 +9,14 @@
 #define _UPDATETASKTOAGENTALGORITHM_H
 
 
+#include "_updateToAgentAlgorithm.h"
+
+
 class _token;
 class _agent;
 class _selectTaskToAgentAlgorithm;
 class _taskIndexerAlgorithm;
-class _updateTaskToAgentAlgorithm {
+class _updateTaskToAgentAlgorithm  : public _updateToAgentAlgorithm{
     
 public:
     

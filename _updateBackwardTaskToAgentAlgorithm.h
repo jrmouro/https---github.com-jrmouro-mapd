@@ -1,27 +1,28 @@
 /* 
- * File:   _updateTaskToAgentAlgorithm.h
+ * File:   _updateBackwardTaskToAgentAlgorithm.h
  * Author: ronaldo
  *
  * Created on 6 de setembro de 2023, 18:40
  */
 
-#ifndef _UPDATETASKTOAGENTALGORITHM_H
-#define _UPDATETASKTOAGENTALGORITHM_H
+#ifndef _UPDATEBACKWARDTASKTOAGENTALGORITHM_H
+#define _UPDATEBACKWARDTASKTOAGENTALGORITHM_H
 
+#include "_updateToAgentAlgorithm.h"
 
 class _token;
 class _agent;
-class _selectTaskToAgentAlgorithm;
+class _selectBackwardTaskToAgentAlgorithm;
 class _taskIndexerAlgorithm;
-class _updateTaskToAgentAlgorithm {
+class _updateBackwardTaskToAgentAlgorithm  : public _updateToAgentAlgorithm{
     
 public:
     
-    _updateTaskToAgentAlgorithm(_selectTaskToAgentAlgorithm&);                
+    _updateBackwardTaskToAgentAlgorithm(_selectBackwardTaskToAgentAlgorithm&);                
     
-    _updateTaskToAgentAlgorithm(const _updateTaskToAgentAlgorithm& orig);
+    _updateBackwardTaskToAgentAlgorithm(const _updateBackwardTaskToAgentAlgorithm& orig);
     
-    virtual ~_updateTaskToAgentAlgorithm(){}
+    virtual ~_updateBackwardTaskToAgentAlgorithm(){}
     
     virtual bool solve(_token&, _agent&) const;
     
@@ -29,9 +30,9 @@ public:
     
 private:
     
-    _selectTaskToAgentAlgorithm& selectTaskToAgentAlgorithm;
+    _selectBackwardTaskToAgentAlgorithm& selectBackwardTaskToAgentAlgorithm;
 
 };
 
-#endif /* _UPDATETASKTOAGENTALGORITHM_H */
+#endif /* _UPDATEBACKWARDTASKTOAGENTALGORITHM_H */
 

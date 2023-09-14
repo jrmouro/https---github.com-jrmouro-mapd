@@ -55,12 +55,13 @@ OBJECTFILES= \
 	${OBJECTDIR}/_agent_parked.o \
 	${OBJECTDIR}/_agent_parken_CL.o \
 	${OBJECTDIR}/_agent_state.o \
-	${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm.o \
 	${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o \
 	${OBJECTDIR}/_closerTaskIndexerAlgorithm.o \
 	${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o \
 	${OBJECTDIR}/_endpointIndexerAlgorithm.o \
 	${OBJECTDIR}/_map.o \
+	${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o \
+	${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectChargingTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectChargingTaskToAgentThresholdAlgorithm.o \
@@ -71,8 +72,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/_stepPathAlgorithm.o \
 	${OBJECTDIR}/_taskIndexerAlgorithm.o \
 	${OBJECTDIR}/_token.o \
+	${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_updateEndpointToAgentAlgorithm.o \
 	${OBJECTDIR}/_updateTaskToAgentAlgorithm.o \
+	${OBJECTDIR}/_updateToAgentAlgorithm.o \
 	${OBJECTDIR}/_updateTokenAlgorithms.o \
 	${OBJECTDIR}/_updateTrivialPathToAgentAlgorithm.o \
 	${OBJECTDIR}/main.o
@@ -214,11 +217,6 @@ ${OBJECTDIR}/_agent_state.o: _agent_state.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_state.o _agent_state.cpp
 
-${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm.o: _backwardTaskDeliveryEndpointAlgorithm.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm.o _backwardTaskDeliveryEndpointAlgorithm.cpp
-
 ${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o: _closerEndpointIndexerAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -243,6 +241,16 @@ ${OBJECTDIR}/_map.o: _map.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_map.o _map.cpp
+
+${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o: _selectBackwardChargingTaskToAgentAlgorithm.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o _selectBackwardChargingTaskToAgentAlgorithm.cpp
+
+${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o: _selectBackwardTaskToAgentAlgorithm.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o _selectBackwardTaskToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm.o: _selectChargingEndpointToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -294,6 +302,11 @@ ${OBJECTDIR}/_token.o: _token.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_token.o _token.cpp
 
+${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm.o: _updateBackwardTaskToAgentAlgorithm.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm.o _updateBackwardTaskToAgentAlgorithm.cpp
+
 ${OBJECTDIR}/_updateEndpointToAgentAlgorithm.o: _updateEndpointToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -303,6 +316,11 @@ ${OBJECTDIR}/_updateTaskToAgentAlgorithm.o: _updateTaskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskToAgentAlgorithm.o _updateTaskToAgentAlgorithm.cpp
+
+${OBJECTDIR}/_updateToAgentAlgorithm.o: _updateToAgentAlgorithm.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateToAgentAlgorithm.o _updateToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_updateTokenAlgorithms.o: _updateTokenAlgorithms.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -607,19 +625,6 @@ ${OBJECTDIR}/_agent_state_nomain.o: ${OBJECTDIR}/_agent_state.o _agent_state.cpp
 	    ${CP} ${OBJECTDIR}/_agent_state.o ${OBJECTDIR}/_agent_state_nomain.o;\
 	fi
 
-${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm_nomain.o: ${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm.o _backwardTaskDeliveryEndpointAlgorithm.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm.o`; \
-	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
-	then  \
-	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm_nomain.o _backwardTaskDeliveryEndpointAlgorithm.cpp;\
-	else  \
-	    ${CP} ${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm.o ${OBJECTDIR}/_backwardTaskDeliveryEndpointAlgorithm_nomain.o;\
-	fi
-
 ${OBJECTDIR}/_closerEndpointIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o _closerEndpointIndexerAlgorithm.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o`; \
@@ -683,6 +688,32 @@ ${OBJECTDIR}/_map_nomain.o: ${OBJECTDIR}/_map.o _map.cpp
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_map_nomain.o _map.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_map.o ${OBJECTDIR}/_map_nomain.o;\
+	fi
+
+${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o _selectBackwardChargingTaskToAgentAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm_nomain.o _selectBackwardChargingTaskToAgentAlgorithm.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm_nomain.o;\
+	fi
+
+${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o _selectBackwardTaskToAgentAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm_nomain.o _selectBackwardTaskToAgentAlgorithm.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm.o _selectChargingEndpointToAgentAlgorithm.cpp 
@@ -815,6 +846,19 @@ ${OBJECTDIR}/_token_nomain.o: ${OBJECTDIR}/_token.o _token.cpp
 	    ${CP} ${OBJECTDIR}/_token.o ${OBJECTDIR}/_token_nomain.o;\
 	fi
 
+${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm.o _updateBackwardTaskToAgentAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm_nomain.o _updateBackwardTaskToAgentAlgorithm.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm.o ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm_nomain.o;\
+	fi
+
 ${OBJECTDIR}/_updateEndpointToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateEndpointToAgentAlgorithm.o _updateEndpointToAgentAlgorithm.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_updateEndpointToAgentAlgorithm.o`; \
@@ -839,6 +883,19 @@ ${OBJECTDIR}/_updateTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateTaskToAge
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskToAgentAlgorithm_nomain.o _updateTaskToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_updateTaskToAgentAlgorithm.o ${OBJECTDIR}/_updateTaskToAgentAlgorithm_nomain.o;\
+	fi
+
+${OBJECTDIR}/_updateToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateToAgentAlgorithm.o _updateToAgentAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_updateToAgentAlgorithm.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateToAgentAlgorithm_nomain.o _updateToAgentAlgorithm.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_updateToAgentAlgorithm.o ${OBJECTDIR}/_updateToAgentAlgorithm_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_updateTokenAlgorithms_nomain.o: ${OBJECTDIR}/_updateTokenAlgorithms.o _updateTokenAlgorithms.cpp 

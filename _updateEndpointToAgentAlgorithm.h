@@ -8,10 +8,12 @@
 #ifndef _UPDATEENDPOINTTOAGENTALGORITHM_H
 #define _UPDATEENDPOINTTOAGENTALGORITHM_H
 
+
+#include "_updateToAgentAlgorithm.h"
 #include "_selectEndpointToAgentAlgorithm.h"
 
 class _selectEndpointToAgentAlgorithm;
-class _updateEndpointToAgentAlgorithm {
+class _updateEndpointToAgentAlgorithm  : public _updateToAgentAlgorithm{
     
 public:
     

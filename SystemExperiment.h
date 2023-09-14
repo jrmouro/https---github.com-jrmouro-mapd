@@ -185,7 +185,7 @@ public:
         
         std::cout << " - makespan: " << system->getToken().getCurrentStep() << std::endl;
         std::cout << " - energy expenditure: " << system->getToken().energyExpenditure() << std::endl;
-        std::cout << " - peding tasks: " << system->getToken().getPendingTaskAmount() << std::endl;
+        std::cout << " - pending tasks: " << system->getToken().getPendingTaskAmount() << std::endl;
         std::cout << " - finished tasks: " << system->getToken().getFinishedTaskAmount() << std::endl;
         std::cout << " - duration: " << time_span.count() << " seconds." << std::endl << std::endl;                        
                         

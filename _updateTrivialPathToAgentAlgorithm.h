@@ -9,10 +9,11 @@
 #define _UPDATETRIVIALPATHTOAGENTALGORITHM_H
 
 #include "_agent.h"
+#include "_updateToAgentAlgorithm.h"
 #include "_selectTrivialPathToAgentAlgorithm.h"
 
 class _token;
-class _updateTrivialPathToAgentAlgorithm {
+class _updateTrivialPathToAgentAlgorithm : public _updateToAgentAlgorithm{
     
 public:
     
