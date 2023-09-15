@@ -27,6 +27,10 @@ public:
     virtual std::string stateName()const{
         return "charging";
     }
+    
+    bool charging() const  { 
+        return true; 
+    }
         
     virtual void onUpdatePath(_token&, _agent&) const;
     virtual void onEnergyExpend(_token&, _agent&) const;

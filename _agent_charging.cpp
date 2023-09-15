@@ -37,7 +37,7 @@ void _agent_charging::onUpdatePath(_token& token, _agent& agent) const{
 
                 case _token::TokenUpdateType::task:
 
-                    if(agent.isPickupping()){
+                    if(agent.isPickupSite()){
 
                         token.runTask(agent.currentTask());
 

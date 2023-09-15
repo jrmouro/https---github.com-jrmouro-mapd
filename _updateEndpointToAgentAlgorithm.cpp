@@ -15,7 +15,7 @@ bool _updateEndpointToAgentAlgorithm::solve(
         _token& token,
         _agent& agent) const {
 
-    if (agent.isInFinishedPath()) {
+    if (agent.isInGoalSite()) {
 
         _stepPath restPath(agent.currentSite());
         _site restEndpoint;

@@ -49,6 +49,10 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
         return false;
 
     });
+    
+    bool aux = false;
+    _task auxTask;
+    _stepPath auxPath;
 
     for (auto task : vtask) {
 
@@ -84,6 +88,11 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
 
             if (flag) {
                 
+                //Guarda para uso futuro
+                aux = true;
+                auxTask = task;
+                auxPath = taskPath;
+                
                 unsigned step = pickupSite.GetStep() - taskPath.currentSite().GetStep();
 
                 flag = thresholdAlgorithm.solve(taskPath.currentSite(), selectedTask.getPickup(), step, pickup_threshold);
@@ -113,23 +122,25 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
 
             }
 
-            //            } 
-
-            //            else {
-            //
-            //                try {
-            //                    std::ostringstream stream;
-            //                    stream << "unsolved task path: " << task;
-            //                    MAPD_EXCEPTION(stream.str());
-            //                } catch (std::exception& e) {
-            //                    std::cout << e.what() << std::endl;
-            //                    std::abort();
-            //                }
-            //
-            //            }
-
         }
 
+    }
+    
+    if(aux){
+        
+        aux = agent.isAbleToFulfillTaskPath(token.getMap(), auxTask, auxPath);
+
+        if (aux) {
+            
+            selectedTask = auxTask;
+
+            auxPath.pop();
+            selectedPath.progress(auxPath);
+
+            return true;
+
+        }
+        
     }
 
     return false;

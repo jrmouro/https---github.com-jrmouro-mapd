@@ -16,7 +16,7 @@
 #include "_c_task.h"
 #include "ReportTask.h"
 #include "MapdException.h"
-#include "ManhattanAlgorithm.h"
+#include "_manhattanAlgorithm.h"
 #include "_endPointsDistanceAlgorithm.h"
 #include "_stepAstarAlgorithm.h"
 #include "_agent.h"

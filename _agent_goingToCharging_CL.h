@@ -27,6 +27,10 @@ public:
     virtual std::string stateName()const{
         return "goingToCharging_CL";
     }
+    
+    virtual bool criticalEnergy() const {
+        return true;
+    }
         
     virtual void onAfterStepping(_token&, _agent&) const;
     virtual void onEnergyExpend(_token&, _agent&) const;

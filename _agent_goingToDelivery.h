@@ -28,6 +28,10 @@ public:
     virtual std::string stateName()const{
         return "goingToDelivery";
     }
+    
+    virtual bool free() const{
+        return false;
+    }
         
     virtual void onAfterStepping(_token&, _agent&) const;
     virtual void onEnergyExpend(_token&, _agent&) const;

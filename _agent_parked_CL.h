@@ -24,6 +24,10 @@ public:
     }
     
     virtual ~_agent_parked_CL(){}
+    
+    virtual bool criticalEnergy() const {
+        return true;
+    }
             
     virtual std::string stateName()const{
         return "parked_CL";

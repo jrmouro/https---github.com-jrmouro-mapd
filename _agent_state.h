@@ -24,7 +24,7 @@ public:
     
     virtual ~_agent_state(){} 
     
-    virtual std::string stateName()const = 0;
+    virtual std::string stateName() const = 0;
       
     virtual void changeState(_agent& agent, _agent_state* state) const;
     
@@ -35,6 +35,11 @@ public:
     virtual void onAfterStepping(_token&,  _agent&) const;
     
     virtual void onDraw(const Render&, const _agent&) const;
+    
+    
+    virtual bool free() const;
+    virtual bool charging() const;
+    virtual bool criticalEnergy() const;
                 
 };
 

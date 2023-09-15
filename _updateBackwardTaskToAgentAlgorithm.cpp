@@ -13,12 +13,15 @@
 #include "_selectBackwardTaskToAgentAlgorithm.h"
 
 _updateBackwardTaskToAgentAlgorithm::_updateBackwardTaskToAgentAlgorithm(
-        _selectBackwardTaskToAgentAlgorithm& selectBackwardTaskToAgentAlgorithm) :
-                selectBackwardTaskToAgentAlgorithm(selectBackwardTaskToAgentAlgorithm) {}
+        _selectBackwardTaskToAgentAlgorithm& selectBackwardTaskToAgentAlgorithm,
+        _closerCooperatorAgentIndexerAlgorithm& closerCooperatorAgentIndexerAlgorithm) :
+                selectBackwardTaskToAgentAlgorithm(selectBackwardTaskToAgentAlgorithm),
+                closerCooperatorAgentIndexerAlgorithm(closerCooperatorAgentIndexerAlgorithm){}
 
 _updateBackwardTaskToAgentAlgorithm::_updateBackwardTaskToAgentAlgorithm(
         const _updateBackwardTaskToAgentAlgorithm& orig) :
-                selectBackwardTaskToAgentAlgorithm(orig.selectBackwardTaskToAgentAlgorithm) {}
+                selectBackwardTaskToAgentAlgorithm(orig.selectBackwardTaskToAgentAlgorithm),
+                closerCooperatorAgentIndexerAlgorithm(orig.closerCooperatorAgentIndexerAlgorithm){}
 
 void _updateBackwardTaskToAgentAlgorithm::setTaskIndexerAlgorithm(
         _taskIndexerAlgorithm& taskIndexerAlgorithm) {
@@ -31,7 +34,7 @@ bool _updateBackwardTaskToAgentAlgorithm::solve(
         _token& token,
         _agent& agent) const {
 
-    if (agent.isInFinishedPath()) {
+    if (agent.isInGoalSite()) {
 
         _task originalTask, selectedTask(token.getOneTaskId()), pendingTask(token.getOneTaskId());
         _stepPath selectedPath(agent.currentSite());
@@ -68,13 +71,13 @@ bool _updateBackwardTaskToAgentAlgorithm::solve(
                 token.reportTaskUpdate(agent, selectedTask, ReportTask::PathType::backward_task, selectedPath);                
                 agent.assignTask(selectedTask, selectedPath);
                 
-                token.addBackwardTask(selectedPath.size(), pendingTask);               
+                token.addBackwardTask(token.getCurrentStep() + selectedPath.size(), pendingTask);               
                 
             }
             
             token.setMoving(agent, selectedPath);
 
-            if (agent.isInFinishedPath()) {
+            if (agent.isInGoalSite()) {
                 
                 auto agentTask = agent.currentTask();
 

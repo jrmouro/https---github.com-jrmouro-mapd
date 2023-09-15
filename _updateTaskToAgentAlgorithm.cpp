@@ -30,7 +30,7 @@ bool _updateTaskToAgentAlgorithm::solve(
         _token& token,
         _agent& agent) const {
 
-    if (agent.isInFinishedPath()) {
+    if (agent.isInGoalSite()) {
 
         _task task;
         _stepPath taskPath(agent.currentSite());
@@ -49,7 +49,7 @@ bool _updateTaskToAgentAlgorithm::solve(
             agent.assignTask(task, taskPath);
             token.setMoving(agent, taskPath);
 
-            if (agent.isInFinishedPath()) {
+            if (agent.isInGoalSite()) {
 
                 token.runTask(task);
                 token.finishTask(task);

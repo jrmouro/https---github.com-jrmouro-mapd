@@ -3,7 +3,7 @@ build/Debug/GNU-Linux/_agent_dead.o: _agent_dead.cpp _agent_dead.h \
  _stepSite.h MapdException.h _agent.h Drawable.h _agent_energy_system.h \
  _energy_system.h _energy_regime.h _map.h Render.h \
  _agent_goingToDelivery.h _token.h Writable.h _c_task.h ReportTask.h \
- ManhattanAlgorithm.h _distanceAlgorithm.h _endPointsDistanceAlgorithm.h \
+ _manhattanAlgorithm.h _distanceAlgorithm.h _endPointsDistanceAlgorithm.h \
  _astarDistanceAlgorithm.h _path.h _astarAlgorithm.h _pathAlgorithm.h \
  _stepAstarAlgorithm.h _stepPathAlgorithm.h ReportTaskMap.h Circle.h \
  Shape.h Text.h _system.h InstanceMAPD.h InstanceMap.h InstanceTask.h \
@@ -16,6 +16,7 @@ build/Debug/GNU-Linux/_agent_dead.o: _agent_dead.cpp _agent_dead.h \
  _selectChargingTaskToAgentThresholdAlgorithm.h \
  _selectTaskToAgentThresholdAlgorithm.h _selectTaskToAgentAlgorithm.h \
  _selectBackwardTaskToAgentAlgorithm.h \
+ _closerCooperatorAgentIndexerAlgorithm.h \
  _selectBackwardChargingTaskToAgentAlgorithm.h \
  _updateBackwardTaskToAgentAlgorithm.h \
  _closerTaskIndexerThresholdAlgorithm.h _closerTaskIndexerAlgorithm.h \
@@ -63,7 +64,7 @@ _c_task.h:
 
 ReportTask.h:
 
-ManhattanAlgorithm.h:
+_manhattanAlgorithm.h:
 
 _distanceAlgorithm.h:
 
@@ -128,6 +129,8 @@ _selectTaskToAgentThresholdAlgorithm.h:
 _selectTaskToAgentAlgorithm.h:
 
 _selectBackwardTaskToAgentAlgorithm.h:
+
+_closerCooperatorAgentIndexerAlgorithm.h:
 
 _selectBackwardChargingTaskToAgentAlgorithm.h:
 

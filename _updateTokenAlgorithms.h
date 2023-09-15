@@ -112,12 +112,20 @@ private:
     
     _updateTokenAlgorithms(
             float pickup_threshold,
-            float delivery_threshold);
+            float delivery_threshold,
+            unsigned min_step_distance = 1,
+            unsigned min_endpoint_distance = 1,
+            unsigned max_step_distance = 1,
+            unsigned max_endpoint_distance = 1);
     
     _updateTokenAlgorithms(
             const _taskIndexerAlgorithm& taskIndexerAlgorithm,
             float pickup_threshold,
-            float delivery_threshold);
+            float delivery_threshold,
+            unsigned min_step_distance = 1,
+            unsigned min_endpoint_distance = 1,
+            unsigned max_step_distance = 1,
+            unsigned max_endpoint_distance = 1);
         
     static _updateTokenAlgorithms* instance;
     
@@ -130,6 +138,7 @@ private:
     _pathToAgentAlgorithm* pathToAgentAlgorithm;
     _taskPathToAgentAlgorithm* taskPathToAgentAlgorithm;
     
+    _closerCooperatorAgentIndexerAlgorithm *closerCooperatorAgentIndexerAlgorithm;    
     
     _selectTaskToAgentAlgorithm* selectTaskToAgentAlgorithm;
     _selectChargingTaskToAgentAlgorithm* selectChargingTaskToAgentAlgorithm;   

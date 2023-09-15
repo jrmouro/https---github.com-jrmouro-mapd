@@ -46,10 +46,10 @@
           <itemPath>_pathAlgorithm.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f6" displayName="Site" projectFiles="true">
-          <itemPath>ManhattanAlgorithm.h</itemPath>
           <itemPath>_astarDistanceAlgorithm.h</itemPath>
           <itemPath>_distanceAlgorithm.h</itemPath>
           <itemPath>_endPointsDistanceAlgorithm.h</itemPath>
+          <itemPath>_manhattanAlgorithm.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="StepMap" projectFiles="true">
           <itemPath>_stepAstarAlgorithm.h</itemPath>
@@ -65,6 +65,10 @@
         <logicalFolder name="f5" displayName="Task" projectFiles="true">
         </logicalFolder>
         <logicalFolder name="f1" displayName="Token" projectFiles="true">
+          <logicalFolder name="f6" displayName="Agent" projectFiles="true">
+            <itemPath>_closerCooperatorAgentIndexerAlgorithm.cpp</itemPath>
+            <itemPath>_closerCooperatorAgentIndexerAlgorithm.h</itemPath>
+          </logicalFolder>
           <logicalFolder name="f5" displayName="Indexer" projectFiles="true">
             <logicalFolder name="f2" displayName="Endpoint" projectFiles="true">
               <itemPath>_closerEndpointIndexerAlgorithm.cpp</itemPath>
@@ -265,8 +269,6 @@
       </item>
       <item path="InstanceTaskExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="ManhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MultiSystemExperiment.h" ex="false" tool="3" flavor2="0">
@@ -371,6 +373,16 @@
       </item>
       <item path="_c_task.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_closerCooperatorAgentIndexerAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_closerCooperatorAgentIndexerAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="_closerEndpointIndexerAlgorithm.cpp"
             ex="false"
             tool="1"
@@ -403,6 +415,8 @@
       <item path="_energy_regime.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_energy_system.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_manhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_map.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -655,8 +669,6 @@
       </item>
       <item path="InstanceTaskExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="ManhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MultiSystemExperiment.h" ex="false" tool="3" flavor2="0">
@@ -761,6 +773,16 @@
       </item>
       <item path="_c_task.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_closerCooperatorAgentIndexerAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_closerCooperatorAgentIndexerAlgorithm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="_closerEndpointIndexerAlgorithm.cpp"
             ex="false"
             tool="1"
@@ -793,6 +815,8 @@
       <item path="_energy_regime.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_energy_system.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_manhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_map.cpp" ex="false" tool="1" flavor2="0">
       </item>

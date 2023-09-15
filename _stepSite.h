@@ -104,6 +104,12 @@ public:
         return _stepSite(this->step, this->row, this->colunm);
     }    
     
+    unsigned step_distance(const _stepSite other) const {
+        if(this->step > other.step){
+            return this->step - other.step;
+        }
+        return other.step - this->step;
+    }
     
 protected:
     

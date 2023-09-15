@@ -7,9 +7,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agent_state.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/BackwardTaskToken.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agent.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_updateTokenAlgorithms.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/ThresholdTokenPass.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_updateTokenAlgorithms.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_selectBackwardChargingTaskToAgentAlgorithm.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_selectBackwardChargingTaskToAgentAlgorithm.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_updateBackwardTaskToAgentAlgorithm.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/main.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_system.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/SystemExperiment.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_selectBackwardTaskToAgentAlgorithm.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agent_state.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_updateBackwardTaskToAgentAlgorithm.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_closerCooperatorAgentIndexerAlgorithm.cpp</file>
         </group>
     </open-files>
 </project-private>

@@ -21,18 +21,16 @@ _selectBackwardChargingTaskToAgentAlgorithm::_selectBackwardChargingTaskToAgentA
         _taskIndexerAlgorithm& taskIndexerAlgorithm,
         const _endpointIndexerAlgorithm& endpointIndexerAlgorithm,
         float delivery_threshold) :
-_selectBackwardTaskToAgentAlgorithm(
-taskPathToAgentAlgorithm,
-taskIndexerAlgorithm,
-delivery_threshold),
-endpointIndexerAlgorithm(endpointIndexerAlgorithm) {
-}
+            _selectBackwardTaskToAgentAlgorithm(
+                taskPathToAgentAlgorithm,
+                taskIndexerAlgorithm,
+                delivery_threshold),
+        endpointIndexerAlgorithm(endpointIndexerAlgorithm) {}
 
 _selectBackwardChargingTaskToAgentAlgorithm::_selectBackwardChargingTaskToAgentAlgorithm(
         const _selectBackwardChargingTaskToAgentAlgorithm& other) :
-_selectBackwardTaskToAgentAlgorithm(other),
-endpointIndexerAlgorithm(endpointIndexerAlgorithm) {
-}
+            _selectBackwardTaskToAgentAlgorithm(other),
+            endpointIndexerAlgorithm(endpointIndexerAlgorithm) {}
 
 bool _selectBackwardChargingTaskToAgentAlgorithm::solve(
         const _token& token,
@@ -55,6 +53,10 @@ bool _selectBackwardChargingTaskToAgentAlgorithm::solve(
         return false;
 
     });
+
+    bool aux = false;
+    _task auxTask;
+    _stepPath auxPath;
 
     for (auto task : vtask) {
 
@@ -89,6 +91,13 @@ bool _selectBackwardChargingTaskToAgentAlgorithm::solve(
             ret = taskPathToAgentAlgorithm.solve(token, agent, originalTask, taskPath, pickupSite, deliverySite);
 
             if (ret) {
+
+                //Guarda para uso futuro
+                aux = true;
+                auxTask = task;
+                auxPath = taskPath;
+                
+//                if(task.id() < 0) continue;
 
                 taskPath.backward(
                         [&ret, &token, agent, &taskPath, thresholdAlgorithm,
@@ -166,7 +175,7 @@ bool _selectBackwardChargingTaskToAgentAlgorithm::solve(
                                                 ret = taskPathToAgentAlgorithm.getStepPathAlgorithm().solve(token, agent, chargingTaskPath, endpoint);
 
                                                 if (ret) {
-                                                    
+
                                                     selectedTask.setPickup(pickupSite);
                                                     selectedTask.setDelivery(site);
 
@@ -185,7 +194,7 @@ bool _selectBackwardChargingTaskToAgentAlgorithm::solve(
                                                         return false;
 
                                                     });
-                                                    
+
                                                     chargingTaskPath.pop();
                                                     backwardTaskPath.progress(chargingTaskPath);
 
@@ -224,6 +233,74 @@ bool _selectBackwardChargingTaskToAgentAlgorithm::solve(
         }
 
         if (ret) return true;
+
+    }
+
+    if (aux) {
+
+        std::vector<_site> vsite;
+
+        token.listChargingEndpoints([&vsite, &token, auxTask, this](const _site & chargingEndpoint) {
+
+            this->endpointIndexerAlgorithm.solve(token, chargingEndpoint, auxTask.getDelivery(), vsite);
+
+            return false;
+
+        });
+
+        for (auto endpoint : vsite) {
+
+            aux = true;
+
+            if (aux) {
+
+                token.listAgents([endpoint, agent, &aux](_agent & otherAgent) {
+
+                    if (agent.id() != otherAgent.id() && otherAgent.goalSite().match(endpoint)) { //other agents
+
+                        aux = false;
+
+                        return true;
+
+                    }
+
+                    return false;
+
+                });
+
+            }
+
+            if (aux) {
+
+                _stepPath chargingPath(auxPath.goalSite());
+
+                aux = taskPathToAgentAlgorithm.getStepPathAlgorithm().solve(token, agent, chargingPath, endpoint);
+
+                if (aux) {
+
+                    chargingPath.pop();
+                    _stepPath path(auxPath);
+                    path.progress(chargingPath);
+
+                    aux = agent.isAbleToFulfillChargingTaskPath(token.getMap(), auxTask, path);
+
+                    if (aux) {
+                        
+                        originalTask = auxTask;
+                        selectedTask = auxTask;
+
+                        path.pop();
+                        selectedPath.progress(path);
+
+                        return true;
+
+                    }
+
+                }
+
+            }
+
+        }
 
     }
 

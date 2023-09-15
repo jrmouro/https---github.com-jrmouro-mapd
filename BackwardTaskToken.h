@@ -41,13 +41,13 @@ public:
     
     virtual _token::TokenUpdateType updatePath(_agent& agent){
         
-        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
-        
+//        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
+        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(500);
         auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerThresholdAlgorithm, .0f, delivery_threshold);
                         
         TokenUpdateType ret = TokenUpdateType::none;
     
-        if(agent.isInFinishedPath()){
+        if(agent.isInGoalSite()){
 
             if(uta->getUpdateBackwardTaskToAgentAlgorithm().solve(*this, agent)) {
 
@@ -101,13 +101,14 @@ public:
     
     virtual _token::TokenUpdateType updateChargingPath(_agent& agent){
         
-        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
+//        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
+        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(500);
         
         auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerThresholdAlgorithm, .0f, delivery_threshold);
         
         TokenUpdateType ret = TokenUpdateType::none;
     
-        if(agent.isInFinishedPath()){
+        if(agent.isInGoalSite()){
 
             if(uta->getUpdateBackwardChargingTaskToAgentAlgorithm().solve(*this, agent)) {
 

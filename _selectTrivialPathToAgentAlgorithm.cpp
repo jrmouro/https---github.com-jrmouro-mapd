@@ -14,7 +14,7 @@ bool _selectTrivialPathToAgentAlgorithm::solve(
         const _agent& agent,
         _stepPath& trivialPath) const {
 
-    if (agent.isInFinishedPath()) {
+    if (agent.isInGoalSite()) {
 
         _trivialPathAlgorithm trivialPathAlgorithm;
 

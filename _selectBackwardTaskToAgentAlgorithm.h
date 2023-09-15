@@ -11,6 +11,7 @@
 #include "_token.h"
 #include "_site.h"
 #include "_stepPath.h"
+#include "_closerCooperatorAgentIndexerAlgorithm.h"
 
 class _token;
 class _agent;
@@ -47,8 +48,11 @@ public:
         this->delivery_threshold = delivery_threshold;
     }
     
+        
 protected:
+    
     float   delivery_threshold;
+        
     const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm;
     _taskIndexerAlgorithm& taskIndexerAlgorithm;
     

@@ -13,12 +13,15 @@
 class _token;
 class _agent;
 class _selectBackwardTaskToAgentAlgorithm;
+class _closerCooperatorAgentIndexerAlgorithm;
 class _taskIndexerAlgorithm;
 class _updateBackwardTaskToAgentAlgorithm  : public _updateToAgentAlgorithm{
     
 public:
     
-    _updateBackwardTaskToAgentAlgorithm(_selectBackwardTaskToAgentAlgorithm&);                
+    _updateBackwardTaskToAgentAlgorithm(
+            _selectBackwardTaskToAgentAlgorithm&,
+            _closerCooperatorAgentIndexerAlgorithm&);                
     
     _updateBackwardTaskToAgentAlgorithm(const _updateBackwardTaskToAgentAlgorithm& orig);
     
@@ -31,6 +34,7 @@ public:
 private:
     
     _selectBackwardTaskToAgentAlgorithm& selectBackwardTaskToAgentAlgorithm;
+    _closerCooperatorAgentIndexerAlgorithm& closerCooperatorAgentIndexerAlgorithm;
 
 };
 

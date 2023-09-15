@@ -87,7 +87,7 @@ public:
         
     }
     
-    const bool isInFinishedPath()const{
+    const bool isInGoalSite()const{
         return _currentPath.size() == 1;
     }
     
@@ -103,11 +103,11 @@ public:
         
     }
     
-    const bool isDelivering()const{
+    const bool isDeliverySite()const{
         
         if(_currentTaskIndex > -1){
             
-            return isInFinishedPath() && currentTask().getDelivery().match(_currentPath.goalSite());
+            return isInGoalSite() && currentTask().getDelivery().match(_currentPath.goalSite());
             
         }
         
@@ -115,11 +115,11 @@ public:
         
     }
     
-    const bool isChargingDelivering()const{
+    const bool isChargingDeliverySite()const{
         
         if(_currentTaskIndex > -1 && !currentTask().getDelivery().match(_currentPath.goalSite())){
             
-            return !isInFinishedPath() &&  currentTask().getDelivery().match(_currentPath.currentSite());
+            return !isInGoalSite() &&  currentTask().getDelivery().match(_currentPath.currentSite());
             
         }
         
@@ -127,7 +127,7 @@ public:
         
     }
     
-    const bool isPickupping()const{
+    const bool isPickupSite()const{
         
         if(_currentTaskIndex > -1){
             
@@ -182,7 +182,7 @@ public:
         return energy_system.isAtDeadLevel();
     }
 
-    bool staysInSamePlace() const {
+    bool stayedInSamePlace() const {
         return currentSite().match(_previousSite);
     }
     
@@ -203,7 +203,15 @@ public:
         return energy_system.energyState();
         
     }
-      
+    
+    bool isFree() const {
+        return this->_state->free();
+    }
+    
+    bool isCharging() const {
+        return this->_state->charging();
+    }
+          
 protected:
     const int _id;
     _agent_state* _state;

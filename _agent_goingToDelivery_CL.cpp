@@ -28,7 +28,7 @@ void _agent_goingToDelivery_CL::onAfterStepping(_token& token, _agent& agent) co
         case AES::normal:
         case AES::charged:
             
-            if(agent.isDelivering()){
+            if(agent.isDeliverySite()){
         
                 token.finishTask(agent.currentTask());
                 
@@ -36,7 +36,7 @@ void _agent_goingToDelivery_CL::onAfterStepping(_token& token, _agent& agent) co
 
                 changeState(agent, _agent_parked::getInstance());       
 
-            } else if(agent.isChargingDelivering()){
+            } else if(agent.isChargingDeliverySite()){
 
                 token.finishTask(agent.currentTask());
                 
@@ -54,7 +54,7 @@ void _agent_goingToDelivery_CL::onAfterStepping(_token& token, _agent& agent) co
         
         case AES::critical:
             
-            if(agent.isDelivering()){
+            if(agent.isDeliverySite()){
         
                 token.finishTask(agent.currentTask());
                 
@@ -62,7 +62,7 @@ void _agent_goingToDelivery_CL::onAfterStepping(_token& token, _agent& agent) co
 
                 changeState(agent, _agent_parked_CL::getInstance());       
 
-            } else if(agent.isChargingDelivering()){
+            } else if(agent.isChargingDeliverySite()){
 
                 token.finishTask(agent.currentTask());
                 

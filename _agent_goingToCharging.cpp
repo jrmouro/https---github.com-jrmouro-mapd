@@ -28,7 +28,7 @@ void _agent_goingToCharging::onAfterStepping(_token& token, _agent& agent) const
         case AES::normal:
         case AES::charged:
             
-            if(agent.isInFinishedPath()){
+            if(agent.isInGoalSite()){
         
                 changeState(agent, _agent_charging::getInstance()); 
 
@@ -38,7 +38,7 @@ void _agent_goingToCharging::onAfterStepping(_token& token, _agent& agent) const
         
         case AES::critical:
             
-            if(agent.isInFinishedPath()){
+            if(agent.isInGoalSite()){
         
                 changeState(agent, _agent_charging_CL::getInstance()); 
 

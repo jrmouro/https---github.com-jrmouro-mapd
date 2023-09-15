@@ -12,6 +12,10 @@
 #include "_agent.h"
 #include "_token.h"
 
+bool _agent_state::free() const { return true; }
+bool _agent_state::charging() const  { return false; }
+bool _agent_state::criticalEnergy() const { return false; }
+
 void _agent_state::onUpdatePath(_token& token, _agent& agent) const {
 }
 
@@ -22,9 +26,9 @@ void _agent_state::onStepping(_token& token, _agent& agent) const {
 
     agent.stepping();
 
-//    if (token.getCurrentStep() > 1757 && agent.id() == 4) {
+//    if (token.getCurrentStep() > 1000 && agent.id() == 0) {
 //        int i = 0;
-//        for (; i < 30; i++)
+//        for (; i < 0; i++)
 //            token.getStepMap().stepView(token.getCurrentStep() + i);        
 //        token.getStepMap().stepView(token.getCurrentStep() + i);
 //    }

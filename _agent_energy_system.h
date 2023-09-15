@@ -16,7 +16,7 @@
 typedef
 enum _agent_energy_regime : int{
     
-    charging = -10, // repondo energia
+    charging = -20, // repondo energia
     unloaded = 1, // parado descarregado
     moving = 3, // movendo descarregado
     loaded = 2, // parado carregado

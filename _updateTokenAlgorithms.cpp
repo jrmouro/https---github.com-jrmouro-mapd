@@ -13,13 +13,25 @@
 #include "_closerEndpointIndexerAlgorithm.h"
 #include "_pathToAgentAlgorithm.h"
 #include "_selectChargingEndpointToAgentAlgorithm.h"
+#include "_closerCooperatorAgentIndexerAlgorithm.h"
 
 _updateTokenAlgorithms* _updateTokenAlgorithms::instance = nullptr;
 
 _updateTokenAlgorithms::_updateTokenAlgorithms(
         const _taskIndexerAlgorithm& taskIndexerAlgorithm,
         float pickup_threshold,
-        float delivery_threshold) : _updateTokenAlgorithms(pickup_threshold, delivery_threshold){
+        float delivery_threshold,
+        unsigned min_step_distance,
+        unsigned min_endpoint_distance,
+        unsigned max_step_distance,
+        unsigned max_endpoint_distance) : 
+            _updateTokenAlgorithms(
+                pickup_threshold, 
+                delivery_threshold,
+                min_step_distance,
+                min_endpoint_distance,
+                max_step_distance,
+                max_endpoint_distance){
 
     delete this->taskIndexerAlgorithm;
     this->taskIndexerAlgorithm = taskIndexerAlgorithm.getInstance();
@@ -27,7 +39,11 @@ _updateTokenAlgorithms::_updateTokenAlgorithms(
 
 _updateTokenAlgorithms::_updateTokenAlgorithms(
         float pickup_threshold,
-        float delivery_threshold) :
+        float delivery_threshold,
+        unsigned min_step_distance,
+        unsigned min_endpoint_distance,
+        unsigned max_step_distance,
+        unsigned max_endpoint_distance) :
 stepPathAlgorithm(new _stepAstarAlgorithm()),
 updateTrivialPathToAgentAlgorithm(new _updateTrivialPathToAgentAlgorithm()),
 taskIndexerAlgorithm(new _closerTaskIndexerAlgorithm()),
@@ -38,6 +54,12 @@ endpointIndexerAlgorithm(new _closerEndpointIndexerAlgorithm()) {
 
     taskPathToAgentAlgorithm = new _taskPathToAgentAlgorithm(
             *stepPathAlgorithm);
+    
+    closerCooperatorAgentIndexerAlgorithm = new _closerCooperatorAgentIndexerAlgorithm(            
+            min_step_distance,
+            min_endpoint_distance,
+            max_step_distance,
+            max_endpoint_distance);
     
     selectRestEndpointToAgentAlgorithm = new _selectRestEndpointToAgentAlgorithm(
             *endpointIndexerAlgorithm,
@@ -98,10 +120,12 @@ endpointIndexerAlgorithm(new _closerEndpointIndexerAlgorithm()) {
             *selectChargingEndpointToAgentAlgorithm);
     
     updateBackwardTaskToAgentAlgorithm = new _updateBackwardTaskToAgentAlgorithm(
-            *selectBackwardTaskToAgentAlgorithm);
+            *selectBackwardTaskToAgentAlgorithm,
+            *closerCooperatorAgentIndexerAlgorithm);
     
     updateBackwardChargingTaskToAgentAlgorithm = new _updateBackwardTaskToAgentAlgorithm(
-            *selectBackwardChargingTaskToAgentAlgorithm);
+            *selectBackwardChargingTaskToAgentAlgorithm,
+            *closerCooperatorAgentIndexerAlgorithm);
 
     
 }
@@ -114,6 +138,7 @@ _updateTokenAlgorithms::~_updateTokenAlgorithms() {
     delete taskIndexerAlgorithm;
     delete endpointIndexerAlgorithm;
     delete pathToAgentAlgorithm;
+    delete closerCooperatorAgentIndexerAlgorithm; 
     
     delete selectRestEndpointToAgentAlgorithm;
     delete selectChargingEndpointToAgentAlgorithm;

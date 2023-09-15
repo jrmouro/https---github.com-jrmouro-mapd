@@ -21,13 +21,13 @@ _selectBackwardTaskToAgentAlgorithm::_selectBackwardTaskToAgentAlgorithm(
         float delivery_threshold) :
             taskPathToAgentAlgorithm(taskPathToAgentAlgorithm),
             taskIndexerAlgorithm(taskIndexerAlgorithm),
-            delivery_threshold(delivery_threshold) {}
+            delivery_threshold(delivery_threshold){}
 
 _selectBackwardTaskToAgentAlgorithm::_selectBackwardTaskToAgentAlgorithm(
         const _selectBackwardTaskToAgentAlgorithm& other) :
             taskPathToAgentAlgorithm(other.taskPathToAgentAlgorithm),
             taskIndexerAlgorithm(other.taskIndexerAlgorithm),
-            delivery_threshold(other.delivery_threshold) {}
+            delivery_threshold(other.delivery_threshold){}
 
 void _selectBackwardTaskToAgentAlgorithm::setTaskIndexerAlgorithm(
         _taskIndexerAlgorithm& taskIndexerAlgorithm) {
@@ -57,6 +57,10 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
         return false;
 
     });
+    
+    bool aux = false;
+    _task auxTask;
+    _stepPath auxPath;
 
     for (auto task : vtask) {
 
@@ -79,7 +83,7 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
             return false;
 
         });
-
+        
         if (ret) {
 
             originalTask = task;
@@ -92,6 +96,13 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
 
             if (ret) {
                 
+                //Guarda para uso futuro
+                aux = true;
+                auxTask = task;
+                auxPath = taskPath;
+                
+//                if(task.id() < 0) continue;
+                
                 taskPath.backward(
                         [&ret, &token, agent, &taskPath, thresholdAlgorithm, 
                         pickupSite, deliverySite, &originalTask, &selectedTask, 
@@ -101,7 +112,7 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
 
                     if (token.isTaskDeliveryEndpoint(site) && token.getStepMap().isPathDefinitelyFree(site, agent.id())) {
 
-                        ret = true;
+                        ret = true;                       
 
                         token.listAgents([&ret, site, agent](const _agent & otherAgent) { // verifica se o task endpoint está disponível
 
@@ -165,14 +176,14 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
                             }
 
                         }
+                        
+                        
 
                     }
 
                     return false;
 
-                });
-
-                
+                });                
                 
             }
 
@@ -180,6 +191,24 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
         
         if(ret) return true;
 
+    }
+    
+    if(aux){
+        
+        aux = agent.isAbleToFulfillTaskPath(token.getMap(), auxTask, auxPath);
+
+        if (aux) {
+            
+            originalTask = auxTask;
+            selectedTask = auxTask;
+
+            auxPath.pop();
+            selectedPath.progress(auxPath);
+
+            return true;
+
+        }
+        
     }
 
     return false;

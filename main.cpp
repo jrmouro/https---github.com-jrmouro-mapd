@@ -12,7 +12,7 @@ using namespace std;
 
 void test(){
     
-    std::string resultFile = "./../../charts/result.csv";
+    std::string resultFile = "./../../charts/test_result.csv";
     std::vector<std::string> mapFilenames, taskFilenames;
     std::vector<_system::TokenType> systemTokenTypes;    
     std::vector<std::pair<float, float>> thresholds;
@@ -22,16 +22,17 @@ void test(){
 //    thresholds.push_back(std::make_pair(.4f, .4f));
 //    thresholds.push_back(std::make_pair(.4f, .8f));
     
-//    mapFilenames.push_back("./Instances/test/test_0.map");
-    mapFilenames.push_back("./Instances/test/test_1.map");
-    mapFilenames.push_back("./Instances/test/test_2.map");
+//    mapFilenames.push_back("./Instances/test/test_2.map");
+    mapFilenames.push_back("./Instances/test/test_4.map");
+//    mapFilenames.push_back("./Instances/test/test_6.map");
+//    mapFilenames.push_back("./Instances/test/test_8.map");
     
-//    taskFilenames.push_back("./Instances/test/test_0.task");
     taskFilenames.push_back("./Instances/test/test_1.task");
-    taskFilenames.push_back("./Instances/test/test_2.task");
+//    taskFilenames.push_back("./Instances/test/test_27.task");
+//    taskFilenames.push_back("./Instances/test/test_79.task");
     
-    systemTokenTypes.push_back(_system::TokenType::tokenPass);
-    systemTokenTypes.push_back(_system::TokenType::threshold_tokenPass);
+//    systemTokenTypes.push_back(_system::TokenType::tokenPass);
+//    systemTokenTypes.push_back(_system::TokenType::threshold_tokenPass);
     systemTokenTypes.push_back(_system::TokenType::backwardTask_tokenPass);
         
     auto experiment = MultiSystemExperiment(
@@ -40,12 +41,12 @@ void test(){
         taskFilenames,                      // instance tasks
         mapFilenames,                       // instance map
         systemTokenTypes,                   // type of token
-        1200,                                // current agent level energy
-        1400,                                // maximum agent level energy
-        1200,                                // charged agent level energy
-        600,                                // critical agent level energy
-        64,                                 // cell_size
-        0);                               // timestep
+        800,                                // current agent level energy
+        1000,                                // maximum agent level energy
+        800,                                // charged agent level energy
+        500,                                // critical agent level energy
+        128,                                 // cell_size
+        1000);                               // timestep
            
 
     experiment.run();
@@ -56,15 +57,15 @@ void test(){
 
 void small(){
     
-    std::string resultFile = "./../../charts/result.csv";
+    std::string resultFile = "./../../charts/small_result.csv";
     std::vector<std::string> mapFilenames, taskFilenames;
     std::vector<_system::TokenType> systemTokenTypes;
     std::vector<std::pair<float, float>> thresholds;
     
     thresholds.push_back(std::make_pair(1.0f, 1.0f));
-    thresholds.push_back(std::make_pair(.7f, .7f));
-    thresholds.push_back(std::make_pair(.5f, .3f));
-    thresholds.push_back(std::make_pair(.3f, .5f));
+//    thresholds.push_back(std::make_pair(.7f, .7f));
+    thresholds.push_back(std::make_pair(.5f, .5f));
+//    thresholds.push_back(std::make_pair(.3f, .5f));
     
     mapFilenames.push_back("./Instances/small/kiva-10-500-5.map");
     mapFilenames.push_back("./Instances/small/kiva-20-500-5.map");
@@ -82,7 +83,7 @@ void small(){
     
     systemTokenTypes.push_back(_system::TokenType::tokenPass);
     systemTokenTypes.push_back(_system::TokenType::backwardTask_tokenPass);
-//    systemTokenTypes.push_back(_system::TokenType::threshold_tokenPass);
+    systemTokenTypes.push_back(_system::TokenType::threshold_tokenPass);
         
     auto experiment = MultiSystemExperiment(
         resultFile,

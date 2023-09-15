@@ -28,6 +28,9 @@ public:
     virtual std::string stateName()const{
         return "dead";
     }
+    
+    bool free() const { return false; }
+    bool criticalEnergy() { return true; }
 
     virtual void onUpdatePath(_token&,  _agent&) const;    
     virtual void onBeforeStepping(_token&,  _agent&) const;

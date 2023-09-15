@@ -29,7 +29,7 @@ void _agent_parked_CL::onUpdatePath(_token& token, _agent& agent) const {
         
         case _token::TokenUpdateType::charging_task:
             
-            if(agent.isPickupping()){
+            if(agent.isPickupSite()){
         
                 token.runTask(agent.currentTask());
 

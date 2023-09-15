@@ -50,7 +50,7 @@ public:
                         
         TokenUpdateType ret = TokenUpdateType::none;
     
-        if(agent.isInFinishedPath()){
+        if(agent.isInGoalSite()){
 
             if(uta->getUpdateTaskToAgentAlgorithm().solve(*this, agent)) {
 
@@ -111,7 +111,7 @@ public:
         
         TokenUpdateType ret = TokenUpdateType::none;
     
-        if(agent.isInFinishedPath()){
+        if(agent.isInGoalSite()){
 
             if(uta->getUpdateChargingTaskToAgentAlgorithm().solve(*this, agent)) {
 

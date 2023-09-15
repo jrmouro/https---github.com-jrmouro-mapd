@@ -28,7 +28,7 @@ void _agent_goingToPickup_CL::onAfterStepping(_token& token, _agent& agent) cons
         case AES::charged:
         case AES::normal:
             
-            if(agent.isPickupping()){
+            if(agent.isPickupSite()){
         
                 token.runTask(agent.currentTask());
 
@@ -44,7 +44,7 @@ void _agent_goingToPickup_CL::onAfterStepping(_token& token, _agent& agent) cons
         
         case AES::critical:
             
-            if(agent.isPickupping()){
+            if(agent.isPickupSite()){
         
                 token.runTask(agent.currentTask());
 
