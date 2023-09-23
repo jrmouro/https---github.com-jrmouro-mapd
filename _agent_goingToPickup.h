@@ -23,17 +23,14 @@ public:
     }
     
     virtual ~_agent_goingToPickup(){}
-            
-    virtual std::string stateName()const{
-        return "designed";
-    }
-            
+                 
     virtual void onAfterStepping(_token&, _agent&) const;
     virtual void onEnergyExpend(_token&, _agent&) const;
     virtual void onDraw(const Render&, const _agent&) const;
     
     protected:        
-        _agent_goingToPickup() : _agent_state() {}
+        _agent_goingToPickup() : _agent_state("goingToPickup") {}
+        _agent_goingToPickup(const std::string& id) : _agent_state(id) {}
     
     private:
         static _agent_state* _instance;

@@ -15,21 +15,11 @@
 #include "Text.h"
 #include "_system.h"
 
-_agent::_agent(
-        int _id, 
-        const _stepSite& currentSite, 
-        int energyCurrentLevel, 
-        int energyMaximumLevel,
-        int energyChargingLevel,  
-        int energyCriticalLevel) : 
+_agent::_agent(int _id, const _stepSite& currentSite, const _agent_energy_system& agent_energy_system): 
                 _id(_id), 
                 _currentPath(currentSite), 
                 _previousSite(currentSite),
-                energy_system(
-                    energyCurrentLevel, 
-                    energyMaximumLevel,
-                    energyChargingLevel, 
-                    energyCriticalLevel) {
+                energy_system(agent_energy_system) {
 
     if(energy_system.isAtCriticalLevel()) {
         
@@ -56,9 +46,9 @@ _agent::_agent(const _agent& other)  :
 
 _agent::~_agent(){ }
 
-void _agent::receive(_system& system) {
+void _agent::receive(_token& token) {
  
-    this->_state->onUpdatePath(system.getToken(), *this);
+    this->_state->onUpdatePath(token, *this);
         
 }
 
@@ -74,15 +64,15 @@ void _agent::stepping(_token& token) {
 
 }
 
-void _agent::move(_system& system) {
+void _agent::move(_token& token) {
     
-    this->_state->onBeforeStepping(system.getToken(), *this);
+    this->_state->onEnergyExpend(token, *this);
     
-    this->_state->onEnergyExpend(system.getToken(), *this);
-    
-    this->_state->onStepping(system.getToken(), *this);
+//    this->_state->onBeforeStepping(token, *this);
+        
+    this->_state->onStepping(token, *this);
      
-    this->_state->onAfterStepping(system.getToken(), *this);
+    this->_state->onAfterStepping(token, *this);
     
 }
 

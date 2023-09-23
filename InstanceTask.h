@@ -87,7 +87,10 @@ public:
         return lastStep;
     }
 
-    
+    unsigned getNumTasks() const {
+        return numTasks;
+    }
+        
 private:
 
     unsigned lastStep, numTasks;

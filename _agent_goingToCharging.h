@@ -23,17 +23,14 @@ public:
     }
     
     virtual ~_agent_goingToCharging(){}
-            
-    virtual std::string stateName()const{
-        return "goingToCharging";
-    }
-        
+             
     virtual void onAfterStepping(_token&, _agent&) const;
     virtual void onEnergyExpend(_token&, _agent&) const;
     virtual void onDraw(const Render&, const _agent&) const; 
     
     protected:        
-        _agent_goingToCharging() : _agent_state() {}
+        _agent_goingToCharging() : _agent_state("goingToCharging") {}
+        _agent_goingToCharging(const std::string& id) : _agent_state(id) {}
     
     private:
         static _agent_state* _instance;

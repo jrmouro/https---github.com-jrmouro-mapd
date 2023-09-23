@@ -23,11 +23,7 @@ public:
     }
     
     virtual ~_agent_charging(){}
-            
-    virtual std::string stateName()const{
-        return "charging";
-    }
-    
+         
     bool charging() const  { 
         return true; 
     }
@@ -38,7 +34,8 @@ public:
     virtual void onDraw(const Render&, const _agent&) const; 
     
     protected:        
-        _agent_charging() : _agent_state() {}
+        _agent_charging() : _agent_state("charging") {}
+        _agent_charging(const std::string& id) : _agent_state(id) {}
     
     private:
         static _agent_state* _instance;

@@ -96,7 +96,7 @@ void _token::setMoving(const _agent& agent, const _stepPath& path) {
 
 }
 
-int _token::currentEnergy()const {
+int _token::currentEnergy() const {
     int ret = 0;
     listAgents([&ret](_agent & agent) {
         ret += agent.currentEnergyLevel();
@@ -105,7 +105,7 @@ int _token::currentEnergy()const {
     return ret;
 }
 
-int _token::energyExpenditure()const {
+int _token::energyExpenditure() const {
     int ret = 0;
     listAgents([&ret](_agent & agent) {
         ret += (agent.energyCharging() - agent.currentEnergyLevel());
@@ -114,7 +114,7 @@ int _token::energyExpenditure()const {
     return ret;
 }
 
-void _token::listAgents(const std::function<bool(_agent&) > function)const {
+void _token::listAgents(const std::function<bool(_agent&) > function) const {
 
     for (auto pagent : agents) {
 
@@ -163,31 +163,31 @@ _token::TokenUpdateType _token::updateTrivialPathToAgent(_agent& agent) {
 
 }
 
-_token::TokenUpdateType _token::updateChargingTrivialPathToAgent(_agent& agent) {
-
-    auto uta = _updateTokenAlgorithms::getInstance();
-
-    TokenUpdateType ret = TokenUpdateType::none;
-
-    bool flag = uta->getUpdateTrivialPathToAgentAlgorithm().solve(*this, agent);
-
-    if (flag) {
-
-        ret = TokenUpdateType::charging_trivial;
-
-    } else {
-
-        try {
-            std::ostringstream stream;
-            stream << "charging trivial path error " << std::endl << agent;
-            MAPD_EXCEPTION(stream.str());
-        } catch (std::exception& e) {
-            std::cout << e.what() << std::endl;
-            std::abort();
-        }
-
-    }
-
-    return ret;
-
-}
+//_token::TokenUpdateType _token::updateChargingTrivialPathToAgent(_agent& agent) {
+//
+//    auto uta = _updateTokenAlgorithms::getInstance();
+//
+//    TokenUpdateType ret = TokenUpdateType::none;
+//
+//    bool flag = uta->getUpdateTrivialPathToAgentAlgorithm().solve(*this, agent);
+//
+//    if (flag) {
+//
+//        ret = TokenUpdateType::charging_trivial;
+//
+//    } else {
+//
+//        try {
+//            std::ostringstream stream;
+//            stream << "charging trivial path error " << std::endl << agent;
+//            MAPD_EXCEPTION(stream.str());
+//        } catch (std::exception& e) {
+//            std::cout << e.what() << std::endl;
+//            std::abort();
+//        }
+//
+//    }
+//
+//    return ret;
+//
+//}

@@ -12,150 +12,183 @@
 #include "SystemExperiment.h"
 
 
-class MultiSystemExperiment : public Experiment{
+class MultiSystemExperiment : public Experiment<std::string>{
     
 public:
     
     MultiSystemExperiment(
-            std::string resultFilename, 
-            std::vector<std::pair<float, float>> thresholds,
-            std::vector<std::string> taskFilenames,             
-            std::vector<std::string> mapFilenames,
-            std::vector<_system::TokenType> tokenTypes,             
-            const int currentEnergyLevelAgent,
-            const int maximumEnergyLevelAgent, 
-            const int chargedEnergyLevelAgent,  
-            const int criticalEnergyLevelAgent, 
+            const std::string& resultFilename, 
+            const std::vector<std::string>& tokenIds,
+            const std::vector<std::pair<float, float>>& thresholds,
+            const std::vector<std::string>& taskFilenames,             
+            const std::vector<std::string>& mapFilenames,
+            const std::vector<_agent_energy_system>& agent_energy_systems,
             const unsigned cell_size = 0, 
             const unsigned timestep = 0) :
+                    Experiment<std::string>("MultiSystemExperiment"),
                     resultFilename(resultFilename),
                     thresholds(thresholds),
                     mapFilenames(mapFilenames), 
                     taskFilenames(taskFilenames), 
-                    tokenTypes(tokenTypes),  
-                    maximumEnergyLevelAgent(maximumEnergyLevelAgent), 
-                    chargedEnergyLevelAgent(chargedEnergyLevelAgent), 
-                    currentEnergyLevelAgent(currentEnergyLevelAgent), 
-                    criticalEnergyLevelAgent(criticalEnergyLevelAgent), 
+                    tokenIds(tokenIds), 
+                    agent_energy_systems(agent_energy_systems),
                     cell_size(cell_size), 
                     timestep(timestep) {}
 
     MultiSystemExperiment(const MultiSystemExperiment& other) :
+            Experiment<std::string>(other),
             resultFilename(other.resultFilename),
             thresholds(other.thresholds),
             mapFilenames(other.mapFilenames), 
             taskFilenames(other.taskFilenames), 
-            tokenTypes(other.tokenTypes), 
-            maximumEnergyLevelAgent(other.maximumEnergyLevelAgent), 
-            chargedEnergyLevelAgent(other.chargedEnergyLevelAgent), 
-            currentEnergyLevelAgent(other.currentEnergyLevelAgent), 
-            criticalEnergyLevelAgent(other.criticalEnergyLevelAgent), 
+            tokenIds(other.tokenIds), 
+            agent_energy_systems(other.agent_energy_systems),
             cell_size(other.cell_size), 
             timestep(other.timestep) { }
 
-    
     virtual void run(){
-        
-        std::set<float> delivery_threshold_set;
-        
-        std::ofstream ofs (resultFilename, std::ofstream::out);
         
         bool headerFlag = true;
         
-        for (auto tokenType : tokenTypes) {
+        std::ofstream ofs (resultFilename, std::ofstream::out);        
+        
+        for (auto mapFilename : mapFilenames) {
             
-            if( tokenType == _system::TokenType::threshold_tokenPass ||
-                tokenType == _system::TokenType::backwardTask_tokenPass){
-                                                
-                for (auto tpair : thresholds) {
-                    
-                    std::set<float>::iterator it = delivery_threshold_set.find(tpair.second);
-                    
-                    if(tokenType == _system::TokenType::backwardTask_tokenPass){
-                    
-                        if(it != delivery_threshold_set.end()){
+            auto imap = InstanceMap::load(mapFilename);
+                        
+            for (auto taskFilename : taskFilenames) {
+                
+                imap->retsetTaskEndpoint();
+                
+                auto itasks = InstanceTask::load(taskFilename, [imap](unsigned id){
+                    return *imap->getMap().getNoBotEndPointById(id);
+                });
 
-                            continue;
-
-                        } else {
-
-                            delivery_threshold_set.insert(tpair.second);
+                itasks->getTaskMap().listTasks([imap](unsigned step, const _task& task){       
+                    imap->setTaskEndpoint(task.getPickup().GetRow(), task.getPickup().GetColunm());
+                    imap->setTaskEndpoint(task.getDelivery().GetRow(), task.getDelivery().GetColunm());            
+                    return false;
+                });
+                
+                std::vector<_token*> ptokens;
+                
+                for (auto tokenId : tokenIds) {
+                    
+                    if(tokenId == "TP") {
+                        
+                        for (auto agent_energy_system : agent_energy_systems) {
+                            
+                            ptokens.push_back(new TokenPass(imap->getMap(), imap->getStepMap(), agent_energy_system));
 
                         }
-                    
-                    }
-                    
-                    for (auto mapFilename : mapFilenames) {
-                
-                        for (auto taskFilename : taskFilenames) {
+                        
+                    }  else if(tokenId == "BTT") {
+                        
+                        std::set<float> deliveryThresholdSet;                        
+                        
+                        for (auto threshold : thresholds) {
+                            
+                            std::set<float>::iterator it = deliveryThresholdSet.find(threshold.second);
+                            
+                            if(it == deliveryThresholdSet.end()){
+                                
+                                deliveryThresholdSet.insert(threshold.second);
+                            
+                                for (auto agent_energy_system : agent_energy_systems) {
 
-                            SystemExperiment experiment(
-                                    taskFilename,
-                                    mapFilename,
-                                    tokenType,                             
-                                    currentEnergyLevelAgent, 
-                                    maximumEnergyLevelAgent, 
-                                    chargedEnergyLevelAgent,
-                                    criticalEnergyLevelAgent,
-                                    cell_size, 
-                                    timestep,
-                                    tpair.first, 
-                                    tpair.second);  
+                                    ptokens.push_back(new BackwardTaskToken(imap->getMap(), imap->getStepMap(), agent_energy_system, threshold.second));
 
-                            experiment.run();
-
-                            if(headerFlag){
-                                headerFlag = false;
-                                experiment.writeHeader(ofs);
-                                Writable::endlWrite(experiment, ofs);                      
+                                }
+                            
                             }
 
-                            experiment.writeRow(ofs);
-                            Writable::endlWrite(experiment, ofs);
+                        }
+                                          
+                        
+                    }   else if(tokenId == "TTP") {
+                        
+                        for (auto threshold : thresholds) {
+                            
+                            for (auto agent_energy_system : agent_energy_systems) {                               
+                                
+                                ptokens.push_back(new ThresholdTokenPass(imap->getMap(), imap->getStepMap(), agent_energy_system, threshold.first, threshold.second));
+
+                            }
 
                         }
-
-                    }
+                        
+                    }        
 
                 }
-
                 
-            } else {
-            
-                for (auto mapFilename : mapFilenames) {
+                for (auto ptoken : ptokens) {                   
+                    
+                    SystemExperiment se(
+                                    ptoken->name() + " ;" + mapFilename + " ;" + taskFilename,
+                                    itasks->getTaskMap(), 
+                                    *ptoken,           
+                                    cell_size,
+                                    timestep);  
+                    
+//                    std::cout << " - token: " << *ptoken << std::endl;
+                    std::cout << "System Experiment: " << std::endl;
+                    std::cout << " - id: " << se.id() << std::endl;
+                    std::cout << " - energy system: " << ptoken->getAgent_energy_system().id() << std::endl;
+                    
+                    std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 
-                    for (auto taskFilename : taskFilenames) {
-
-                        SystemExperiment experiment(
-                                taskFilename,
-                                mapFilename,
-                                tokenType,                             
-                                currentEnergyLevelAgent, 
-                                maximumEnergyLevelAgent, 
-                                chargedEnergyLevelAgent,
-                                criticalEnergyLevelAgent,
-                                cell_size, 
-                                timestep);  
-
-                        experiment.run();
-
-                        if(headerFlag){
-                            headerFlag = false;
-                            experiment.writeHeader(ofs);
-                            Writable::endlWrite(experiment, ofs);                      
-                        }
-
-                        experiment.writeRow(ofs);
-                        Writable::endlWrite(experiment, ofs);
-
+                    se.run();
+                    
+                    std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+                    std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+                    
+                    std::cout << " - makespan: " << ptoken->getCurrentStep() << std::endl;
+                    std::cout << " - energy expenditure: " << ptoken->energyExpenditure() << std::endl;
+                    std::cout << " - pending tasks: " << ptoken->getPendingTaskAmount() << std::endl;
+                    std::cout << " - assigned tasks: " << ptoken->getAssignedTaskAmount() << std::endl;
+                    std::cout << " - running tasks: " << ptoken->getRunningTaskAmount() << std::endl;
+                    std::cout << " - baskward tasks: " << ptoken->getBackwardTaskAmount() << std::endl;
+                    std::cout << " - finished tasks: " << ptoken->getFinishedTaskAmount() << std::endl;
+                    std::cout << " - duration: " << time_span.count() << " seconds." << std::endl << std::endl; 
+//                    std::cout << " - report: " << std::endl << se.getToken().getReportTaskMap() <<  std::endl << std::endl;
+//                    std::cout << " - token: " << *ptoken << std::endl;
+                    
+                    if(headerFlag){
+                        
+                        headerFlag = false;
+                        
+                        Writable::strWrite(*imap, ofs, "mapFilename", true);
+                        Writable::strWrite(*imap, ofs, "taskFilename", true); 
+                        imap->writeHeader(ofs);
+                        Writable::sepWrite(*imap, ofs);
+                        itasks->writeHeader(ofs);
+                        Writable::sepWrite(*imap, ofs);
+                        ptoken->writeHeader(ofs);
+                        Writable::endlWrite(*imap, ofs);
+                        
                     }
 
+                    Writable::strWrite(*imap, ofs, mapFilename, true);
+                    Writable::strWrite(*imap, ofs, taskFilename, true);
+                    imap->writeRow(ofs);
+                    Writable::sepWrite(*imap, ofs);
+                    itasks->writeRow(ofs);
+                    Writable::sepWrite(*imap, ofs);
+                    ptoken->writeRow(ofs);
+                    Writable::endlWrite(*imap, ofs);               
+                    
+//                    delete ptoken;
+                    
                 }
-            
+                
+                delete itasks;
+                
             }
-
+                        
+            delete imap;            
+                        
         }
-         
+        
         ofs.close();        
         
     }
@@ -164,17 +197,10 @@ public:
     
 private:
     
-    std::string resultFilename;
-    
-    std::vector<std::pair<float, float>> thresholds;
-    std::vector<std::string> mapFilenames, taskFilenames;
-    std::vector<_system::TokenType> tokenTypes;
-            
-    const int maximumEnergyLevelAgent, 
-            chargedEnergyLevelAgent, 
-            currentEnergyLevelAgent, 
-            criticalEnergyLevelAgent;
-    
+    const std::string& resultFilename; 
+    const std::vector<std::pair<float, float>>& thresholds;
+    const std::vector<std::string>& tokenIds, taskFilenames, mapFilenames;  
+    const std::vector<_agent_energy_system>& agent_energy_systems;            
     const unsigned cell_size = 0, timestep = 0;
 
 };

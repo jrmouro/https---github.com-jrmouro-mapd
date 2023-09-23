@@ -28,17 +28,13 @@ public:
     virtual bool criticalEnergy() const {
         return true;
     }
-            
-    virtual std::string stateName()const{
-        return "parked_CL";
-    }
 
     virtual void onUpdatePath(_token&, _agent&) const;
     virtual void onEnergyExpend(_token&, _agent&) const;
     virtual void onAfterStepping(_token&,  _agent&) const;
     
     protected:        
-        _agent_parked_CL() : _agent_parked() {}
+        _agent_parked_CL() : _agent_parked("parked_CL") {}
     
     private:
         static _agent_state* _instance;

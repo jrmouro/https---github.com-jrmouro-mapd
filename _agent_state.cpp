@@ -16,17 +16,15 @@ bool _agent_state::free() const { return true; }
 bool _agent_state::charging() const  { return false; }
 bool _agent_state::criticalEnergy() const { return false; }
 
-void _agent_state::onUpdatePath(_token& token, _agent& agent) const {
-}
+void _agent_state::onUpdatePath(_token& token, _agent& agent) const {}
 
-void _agent_state::onBeforeStepping(_token& token, _agent& agent) const {
-}
+//void _agent_state::onBeforeStepping(_token& token, _agent& agent) const {}
 
 void _agent_state::onStepping(_token& token, _agent& agent) const {
 
     agent.stepping();
 
-//    if (token.getCurrentStep() > 1000 && agent.id() == 0) {
+//    if (token.getCurrentStep() >= 200 && agent.id() == 0) {
 //        int i = 0;
 //        for (; i < 0; i++)
 //            token.getStepMap().stepView(token.getCurrentStep() + i);        
@@ -35,8 +33,7 @@ void _agent_state::onStepping(_token& token, _agent& agent) const {
 
 }
 
-void _agent_state::onAfterStepping(_token& token, _agent& agent) const {
-}
+void _agent_state::onAfterStepping(_token& token, _agent& agent) const {}
 
 void _agent_state::onDraw(const Render& render, const _agent& agent) const {
 

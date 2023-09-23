@@ -24,23 +24,19 @@ public:
     }
     
     virtual ~_agent_dead(){}
-            
-    virtual std::string stateName()const{
-        return "dead";
-    }
-    
+          
     bool free() const { return false; }
     bool criticalEnergy() { return true; }
 
     virtual void onUpdatePath(_token&,  _agent&) const;    
-    virtual void onBeforeStepping(_token&,  _agent&) const;
+//    virtual void onBeforeStepping(_token&,  _agent&) const;
     virtual void onEnergyExpend(_token&,  _agent&) const;
     virtual void onStepping(_token&,  _agent&) const;
     virtual void onAfterStepping(_token&,  _agent&) const;    
     virtual void onDraw(const Render&, const _agent&) const;
     
     protected:        
-        _agent_dead() : _agent_state() {}
+        _agent_dead() : _agent_state("dead") {}
     
     private:
         static _agent_state* _instance;

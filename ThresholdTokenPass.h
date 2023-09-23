@@ -17,44 +17,58 @@ class ThresholdTokenPass : public _token{
 public:
     ThresholdTokenPass(
             const _map& map, 
-            _stepMap& stepMap, 
-            std::vector<_site>& endpoints,  
-            std::vector<_site>& chargingEndpoints, 
-            const _endpointsDistanceAlgorithm& endpointsDistanceAlgorithm, 
+            const _stepMap& stepMap, 
+            const _agent_energy_system& agent_energy_system,
             float pickup_threshold, 
-            float delivery_threshold) :
-                _token(map, 
-                        stepMap, 
-                        endpoints, 
-                        chargingEndpoints, 
-                        endpointsDistanceAlgorithm), 
+            float delivery_threshold)  : 
+                _token(map, stepMap, agent_energy_system),
                 pickup_threshold(pickup_threshold), 
-                delivery_threshold(delivery_threshold){
-    }
+                delivery_threshold(delivery_threshold) { }
     
-    ThresholdTokenPass(const ThresholdTokenPass& other) : _token(other) { }
+//    ThresholdTokenPass(const ThresholdTokenPass& other) : 
+//                _token(other),
+//                pickup_threshold(other.pickup_threshold), 
+//                delivery_threshold(other.delivery_threshold) { }
 
     virtual ~ThresholdTokenPass(){}
     
-    virtual _token* getInstance() const {
-        return new ThresholdTokenPass(*this);
+//    virtual _token* builderToken(
+//            const _map& map, 
+//            const _stepMap& stepMap, 
+//            const _agent_energy_system& agent_energy_system,
+//            float pickup_threshold = 0, 
+//            float delivery_threshold = 0) const{
+//        
+//        
+//        return new ThresholdTokenPass(map, stepMap, agent_energy_system, pickup_threshold, delivery_threshold);
+//        
+//    }
+    
+//    virtual _token* getInstance() const {
+//        return new ThresholdTokenPass(*this);
+//    }
+    
+    virtual std::string name() const {
+        
+        std::stringstream s;
+        s << "TTP(" << pickup_threshold << " : " << delivery_threshold << ")"; 
+        
+        return s.str();
+        
     }
     
     virtual std::string id() const {
         
-        std::stringstream s;
-        s << "ThresholdTokenPass(" << pickup_threshold << " : " << delivery_threshold << ")"; 
-        
-        return s.str();
+        return "TTP";
         
     }
     
     virtual _token::TokenUpdateType updatePath(_agent& agent){
         
 //        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
-        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(500);
+        _closerTaskIndexerAlgorithm closerTaskIndexerAlgorithm;
         
-        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerThresholdAlgorithm, pickup_threshold, delivery_threshold);
+        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerAlgorithm, pickup_threshold, delivery_threshold);
         
         TokenUpdateType ret = TokenUpdateType::none;
     
@@ -114,9 +128,9 @@ public:
     virtual _token::TokenUpdateType updateChargingPath(_agent& agent){
         
 //        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
-        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(500);
+        _closerTaskIndexerAlgorithm closerTaskIndexerAlgorithm;
         
-        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerThresholdAlgorithm, pickup_threshold, delivery_threshold);
+        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerAlgorithm, pickup_threshold, delivery_threshold);
         
         TokenUpdateType ret = TokenUpdateType::none;
     
@@ -136,7 +150,7 @@ public:
 
                     if(uta->getUpdateTrivialPathToAgentAlgorithm().solve(*this, agent)){
                         
-                        ret =  TokenUpdateType::charging_trivial;                      
+                        ret =  TokenUpdateType::trivial;                      
                         
                     } else {
                         
@@ -171,6 +185,14 @@ public:
     
         return ret;
 
+    }
+    
+    void setDelivery_threshold(float delivery_threshold) {
+        this->delivery_threshold = delivery_threshold;
+    }
+
+    void setPickup_threshold(float pickup_threshold) {
+        this->pickup_threshold = pickup_threshold;
     }
     
 private:

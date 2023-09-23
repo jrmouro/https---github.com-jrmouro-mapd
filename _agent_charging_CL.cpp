@@ -92,11 +92,11 @@ void _agent_charging_CL::onUpdatePath(_token& token, _agent& agent) const{
             changeState(agent, _agent_dead::getInstance());
             break;        
         
-        default:   
-    
-            tut = token.updateChargingTrivialPathToAgent(agent);
+        default: 
+            
+            tut = token.updateTrivialPathToAgent(agent);
 
-            if(tut != _token::TokenUpdateType::charging_trivial){
+            if(tut != _token::TokenUpdateType::trivial){
 
                 try {
                     std::ostringstream stream;
@@ -108,6 +108,21 @@ void _agent_charging_CL::onUpdatePath(_token& token, _agent& agent) const{
                 }
 
             }
+    
+//            tut = token.updateChargingTrivialPathToAgent(agent);
+//
+//            if(tut != _token::TokenUpdateType::charging_trivial){
+//
+//                try {
+//                    std::ostringstream stream;
+//                    stream << "invalid token update type: " << agent << std::endl;
+//                    MAPD_EXCEPTION(stream.str());
+//                } catch (std::exception& e) {
+//                    std::cout << e.what() << std::endl;
+//                    std::abort();
+//                }
+//
+//            }
     
     }
     

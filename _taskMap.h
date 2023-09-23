@@ -83,9 +83,11 @@ public:
 
         while (std::getline(filestream, line)) {
             
-            int t, s, g, ts, tg;
+            
+            int t = -1, s, g, ts, tg;
             std::stringstream(line) >> t >> s >> g >> ts >> tg;            
-            this->set(t, _task(taskId++, oracle(s), oracle(g)));           
+            this->set(t, _task(taskId++, oracle(s), oracle(g)));   
+            lastStepTask = std::max<int>((unsigned)t, lastStepTask);
 
         }
 
@@ -110,10 +112,18 @@ public:
         return os;
         
     }
-
+    
+    unsigned getNumTasks()const{
+        return tasks.size();
+    }
+    
+    unsigned getLastTask() const {
+        return lastStepTask;
+    }
 
 private:
 
+    unsigned lastStepTask = 0;
     std::map<unsigned, std::vector<_task>> tasks;
 
 };

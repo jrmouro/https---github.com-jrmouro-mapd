@@ -124,64 +124,64 @@ public:
         
     }
     
-    _stepMap& operator=(const _stepMap& right) {
-        // Check for self-assignment!
-        if (this == &right) // Same object?
-            return *this; // Yes, so skip assignment, and just return *this.
-        if(this->nodes != nullptr) delete this->nodes;
-        if(this->row_edge != nullptr) delete this->row_edge;
-        if(this->colunm_edge != nullptr) delete this->colunm_edge;
-        
-        this->colunm_size = right.colunm_size;
-        this->row_size = right.row_size;
-        this->step_size = right.step_size;
-        this->nodes_product = right.nodes_product;
-        this->row_product = right.row_product;
-        this->colunm_product = right.colunm_product;
-        
-        unsigned size = right.step_size * right.nodes_product;
-        
-        if(size > 0){            
-            this->nodes = new int[size];
-            for (unsigned i = 0; i < size; i++)
-                this->nodes[i] = right.nodes[i];
-        }
-        
-        if(row_size > 1){
-            
-            colunm_product = (row_size - 1) * colunm_size;
-            size = step_size * colunm_product;
-            
-            if(size > 0) {
-                
-                colunm_edge = new int[size];
-            
-                for (unsigned i = 0; i < size; i++)
-                    this->colunm_edge[i] = right.colunm_edge[i];
-                
-            }
-            
-        }
-        
-        if(colunm_size > 1){
-            
-            row_product = row_size * (colunm_size - 1);
-            size = step_size * row_product;
-            
-            if(size > 0){
-                
-                row_edge = new int[size];
-                
-                for (unsigned i = 0; i < size; i++)
-                    this->row_edge[i] = right.row_edge[i];
-                
-            }
-            
-        }
-        
-        return *this;
-        
-    }
+//    _stepMap& operator=(const _stepMap& right) {
+//        // Check for self-assignment!
+//        if (this == &right) // Same object?
+//            return *this; // Yes, so skip assignment, and just return *this.
+//        if(this->nodes != nullptr) delete this->nodes;
+//        if(this->row_edge != nullptr) delete this->row_edge;
+//        if(this->colunm_edge != nullptr) delete this->colunm_edge;
+//        
+//        this->colunm_size = right.colunm_size;
+//        this->row_size = right.row_size;
+//        this->step_size = right.step_size;
+//        this->nodes_product = right.nodes_product;
+//        this->row_product = right.row_product;
+//        this->colunm_product = right.colunm_product;
+//        
+//        unsigned size = right.step_size * right.nodes_product;
+//        
+//        if(size > 0){            
+//            this->nodes = new int[size];
+//            for (unsigned i = 0; i < size; i++)
+//                this->nodes[i] = right.nodes[i];
+//        }
+//        
+//        if(row_size > 1){
+//            
+//            colunm_product = (row_size - 1) * colunm_size;
+//            size = step_size * colunm_product;
+//            
+//            if(size > 0) {
+//                
+//                colunm_edge = new int[size];
+//            
+//                for (unsigned i = 0; i < size; i++)
+//                    this->colunm_edge[i] = right.colunm_edge[i];
+//                
+//            }
+//            
+//        }
+//        
+//        if(colunm_size > 1){
+//            
+//            row_product = row_size * (colunm_size - 1);
+//            size = step_size * row_product;
+//            
+//            if(size > 0){
+//                
+//                row_edge = new int[size];
+//                
+//                for (unsigned i = 0; i < size; i++)
+//                    this->row_edge[i] = right.row_edge[i];
+//                
+//            }
+//            
+//        }
+//        
+//        return *this;
+//        
+//    }
 
 
     virtual ~_stepMap() {
@@ -448,21 +448,18 @@ public:
         
         auto current = path.currentSite();
         this->setTypesFrom(current.GetStep() + 1, current.GetRow(), current.GetColunm(), NodeType::freeNode);
-//        auto goal = path.goalSite();
-//        this->setTypesFrom(goal.GetStep(), goal.GetRow(), goal.GetColunm(), type);
-        this->setTypesFrom(path.goalSite(), type);
+        auto goal = path.goalSite();
+        this->setTypesFrom(goal.GetStep(), goal.GetRow(), goal.GetColunm(), type);
+//        this->setTypesFrom(path.currentSite(), NodeType::freeNode);
+//        this->setTypesFrom(path.goalSite(), type);
         
         
         
         path.movingList([this,type](const _stepSite& s, const _stepSite& g){
-//            this->setTypesUntil(s, type);
             this->setNodeType(s, type);
             this->setEdgeType(s.GetStep(), s, g, type);
             return false;
         });
-        
-//        auto goal = path.goalSite();
-//        this->setTypesFrom(goal.GetStep() - 1, goal.GetRow(), goal.GetColunm(), type);
         
     }
     

@@ -8,67 +8,23 @@
 #ifndef _ASTARDISTANCEALGORITHM_H
 #define _ASTARDISTANCEALGORITHM_H
 
-#include <climits>
+
 #include "_distanceAlgorithm.h"
 #include "_map.h"
 #include "_path.h"
 #include "_astarAlgorithm.h"
 
+class _map;
 class _astarDistanceAlgorithm : public _distanceAlgorithm{
 public:
     
-    _astarDistanceAlgorithm(const _map& map) :
-    map(map) { }
+    _astarDistanceAlgorithm(const _map& map);
     
-    _astarDistanceAlgorithm(const _astarDistanceAlgorithm& other) :
-    map(other.map) { }
+    _astarDistanceAlgorithm(const _astarDistanceAlgorithm& other);
     
-    virtual ~_astarDistanceAlgorithm(){}
+    virtual ~_astarDistanceAlgorithm();
     
-    virtual unsigned solve(const _site& start, const _site& goal) const{
-        
-        if(map.isNodeBelonging(start)){
-            
-            if(map.isNodeBelonging(goal)){
-                
-                _astarAlgorithm astar;
-                
-                _path path;
-                
-                if(astar.solve(map, start, goal, path))
-                    return path.size() - 1;
-                
-            } else {
-                
-                
-                try {
-                    std::ostringstream stream;
-                    stream << "invalid goal site: " << goal;
-                    MAPD_EXCEPTION(stream.str());
-                } catch (std::exception& e) {
-                    std::cout << e.what() << std::endl;
-                    std::abort();
-                }
-                
-            }
-            
-        }else{
-            
-            try {
-                std::ostringstream stream;
-                stream << "invalid start site: " << start;
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
-            
-        }
-        
-        return UINT_MAX;
-        
-    }
-    
+    virtual unsigned solve(const _site& start, const _site& goal) const ;    
     
 private:
     

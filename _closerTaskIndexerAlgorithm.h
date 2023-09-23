@@ -9,7 +9,7 @@
 #define _CLOSERTASKINDEXERALGORITHM_H
 
 #include "_taskIndexerAlgorithm.h"
-#include "_endPointsDistanceAlgorithm.h"
+#include "_endpointsDistanceAlgorithm.h"
 
 class _closerTaskIndexerAlgorithm : public _taskIndexerAlgorithm{
     

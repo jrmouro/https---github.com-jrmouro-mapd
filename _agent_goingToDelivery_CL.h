@@ -24,11 +24,7 @@ public:
     }
     
     virtual ~_agent_goingToDelivery_CL(){}
-        
-    virtual std::string stateName()const{
-        return "goingToDelivery_CL";
-    }
-    
+         
     virtual bool free() const{
         return false;
     }
@@ -41,7 +37,7 @@ public:
     virtual void onEnergyExpend(_token&, _agent&) const;
        
     protected:
-        _agent_goingToDelivery_CL() : _agent_goingToDelivery() {}
+        _agent_goingToDelivery_CL() : _agent_goingToDelivery("goingToDelivery_CL") {}
 
     private:
         static _agent_state* _instance;

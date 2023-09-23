@@ -23,11 +23,7 @@ public:
     }
     
     virtual ~_agent_goingToPickup_CL(){}
-            
-    virtual std::string stateName()const{
-        return "goingToPickup_CL";
-    }
-    
+       
     virtual bool criticalEnergy() const {
         return true;
     }
@@ -36,7 +32,7 @@ public:
     virtual void onEnergyExpend(_token&, _agent&) const;
     
     protected:        
-        _agent_goingToPickup_CL() : _agent_goingToPickup() {}
+        _agent_goingToPickup_CL() : _agent_goingToPickup("goingToPickup_CL") {}
     
     private:
         static _agent_state* _instance;

@@ -11,39 +11,59 @@
 #include "_token.h"
 
 class BackwardTaskToken : public _token{
-public:
-    BackwardTaskToken(const _map& map, 
-            _stepMap& stepMap, 
-            std::vector<_site>& endpoints, 
-            std::vector<_site>& chargingEndpoints,  
-            const _endpointsDistanceAlgorithm& endpointsDistanceAlgorithm, 
-            float delivery_threshold) :
-            _token(map, stepMap, endpoints, chargingEndpoints, endpointsDistanceAlgorithm),
-            delivery_threshold(delivery_threshold) {
-    }
     
-    BackwardTaskToken(const BackwardTaskToken& other) : _token(other) { }
+public:
+    
+    BackwardTaskToken(
+            const _map& map, 
+            const _stepMap& stepMap, 
+            const _agent_energy_system& agent_energy_system,
+            float delivery_threshold) :
+                _token(map, stepMap, agent_energy_system),
+                delivery_threshold(delivery_threshold) { }
+    
+//    BackwardTaskToken(const BackwardTaskToken& other) : 
+//                _token(other), 
+//                delivery_threshold(other.delivery_threshold){ }
 
     virtual ~BackwardTaskToken(){}
     
-    virtual _token* getInstance() const {
-        return new BackwardTaskToken(*this);
+//    virtual _token* builderToken(
+//            const _map& map, 
+//            const _stepMap& stepMap, 
+//            const _agent_energy_system& agent_energy_system,
+//            float pickup_threshold = 0, 
+//            float delivery_threshold = 0) const{
+//        
+//        
+//        return new BackwardTaskToken(map, stepMap, agent_energy_system, delivery_threshold);
+//        
+//    }
+    
+//    virtual _token* getInstance() const {
+//        return new BackwardTaskToken(*this);
+//    }
+    
+    virtual std::string name() const {
+        
+        std::stringstream s;
+        s << "BTT(" << delivery_threshold << ")"; 
+        
+        return s.str();
+        
     }
     
     virtual std::string id() const {
         
-        std::stringstream s;
-        s << "BackwardTaskToken(" << delivery_threshold << ")"; 
-        
-        return s.str();
+        return "BTT";
         
     }
     
     virtual _token::TokenUpdateType updatePath(_agent& agent){
         
 //        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
-        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(500);
-        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerThresholdAlgorithm, .0f, delivery_threshold);
+        _closerTaskIndexerAlgorithm closerTaskIndexerAlgorithm;
+        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerAlgorithm, .0f, delivery_threshold);
                         
         TokenUpdateType ret = TokenUpdateType::none;
     
@@ -102,9 +122,9 @@ public:
     virtual _token::TokenUpdateType updateChargingPath(_agent& agent){
         
 //        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
-        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(500);
+        _closerTaskIndexerAlgorithm closerTaskIndexerAlgorithm;
         
-        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerThresholdAlgorithm, .0f, delivery_threshold);
+        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerAlgorithm, .0f, delivery_threshold);
         
         TokenUpdateType ret = TokenUpdateType::none;
     
@@ -124,7 +144,7 @@ public:
 
                     if(uta->getUpdateTrivialPathToAgentAlgorithm().solve(*this, agent)){
                         
-                        ret =  TokenUpdateType::charging_trivial;                      
+                        ret =  TokenUpdateType::trivial;                      
                         
                     } else {
                         
@@ -159,6 +179,10 @@ public:
     
         return ret;
 
+    }
+    
+    void setDelivery_threshold(float delivery_threshold) {
+        this->delivery_threshold = delivery_threshold;
     }
     
 private:

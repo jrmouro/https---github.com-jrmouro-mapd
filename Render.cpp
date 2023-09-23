@@ -34,13 +34,6 @@ void Render::loop(unsigned elapse, std::function<void()> update){
         
     while (window->isOpen()){
         
-        this->elapsed = clock.restart();
-        time += this->elapsed;
-        if(time > sf::milliseconds(elapse)){
-            time = time - sf::milliseconds(elapse);
-            update();
-        }
-
         sf::Event event;
 
         while (window->pollEvent(event)){
@@ -59,6 +52,13 @@ void Render::loop(unsigned elapse, std::function<void()> update){
         }
 
         window->display();
+        
+        this->elapsed = clock.restart();
+        time += this->elapsed;
+        if(time > sf::milliseconds(elapse)){
+            time = time - sf::milliseconds(elapse);
+            update();
+        }
 
     }
 

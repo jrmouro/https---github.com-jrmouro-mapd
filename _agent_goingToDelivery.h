@@ -24,11 +24,7 @@ public:
     }
     
     virtual ~_agent_goingToDelivery(){}
-        
-    virtual std::string stateName()const{
-        return "goingToDelivery";
-    }
-    
+          
     virtual bool free() const{
         return false;
     }
@@ -38,7 +34,8 @@ public:
     virtual void onDraw(const Render&, const _agent&) const;
        
     protected:
-        _agent_goingToDelivery() : _agent_state() {}
+        _agent_goingToDelivery() : _agent_state("goingToDelivery") {}
+        _agent_goingToDelivery(const std::string& id) : _agent_state(id) {}
 
     private:
         static _agent_state* _instance;

@@ -20,7 +20,7 @@ bool _selectTrivialPathToAgentAlgorithm::solve(
 
         trivialPathAlgorithm.solve(agent.currentSite(), trivialPath);
         
-        return agent.isAbleToFulfillNoCarryngPath(token.getMap(), trivialPath);
+        return agent.isAbleToFulfillTrivialPath(token.getMap(), trivialPath);
         
     }
 

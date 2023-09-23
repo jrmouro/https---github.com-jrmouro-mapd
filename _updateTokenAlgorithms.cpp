@@ -33,7 +33,7 @@ _updateTokenAlgorithms::_updateTokenAlgorithms(
                 max_step_distance,
                 max_endpoint_distance){
 
-    delete this->taskIndexerAlgorithm;
+//    delete this->taskIndexerAlgorithm;
     this->taskIndexerAlgorithm = taskIndexerAlgorithm.getInstance();
 }
 

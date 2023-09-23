@@ -8,99 +8,47 @@
 #ifndef _ASTARALGORITHM_H
 #define _ASTARALGORITHM_H
 
-#include <unordered_map>
-#include <unordered_set>
 #include <queue>
-#include <cmath>
 #include <iostream>
 #include "_pathAlgorithm.h"
-#include "_map.h"
 #include "_site.h"
-#include "_path.h"
 
+class _site;
 class _astarAlgorithm : public _pathAlgorithm{
 public:
     
-    _astarAlgorithm(){}
+    _astarAlgorithm();
     
-    _astarAlgorithm(const _astarAlgorithm& other){}
+    _astarAlgorithm(const _astarAlgorithm& other);
     
-    virtual bool solve(const _map& map, const _site& start, const _site& goal, _path& path) const{
-        
-        bool ret = false;  
-        ClosedStates closedStates(map.getColumn_size() ,map.getRow_size()*map.getColumn_size());
-        PriorityStates priorityStates;
-        std::vector<AstarState*> visitedStates;
-        
-        auto bstart = _site(start.GetRow(), start.GetColunm());
-        
-        AstarState* startState = new AstarState(.0f, this->heuristic(start, goal), bstart, nullptr);        
-        AstarState* solved = this->solveAux_iterative(startState, map, goal, closedStates, priorityStates, visitedStates);
-                  
-//        std::cout << map << std::endl;
-        
-        if(solved != nullptr){
-            
-            path.clear();
-        
-            while(solved != nullptr){            
-                path.add(solved->getSite());
-                solved = solved->getPrevious();
-            } 
-            
-//            path.pop(); // retira o site inicial
-            
-            ret = true;
-        
-        }
-        
-        for (auto elem : visitedStates) {
-            
-            delete elem;
-
-        }
-        
-        
-                
-        return ret;
-        
-    }
+    virtual bool solve(
+            const _map& map, 
+            const _site& start, 
+            const _site& goal, 
+            _path& path) const;
     
-    virtual ~_astarAlgorithm(){ }
+    virtual ~_astarAlgorithm();
     
 protected:
         
     class AstarState{
     public:
         
-        AstarState(float traveled, float heuristic, const _site& site, AstarState* previous) :
-        traveled(traveled), _cost(heuristic + traveled), site(site), previous(previous) {}
-        
+        AstarState(float traveled, float heuristic, const _site& site, AstarState* previous);        
 
-        AstarState(const AstarState& other) :
-        traveled(other.traveled), _cost(other._cost), site(other.site), previous(other.previous) { }
+        AstarState(const AstarState& other);
         
-        virtual ~AstarState(){ }
+        virtual ~AstarState();
         
-        const _site getSite() const {
-            return site;
-        }
+        const _site getSite() const;
         
-        float cost() const{
-            return this->_cost; 
-        }
+        float cost() const;
 
-        float getTraveled() const {
-            return traveled;
-        }
+        float getTraveled() const;
                 
-        bool operator<(const AstarState& right) const {
-            return this->cost() < right.cost();
-        }
+        bool operator<(const AstarState& right) const;
                 
-        AstarState* getPrevious() const {
-            return this->previous;
-        }
+        AstarState* getPrevious() const;
         
         friend std::ostream& operator<<(std::ostream& os, const AstarState& obj) {
             os << "site: " << obj.site;
@@ -118,9 +66,7 @@ protected:
     
     class AstarStateComparison {
     public:      
-        bool operator() (const AstarState* as1, const AstarState* as2) const {
-          return *as2 < *as1;
-        }
+        bool operator() (const AstarState* as1, const AstarState* as2) const;
     };
     
     
@@ -130,38 +76,15 @@ private:
         
     public:
         
-        virtual ~PriorityStates(){
-            
-            while (!this->states.empty()){
-                delete states.top();
-               this->states.pop();
-            }
-            
-        }
+        virtual ~PriorityStates();
         
-        void push(AstarState*  state){
-            
-            this->states.push(state);
-            
-        }
+        void push(AstarState*  state);
         
-        AstarState* pop(){
-            if(this->states.empty())
-                return nullptr;
-            
-            auto ret = this->states.top();
-            this->states.pop();
-            return ret;
-        }
+        AstarState* pop();
         
-        bool empty(){
-            return this->states.empty();
-        }
+        bool empty();
         
-        void clear(){            
-            while (!this->states.empty())
-               this->states.pop();           
-        }
+        void clear();
         
         
     private:
@@ -173,36 +96,20 @@ private:
     class ClosedStates{
     public:
         
-        ClosedStates(unsigned colunm, unsigned size) :
-        colunm(colunm), states(size, false) {}
+        ClosedStates(unsigned colunm, unsigned size);
         
-        ClosedStates(const ClosedStates& other) :
-        colunm(other.colunm), states(other.states) { }
+        ClosedStates(const ClosedStates& other);
 
-        void add(AstarState* state){
-            states[
-                state->getSite().GetRow() * colunm + 
-                state->getSite().GetColunm()] = true;             
-        }
+        void add(AstarState* state);
         
-        bool closed(const _site& site){
-                        
-            return states[
-                site.GetRow() * colunm + 
-                site.GetColunm()];
-            
-        }
+        bool closed(const _site& site);
         
     private:
         unsigned colunm;
         std::vector<bool> states;
     };
     
-    virtual float heuristic(const _site& start, const _site& goal) const{
-        
-        return std::abs((int)start.GetRow() - (int)goal.GetRow()) + std::abs((int)start.GetColunm() - (int)goal.GetColunm());
-        
-    }    
+    virtual float heuristic(const _site& start, const _site& goal) const;
     
     AstarState* solveAux_recursive(
         AstarState* current,
@@ -210,43 +117,7 @@ private:
         const _site& goal,
         ClosedStates& closedStates,
         PriorityStates& priorityStates,
-        std::vector<AstarState*>& visitedStates)const{
-        
-        visitedStates.push_back(current);
-                
-        if(goal.GetRow() == current->getSite().GetRow() && goal.GetColunm() == current->getSite().GetColunm()){
-                        
-            return current;
-            
-        }
-            
-        map.listNeighborFreeSites(current->getSite(), [current, goal, &closedStates, &priorityStates, this](const _site& site){
-            
-            if(!closedStates.closed(site)){
-                
-                auto state = new AstarState(current->getTraveled() + 1, this->heuristic(site, goal), site, current);
-
-                priorityStates.push(state);
-                
-                closedStates.add(state);
-
-            }
-         
-            return false;
-            
-        });
-        
-        if(!priorityStates.empty()){
-            
-            auto state = priorityStates.pop();
-            
-            return this->solveAux_recursive(state, map, goal, closedStates, priorityStates, visitedStates);
-            
-        }  
-                   
-        return nullptr;
-        
-    }
+        std::vector<AstarState*>& visitedStates) const;
     
     AstarState* solveAux_iterative(
         AstarState* current,
@@ -254,50 +125,7 @@ private:
         const _site& goal,
         ClosedStates& closedStates,
         PriorityStates& priorityStates,
-        std::vector<AstarState*>& visitedStates) const {
-        
-        while(current != nullptr){
-            
-            visitedStates.push_back(current);
-            
-            if(goal.GetRow() == current->getSite().GetRow() && goal.GetColunm() == current->getSite().GetColunm()){
-                        
-                return current;
-
-            }
-            
-            map.listNeighborFreeSites(current->getSite(), [current, goal, &closedStates, &priorityStates, this](const _site& site){
-            
-            
-                if(!closedStates.closed(site)){
-
-                    auto state = new AstarState(current->getTraveled() + 1, this->heuristic(site, goal), site, current);
-                    
-                    closedStates.add(state);
-                    
-                    priorityStates.push(state);
-                    
-                }
-
-                return false;
-
-            });
-            
-            if(!priorityStates.empty()){
-            
-                current = priorityStates.pop();
-                                
-            }  else {
-                
-                current = nullptr;
-                
-            }
-                        
-        }
-                               
-        return nullptr;               
-        
-    }
+        std::vector<AstarState*>& visitedStates) const;
     
 };
 

@@ -11,6 +11,7 @@
 #include <vector>
 #include "InstanceMap.h"
 #include "InstanceTask.h"
+#include "_endpointsDistanceAlgorithm.h"
 
 
 class InstanceMAPD : public Writable{
@@ -18,19 +19,16 @@ public:
     
         
     InstanceMAPD(InstanceMap* instanceMap, InstanceTask* instanceTask) :
-        instanceMap(instanceMap), instanceTask(instanceTask) {}
+        instanceMap(instanceMap), instanceTask(instanceTask) { }
     
     InstanceMAPD(const InstanceMAPD& other) :
         instanceMap(new InstanceMap(*other.instanceMap)), 
-        instanceTask(new InstanceTask(*other.instanceTask)) {
-    }
-
+        instanceTask(new InstanceTask(*other.instanceTask)) { }
     
-    virtual ~InstanceMAPD() {
-    
+    virtual ~InstanceMAPD() {    
         if(instanceMap != nullptr) delete instanceMap;
         if(instanceTask != nullptr) delete instanceTask;
-    
+        
     }
     
     virtual void writeHeader(std::ostream& fs) const {
@@ -51,7 +49,7 @@ public:
         
         auto map = InstanceMap::load(map_filename);
         auto tasks = InstanceTask::load(task_filename, [map](unsigned id){
-            return *map->getNoBotEndPointById(id);
+            return *map->getMap().getNoBotEndPointById(id);
         });
         
         tasks->getTaskMap().listTasks([map](unsigned step, const _task& task){       
@@ -86,7 +84,7 @@ public:
         
     void listBotsEndPoints(const std::function<bool(unsigned, const _site&)>& function) const {
         
-        instanceMap->listBotsEndPoints(function);
+        instanceMap->getMap().listBotsEndPoints(function);
         
     }
     
@@ -106,14 +104,10 @@ public:
         return instanceMap->getStepMap().getStep_size();
     } 
     
-    const std::vector<_site>& getEndpoints() const {
-        return instanceMap->getEndpoints();
-    }
-    
     unsigned getNumBots() const {
-        return instanceMap->getNumBots();
+        return instanceMap->getMap().getNumBots();
     }
-    
+        
 private:
     
     InstanceMap* instanceMap = nullptr;

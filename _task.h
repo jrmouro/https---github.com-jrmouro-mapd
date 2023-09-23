@@ -71,10 +71,6 @@ public:
         return pickup.match(delivery);
     }
     
-    virtual _task* instance()const{
-        return new _task(*this);
-    }
-    
 private:
     
     int _id;

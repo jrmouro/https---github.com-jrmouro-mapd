@@ -8,8 +8,7 @@
 #ifndef _DISTANCEALGORITHM_H
 #define _DISTANCEALGORITHM_H
 
-#include "_site.h"
-
+class _site;
 class _distanceAlgorithm {
 public:
     virtual unsigned solve(const _site& start, const _site& goal) const = 0;

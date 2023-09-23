@@ -9,20 +9,12 @@
 #define _AGENT_ENERGY_SYSTEM_H
 
 #include "_energy_system.h"
+#include "_agent_energy_regime.h"
 #include "_stepPath.h"
 #include "_task.h"
 #include "_map.h"
 
-typedef
-enum _agent_energy_regime : int{
-    
-    charging = -20, // repondo energia
-    unloaded = 1, // parado descarregado
-    moving = 3, // movendo descarregado
-    loaded = 2, // parado carregado
-    carrying = 10 // movendo carregado
-    
-} AER;
+
 
 typedef
 enum _agent_energy_state : int{
@@ -35,28 +27,41 @@ enum _agent_energy_state : int{
     
 } AES;
 
-class _agent_energy_system : public _energy_system<AER, int>{
+class _agent_energy_system : public _energy_system<AERT, int>{
     
 public:
     
-    _agent_energy_system(int current_level, const int maximum_level, const int energyChargingLevel, const int critical_level) :
-    _energy_system<AER, int>(current_level, maximum_level, energyChargingLevel, critical_level), charging(current_level) {
+    _agent_energy_system(
+            const std::string id,
+            const _energy_charge<int>& energy_charge,
+            const _agent_energy_regime& agent_energy_regime) :
+                _energy_system<AERT, int>(
+                        id,
+                        energy_charge,
+                        agent_energy_regime), 
+                charging(energy_charge.current_level) { }
         
-        addRegime(AER::charging, AER::charging);
-        addRegime(AER::unloaded, AER::unloaded);
-        addRegime(AER::moving, AER::moving);
-        addRegime(AER::loaded, AER::loaded);
-        addRegime(AER::carrying, AER::carrying);
-        
-    }
-        
-    _agent_energy_system(const _agent_energy_system& other):_energy_system<AER, int>(other), charging(other.current_level){}
+    _agent_energy_system(
+        const _agent_energy_system& other):
+        _energy_system<AERT, int>(other), 
+        charging(other.charging){}
     
     virtual ~_agent_energy_system(){}
     
     friend std::ostream& operator<<(std::ostream& os, const _agent_energy_system& obj) {
-        os << "current level: " << obj.currentLevel() << " / charging: " << obj.charging;
+        os <<  "regime: " << obj.regime << std::endl;
+        os << "current level: " << obj.currentLevel() << std::endl;
+        os << "critical level: " << obj.criticalLevel() << std::endl;
+        os << "charged level: " << obj.chargedLevel() << std::endl;
+        os << "maximum level: " << obj.maximumLevel() << std::endl;
+        os << "charging: " << obj.charging << std::endl;
         return os;
+    }
+    
+    int getCarringRegime()const{
+        int ret = 0;
+        regime.get(AERT::carrying, ret);
+        return ret;
     }
     
     virtual bool isAtDeadLevel() const{
@@ -68,27 +73,25 @@ public:
         if(this->isAtCriticalLevel()) return AES::critical;
         if(this->isAtChargedLevel()) return AES::charged;
         return AES::normal;        
-    }   
-    
-    virtual AES energyState(int estimative) const {        
-        if(0 >= this->current_level - estimative) return AES::dead;
-        if(this->critical_level >= this->current_level - estimative) return AES::critical;
-        if(this->charged_level <= this->current_level - estimative) return AES::charged;
-        return AES::normal;        
-    }   
+    }    
     
     virtual int appraiseTaskPath(const _map& map, const _task& task, const _stepPath& path) const {
         
         int ret = 0;
-        int moving_value = regime.get(AER::moving);
-        int loaded_value = regime.get(AER::loaded);
-        int unloaded_value = regime.get(AER::unloaded);
-        int carrying_value = regime.get(AER::carrying);
-        int charging_value = regime.get(AER::charging);
+        int moving_value;
+        regime.get(AERT::moving, moving_value);
+        int loaded_value;
+        regime.get(AERT::loaded, loaded_value);
+        int unloaded_value;
+        regime.get(AERT::unloaded, unloaded_value);
+        int carrying_value;
+        regime.get(AERT::carrying, carrying_value);
+        int charging_value;
+        regime.get(AERT::charging, charging_value);
         
         bool pickup_flag = true, delivery_flag = true;
         
-        path.movingList([map, task, moving_value, loaded_value, unloaded_value, carrying_value, charging_value, &pickup_flag, &delivery_flag, &ret](const _stepSite& orig, const _stepSite& dest){
+        path.movingList([map, task, moving_value, loaded_value, unloaded_value, carrying_value, charging_value, &pickup_flag, &delivery_flag, &ret, this](const _stepSite& orig, const _stepSite& dest){
                                    
             if(pickup_flag && orig.match(task.getPickup())){
                 
@@ -102,9 +105,19 @@ public:
                 
             }
                         
-            if(map.getType(orig.GetRow(), orig.GetColunm()) == _map::Type::bot){
+            if(map.getTypeOfSite(orig.GetRow(), orig.GetColunm()) == _map::TypeOfSite::bot){
                 
-                ret += charging_value;
+                int diff = current_level - charging_value - energy_charge.maximum_level;
+                
+                if(diff < 0){
+                
+                    ret += charging_value;
+                
+                } else {
+                    
+                    ret += (charging_value + diff);
+                    
+                }
                 
             } 
             
@@ -161,15 +174,28 @@ public:
     virtual int appraiseNoCarryngPath(const _map& map, const _stepPath& path) const {
         
         int ret = 0;
-        int moving_value = regime.get(AER::moving);
-        int unloaded_value = regime.get(AER::unloaded);
-        int charging_value = regime.get(AER::charging);
+        int moving_value;
+        regime.get(AERT::moving, moving_value);
+        int unloaded_value;
+        regime.get(AERT::unloaded, unloaded_value);
+        int charging_value;
+        regime.get(AERT::charging, charging_value);
         
-        path.movingList([map, charging_value, moving_value, unloaded_value, &ret](const _stepSite& orig, const _stepSite& dest){
+        path.movingList([map, charging_value, moving_value, unloaded_value, &ret, this](const _stepSite& orig, const _stepSite& dest){
             
-            if(map.getType(orig.GetRow(), orig.GetColunm()) == _map::Type::bot){
+            if(map.getTypeOfSite(orig.GetRow(), orig.GetColunm()) == _map::TypeOfSite::bot){
                 
-                ret += charging_value;
+                int diff = current_level - charging_value - energy_charge.maximum_level;
+                
+                if(diff < 0){
+                
+                    ret += charging_value;
+                
+                } else {
+                    
+                    ret += (charging_value + diff);
+                    
+                }
                 
             } 
                 
@@ -190,98 +216,49 @@ public:
         return ret;
         
     }
-    
-    virtual int appraiseNoCarryngStepping(const _map& map, const _stepSite& orig, const _stepSite dest) const {
-        
-        int ret = 0;
-        int moving_value = regime.get(AER::moving);
-        int unloaded_value = regime.get(AER::unloaded);
-        int charging_value = regime.get(AER::charging);
-                            
-        if(map.getType(orig.GetRow(), orig.GetColunm()) == _map::Type::bot){
-
-            ret += charging_value;
-
-        }         
-
-        if(orig.match(dest)){
-
-            ret += unloaded_value;
-
-        } else {
-
-            ret += moving_value;
-
-        }
-               
-        return ret;
-        
-    }
-    
-    virtual int appraiseCarryngStepping(const _map& map, const _stepSite& orig, const _stepSite dest) const {
-        
-        int ret = 0;
-        int carrying_value = regime.get(AER::carrying);
-        int loaded_value = regime.get(AER::loaded);
-        int charging_value = regime.get(AER::charging);
-                            
-        if(map.getType(orig.GetRow(), orig.GetColunm()) == _map::Type::bot){
-
-            ret += charging_value;
-
-        }         
-
-        if(orig.match(dest)){
-
-            ret += loaded_value;
-
-        } else {
-
-            ret += carrying_value;
-
-        }
-               
-        return ret;
-        
-    }
+   
     
     void expendCarryngStepping(bool isChargingSite, const _stepSite& orig, const _stepSite dest){
-                                    
+                   
+        int value;
+        
         if(isChargingSite){
 
-            expend(AER::charging);
-            charging -= AER::charging;
+            expend(AERT::charging, value);
+            charging -= value;
 
         }         
 
         if(orig.match(dest)){
 
-            expend(AER::loaded);
+            expend(AERT::loaded, value);
 
         } else {
 
-            expend(AER::carrying);
+            expend(AERT::carrying, value);
 
         }
                
     }
     
     void expendNoCarryngStepping(bool isChargingSite, const _stepSite& orig, const _stepSite dest){
-                                    
+                          
+        int value;
+        
         if(isChargingSite){
 
-            expend(AER::charging);
-            charging -= AER::charging;
+            expend(AERT::charging, value);
+            charging -= value;
 
         }         
 
         if(orig.match(dest)){
 
-            expend(AER::unloaded);
+            expend(AERT::unloaded, value);
 
         } else {
 
-            expend(AER::moving);
+            expend(AERT::moving, value);
 
         }
                

@@ -49,10 +49,14 @@ void _agent_parked_CL::onUpdatePath(_token& token, _agent& agent) const {
             
             break;
             
-        case _token::TokenUpdateType::charging_trivial:
+//        case _token::TokenUpdateType::charging_trivial:
+//            
+//            changeState(agent, _agent_charging_CL::getInstance());
+//            
+//            break;
             
-            changeState(agent, _agent_charging_CL::getInstance());
-            
+        case _token::TokenUpdateType::trivial:
+                        
             break;
             
         case _token::TokenUpdateType::none:

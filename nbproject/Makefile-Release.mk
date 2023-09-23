@@ -53,13 +53,16 @@ OBJECTFILES= \
 	${OBJECTDIR}/_agent_goingToRest.o \
 	${OBJECTDIR}/_agent_goingToRest_CL.o \
 	${OBJECTDIR}/_agent_parked.o \
-	${OBJECTDIR}/_agent_parken_CL.o \
+	${OBJECTDIR}/_agent_parker_CL.o \
 	${OBJECTDIR}/_agent_state.o \
+	${OBJECTDIR}/_astarAlgorithm.o \
+	${OBJECTDIR}/_astarDistanceAlgorithm.o \
 	${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm.o \
 	${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o \
 	${OBJECTDIR}/_closerTaskIndexerAlgorithm.o \
 	${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o \
 	${OBJECTDIR}/_endpointIndexerAlgorithm.o \
+	${OBJECTDIR}/_endpointsDistanceAlgorithm.o \
 	${OBJECTDIR}/_map.o \
 	${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o \
@@ -208,15 +211,25 @@ ${OBJECTDIR}/_agent_parked.o: _agent_parked.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parked.o _agent_parked.cpp
 
-${OBJECTDIR}/_agent_parken_CL.o: _agent_parken_CL.cpp
+${OBJECTDIR}/_agent_parker_CL.o: _agent_parker_CL.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parken_CL.o _agent_parken_CL.cpp
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parker_CL.o _agent_parker_CL.cpp
 
 ${OBJECTDIR}/_agent_state.o: _agent_state.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_state.o _agent_state.cpp
+
+${OBJECTDIR}/_astarAlgorithm.o: _astarAlgorithm.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarAlgorithm.o _astarAlgorithm.cpp
+
+${OBJECTDIR}/_astarDistanceAlgorithm.o: _astarDistanceAlgorithm.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarDistanceAlgorithm.o _astarDistanceAlgorithm.cpp
 
 ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm.o: _closerCooperatorAgentIndexerAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -242,6 +255,11 @@ ${OBJECTDIR}/_endpointIndexerAlgorithm.o: _endpointIndexerAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointIndexerAlgorithm.o _endpointIndexerAlgorithm.cpp
+
+${OBJECTDIR}/_endpointsDistanceAlgorithm.o: _endpointsDistanceAlgorithm.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointsDistanceAlgorithm.o _endpointsDistanceAlgorithm.cpp
 
 ${OBJECTDIR}/_map.o: _map.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -605,17 +623,17 @@ ${OBJECTDIR}/_agent_parked_nomain.o: ${OBJECTDIR}/_agent_parked.o _agent_parked.
 	    ${CP} ${OBJECTDIR}/_agent_parked.o ${OBJECTDIR}/_agent_parked_nomain.o;\
 	fi
 
-${OBJECTDIR}/_agent_parken_CL_nomain.o: ${OBJECTDIR}/_agent_parken_CL.o _agent_parken_CL.cpp 
+${OBJECTDIR}/_agent_parker_CL_nomain.o: ${OBJECTDIR}/_agent_parker_CL.o _agent_parker_CL.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_parken_CL.o`; \
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agent_parker_CL.o`; \
 	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parken_CL_nomain.o _agent_parken_CL.cpp;\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parker_CL_nomain.o _agent_parker_CL.cpp;\
 	else  \
-	    ${CP} ${OBJECTDIR}/_agent_parken_CL.o ${OBJECTDIR}/_agent_parken_CL_nomain.o;\
+	    ${CP} ${OBJECTDIR}/_agent_parker_CL.o ${OBJECTDIR}/_agent_parker_CL_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_agent_state_nomain.o: ${OBJECTDIR}/_agent_state.o _agent_state.cpp 
@@ -629,6 +647,32 @@ ${OBJECTDIR}/_agent_state_nomain.o: ${OBJECTDIR}/_agent_state.o _agent_state.cpp
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_state_nomain.o _agent_state.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_state.o ${OBJECTDIR}/_agent_state_nomain.o;\
+	fi
+
+${OBJECTDIR}/_astarAlgorithm_nomain.o: ${OBJECTDIR}/_astarAlgorithm.o _astarAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_astarAlgorithm.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarAlgorithm_nomain.o _astarAlgorithm.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_astarAlgorithm.o ${OBJECTDIR}/_astarAlgorithm_nomain.o;\
+	fi
+
+${OBJECTDIR}/_astarDistanceAlgorithm_nomain.o: ${OBJECTDIR}/_astarDistanceAlgorithm.o _astarDistanceAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_astarDistanceAlgorithm.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarDistanceAlgorithm_nomain.o _astarDistanceAlgorithm.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_astarDistanceAlgorithm.o ${OBJECTDIR}/_astarDistanceAlgorithm_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm.o _closerCooperatorAgentIndexerAlgorithm.cpp 
@@ -694,6 +738,19 @@ ${OBJECTDIR}/_endpointIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_endpointIndexerAl
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointIndexerAlgorithm_nomain.o _endpointIndexerAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_endpointIndexerAlgorithm.o ${OBJECTDIR}/_endpointIndexerAlgorithm_nomain.o;\
+	fi
+
+${OBJECTDIR}/_endpointsDistanceAlgorithm_nomain.o: ${OBJECTDIR}/_endpointsDistanceAlgorithm.o _endpointsDistanceAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_endpointsDistanceAlgorithm.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointsDistanceAlgorithm_nomain.o _endpointsDistanceAlgorithm.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_endpointsDistanceAlgorithm.o ${OBJECTDIR}/_endpointsDistanceAlgorithm_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_map_nomain.o: ${OBJECTDIR}/_map.o _map.cpp 

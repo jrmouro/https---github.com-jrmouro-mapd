@@ -23,11 +23,7 @@ public:
     }
     
     virtual ~_agent_charging_CL(){}
-            
-    virtual std::string stateName()const{
-        return "charging_CL";
-    }
-    
+        
     virtual bool criticalEnergy() const {
         return true;
     }
@@ -41,7 +37,7 @@ public:
     virtual void onAfterStepping(_token&, _agent&) const;
     
     protected:        
-        _agent_charging_CL() : _agent_charging() {}
+        _agent_charging_CL() : _agent_charging("charging_CL") {}
     
     private:
         static _agent_state* _instance;

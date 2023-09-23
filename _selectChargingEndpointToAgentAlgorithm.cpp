@@ -49,7 +49,7 @@ bool _selectChargingEndpointToAgentAlgorithm::solve(
 
             if (flag) {
 
-                flag = agent.isAbleToFulfillNoCarryngPath(token.getMap(), chargingPath);
+                flag = agent.isAbleToFulfillChargingNoCarryngPath(token.getMap(), chargingPath);
 
                 if (flag) {
                     

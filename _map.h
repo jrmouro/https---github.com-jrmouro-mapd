@@ -21,11 +21,13 @@
 #include "Render.h"
 #include "_site.h"
 #include "MapdException.h"
+#include "_endpointsDistanceAlgorithm.h"
 
+class _endpointsDistanceAlgorithm;
 class _map : public Drawable{
 public:
     
-    enum Type {
+    enum TypeOfSite {
         none,
         path,
         bot,
@@ -38,15 +40,15 @@ public:
     public:
         
         _TypeColorMap() {
-            map.insert(std::pair<Type,sf::Color>(Type::bot, sf::Color::Yellow));
-            map.insert(std::pair<Type,sf::Color>(Type::endpoint, sf::Color::Blue));
-            map.insert(std::pair<Type,sf::Color>(Type::path, sf::Color::Green));
-            map.insert(std::pair<Type,sf::Color>(Type::task, sf::Color::Cyan));
-            map.insert(std::pair<Type,sf::Color>(Type::none, sf::Color::Red));
+            map.insert(std::pair<TypeOfSite,sf::Color>(TypeOfSite::bot, sf::Color::Yellow));
+            map.insert(std::pair<TypeOfSite,sf::Color>(TypeOfSite::endpoint, sf::Color::Blue));
+            map.insert(std::pair<TypeOfSite,sf::Color>(TypeOfSite::path, sf::Color::Green));
+            map.insert(std::pair<TypeOfSite,sf::Color>(TypeOfSite::task, sf::Color::Cyan));
+            map.insert(std::pair<TypeOfSite,sf::Color>(TypeOfSite::none, sf::Color::Red));
         }
         
-        sf::Color get(Type siteType) const {
-            std::unordered_map<Type,sf::Color>::const_iterator it;
+        sf::Color get(TypeOfSite siteType) const {
+            std::unordered_map<TypeOfSite,sf::Color>::const_iterator it;
             it = map.find(siteType);
             if(it != map.end()) 
                 return it->second;            
@@ -55,7 +57,7 @@ public:
 
     private:
         
-        std::unordered_map<Type,sf::Color> map;
+        std::unordered_map<TypeOfSite,sf::Color> map;
         
     } TypeColorMap;
         
@@ -67,79 +69,67 @@ public:
         
         if(size > 0){
         
-            nodes = new Type[size];
+            sites = new TypeOfSite[size];
         
         }
 
     }
 
-    _map(const _map& orig) : colunm_size(orig.colunm_size), row_size(orig.row_size),
-    num_bots(orig.num_bots), num_endpoints(orig.num_endpoints){
-
-        unsigned size = orig.row_size * orig.colunm_size;
-        
-        if(size > 0){ 
-
-            this->nodes = new Type[size];
-
-            for (unsigned i = 0; i < size; i++)
-                this->nodes[i] = orig.nodes[i];
-        
-        }
-        
-    }
+    _map(const _map& other);
     
-    _map& operator=(const _map& right) {
-        // Check for self-assignment!
-        if (this == &right) // Same object?
-            return *this; // Yes, so skip assignment, and just return *this.
-        if(this->nodes != nullptr) delete this->nodes;
-        unsigned size = right.row_size * right.colunm_size;
-        this->colunm_size = right.colunm_size;
-        this->row_size = right.row_size;
-        this->num_bots = right.num_bots;
-        this->num_endpoints = right.num_endpoints;
-        if(size > 0){            
-            this->nodes = new Type[size];
-            for (unsigned i = 0; i < size; i++)
-                this->nodes[i] = right.nodes[i];
-        }
-        return *this;
-    }
-
-
     virtual ~_map() {
 
-        if (nodes != nullptr) delete [] nodes;
+        if (sites != nullptr) delete [] sites;
+        if (endpointsDistanceAlgorithm != nullptr) delete endpointsDistanceAlgorithm;
 
     }
     
-    void setType(unsigned linearLocation, Type value) {
+    void setTypeOfSite(unsigned linearLocation, TypeOfSite value) {
         
         if (linearLocation < row_size * colunm_size)
-            this->nodes[linearLocation] = value;
+            this->sites[linearLocation] = value;
 
     }
 
-    void setType(unsigned row, unsigned column, Type value) {
+    void setTypeOfSite(unsigned row, unsigned column, TypeOfSite value) {
 
         if (row < row_size && column < colunm_size)
-            this->nodes[row * colunm_size + column] = value;
-
-    }
-
-    Type getType(int row, int colunm) const {
-
-        if (row > -1 && row < row_size && colunm > -1 && colunm < colunm_size)
-            return this->nodes[row * colunm_size + colunm];
-
-        return Type::none;
+            this->sites[row * colunm_size + column] = value;
 
     }
     
-    Type getType(const _site& site) const {
+    void resetTaskTypeOfSite() {
 
-        return getType(site.GetRow(), site.GetColunm());
+        for (unsigned r = 0; r < row_size; r++) {
+
+            for (unsigned c = 0; c < colunm_size; c++) {
+
+                auto p = sites[r * colunm_size + c];
+
+                if (p == TypeOfSite::task) {
+                    
+                    sites[r * colunm_size + c] = TypeOfSite::endpoint;
+                    
+                } 
+
+            }
+
+        }
+
+    }
+
+    TypeOfSite getTypeOfSite(int row, int colunm) const {
+
+        if (row > -1 && row < row_size && colunm > -1 && colunm < colunm_size)
+            return this->sites[row * colunm_size + colunm];
+
+        return TypeOfSite::none;
+
+    }
+    
+    TypeOfSite getTypeOfSite(const _site& site) const {
+
+        return getTypeOfSite(site.GetRow(), site.GetColunm());
 
     }
        
@@ -152,15 +142,15 @@ public:
 
             for (unsigned c = 0; c < obj.colunm_size; c++) {
 
-                auto p = obj.nodes[r * obj.colunm_size + c];
+                auto p = obj.sites[r * obj.colunm_size + c];
 
-                if (p == Type::none) {
+                if (p == TypeOfSite::none) {
                     os << "@";
-                } else if (p == Type::bot) {
+                } else if (p == TypeOfSite::bot) {
                     os << "r";
-                } else if (p == Type::endpoint) {
+                } else if (p == TypeOfSite::endpoint) {
                     os << "e";
-                }else if (p == Type::task) {
+                }else if (p == TypeOfSite::task) {
                     os << "t";
                 } else {
                     os << " ";
@@ -172,48 +162,13 @@ public:
 
         }
 
-        os << std::endl;
-        
-        
+        os << std::endl;     
 
         return os;
 
     }
 
-    void load(std::ifstream& filestream, std::function<bool(unsigned, unsigned, Type)> func) {
-
-        num_bots = 0;
-        num_endpoints = 0;
-        
-        for (unsigned r = 0; r < this->row_size; r++) {
-
-            std::string line;
-            getline(filestream, line);
-
-            for (unsigned c = 0; c < this->colunm_size; c++) {
-
-                Type t = Type::path;
-                
-                if (line[c] == '@') {
-                    t = Type::none;
-                } else if (line[c] == 'r') {
-                    t = Type::bot;
-                    num_bots++;
-                    num_endpoints++;
-                } else if (line[c] == 'e') {
-                    t = Type::endpoint;
-                    num_endpoints++;
-                } 
-                
-                this->nodes[r * colunm_size + c] = t;
-                
-                if(func(r, c, t)) return;
-
-            }
-
-        }
-
-    }
+    void load(std::ifstream& filestream, std::function<bool(unsigned, unsigned, TypeOfSite)> func);
 
     unsigned getColumn_size() const {
         return colunm_size;
@@ -223,12 +178,12 @@ public:
         return row_size;
     }
     
-    unsigned getNum_bots() const {
-        return num_bots;
+    unsigned getNumBots() const {
+        return botMap.size();
     }
 
-    unsigned getNum_endpoints() const {
-        return num_endpoints;
+    unsigned getNumEndpoints() const {
+        return endpoints.size();
     }
     
     virtual bool isNodeBelonging(const _site& site) const {
@@ -247,7 +202,7 @@ public:
                 
                     unsigned index = neigh.GetRow() * colunm_size + neigh.GetColunm();
 
-                    if(this->nodes[index] != Type::none) 
+                    if(this->sites[index] != TypeOfSite::none) 
                         if(function(neigh)) return true;
 
                 } 
@@ -272,17 +227,76 @@ public:
     }
             
     virtual void draw(const Render& render) const;
+    
+    const _site* getNoBotEndPointById(unsigned endpointId) const {
         
+        std::map<unsigned, _site>::const_iterator it;
+        it = this->endpointMap.find(endpointId);
+
+        if (it != this->endpointMap.end()) {
+            
+            return &(*it).second;
+            
+        }
+        
+        try {
+            std::ostringstream stream;
+            stream << "invalid endpoint id [" << endpointId << "]";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+        return nullptr;
+        
+    }
+    
+    void listBotsEndPoints(const std::function<bool(unsigned, const _site&)>& function) const {
+        
+        for (auto elem : botMap) {
+            
+            if(function(elem.first, elem.second)) return;
+
+        }
+        
+    }
+    
+    void listBotsEndPoints(const std::function<bool(const _site&)>& function) const {
+        
+        for (auto elem : botMap) {
+            
+            if(function(elem.second)) return;
+
+        }
+        
+    }    
+    
+    void listEndpoints(const std::function<bool(const _site&)>& function) const {
+        
+        for (auto endpoint : endpoints) {
+            
+            if(function(endpoint)) return;
+
+        }
+        
+    }
+    
+    const _endpointsDistanceAlgorithm& getEndpointsDistanceAlgorithm() const;
        
 private:
 
-    Type* nodes = nullptr;
+    TypeOfSite* sites = nullptr;
     
     unsigned 
             colunm_size = 0, 
-            row_size = 0,
-            num_bots = 0, 
-            num_endpoints = 0;
+            row_size = 0;
+    
+    std::vector<_site> endpoints;
+    std::map<unsigned,_site> endpointMap;
+    std::map<unsigned,_site> botMap;
+    
+    _endpointsDistanceAlgorithm* endpointsDistanceAlgorithm = nullptr;
 
 };
 

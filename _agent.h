@@ -25,7 +25,9 @@ class _agent_state;
 class _agent : public Identifiable<int>, public Drawable{
 public:
         
-    _agent(int _id, const _stepSite& currentSite, int energyCurrentLevel, int energyMaximumLevel, int energyChargingLevel, int energyCriticalLevel);
+    _agent(int _id, const _stepSite& currentSite, const _agent_energy_system& agent_energy_system);
+    
+//    _agent(int _id, const _stepSite& currentSite, int energyCurrentLevel, int energyMaximumLevel, int energyChargingLevel, int energyCriticalLevel);
     
     _agent(const _agent& other);
 
@@ -51,23 +53,31 @@ public:
         _currentTaskIndex = -1;
     }
     
-    virtual _agent* instance()const{
-        return new _agent(*this);
-    }
+//    
     
     bool isAbleToFulfillTaskPath(const _map& map, const _task& task, const _stepPath& taskPath)const{
         int need = this->energy_system.appraiseTaskPath(map, task, taskPath);
-        return need + 10  /*+ this->energy_system.criticalLevel()/2*/ < this->energy_system.currentLevel();
+        return this->energy_system.currentLevel() - need > this->energy_system.criticalLevel();
     }
     
     bool isAbleToFulfillChargingTaskPath(const _map& map, const _task& task, const _stepPath& taskPath)const{
         int need = this->energy_system.appraiseTaskPath(map, task, taskPath);
-        return need + 10  < this->energy_system.currentLevel();
+        return need < this->energy_system.currentLevel();
     }
         
     bool isAbleToFulfillNoCarryngPath(const _map& map, const _stepPath& path)const{
         int need = this->energy_system.appraiseNoCarryngPath(map, path);
-        return need + 10 < this->energy_system.currentLevel();
+        return this->energy_system.currentLevel() - need > this->energy_system.criticalLevel();
+    }
+    
+    bool isAbleToFulfillChargingNoCarryngPath(const _map& map, const _stepPath& path)const{
+        int need = this->energy_system.appraiseNoCarryngPath(map, path);
+        return need < this->energy_system.currentLevel();
+    }
+    
+    bool isAbleToFulfillTrivialPath(const _map& map, const _stepPath& path)const{
+        int need = this->energy_system.appraiseNoCarryngPath(map, path);
+        return need < this->energy_system.currentLevel();
     }
      
     
@@ -144,10 +154,10 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const _agent& obj) {
         os <<"agent id: "<< obj._id << std::endl;
         os << "energy " << obj.energy_system << std::endl;
-        os <<"agent path: "<< obj._currentPath << std::endl;
-        if(obj._currentTaskIndex > -1)
-            os <<"agent current task: "<< obj.currentTask() << std::endl;
-        os <<"agent state: "<< obj._state->stateName() << std::endl;
+//        os <<"agent path: "<< obj._currentPath << std::endl;
+//        if(obj._currentTaskIndex > -1)
+//            os <<"agent current task: "<< obj.currentTask() << std::endl;
+//        os <<"agent state: "<< obj._state->stateName() << std::endl;
         return os;
     }
     
@@ -223,8 +233,8 @@ protected:
             
 private:
     friend class _system;
-    virtual void move(_system& system);
-    virtual void receive(_system& system);
+    virtual void move(_token& token);
+    virtual void receive(_token& token);
     
 private:
     

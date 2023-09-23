@@ -33,7 +33,7 @@
           <itemPath>_agent_parked.cpp</itemPath>
           <itemPath>_agent_parked.h</itemPath>
           <itemPath>_agent_parked_CL.h</itemPath>
-          <itemPath>_agent_parken_CL.cpp</itemPath>
+          <itemPath>_agent_parker_CL.cpp</itemPath>
           <itemPath>_agent_state.cpp</itemPath>
           <itemPath>_agent_state.h</itemPath>
         </logicalFolder>
@@ -42,13 +42,16 @@
       </logicalFolder>
       <logicalFolder name="f1" displayName="Algorithm" projectFiles="true">
         <logicalFolder name="f3" displayName="Map" projectFiles="true">
+          <itemPath>_astarAlgorithm.cpp</itemPath>
           <itemPath>_astarAlgorithm.h</itemPath>
           <itemPath>_pathAlgorithm.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f6" displayName="Site" projectFiles="true">
+          <itemPath>_astarDistanceAlgorithm.cpp</itemPath>
           <itemPath>_astarDistanceAlgorithm.h</itemPath>
           <itemPath>_distanceAlgorithm.h</itemPath>
-          <itemPath>_endPointsDistanceAlgorithm.h</itemPath>
+          <itemPath>_endpointsDistanceAlgorithm.cpp</itemPath>
+          <itemPath>_endpointsDistanceAlgorithm.h</itemPath>
           <itemPath>_manhattanAlgorithm.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="StepMap" projectFiles="true">
@@ -142,17 +145,15 @@
         <itemPath>Text.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f13" displayName="Energy" projectFiles="true">
+        <itemPath>_agent_energy_regime.h</itemPath>
         <itemPath>_agent_energy_system.h</itemPath>
+        <itemPath>_energy_charge.h</itemPath>
         <itemPath>_energy_regime.h</itemPath>
         <itemPath>_energy_system.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Experiment" projectFiles="true">
-        <itemPath>AstarExperiment.h</itemPath>
         <itemPath>Experiment.h</itemPath>
-        <itemPath>InstanceMapExperiment.h</itemPath>
-        <itemPath>InstanceTaskExperiment.h</itemPath>
         <itemPath>MultiSystemExperiment.h</itemPath>
-        <itemPath>RenderExperiment.h</itemPath>
         <itemPath>SystemExperiment.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f11" displayName="Instance" projectFiles="true">
@@ -245,8 +246,6 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="AstarExperiment.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="BackwardTaskToken.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
@@ -263,11 +262,7 @@
       </item>
       <item path="InstanceMap.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="InstanceMapExperiment.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="InstanceTask.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="InstanceTaskExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -280,8 +275,6 @@
       <item path="Render.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Render.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RenderExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ReportTask.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -320,6 +313,8 @@
       <item path="_agent_dead.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_dead.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_energy_regime.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_energy_system.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -361,13 +356,17 @@
       </item>
       <item path="_agent_parked_CL.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_agent_parken_CL.cpp" ex="false" tool="1" flavor2="0">
+      <item path="_agent_parker_CL.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_state.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_state.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_astarAlgorithm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="_astarAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_astarDistanceAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_astarDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -406,11 +405,15 @@
       </item>
       <item path="_distanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_endPointsDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="_endpointIndexerAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_endpointIndexerAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_endpointsDistanceAlgorithm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_endpointsDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_energy_charge.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_energy_regime.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -645,8 +648,6 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="AstarExperiment.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="BackwardTaskToken.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
@@ -663,11 +664,7 @@
       </item>
       <item path="InstanceMap.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="InstanceMapExperiment.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="InstanceTask.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="InstanceTaskExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -680,8 +677,6 @@
       <item path="Render.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Render.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RenderExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ReportTask.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -720,6 +715,8 @@
       <item path="_agent_dead.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_dead.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agent_energy_regime.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_agent_energy_system.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -761,13 +758,17 @@
       </item>
       <item path="_agent_parked_CL.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_agent_parken_CL.cpp" ex="false" tool="1" flavor2="0">
+      <item path="_agent_parker_CL.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_state.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_agent_state.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_astarAlgorithm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="_astarAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_astarDistanceAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_astarDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -806,11 +807,15 @@
       </item>
       <item path="_distanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_endPointsDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="_endpointIndexerAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_endpointIndexerAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_endpointsDistanceAlgorithm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_endpointsDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_energy_charge.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_energy_regime.h" ex="false" tool="3" flavor2="0">
       </item>
