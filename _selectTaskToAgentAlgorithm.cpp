@@ -39,7 +39,7 @@ bool _selectTaskToAgentAlgorithm::solve(
 
         bool flag = true;
 
-        token.listAgents([task, &flag, agent](const _agent & otherAgent) {
+        token.listConstAgents([task, &flag, agent](const _agent& otherAgent) {
 
             if (otherAgent.id() != agent.id()) {
 

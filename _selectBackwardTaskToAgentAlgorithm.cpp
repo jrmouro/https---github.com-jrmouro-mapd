@@ -66,7 +66,7 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
 
         ret = true;
 
-        token.listAgents([task, &ret, agent](const _agent & otherAgent) {
+        token.listConstAgents([task, &ret, agent](const _agent& otherAgent) {
 
             if (otherAgent.id() != agent.id()) {
 
@@ -114,7 +114,7 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
 
                         ret = true;                       
 
-                        token.listAgents([&ret, site, agent](const _agent & otherAgent) { // verifica se o task endpoint está disponível
+                        token.listConstAgents([&ret, site, agent](const _agent& otherAgent) { // verifica se o task endpoint está disponível
 
                             if (otherAgent.id() != agent.id()) {
 

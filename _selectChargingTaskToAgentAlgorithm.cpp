@@ -22,7 +22,7 @@ bool _selectChargingTaskToAgentAlgorithm::solve(
 
         bool flag = true;
 
-        token.listAgents([task, &flag, agent](const _agent & otherAgent) {
+        token.listConstAgents([task, &flag, agent](const _agent& otherAgent) {
 
             if (otherAgent.id() != agent.id()) {
 
@@ -67,7 +67,7 @@ bool _selectChargingTaskToAgentAlgorithm::solve(
 
                     if (flag) {
 
-                        token.listAgents([endpoint, agent, &flag](_agent & otherAgent) {
+                        token.listConstAgents([endpoint, agent, &flag](const _agent& otherAgent) {
 
                             if (agent.id() != otherAgent.id() && otherAgent.goalSite().match(endpoint)) { //other agents
 

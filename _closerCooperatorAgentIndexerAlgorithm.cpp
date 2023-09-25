@@ -39,7 +39,7 @@ void _closerCooperatorAgentIndexerAlgorithm::solve(
 
     _manhattanAlgorithm manhattanAlgorithm;
 
-    token.listAgents([&token, pickup, delivery, manhattanAlgorithm, &vpair_agentid_epdist, this](const _agent& agent) {
+    token.listConstAgents([&token, pickup, delivery, manhattanAlgorithm, &vpair_agentid_epdist, this](const _agent& agent) {
 
         if(agent.isFree() && !agent.isCharging() && !agent.isAtEnergyCriticalLevel()) {
         

@@ -23,7 +23,7 @@ bool _selectChargingEndpointToAgentAlgorithm::solve(
 
         if (flag) {
 
-            token.listAgents([endpoint, agent, &flag](_agent & otherAgent) {
+            token.listConstAgents([endpoint, agent, &flag](const _agent & otherAgent) {
 
                 if (agent.id() != otherAgent.id() && otherAgent.goalSite().match(endpoint)) { //other agents
 

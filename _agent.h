@@ -26,9 +26,7 @@ class _agent : public Identifiable<int>, public Drawable{
 public:
         
     _agent(int _id, const _stepSite& currentSite, const _agent_energy_system& agent_energy_system);
-    
-//    _agent(int _id, const _stepSite& currentSite, int energyCurrentLevel, int energyMaximumLevel, int energyChargingLevel, int energyCriticalLevel);
-    
+        
     _agent(const _agent& other);
 
     virtual ~_agent();

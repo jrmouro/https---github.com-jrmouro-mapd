@@ -15,13 +15,13 @@ void _token::error_site_collision_check() const {
 
             if (count2 > 0) {
 
-                if (pagent1.second->id() != pagent2.second->id() &&
-                        pagent1.second->currentSite().match(pagent2.second->currentSite())) {
+                if (pagent1.second.id() != pagent2.second.id() &&
+                        pagent1.second.currentSite().match(pagent2.second.currentSite())) {
 
                     try {
                         std::ostringstream stream;
-                        stream << "site collision between agent " << pagent1.second->id();
-                        stream << " and agent " << pagent2.second->id() << " step(" << currentStep << ")";
+                        stream << "site collision between agent " << pagent1.second.id();
+                        stream << " and agent " << pagent2.second.id() << " step(" << currentStep << ")";
                         MAPD_EXCEPTION(stream.str());
                     } catch (std::exception& e) {
                         std::cout << e.what() << std::endl;
@@ -58,14 +58,14 @@ void _token::error_edge_collision_check() const {
 
             if (count2 > 0) {
 
-                if (pagent1.second->id() != pagent2.second->id() &&
-                        pagent1.second->previousSite().match(pagent2.second->currentSite()) &&
-                        pagent2.second->previousSite().match(pagent1.second->currentSite())) {
+                if (pagent1.second.id() != pagent2.second.id() &&
+                        pagent1.second.previousSite().match(pagent2.second.currentSite()) &&
+                        pagent2.second.previousSite().match(pagent1.second.currentSite())) {
 
                     try {
                         std::ostringstream stream;
-                        stream << "edge collision between agent " << pagent1.second->id();
-                        stream << " and agent " << pagent2.second->id() << " step(" << currentStep << ")";
+                        stream << "edge collision between agent " << pagent1.second.id();
+                        stream << " and agent " << pagent2.second.id() << " step(" << currentStep << ")";
                         MAPD_EXCEPTION(stream.str());
                     } catch (std::exception& e) {
                         std::cout << e.what() << std::endl;
@@ -98,7 +98,7 @@ void _token::setMoving(const _agent& agent, const _stepPath& path) {
 
 int _token::currentEnergy() const {
     int ret = 0;
-    listAgents([&ret](_agent & agent) {
+    listConstAgents([&ret](const _agent& agent) {
         ret += agent.currentEnergyLevel();
         return false;
     });
@@ -107,28 +107,41 @@ int _token::currentEnergy() const {
 
 int _token::energyExpenditure() const {
     int ret = 0;
-    listAgents([&ret](_agent & agent) {
+    listConstAgents([&ret](const _agent& agent) {
         ret += (agent.energyCharging() - agent.currentEnergyLevel());
         return false;
     });
     return ret;
 }
 
-void _token::listAgents(const std::function<bool(_agent&) > function) const {
+void _token::listAgents(const std::function<bool(_agent&) > function) {
 
-    for (auto pagent : agents) {
+    for (auto& pagent : agents) {
 
-        if (function(*pagent.second)) return;
+        if (function(pagent.second)) return;
 
     }
+    
+}
+
+void _token::listConstAgents(const std::function<bool(const _agent&) > function) const {
+
+    for (auto& pagent : agents) {
+
+        if (function(pagent.second)) return;
+
+    }
+    
+    
+
 
 }
 
 void _token::draw(const Render& render) const {
 
-    for (auto pagent : agents) {
+    for (auto& pagent : agents) {
 
-        pagent.second->draw(render);
+        pagent.second.draw(render);
 
     }
 

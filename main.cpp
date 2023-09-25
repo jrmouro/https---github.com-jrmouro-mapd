@@ -54,7 +54,7 @@ void test(){
         mapFilenames,                      
         agent_energy_systems,                   
         80,                               
-        0);                              
+        500);                              
            
 
     experiment.run();

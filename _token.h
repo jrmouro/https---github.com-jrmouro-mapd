@@ -58,9 +58,9 @@ public:
         map.listBotsEndPoints([this, agent_energy_system](unsigned botId, const _site& endpoint){
             
             agents.insert(
-                std::pair<unsigned, _agent*>(
+                std::pair<unsigned, _agent>(
                     botId, 
-                    new _agent(
+                    _agent(
                         botId, 
                         _stepSite(0, endpoint.GetRow(), endpoint.GetColunm()), 
                         agent_energy_system)));
@@ -71,6 +71,20 @@ public:
     
     }            
     
+    _token(const _token& other) :
+    currentStep(other.currentStep), 
+    new_task_ids(other.new_task_ids), 
+    map(other.map), stepMap(other.stepMap), 
+    agent_energy_system(other.agent_energy_system), 
+    nonTaskDeliveryEndpoints(other.nonTaskDeliveryEndpoints), 
+    taskDeliveryEndpoints(other.taskDeliveryEndpoints), 
+    backwardTasks(other.backwardTasks), agents(other.agents), 
+    pendingTasks(other.pendingTasks), assignedTasks(other.assignedTasks), 
+    runningTasks(other.runningTasks), finishedTasks(other.finishedTasks), 
+    assignTaskAgent(other.assignTaskAgent), reportTaskMap(other.reportTaskMap) { }
+    
+
+     
     virtual ~_token(){} 
     
     virtual void writeHeader(std::ostream& fs) const {
@@ -212,7 +226,9 @@ public:
         return !runningTasks.empty();
     }
         
-    void listAgents(const std::function<bool(_agent&)> function)const;
+    void listAgents(const std::function<bool(_agent&)> function);
+    
+    void listConstAgents(const std::function<bool(const _agent&) > function) const;
     
     void listEndpoints(const std::function<bool(const _site&)>& function) const{
         
@@ -246,17 +262,17 @@ public:
 
     }
     
-    void listNoRunningYetTasks(const std::function<bool(const _task&, const _agent*)> function)const{
+    void listNoRunningYetTasks(const std::function<bool(const _task&, int)> function)const{
         
         for (auto taskPair : pendingTasks) {
             
-            if(function(taskPair.second, nullptr))return;
+            if(function(taskPair.second, -1))return;
 
         }
         
         for (auto taskPair : assignedTasks) {
             
-            if(function(taskPair.second, assignmentTaskAgent(taskPair.second)))return;
+            if(function(taskPair.second, assignmentTaskAgent(taskPair.second.id())))return;
 
         }
 
@@ -345,8 +361,8 @@ public:
         os << "current step: " << obj.currentStep << std::endl;
         os  << std::endl << "energy: " << obj.currentEnergy() << std::endl;
         os  << std::endl << "agents: " << std::endl;
-        for (auto elem : obj.agents) {
-            os << *elem.second <<  std::endl;
+        for (auto& elem : obj.agents) {
+            os << elem.second <<  std::endl;
         } 
         
         os << obj.stepMap << std::endl;
@@ -440,9 +456,9 @@ private:
     void addAgent(const _agent& agent){
 //        this->agents.insert(std::pair<unsigned, _agent*>(agent.id(), agent.instance()));
         agents.insert(
-                std::pair<unsigned, _agent*>(
+                std::pair<unsigned, _agent>(
                     agent.id(), 
-                    new _agent(agent.id(), agent.currentSite(), agent_energy_system)));
+                    _agent(agent.id(), agent.currentSite(), agent_energy_system)));
     }
         
     
@@ -454,23 +470,31 @@ private:
     } 
     
     
-    _agent* assignmentTaskAgent(const _task& task) const {
+    int assignmentTaskAgent(const _task& task) const {
         
         std::map<int, int>::const_iterator it = assignTaskAgent.find(task.id());
         
         if(it != assignTaskAgent.end()){
-            
-            std::map<int, _agent*>::const_iterator it2 = agents.find(it->second);  
-            
-            if(it2 != agents.end()){
                 
-                return it2->second;
-                
-            }
-            
+            return it->second;
+                            
         }
         
-        return nullptr;
+        return -1;
+        
+    }
+    
+    int assignmentTaskAgent(int taskId) const {
+        
+        std::map<int, int>::const_iterator it = assignTaskAgent.find(taskId);
+        
+        if(it != assignTaskAgent.end()){
+                
+            return it->second;
+                            
+        }
+        
+        return -1;
         
     }
 
@@ -486,7 +510,7 @@ private:
     std::map<unsigned,_site> nonTaskDeliveryEndpoints, taskDeliveryEndpoints;    
     
     std::map<unsigned, std::vector<_task>> backwardTasks;//step->task
-    std::map<int, _agent*> agents;
+    std::map<int, _agent> agents;
     std::map<int, _task> pendingTasks, assignedTasks, runningTasks, finishedTasks;
     std::map<int, int> assignTaskAgent; // task.id()->agent.id()
     
