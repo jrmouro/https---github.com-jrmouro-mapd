@@ -61,14 +61,14 @@ public:
 
             } else {
                 
-                try {
-                    std::ostringstream stream;
-                    stream << "unsolved path";
-                    MAPD_EXCEPTION(stream.str());
-                } catch (std::exception& e) {
-                    std::cout << e.what() << std::endl;
-                    std::abort();
-                } 
+//                try {
+//                    std::ostringstream stream;
+//                    stream << "unsolved path";
+//                    MAPD_EXCEPTION(stream.str());
+//                } catch (std::exception& e) {
+//                    std::cout << e.what() << std::endl;
+//                    std::abort();
+//                } 
                 
             }
             
@@ -367,8 +367,12 @@ private:
             
             
                 if(!closedStates.closed(site)){
+                    
+                    unsigned inc = 1;
+                    
+//                    if(site.match(current->getSite())) inc = 0;
 
-                    auto state = new AstarState(current->getTraveled() + 1, this->heuristic(site, goal), site, current);
+                    auto state = new AstarState(current->getTraveled() + inc, this->heuristic(site, goal), site, current);
                     
                     closedStates.add(state);
                     

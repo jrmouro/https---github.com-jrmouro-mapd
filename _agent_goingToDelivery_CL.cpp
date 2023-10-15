@@ -32,7 +32,7 @@ void _agent_goingToDelivery_CL::onAfterStepping(_token& token, _agent& agent) co
         
                 token.finishTask(agent.currentTask());
                 
-                agent.unassignTask();
+                agent.finishTask();
 
                 changeState(agent, _agent_parked::getInstance());       
 
@@ -40,7 +40,7 @@ void _agent_goingToDelivery_CL::onAfterStepping(_token& token, _agent& agent) co
 
                 token.finishTask(agent.currentTask());
                 
-                agent.unassignTask();
+                agent.finishTask();
 
                 changeState(agent, _agent_goingToCharging::getInstance());
 
@@ -58,7 +58,7 @@ void _agent_goingToDelivery_CL::onAfterStepping(_token& token, _agent& agent) co
         
                 token.finishTask(agent.currentTask());
                 
-                agent.unassignTask();
+                agent.finishTask();
 
                 changeState(agent, _agent_parked_CL::getInstance());       
 
@@ -66,7 +66,7 @@ void _agent_goingToDelivery_CL::onAfterStepping(_token& token, _agent& agent) co
 
                 token.finishTask(agent.currentTask());
                 
-                agent.unassignTask();
+                agent.finishTask();
 
                 changeState(agent, _agent_goingToCharging_CL::getInstance());
 

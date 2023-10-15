@@ -20,7 +20,13 @@
 #include "_selectTaskToAgentAlgorithm.h"
 #include "_selectBackwardTaskToAgentAlgorithm.h"
 #include "_selectBackwardChargingTaskToAgentAlgorithm.h"
+#include "_selectTaskSwapToAgentAlgorithm.h"
 #include "_updateBackwardTaskToAgentAlgorithm.h"
+#include "_updateTaskSwapToAgentAlgorithm.h"
+#include "_selectChargingTaskToAgentAlgorithm.h"
+#include "_closerEndpointIndexerAlgorithm.h"
+#include "_closerTaskIndexerAlgorithm.h"
+#include "_closerTaskIndexerThresholdAlgorithm.h"
 
 class _pathToAgentAlgorithm;
 class _taskPathToAgentAlgorithm;
@@ -33,48 +39,30 @@ class _updateToAgentAlgorithm;
 class _updateTokenAlgorithms {
 public:
             
+          
     static _updateTokenAlgorithms* getInstance(
+            unsigned task_threshold = UINT_MAX,
             float pickup_threshold = .0f,
             float delivery_threshold = .0f){
         
         if(instance == nullptr){
             
-            instance = new _updateTokenAlgorithms(pickup_threshold, delivery_threshold);
+            instance = new _updateTokenAlgorithms(task_threshold, pickup_threshold, delivery_threshold);
             
+        } else {
+            
+            instance->taskIndexerAlgorithm->setTaskThreshold(task_threshold);
+        
+            instance->selectTaskToAgentThresholdAlgorithm->setDelivery_threshold(delivery_threshold);
+            instance->selectTaskToAgentThresholdAlgorithm->setPickup_threshold(pickup_threshold);
+
+            instance->selectChargingTaskToAgentThresholdAlgorithm->setDelivery_threshold(delivery_threshold);
+            instance->selectChargingTaskToAgentThresholdAlgorithm->setPickup_threshold(pickup_threshold);
+
+            instance->selectBackwardTaskToAgentAlgorithm->setDelivery_threshold(delivery_threshold);
+            instance->selectBackwardChargingTaskToAgentAlgorithm->setDelivery_threshold(delivery_threshold);
+                                        
         }
-        
-        instance->selectTaskToAgentThresholdAlgorithm->setDelivery_threshold(delivery_threshold);
-        instance->selectTaskToAgentThresholdAlgorithm->setPickup_threshold(pickup_threshold);
-        
-        instance->selectChargingTaskToAgentThresholdAlgorithm->setDelivery_threshold(delivery_threshold);
-        instance->selectChargingTaskToAgentThresholdAlgorithm->setPickup_threshold(pickup_threshold);
-        
-        instance->selectBackwardTaskToAgentAlgorithm->setDelivery_threshold(delivery_threshold);
-        instance->selectBackwardChargingTaskToAgentAlgorithm->setDelivery_threshold(delivery_threshold);
-                        
-        return instance;
-        
-    }
-            
-    static _updateTokenAlgorithms* getInstance(
-            const _taskIndexerAlgorithm& taskIndexerAlgorithm,
-            float pickup_threshold = .0f,
-            float delivery_threshold = .0f){
-        
-        if(instance == nullptr){
-            
-            instance = new _updateTokenAlgorithms(taskIndexerAlgorithm, pickup_threshold, delivery_threshold);
-            
-        }
-        
-        instance->selectTaskToAgentThresholdAlgorithm->setDelivery_threshold(delivery_threshold);
-        instance->selectTaskToAgentThresholdAlgorithm->setPickup_threshold(pickup_threshold);
-        
-        instance->selectChargingTaskToAgentThresholdAlgorithm->setDelivery_threshold(delivery_threshold);
-        instance->selectChargingTaskToAgentThresholdAlgorithm->setPickup_threshold(pickup_threshold);
-        
-        instance->selectBackwardTaskToAgentAlgorithm->setDelivery_threshold(delivery_threshold);
-        instance->selectBackwardChargingTaskToAgentAlgorithm->setDelivery_threshold(delivery_threshold);
                         
         return instance;
         
@@ -107,38 +95,31 @@ public:
     const _updateToAgentAlgorithm& getUpdateBackwardTaskToAgentAlgorithm() const;
     const _updateToAgentAlgorithm& getUpdateBackwardChargingTaskToAgentAlgorithm() const;
     
+    const _updateToAgentAlgorithm& getUpdateTaskSwapToAgentAlgorithm() const;
+    
 
 private:
     
-    _updateTokenAlgorithms(
-            float pickup_threshold,
-            float delivery_threshold,
-            unsigned min_step_distance = 1,
-            unsigned min_endpoint_distance = 1,
-            unsigned max_step_distance = 1,
-            unsigned max_endpoint_distance = 1);
     
+//    _updateTokenAlgorithms();
+        
     _updateTokenAlgorithms(
-            const _taskIndexerAlgorithm& taskIndexerAlgorithm,
+            unsigned task_threshold,
             float pickup_threshold,
-            float delivery_threshold,
-            unsigned min_step_distance = 1,
-            unsigned min_endpoint_distance = 1,
-            unsigned max_step_distance = 1,
-            unsigned max_endpoint_distance = 1);
+            float delivery_threshold);
         
     static _updateTokenAlgorithms* instance;
     
     
-    _taskIndexerAlgorithm *taskIndexerAlgorithm; 
+    _closerTaskIndexerThresholdAlgorithm *taskIndexerAlgorithm; 
     
     _endpointIndexerAlgorithm* endpointIndexerAlgorithm;
     
     _stepPathAlgorithm* stepPathAlgorithm; 
     _pathToAgentAlgorithm* pathToAgentAlgorithm;
     _taskPathToAgentAlgorithm* taskPathToAgentAlgorithm;
-    
-    _closerCooperatorAgentIndexerAlgorithm *closerCooperatorAgentIndexerAlgorithm;    
+        
+    _selectTaskSwapToAgentAlgorithm* selectTaskSwapToAgentAlgorithm;
     
     _selectTaskToAgentAlgorithm* selectTaskToAgentAlgorithm;
     _selectChargingTaskToAgentAlgorithm* selectChargingTaskToAgentAlgorithm;   
@@ -160,10 +141,11 @@ private:
             *updateChargingTaskToAgentAlgorithm, 
             *updateTaskToAgentThresholdAlgorithm,
             *updateChargingTaskToAgentThresholdAlgorithm,
-            * updateRestEndpointToAgentAlgorithm,
-            * updateChargingEndpointToAgentAlgorithm, 
+            *updateRestEndpointToAgentAlgorithm,
+            *updateChargingEndpointToAgentAlgorithm, 
             *updateBackwardTaskToAgentAlgorithm,
-            *updateBackwardChargingTaskToAgentAlgorithm;
+            *updateBackwardChargingTaskToAgentAlgorithm,
+            *updateTaskSwapToAgentAlgorithm;
     
     
 };

@@ -17,6 +17,8 @@ class _token;
 class _endpointIndexerAlgorithm {
 public:
     
+    virtual _endpointIndexerAlgorithm* getInstance() const = 0;
+    
     virtual void solve(
             const _token& token, 
             const _site& site, 

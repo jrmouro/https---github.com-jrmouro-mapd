@@ -5,6 +5,13 @@
 
 const _map::_TypeColorMap _map::TypeColorMap;
 
+_map::~_map() {
+
+    if (sites != nullptr) delete [] sites;
+    if (endpointsDistanceAlgorithm != nullptr) delete endpointsDistanceAlgorithm;
+
+}
+
 _map::_map(const _map& other) :
     colunm_size(other.colunm_size), 
     row_size(other.row_size), 

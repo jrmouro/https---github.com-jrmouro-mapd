@@ -36,14 +36,6 @@ public:
         taskMap(taskMap), 
         token(token) { }
 
-    
-//    SystemExperiment(const SystemExperiment& other) :
-//            Experiment<std::string>(other),
-//            cell_size(other.cell_size),
-//            timestep(other.timestep),
-//            taskMap(other.taskMap), 
-//            token(other.token.getInstance()) { }
-
     virtual ~SystemExperiment(){ }
     
     virtual void run(){
@@ -55,9 +47,7 @@ public:
             system.run(taskMap, token);
             
         } else {
-            
-//            token->getStepMap().stepView(token->getCurrentStep());
-            
+                        
             Render render(
                     std::pair<unsigned, unsigned>(cell_size,cell_size),
                     std::pair<unsigned, unsigned>(

@@ -49,6 +49,8 @@ public:
             }
         }
         
+        return .0f;
+        
     } 
     
     virtual float solve(const _task& task, unsigned size) const {        

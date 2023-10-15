@@ -83,7 +83,7 @@ public:
     runningTasks(other.runningTasks), finishedTasks(other.finishedTasks), 
     assignTaskAgent(other.assignTaskAgent), reportTaskMap(other.reportTaskMap) { }
     
-
+    virtual _token* getClone() const = 0;
      
     virtual ~_token(){} 
     
@@ -106,7 +106,10 @@ public:
     }
         
     virtual std::string id() const = 0;
-    virtual std::string name() const = 0;
+    
+    virtual std::string name() const {
+        return agent_energy_system.id();
+    }
     
     bool isChargingSite(const _agent& agent)const{
         
@@ -120,22 +123,161 @@ public:
         
     }
         
-    void assignTask(const _task& task, const _agent& agent){
+    void assignTask(int taskId, int agentId){
         
-        std::map<int, _task>::const_iterator it = pendingTasks.find(task.id());
+        std::map<int, _task>::const_iterator it = pendingTasks.find(taskId);
         
         if(it != pendingTasks.end()){
             
-            assignTaskAgent.insert(std::pair<int, int>(task.id(), agent.id()));
-            assignedTasks.insert(std::pair<int, _task>(task.id(), it->second));
+            std::map<int, _agent>::iterator it2 = agents.find(agentId);
             
-            pendingTasks.erase(it);
+            if(it2 != agents.end()){
+            
+                assignTaskAgent.insert(std::pair<int, int>(taskId, agentId));
+                assignedTasks.insert(std::pair<int, _task>(taskId, it->second));
+
+                pendingTasks.erase(it);
+            
+            } else {                
+                
+                try {
+                    std::ostringstream stream;
+                    stream << "agent id not found: " << agentId;
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
+                }
+                
+            }
             
         } else {
             
             try {
                 std::ostringstream stream;
-                stream << "pending task not found: " << task;
+                stream << "pending task id not found: " << taskId;
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }
+        
+    }
+    
+    void assignTaskSwap(int taskId, int agentId, const _stepPath& path){
+        
+        std::map<int, _task>::const_iterator it = pendingTasks.find(taskId);
+        
+        if(it != pendingTasks.end()){
+            
+            std::map<int, _agent>::iterator it2 = agents.find(agentId);
+            
+            if(it2 != agents.end()){
+            
+                assignTaskAgent.insert(std::pair<int, int>(taskId, agentId));
+                assignedTasks.insert(std::pair<int, _task>(taskId, it->second));
+
+                pendingTasks.erase(it);
+                
+                it2->second.assignTaskSwap(it->second, path);
+                
+                stepMap.setMoving(path, agentId);
+            
+            } else {                
+                
+                try {
+                    std::ostringstream stream;
+                    stream << "agent id not found: " << agentId;
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
+                }
+                
+            }
+            
+        } else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "pending task id not found: " << taskId;
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }
+        
+    }
+    
+//    void assignTaskSwap(int taskId, int agentId){
+//                
+//        std::map<int, _task>::const_iterator it = assignedTasks.find(taskId);
+//        
+//        if(it != assignedTasks.end()){
+//            
+//            assignedTasks.erase(taskId);
+//            assignTaskAgent.erase(taskId);            
+//            
+//            assignedTasks.insert(std::pair<int, _task>(taskId, it->second));
+//            assignTaskAgent.insert(std::pair<int, int>(taskId, agentId));        
+//            
+//            
+//        } else {
+//            
+//            try {
+//                std::ostringstream stream;
+//                stream << "assigned task not found: " << task;
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            }
+//            
+//        }
+//        
+//    }
+    
+    void unassignTaskSwap(int taskId, int agentId){
+        
+        std::map<int, _task>::const_iterator it = assignedTasks.find(taskId);
+        
+        if(it != assignedTasks.end()){
+            
+            std::map<int, _agent>::iterator it2 = agents.find(agentId);
+            
+            if(it2 != agents.end()){
+            
+                assignedTasks.erase(taskId);
+                assignTaskAgent.erase(taskId);
+                
+                stepMap.deleteMoving(it2->second.currentPath(), agentId);
+                
+                it2->second.unassignTaskSwap(it->second);
+                
+                pendingTasks.insert(std::pair<int, _task>(taskId, it->second));
+            
+            } else {                
+                
+                try {
+                    std::ostringstream stream;
+                    stream << "agent id not found: " << agentId;
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
+                }
+                
+            }
+            
+        } else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "assigned task id not found: " << taskId;
                 MAPD_EXCEPTION(stream.str());
             } catch (std::exception& e) {
                 std::cout << e.what() << std::endl;
@@ -197,6 +339,9 @@ public:
     }
     
     void setMoving(const _agent& agent, const _stepPath& path);
+    void setMoving(int agentId, const _stepPath& path);
+    void setMovingSwap(int agentId, const _stepPath& path);
+    void deleteMoving(const _agent& agent, const _stepPath& path);
     
     const _stepMap& getStepMap() const {
         return stepMap;
@@ -262,17 +407,17 @@ public:
 
     }
     
-    void listNoRunningYetTasks(const std::function<bool(const _task&, int)> function)const{
+    void listNoRunningYetTasks(const std::function<bool(const _task&)> function)const{
         
         for (auto taskPair : pendingTasks) {
             
-            if(function(taskPair.second, -1))return;
+            if(function(taskPair.second))return;
 
         }
         
         for (auto taskPair : assignedTasks) {
             
-            if(function(taskPair.second, assignmentTaskAgent(taskPair.second.id())))return;
+            if(function(taskPair.second))return;
 
         }
 
@@ -358,11 +503,15 @@ public:
     }
     
     friend std::ostream& operator<<(std::ostream& os, const _token& obj) {
+        
         os << "current step: " << obj.currentStep << std::endl;
         os  << std::endl << "energy: " << obj.currentEnergy() << std::endl;
         os  << std::endl << "agents: " << std::endl;
+        
         for (auto& elem : obj.agents) {
+            
             os << elem.second <<  std::endl;
+            
         } 
         
         os << obj.stepMap << std::endl;
@@ -374,10 +523,8 @@ public:
     virtual void draw(const Render& render) const;
     
     virtual _token::TokenUpdateType updatePath(_agent& agent) = 0;
-    virtual _token::TokenUpdateType updateChargingPath(_agent& agent) = 0;
-    
+    virtual _token::TokenUpdateType updateChargingPath(_agent& agent) = 0;    
     virtual _token::TokenUpdateType updateTrivialPathToAgent(_agent& agent);    
-//    virtual _token::TokenUpdateType updateChargingTrivialPathToAgent(_agent& agent);
     
     
     void error_site_collision_check() const;
@@ -448,6 +595,57 @@ public:
         return map.getNumBots() - (pendingTasks.size() +  assignedTasks.size() + runningTasks.size());
     }
 
+    int assignmentTaskAgentId(int taskId) const {
+        
+        std::map<int, int>::const_iterator it = assignTaskAgent.find(taskId);
+        
+        if(it != assignTaskAgent.end()){
+                
+            return it->second;
+                            
+        }
+        
+        return -1;
+        
+    }
+    
+    const _agent* assignmentTaskAgent(int taskId) const {
+        
+        std::map<int, int>::const_iterator it = assignTaskAgent.find(taskId);
+        
+        if(it != assignTaskAgent.end()){
+            
+            std::map<int, _agent>::const_iterator it2 = agents.find(it->second);
+            
+            if(it2 != agents.end()){
+                
+                return &it2->second;
+                
+            }
+            
+                            
+        }
+        
+        return nullptr;
+        
+    }
+    
+    
+    const _agent* agentById(int agentId) const {
+        
+        std::map<int, _agent>::const_iterator it2 = agents.find(agentId);
+            
+        if(it2 != agents.end()){
+
+            return &it2->second;
+
+        }     
+        
+        return nullptr;
+        
+    }
+    
+        
 
 private:
     
@@ -470,6 +668,8 @@ private:
     } 
     
     
+    
+    
     int assignmentTaskAgent(const _task& task) const {
         
         std::map<int, int>::const_iterator it = assignTaskAgent.find(task.id());
@@ -484,19 +684,8 @@ private:
         
     }
     
-    int assignmentTaskAgent(int taskId) const {
-        
-        std::map<int, int>::const_iterator it = assignTaskAgent.find(taskId);
-        
-        if(it != assignTaskAgent.end()){
-                
-            return it->second;
-                            
-        }
-        
-        return -1;
-        
-    }
+    
+    
 
                
 private:

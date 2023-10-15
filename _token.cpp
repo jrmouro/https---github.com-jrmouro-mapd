@@ -7,11 +7,11 @@ void _token::error_site_collision_check() const {
 
     unsigned count1 = agents.size();
 
-    for (auto pagent1 : agents) {
+    for (const auto& pagent1 : agents) {
 
         unsigned count2 = count1;
 
-        for (auto pagent2 : agents) {
+        for (const auto& pagent2 : agents) {
 
             if (count2 > 0) {
 
@@ -50,11 +50,11 @@ void _token::error_edge_collision_check() const {
 
     unsigned count1 = agents.size();
 
-    for (auto pagent1 : agents) {
+    for (const auto& pagent1 : agents) {
 
         unsigned count2 = count1;
 
-        for (auto pagent2 : agents) {
+        for (const auto& pagent2 : agents) {
 
             if (count2 > 0) {
 
@@ -96,6 +96,50 @@ void _token::setMoving(const _agent& agent, const _stepPath& path) {
 
 }
 
+void _token::setMoving(int agentId, const _stepPath& path) {
+
+    stepMap.setMoving(path, agentId);
+
+}
+
+
+void _token::setMovingSwap(int agentId, const _stepPath& path) {
+    
+    std::map<int, _agent>::iterator it = agents.find(agentId);
+            
+    if(it != agents.end()){
+        
+        it->second.setPathSwap(path);
+        
+        stepMap.setMoving(path, agentId);   
+        
+        if(path.isTrivial()){
+            
+            updateTrivialPathToAgent(it->second);            
+            
+        }
+        
+    } else {                
+
+        try {
+            std::ostringstream stream;
+            stream << "agent id not found: " << agentId;
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+
+    }
+    
+}
+
+void _token::deleteMoving(const _agent& agent, const _stepPath& path) {
+
+    stepMap.deleteMoving(path, agent.id());
+
+}
+
 int _token::currentEnergy() const {
     int ret = 0;
     listConstAgents([&ret](const _agent& agent) {
@@ -126,20 +170,17 @@ void _token::listAgents(const std::function<bool(_agent&) > function) {
 
 void _token::listConstAgents(const std::function<bool(const _agent&) > function) const {
 
-    for (auto& pagent : agents) {
+    for (const auto& pagent : agents) {
 
         if (function(pagent.second)) return;
 
     }
-    
-    
-
-
+        
 }
 
 void _token::draw(const Render& render) const {
 
-    for (auto& pagent : agents) {
+    for (const auto& pagent : agents) {
 
         pagent.second.draw(render);
 

@@ -19,7 +19,7 @@ void _closerTaskIndexerThresholdAlgorithm::solve(
 
     _closerTaskIndexerAlgorithm::solve(token, task, endPointReference, taskIndex);
     
-    if(taskIndex.size() > num_task_threshold)
+    if(taskIndex.size() > task_threshold)
         taskIndex.pop_back();
 
 }

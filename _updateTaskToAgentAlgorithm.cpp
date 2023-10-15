@@ -43,7 +43,7 @@ bool _updateTaskToAgentAlgorithm::solve(
 
         if (flag) {
 
-            token.assignTask(task, agent);
+            token.assignTask(task.id(), agent.id());
             token.reportTaskUpdate(agent, task, ReportTask::PathType::task, taskPath);
 
             agent.assignTask(task, taskPath);

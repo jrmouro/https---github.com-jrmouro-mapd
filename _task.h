@@ -25,7 +25,7 @@ public:
             _id(other._id),
             pickup(other.pickup), 
             delivery(other.delivery) { }
-    
+        
     _task& operator=(const _task& right) {
         if (this == &right)
             return *this;

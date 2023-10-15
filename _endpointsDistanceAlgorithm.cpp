@@ -1,4 +1,5 @@
 #include "_endpointsDistanceAlgorithm.h"
+#include "_manhattanAlgorithm.h"
 
 _endpointsDistanceAlgorithm::_endpointsDistanceAlgorithm(){}
     
@@ -59,15 +60,19 @@ unsigned _endpointsDistanceAlgorithm::solve(const _site& start, const _site& goa
             }
 
         } else {
-
-            try {
-                std::ostringstream stream;
-                stream << "start site domain error: " << start;
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
+            
+            _manhattanAlgorithm ma;
+                        
+            return ma.solve(start, goal);
+            
+//            try {
+//                std::ostringstream stream;
+//                stream << "start site domain error: " << start;
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            }
 
         }
 

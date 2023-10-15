@@ -113,9 +113,9 @@ public:
         
     }
     
-    unsigned getNumTasks()const{
-        return tasks.size();
-    }
+//    unsigned getNumTasks()const{
+//        return tasks.size();
+//    }
     
     unsigned getLastTask() const {
         return lastStepTask;

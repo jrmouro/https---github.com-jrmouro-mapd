@@ -1,5 +1,9 @@
 #include "_closerEndpointIndexerAlgorithm.h"
 
+_endpointIndexerAlgorithm* _closerEndpointIndexerAlgorithm::getInstance() const {
+    return new _closerEndpointIndexerAlgorithm();
+}
+
 void _closerEndpointIndexerAlgorithm::solve(
         const _token& token,
         const _site& endpoint,

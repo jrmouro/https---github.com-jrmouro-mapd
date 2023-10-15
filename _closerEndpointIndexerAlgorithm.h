@@ -19,6 +19,8 @@ public:
     
     _closerEndpointIndexerAlgorithm(const _closerEndpointIndexerAlgorithm& other){ }
     
+    virtual _endpointIndexerAlgorithm* getInstance() const;
+    
     virtual void solve(
             const _token& token,
             const _site& endpoint, 

@@ -7,40 +7,71 @@
     </logicalFolder>
     <logicalFolder name="HeaderFiles" displayName="Library" projectFiles="true">
       <logicalFolder name="f4" displayName="Agent" projectFiles="true">
-        <logicalFolder name="f1" displayName="Agent_State" projectFiles="true">
-          <itemPath>_agent_charging.cpp</itemPath>
-          <itemPath>_agent_charging.h</itemPath>
-          <itemPath>_agent_charging_CL.cpp</itemPath>
-          <itemPath>_agent_charging_CL.h</itemPath>
-          <itemPath>_agent_dead.cpp</itemPath>
-          <itemPath>_agent_dead.h</itemPath>
-          <itemPath>_agent_goingToCharging.cpp</itemPath>
-          <itemPath>_agent_goingToCharging.h</itemPath>
-          <itemPath>_agent_goingToCharging_CL.cpp</itemPath>
-          <itemPath>_agent_goingToCharging_CL.h</itemPath>
-          <itemPath>_agent_goingToDelivery.cpp</itemPath>
-          <itemPath>_agent_goingToDelivery.h</itemPath>
-          <itemPath>_agent_goingToDelivery_CL.cpp</itemPath>
-          <itemPath>_agent_goingToDelivery_CL.h</itemPath>
-          <itemPath>_agent_goingToPickup.cpp</itemPath>
-          <itemPath>_agent_goingToPickup.h</itemPath>
-          <itemPath>_agent_goingToPickup_CL.cpp</itemPath>
-          <itemPath>_agent_goingToPickup_CL.h</itemPath>
-          <itemPath>_agent_goingToRest.cpp</itemPath>
-          <itemPath>_agent_goingToRest.h</itemPath>
-          <itemPath>_agent_goingToRest_CL.cpp</itemPath>
-          <itemPath>_agent_goingToRest_CL.h</itemPath>
-          <itemPath>_agent_parked.cpp</itemPath>
-          <itemPath>_agent_parked.h</itemPath>
-          <itemPath>_agent_parked_CL.h</itemPath>
-          <itemPath>_agent_parker_CL.cpp</itemPath>
-          <itemPath>_agent_state.cpp</itemPath>
-          <itemPath>_agent_state.h</itemPath>
+        <logicalFolder name="f3" displayName="GA" projectFiles="true">
+          <logicalFolder name="f2" displayName="GA_Agent_State" projectFiles="true">
+            <itemPath>_ga_agent_state.cpp</itemPath>
+            <itemPath>_ga_agent_state.h</itemPath>
+            <itemPath>_ga_agent_state_buzy.cpp</itemPath>
+            <itemPath>_ga_agent_state_buzy.h</itemPath>
+            <itemPath>_ga_agent_state_free.cpp</itemPath>
+            <itemPath>_ga_agent_state_free.h</itemPath>
+          </logicalFolder>
+          <itemPath>_ga_agent.cpp</itemPath>
+          <itemPath>_ga_agent.h</itemPath>
         </logicalFolder>
-        <itemPath>_agent.cpp</itemPath>
-        <itemPath>_agent.h</itemPath>
+        <logicalFolder name="f2" displayName="TP" projectFiles="true">
+          <logicalFolder name="f1" displayName="Agent_State" projectFiles="true">
+            <itemPath>_agent_charging.cpp</itemPath>
+            <itemPath>_agent_charging.h</itemPath>
+            <itemPath>_agent_charging_CL.cpp</itemPath>
+            <itemPath>_agent_charging_CL.h</itemPath>
+            <itemPath>_agent_dead.cpp</itemPath>
+            <itemPath>_agent_dead.h</itemPath>
+            <itemPath>_agent_goingToCharging.cpp</itemPath>
+            <itemPath>_agent_goingToCharging.h</itemPath>
+            <itemPath>_agent_goingToCharging_CL.cpp</itemPath>
+            <itemPath>_agent_goingToCharging_CL.h</itemPath>
+            <itemPath>_agent_goingToDelivery.cpp</itemPath>
+            <itemPath>_agent_goingToDelivery.h</itemPath>
+            <itemPath>_agent_goingToDelivery_CL.cpp</itemPath>
+            <itemPath>_agent_goingToDelivery_CL.h</itemPath>
+            <itemPath>_agent_goingToPickup.cpp</itemPath>
+            <itemPath>_agent_goingToPickup.h</itemPath>
+            <itemPath>_agent_goingToPickup_CL.cpp</itemPath>
+            <itemPath>_agent_goingToPickup_CL.h</itemPath>
+            <itemPath>_agent_goingToRest.cpp</itemPath>
+            <itemPath>_agent_goingToRest.h</itemPath>
+            <itemPath>_agent_goingToRest_CL.cpp</itemPath>
+            <itemPath>_agent_goingToRest_CL.h</itemPath>
+            <itemPath>_agent_parked.cpp</itemPath>
+            <itemPath>_agent_parked.h</itemPath>
+            <itemPath>_agent_parked_CL.h</itemPath>
+            <itemPath>_agent_parker_CL.cpp</itemPath>
+            <itemPath>_agent_state.cpp</itemPath>
+            <itemPath>_agent_state.h</itemPath>
+          </logicalFolder>
+          <itemPath>_agent.cpp</itemPath>
+          <itemPath>_agent.h</itemPath>
+        </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f1" displayName="Algorithm" projectFiles="true">
+        <logicalFolder name="f8" displayName="GA" projectFiles="true">
+          <logicalFolder name="f1" displayName="Token" projectFiles="true">
+            <logicalFolder name="f1" displayName="Allocator" projectFiles="true">
+              <itemPath>_agentsTasksAllocator.h</itemPath>
+              <itemPath>_greedy_agentsTasksAllocator.cpp</itemPath>
+              <itemPath>_greedy_agentsTasksAllocator.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="Planning" projectFiles="true">
+              <itemPath>_agentsPlanningPath.cpp</itemPath>
+              <itemPath>_agentsPlanningPath.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="Update" projectFiles="true">
+              <itemPath>_agentsUpdatePath.cpp</itemPath>
+              <itemPath>_agentsUpdatePath.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
         <logicalFolder name="f3" displayName="Map" projectFiles="true">
           <itemPath>_astarAlgorithm.cpp</itemPath>
           <itemPath>_astarAlgorithm.h</itemPath>
@@ -105,12 +136,20 @@
             <itemPath>_selectEndpointToAgentAlgorithm.h</itemPath>
             <itemPath>_selectRestEndpointToAgentAlgorithm.cpp</itemPath>
             <itemPath>_selectRestEndpointToAgentAlgorithm.h</itemPath>
+            <itemPath>_selectTaskSwapToAgentAlgorithm.cpp</itemPath>
+            <itemPath>_selectTaskSwapToAgentAlgorithm.h</itemPath>
             <itemPath>_selectTaskToAgentAlgorithm.cpp</itemPath>
             <itemPath>_selectTaskToAgentAlgorithm.h</itemPath>
             <itemPath>_selectTaskToAgentThresholdAlgorithm.cpp</itemPath>
             <itemPath>_selectTaskToAgentThresholdAlgorithm.h</itemPath>
             <itemPath>_selectTrivialPathToAgentAlgorithm.cpp</itemPath>
             <itemPath>_selectTrivialPathToAgentAlgorithm.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f7" displayName="Task" projectFiles="true">
+            <itemPath>_chargingTaskToAgentAlgorithm.cpp</itemPath>
+            <itemPath>_chargingTaskToAgentAlgorithm.h</itemPath>
+            <itemPath>_taskToAgentAlgorithm.cpp</itemPath>
+            <itemPath>_taskToAgentAlgorithm.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="TaskPath" projectFiles="true">
             <itemPath>_taskPathToAgentAlgorithm.h</itemPath>
@@ -120,9 +159,10 @@
             <itemPath>_updateBackwardTaskToAgentAlgorithm.h</itemPath>
             <itemPath>_updateEndpointToAgentAlgorithm.cpp</itemPath>
             <itemPath>_updateEndpointToAgentAlgorithm.h</itemPath>
+            <itemPath>_updateTaskSwapToAgentAlgorithm.cpp</itemPath>
+            <itemPath>_updateTaskSwapToAgentAlgorithm.h</itemPath>
             <itemPath>_updateTaskToAgentAlgorithm.cpp</itemPath>
             <itemPath>_updateTaskToAgentAlgorithm.h</itemPath>
-            <itemPath>_updateToAgentAlgorithm.cpp</itemPath>
             <itemPath>_updateToAgentAlgorithm.h</itemPath>
             <itemPath>_updateTrivialPathToAgentAlgorithm.cpp</itemPath>
             <itemPath>_updateTrivialPathToAgentAlgorithm.h</itemPath>
@@ -153,6 +193,8 @@
       </logicalFolder>
       <logicalFolder name="f3" displayName="Experiment" projectFiles="true">
         <itemPath>Experiment.h</itemPath>
+        <itemPath>GA_SystemExperiment.cpp</itemPath>
+        <itemPath>GA_SystemExperiment.h</itemPath>
         <itemPath>MultiSystemExperiment.h</itemPath>
         <itemPath>SystemExperiment.h</itemPath>
       </logicalFolder>
@@ -174,8 +216,17 @@
         <itemPath>_site.h</itemPath>
         <itemPath>_stepSite.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f14" displayName="Swap" projectFiles="true">
+        <itemPath>_swapInfo.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f12" displayName="System" projectFiles="true">
-        <itemPath>_system.h</itemPath>
+        <logicalFolder name="f1" displayName="GA" projectFiles="true">
+          <itemPath>_ga_system.cpp</itemPath>
+          <itemPath>_ga_system.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="TP" projectFiles="true">
+          <itemPath>_system.h</itemPath>
+        </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f6" displayName="Task" projectFiles="true">
         <itemPath>ReportTask.h</itemPath>
@@ -185,11 +236,18 @@
         <itemPath>_taskMap.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="Token" projectFiles="true">
-        <itemPath>BackwardTaskToken.h</itemPath>
-        <itemPath>ThresholdTokenPass.h</itemPath>
-        <itemPath>TokenPass.h</itemPath>
-        <itemPath>_token.cpp</itemPath>
-        <itemPath>_token.h</itemPath>
+        <logicalFolder name="f2" displayName="GA" projectFiles="true">
+          <itemPath>_ga_token.cpp</itemPath>
+          <itemPath>_ga_token.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f1" displayName="TP" projectFiles="true">
+          <itemPath>BackwardTaskToken.h</itemPath>
+          <itemPath>TaskSwapTokenPass.h</itemPath>
+          <itemPath>ThresholdTokenPass.h</itemPath>
+          <itemPath>TokenPass.h</itemPath>
+          <itemPath>_token.cpp</itemPath>
+          <itemPath>_token.h</itemPath>
+        </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f10" displayName="Util" projectFiles="true">
         <itemPath>Identifiable.h</itemPath>
@@ -256,6 +314,10 @@
       </item>
       <item path="Experiment.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="GA_SystemExperiment.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GA_SystemExperiment.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Identifiable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="InstanceMAPD.h" ex="false" tool="3" flavor2="0">
@@ -287,6 +349,8 @@
       <item path="Shape.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SystemExperiment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TaskSwapTokenPass.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Text.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -362,6 +426,16 @@
       </item>
       <item path="_agent_state.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_agentsPlanningPath.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agentsPlanningPath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agentsTasksAllocator.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agentsUpdatePath.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agentsUpdatePath.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_astarAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_astarAlgorithm.h" ex="false" tool="3" flavor2="0">
@@ -371,6 +445,10 @@
       <item path="_astarDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_c_task.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_chargingTaskToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_chargingTaskToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_closerCooperatorAgentIndexerAlgorithm.cpp"
             ex="false"
@@ -418,6 +496,34 @@
       <item path="_energy_regime.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_energy_system.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_agent.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_agent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_agent_state.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_agent_state.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_agent_state_buzy.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_agent_state_buzy.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_agent_state_free.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_agent_state_free.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_system.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_system.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_token.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_token.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_greedy_agentsTasksAllocator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_greedy_agentsTasksAllocator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_manhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -493,6 +599,13 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="_selectTaskSwapToAgentAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_selectTaskSwapToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_selectTaskToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_selectTaskToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
@@ -531,6 +644,8 @@
       </item>
       <item path="_stepSite.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_swapInfo.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_system.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_task.h" ex="false" tool="3" flavor2="0">
@@ -542,6 +657,10 @@
       <item path="_taskMap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_taskPathToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_taskToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_taskToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_thresholdAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -568,11 +687,16 @@
       </item>
       <item path="_updateEndpointToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_updateTaskSwapToAgentAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_updateTaskSwapToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_updateTaskToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_updateTaskToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="_updateToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_updateToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -658,6 +782,10 @@
       </item>
       <item path="Experiment.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="GA_SystemExperiment.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GA_SystemExperiment.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Identifiable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="InstanceMAPD.h" ex="false" tool="3" flavor2="0">
@@ -689,6 +817,8 @@
       <item path="Shape.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SystemExperiment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TaskSwapTokenPass.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Text.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -764,6 +894,16 @@
       </item>
       <item path="_agent_state.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_agentsPlanningPath.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agentsPlanningPath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agentsTasksAllocator.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_agentsUpdatePath.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_agentsUpdatePath.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_astarAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_astarAlgorithm.h" ex="false" tool="3" flavor2="0">
@@ -773,6 +913,10 @@
       <item path="_astarDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_c_task.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_chargingTaskToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_chargingTaskToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_closerCooperatorAgentIndexerAlgorithm.cpp"
             ex="false"
@@ -820,6 +964,34 @@
       <item path="_energy_regime.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_energy_system.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_agent.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_agent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_agent_state.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_agent_state.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_agent_state_buzy.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_agent_state_buzy.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_agent_state_free.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_agent_state_free.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_system.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_system.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_token.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_token.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_greedy_agentsTasksAllocator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_greedy_agentsTasksAllocator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_manhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -895,6 +1067,13 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="_selectTaskSwapToAgentAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_selectTaskSwapToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_selectTaskToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_selectTaskToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
@@ -933,6 +1112,8 @@
       </item>
       <item path="_stepSite.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_swapInfo.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_system.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_task.h" ex="false" tool="3" flavor2="0">
@@ -944,6 +1125,10 @@
       <item path="_taskMap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_taskPathToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_taskToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_taskToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_thresholdAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -970,11 +1155,16 @@
       </item>
       <item path="_updateEndpointToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_updateTaskSwapToAgentAlgorithm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_updateTaskSwapToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_updateTaskToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_updateTaskToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="_updateToAgentAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_updateToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>

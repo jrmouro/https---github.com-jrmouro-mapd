@@ -1,41 +1,63 @@
 /* 
- * File:   _selectTaskToAgentAlgorithm.h
+ * File:   _selectTaskSwapToAgentAlgorithm.h
  * Author: ronaldo
  *
- * Created on 5 de setembro de 2023, 05:07
+ * Created on 25 de setembro de 2023, 14:55
  */
 
-#ifndef _SELECTTASKTOAGENTALGORITHM_H
-#define _SELECTTASKTOAGENTALGORITHM_H
+#ifndef _SELECTTASKSWAPTOAGENTALGORITHM_H
+#define _SELECTTASKSWAPTOAGENTALGORITHM_H
+
+#include <vector>
+#include "_taskToAgentAlgorithm.h"
+#include "_chargingTaskToAgentAlgorithm.h"
+#include "_selectRestEndpointToAgentAlgorithm.h"
+#include "_selectChargingEndpointToAgentAlgorithm.h"
 
 class _token;
 class _agent; 
 class _task;
 class _stepPath;
 class _thresholdAlgorithm;
+class _pathToAgentAlgorithm;
 class _taskPathToAgentAlgorithm;
 class _taskIndexerAlgorithm;
+class _endpointIndexerAlgorithm;
+class _taskSwapInfo;
+class _swapInfo;
 
-class _selectTaskToAgentAlgorithm {
+class _selectTaskSwapToAgentAlgorithm {
     
 public:
     
-    _selectTaskToAgentAlgorithm(const _taskPathToAgentAlgorithm&, _taskIndexerAlgorithm&);
+    _selectTaskSwapToAgentAlgorithm(
+            const _pathToAgentAlgorithm&, 
+            const _taskPathToAgentAlgorithm&, 
+            _endpointIndexerAlgorithm&,
+            _taskIndexerAlgorithm&);
         
-    _selectTaskToAgentAlgorithm(const _selectTaskToAgentAlgorithm&);
+    _selectTaskSwapToAgentAlgorithm(const _selectTaskSwapToAgentAlgorithm& other);
     
-    virtual ~_selectTaskToAgentAlgorithm(){}
+    virtual ~_selectTaskSwapToAgentAlgorithm();
     
-    virtual bool solve(const _token&, const _agent&, _task&, _stepPath&) const;
+    virtual bool solve(
+        const _token&, 
+        const _agent&, 
+        _task&, _stepPath&, 
+        std::vector<_swapInfo>&) const;
     
-    void setTaskIndexerAlgorithm(_taskIndexerAlgorithm& taskIndexerAlgorithm);
+    void setTaskIndexerAlgorithm(_taskIndexerAlgorithm& taskIndexerAlgorithm);    
+    void setEndpointIndexerAlgorithm(_endpointIndexerAlgorithm& endpointIndexerAlgorithm);
     
 protected:
     
-    const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm;
+    _taskToAgentAlgorithm taskToAgentAlgorithm;
+    _chargingTaskToAgentAlgorithm chargingTaskToAgentAlgorithm;
+    _selectChargingEndpointToAgentAlgorithm selectChargingEndpointToAgentAlgorithm;
+    _selectRestEndpointToAgentAlgorithm selectRestEndpointToAgentAlgorithm;
     _taskIndexerAlgorithm& taskIndexerAlgorithm;
 
 };
 
-#endif /* _SELECTTASKTOAGENTALGORITHM_H */
+#endif /* _SELECTTASKSWAPTOAGENTALGORITHM_H */
 

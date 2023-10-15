@@ -35,23 +35,13 @@ public:
         return _id;
     }
         
-    void setPath(const _stepPath& path){
-        
-        this->_currentPath = path;
-        
+    void setPath(const _stepPath& path){        
+        this->_currentPath = path;        
     }
-    
-    void assignTask(const _task& task, const _stepPath& path){
-        this->_currentPath = path;
-        tasks.push_back(task);
-        _currentTaskIndex = tasks.size() - 1;
-    }
-    
-    void unassignTask(){
+        
+    void finishTask(){
         _currentTaskIndex = -1;
-    }
-    
-//    
+    }      
     
     bool isAbleToFulfillTaskPath(const _map& map, const _task& task, const _stepPath& taskPath)const{
         int need = this->energy_system.appraiseTaskPath(map, task, taskPath);
@@ -161,18 +151,20 @@ public:
     
     const _task& currentTask() const{
         
-        if(_currentTaskIndex > -1)
+        if(_currentTaskIndex < 0){
             
-            return tasks.at(_currentTaskIndex);
+            try{
+                std::ostringstream stream;
+                stream << "no current task" << std::endl;
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
         
-        try {
-            std::ostringstream stream;
-            stream << "no current task" << std::endl;
-            MAPD_EXCEPTION(stream.str());
-        } catch (std::exception& e) {
-            std::cout << e.what() << std::endl;
-            std::abort();
         }
+        
+        return tasks.at(_currentTaskIndex);
                 
     }
     
@@ -219,6 +211,29 @@ public:
     bool isCharging() const {
         return this->_state->charging();
     }
+    
+    unsigned pickupStepToArrive()const{
+        
+        if(isAssigned()){
+                        
+            return _currentPath.stepToArrive(currentTask().getPickup());
+                        
+        }
+        
+        return UINT_MAX;
+        
+    }
+    
+    void assignTask(const _task& task, const _stepPath& path){
+        this->_currentPath = path;
+        tasks.push_back(task);
+        _currentTaskIndex = tasks.size() - 1;
+    }
+    
+    void assignTaskSwap(const _task& task, const _stepPath& path);
+    
+    void unassignTaskSwap(const _task& task);
+    void setPathSwap(const _stepPath& path);
           
 protected:
     const int _id;
@@ -228,7 +243,7 @@ protected:
     int _currentTaskIndex = -1;
     _agent_energy_system energy_system;
     _stepSite _previousSite;
-            
+                
 private:
     friend class _system;
     virtual void move(_token& token);
@@ -281,6 +296,8 @@ private:
     int energyCharging() const {
         return energy_system.getCharging();
     }
+    
+    
     
     
         

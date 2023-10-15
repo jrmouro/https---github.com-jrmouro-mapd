@@ -216,6 +216,45 @@ public:
         return ret;
         
     }
+    
+    void expendStepping(bool isChargingSite, bool stayedSamePlace, bool carrying){
+                   
+        int value;
+        
+        if(isChargingSite){
+
+            expend(AERT::charging, value);
+            charging -= value;
+
+        }         
+
+        if(stayedSamePlace){
+            
+            if(carrying){
+                
+                expend(AERT::loaded, value);
+                
+            } else {
+                
+                expend(AERT::unloaded, value);
+                
+            }
+
+        } else {
+            
+            if(carrying){
+                
+                expend(AERT::carrying, value);
+                
+            } else {
+                
+                expend(AERT::moving, value);
+                
+            }
+
+        }
+               
+    }
    
     
     void expendCarryngStepping(bool isChargingSite, const _stepSite& orig, const _stepSite dest){

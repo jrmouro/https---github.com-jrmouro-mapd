@@ -13,11 +13,11 @@
 class _closerTaskIndexerThresholdAlgorithm : public _closerTaskIndexerAlgorithm{
 public:
     
-    _closerTaskIndexerThresholdAlgorithm(unsigned num_task_threshold) :
-    num_task_threshold(num_task_threshold) { }
+    _closerTaskIndexerThresholdAlgorithm(unsigned task_threshold) :
+    task_threshold(task_threshold) { }
 
     _closerTaskIndexerThresholdAlgorithm(const _closerTaskIndexerThresholdAlgorithm& other) :
-    num_task_threshold(other.num_task_threshold) { }
+    task_threshold(other.task_threshold) { }
     
     virtual _taskIndexerAlgorithm* getInstance() const;
     
@@ -27,17 +27,17 @@ public:
             const _site& endPointReference, 
             std::vector<_task>& taskIndex) const;
     
-    unsigned getNum_task_threshold() const {
-        return num_task_threshold;
+    unsigned getTaskThreshold() const {
+        return task_threshold;
     }
 
-    void setNum_task_threshold(unsigned num_task_threshold) {
-        this->num_task_threshold = num_task_threshold;
+    void setTaskThreshold(unsigned task_threshold) {
+        this->task_threshold = task_threshold;
     }
     
 private:
     
-    unsigned num_task_threshold;
+    unsigned task_threshold;
 
 };
 

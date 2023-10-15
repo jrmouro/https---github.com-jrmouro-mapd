@@ -2,6 +2,10 @@
 #include "_token.h"
 #include "_taskPathToAgentAlgorithm.h"
 
+void _selectChargingTaskToAgentAlgorithm::setEndpointIndexerAlgorithm(_endpointIndexerAlgorithm& endpointIndexerAlgorithm) {
+    this->endpointIndexerAlgorithm = endpointIndexerAlgorithm;
+}
+
 bool _selectChargingTaskToAgentAlgorithm::solve(
         const _token& token,
         const _agent& agent,

@@ -8,8 +8,14 @@
 #include "_agent.h"
 #include "_agent_state.h"
 #include "_token.h"
+#include "_agent_parked.h"
+#include "_agent_parked_CL.h"
 #include "_agent_charging.h"
 #include "_agent_charging_CL.h"
+#include "_agent_goingToPickup.h"
+#include "_agent_goingToPickup_CL.h"
+#include "_agent_goingToCharging_CL.h"
+#include "_agent_goingToRest.h"
 #include "Render.h"
 #include "Circle.h"
 #include "Text.h"
@@ -30,7 +36,6 @@ _agent::_agent(int _id, const _stepSite& currentSite, const _agent_energy_system
         this->changeState(_agent_charging::getInstance());
         
     }
-
 
 }
 
@@ -80,6 +85,120 @@ void _agent::draw(const Render& render) const{
     
     this->_state->onDraw(render, *this);
   
+}
+
+void _agent::setPathSwap(const _stepPath& path){
+        
+    setPath(path);
+    
+    if(path.isTrivial()){
+        
+        if(energy_system.isAtCriticalLevel()) {
+
+            this->changeState(_agent_parked_CL::getInstance());
+
+        } else {
+
+            this->changeState(_agent_parked::getInstance());
+
+        }         
+        
+    }else{
+
+        if(energy_system.isAtCriticalLevel()) {
+
+            this->changeState(_agent_goingToCharging_CL::getInstance());
+
+        } else {
+
+            this->changeState(_agent_goingToRest::getInstance());
+
+        }
+    
+    }
+
+}
+
+void _agent::assignTaskSwap(const _task& task, const _stepPath& path){
+        
+    assignTask(task, path);
+    
+    if(path.isTrivial()){
+        
+        unassignTaskSwap(task);
+        
+        if(energy_system.isAtCriticalLevel()) {
+
+            this->changeState(_agent_parked_CL::getInstance());
+
+        } else {
+
+            this->changeState(_agent_parked::getInstance());
+
+        }
+        
+    }else{
+
+        if(energy_system.isAtCriticalLevel()) {
+
+            this->changeState(_agent_goingToPickup_CL::getInstance());
+
+        } else {
+
+            this->changeState(_agent_goingToPickup::getInstance());
+
+        }
+    
+    }
+
+}
+
+void _agent::unassignTaskSwap(const _task& task){
+    
+    if(isAssigned()){
+        
+        if(task.id() == tasks.back().id()){
+
+            setPath(_stepPath(currentSite()));
+            _currentTaskIndex = -1;
+            tasks.pop_back();
+
+            if(energy_system.isAtCriticalLevel()) {
+
+                this->changeState(_agent_parked_CL::getInstance());
+
+            } else {
+
+                this->changeState(_agent_parked::getInstance());
+
+            }
+
+        } else {
+
+            try {
+                std::ostringstream stream;
+                stream << "unrecognized task as assigned: " << task;
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+
+        } 
+    
+    } else {
+        
+        try {
+            std::ostringstream stream;
+            stream << "agent is not assigned to any task: " << *this;
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+    }
+
 }
 
 

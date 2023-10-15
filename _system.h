@@ -13,9 +13,6 @@
 #include "MapdException.h"
 #include "InstanceMAPD.h"
 #include "_token.h"
-#include "ThresholdTokenPass.h"
-#include "TokenPass.h"
-#include "BackwardTaskToken.h"
 #include "_agent.h"
 
 class _system{
@@ -31,6 +28,8 @@ public:
             token.error_site_collision_check();
             token.error_edge_collision_check();
             
+            int i = 0;
+            
             taskMap.listTasksByStep(token.getCurrentStep(), [&token](const _task& task){
                 
                 token.addPendingTask(task);
@@ -39,6 +38,8 @@ public:
                 
             });
             
+            i = 0;
+            
             token.listAgents([this, &token](_agent& agent){
                 
                 agent.receive(token);
@@ -46,6 +47,8 @@ public:
                 return false;
                 
             });
+            
+            i = 0;
                     
             token.listAgents([this, &token](_agent& agent){
                 
@@ -54,6 +57,8 @@ public:
                 return false;
                 
             });
+            
+            i = 0;
             
             token.stepping();
             

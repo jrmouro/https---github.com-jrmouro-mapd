@@ -24,9 +24,9 @@ void _agent_state::onStepping(_token& token, _agent& agent) const {
 
     agent.stepping();
 
-//    if (token.getCurrentStep() >= 200 && agent.id() == 0) {
+//    if (token.getCurrentStep() >= 35 && agent.id() == 0) {;
 //        int i = 0;
-//        for (; i < 0; i++)
+//        for (; i < 20; i++)
 //            token.getStepMap().stepView(token.getCurrentStep() + i);        
 //        token.getStepMap().stepView(token.getCurrentStep() + i);
 //    }

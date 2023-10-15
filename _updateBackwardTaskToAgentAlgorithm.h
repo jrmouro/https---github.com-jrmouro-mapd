@@ -20,8 +20,9 @@ class _updateBackwardTaskToAgentAlgorithm  : public _updateToAgentAlgorithm{
 public:
     
     _updateBackwardTaskToAgentAlgorithm(
-            _selectBackwardTaskToAgentAlgorithm&,
-            _closerCooperatorAgentIndexerAlgorithm&);                
+            _selectBackwardTaskToAgentAlgorithm&//,
+//            _closerCooperatorAgentIndexerAlgorithm&
+            );                
     
     _updateBackwardTaskToAgentAlgorithm(const _updateBackwardTaskToAgentAlgorithm& orig);
     
@@ -34,7 +35,7 @@ public:
 private:
     
     _selectBackwardTaskToAgentAlgorithm& selectBackwardTaskToAgentAlgorithm;
-    _closerCooperatorAgentIndexerAlgorithm& closerCooperatorAgentIndexerAlgorithm;
+//    _closerCooperatorAgentIndexerAlgorithm& closerCooperatorAgentIndexerAlgorithm;
 
 };
 

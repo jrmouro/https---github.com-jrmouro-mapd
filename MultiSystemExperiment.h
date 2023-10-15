@@ -10,6 +10,10 @@
 
 #include <set>
 #include "SystemExperiment.h"
+#include "ThresholdTokenPass.h"
+#include "TokenPass.h"
+#include "TaskSwapTokenPass.h"
+#include "BackwardTaskToken.h"
 
 
 class MultiSystemExperiment : public Experiment<std::string>{
@@ -23,6 +27,7 @@ public:
             const std::vector<std::string>& taskFilenames,             
             const std::vector<std::string>& mapFilenames,
             const std::vector<_agent_energy_system>& agent_energy_systems,
+            const unsigned task_threshold,
             const unsigned cell_size = 0, 
             const unsigned timestep = 0) :
                     Experiment<std::string>("MultiSystemExperiment"),
@@ -32,6 +37,7 @@ public:
                     taskFilenames(taskFilenames), 
                     tokenIds(tokenIds), 
                     agent_energy_systems(agent_energy_systems),
+                    task_threshold(task_threshold),
                     cell_size(cell_size), 
                     timestep(timestep) {}
 
@@ -43,6 +49,7 @@ public:
             taskFilenames(other.taskFilenames), 
             tokenIds(other.tokenIds), 
             agent_energy_systems(other.agent_energy_systems),
+            task_threshold(other.task_threshold),
             cell_size(other.cell_size), 
             timestep(other.timestep) { }
 
@@ -78,7 +85,15 @@ public:
                         
                         for (auto agent_energy_system : agent_energy_systems) {
                             
-                            ptokens.push_back(new TokenPass(imap->getMap(), imap->getStepMap(), agent_energy_system));
+                            ptokens.push_back(new TokenPass(imap->getMap(), imap->getStepMap(), agent_energy_system, task_threshold));
+
+                        }
+                        
+                    } else if(tokenId == "TSTP") {
+                        
+                        for (auto agent_energy_system : agent_energy_systems) {
+                            
+                            ptokens.push_back(new TaskSwapTokenPass(imap->getMap(), imap->getStepMap(), agent_energy_system, task_threshold));
 
                         }
                         
@@ -96,7 +111,7 @@ public:
                             
                                 for (auto agent_energy_system : agent_energy_systems) {
 
-                                    ptokens.push_back(new BackwardTaskToken(imap->getMap(), imap->getStepMap(), agent_energy_system, threshold.second));
+                                    ptokens.push_back(new BackwardTaskToken(imap->getMap(), imap->getStepMap(), agent_energy_system, threshold.second, task_threshold));
 
                                 }
                             
@@ -111,7 +126,7 @@ public:
                             
                             for (auto agent_energy_system : agent_energy_systems) {                               
                                 
-                                ptokens.push_back(new ThresholdTokenPass(imap->getMap(), imap->getStepMap(), agent_energy_system, threshold.first, threshold.second));
+                                ptokens.push_back(new ThresholdTokenPass(imap->getMap(), imap->getStepMap(), agent_energy_system, threshold.first, threshold.second, task_threshold));
 
                             }
 
@@ -201,7 +216,7 @@ private:
     const std::vector<std::pair<float, float>>& thresholds;
     const std::vector<std::string>& tokenIds, taskFilenames, mapFilenames;  
     const std::vector<_agent_energy_system>& agent_energy_systems;            
-    const unsigned cell_size = 0, timestep = 0;
+    const unsigned cell_size = 0, timestep = 0, task_threshold = UINT_MAX;
 
 };
 

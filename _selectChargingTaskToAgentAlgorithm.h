@@ -36,13 +36,11 @@ public:
             _stepPath& path) const;
     
     
-//    void setEndpointIndexerAlgorithm(_endpointIndexerAlgorithm& endpointIndexerAlgorithm) {
-//        this->endpointIndexerAlgorithm = endpointIndexerAlgorithm;
-//    }
+    void setEndpointIndexerAlgorithm(_endpointIndexerAlgorithm& endpointIndexerAlgorithm);
 
 private:
 
-    const _endpointIndexerAlgorithm& endpointIndexerAlgorithm;
+    _endpointIndexerAlgorithm& endpointIndexerAlgorithm;
     
 };
 

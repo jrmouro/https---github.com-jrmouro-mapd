@@ -19,7 +19,7 @@ public:
     _selectBackwardChargingTaskToAgentAlgorithm(
     const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm, 
             _taskIndexerAlgorithm& taskIndexerAlgorithm,
-            const _endpointIndexerAlgorithm& endpointIndexerAlgorithm,
+            _endpointIndexerAlgorithm& endpointIndexerAlgorithm,
             float delivery_threshold);
     
     _selectBackwardChargingTaskToAgentAlgorithm(
@@ -35,9 +35,13 @@ public:
     
     virtual ~_selectBackwardChargingTaskToAgentAlgorithm(){}
     
+    void setEndpointIndexerAlgorithm(_endpointIndexerAlgorithm& endpointIndexerAlgorithm) {
+        this->endpointIndexerAlgorithm = endpointIndexerAlgorithm;
+    }
+    
 private:
 
-    const _endpointIndexerAlgorithm& endpointIndexerAlgorithm;
+    _endpointIndexerAlgorithm& endpointIndexerAlgorithm;
     
 };
 

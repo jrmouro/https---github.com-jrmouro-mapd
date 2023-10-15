@@ -21,7 +21,7 @@
 #include "Render.h"
 #include "_site.h"
 #include "MapdException.h"
-#include "_endpointsDistanceAlgorithm.h"
+//#include "_endpointsDistanceAlgorithm.h"
 
 class _endpointsDistanceAlgorithm;
 class _map : public Drawable{
@@ -77,12 +77,7 @@ public:
 
     _map(const _map& other);
     
-    virtual ~_map() {
-
-        if (sites != nullptr) delete [] sites;
-        if (endpointsDistanceAlgorithm != nullptr) delete endpointsDistanceAlgorithm;
-
-    }
+    virtual ~_map();
     
     void setTypeOfSite(unsigned linearLocation, TypeOfSite value) {
         
@@ -117,6 +112,8 @@ public:
         }
 
     }
+    
+    
 
     TypeOfSite getTypeOfSite(int row, int colunm) const {
 

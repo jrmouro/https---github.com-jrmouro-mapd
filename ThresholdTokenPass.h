@@ -9,49 +9,38 @@
 #define THRESHOLDTOKENPASS_H
 
 #include <sstream>
-#include "_token.h"
+#include "TokenPass.h"
 #include "_updateTokenAlgorithms.h"
 #include "_closerTaskIndexerThresholdAlgorithm.h"
 
-class ThresholdTokenPass : public _token{
+class ThresholdTokenPass : public TokenPass{
 public:
     ThresholdTokenPass(
             const _map& map, 
             const _stepMap& stepMap, 
             const _agent_energy_system& agent_energy_system,
             float pickup_threshold, 
-            float delivery_threshold)  : 
-                _token(map, stepMap, agent_energy_system),
+            float delivery_threshold,
+            unsigned task_threshold)  : 
+                TokenPass(map, stepMap, agent_energy_system, task_threshold),
                 pickup_threshold(pickup_threshold), 
                 delivery_threshold(delivery_threshold) { }
     
-//    ThresholdTokenPass(const ThresholdTokenPass& other) : 
-//                _token(other),
-//                pickup_threshold(other.pickup_threshold), 
-//                delivery_threshold(other.delivery_threshold) { }
+    ThresholdTokenPass(const ThresholdTokenPass& other) : 
+                TokenPass(other),
+                pickup_threshold(other.pickup_threshold), 
+                delivery_threshold(other.delivery_threshold) { }
 
     virtual ~ThresholdTokenPass(){}
     
-//    virtual _token* builderToken(
-//            const _map& map, 
-//            const _stepMap& stepMap, 
-//            const _agent_energy_system& agent_energy_system,
-//            float pickup_threshold = 0, 
-//            float delivery_threshold = 0) const{
-//        
-//        
-//        return new ThresholdTokenPass(map, stepMap, agent_energy_system, pickup_threshold, delivery_threshold);
-//        
-//    }
-    
-//    virtual _token* getInstance() const {
-//        return new ThresholdTokenPass(*this);
-//    }
+    virtual _token* getClone() const {
+        return new ThresholdTokenPass(*this);
+    }
     
     virtual std::string name() const {
         
         std::stringstream s;
-        s << "TTP(" << pickup_threshold << " : " << delivery_threshold << ")"; 
+        s << "TTP(" << pickup_threshold << " : " << delivery_threshold << ")["<< _token::name() << "]"; 
         
         return s.str();
         
@@ -65,10 +54,7 @@ public:
     
     virtual _token::TokenUpdateType updatePath(_agent& agent){
         
-//        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
-        _closerTaskIndexerAlgorithm closerTaskIndexerAlgorithm;
-        
-        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerAlgorithm, pickup_threshold, delivery_threshold);
+        auto uta = _updateTokenAlgorithms::getInstance(task_threshold, pickup_threshold, delivery_threshold);
         
         TokenUpdateType ret = TokenUpdateType::none;
     
@@ -126,11 +112,8 @@ public:
     }
     
     virtual _token::TokenUpdateType updateChargingPath(_agent& agent){
-        
-//        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNum_bots());
-        _closerTaskIndexerAlgorithm closerTaskIndexerAlgorithm;
-        
-        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerAlgorithm, pickup_threshold, delivery_threshold);
+                
+        auto uta = _updateTokenAlgorithms::getInstance(task_threshold, pickup_threshold, delivery_threshold);
         
         TokenUpdateType ret = TokenUpdateType::none;
     

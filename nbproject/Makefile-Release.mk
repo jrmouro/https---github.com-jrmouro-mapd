@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/Circle.o \
+	${OBJECTDIR}/GA_SystemExperiment.o \
 	${OBJECTDIR}/Rectangle.o \
 	${OBJECTDIR}/Render.o \
 	${OBJECTDIR}/Shape.o \
@@ -55,14 +56,24 @@ OBJECTFILES= \
 	${OBJECTDIR}/_agent_parked.o \
 	${OBJECTDIR}/_agent_parker_CL.o \
 	${OBJECTDIR}/_agent_state.o \
+	${OBJECTDIR}/_agentsPlanningPath.o \
+	${OBJECTDIR}/_agentsUpdatePath.o \
 	${OBJECTDIR}/_astarAlgorithm.o \
 	${OBJECTDIR}/_astarDistanceAlgorithm.o \
+	${OBJECTDIR}/_chargingTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm.o \
 	${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o \
 	${OBJECTDIR}/_closerTaskIndexerAlgorithm.o \
 	${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o \
 	${OBJECTDIR}/_endpointIndexerAlgorithm.o \
 	${OBJECTDIR}/_endpointsDistanceAlgorithm.o \
+	${OBJECTDIR}/_ga_agent.o \
+	${OBJECTDIR}/_ga_agent_state.o \
+	${OBJECTDIR}/_ga_agent_state_buzy.o \
+	${OBJECTDIR}/_ga_agent_state_free.o \
+	${OBJECTDIR}/_ga_system.o \
+	${OBJECTDIR}/_ga_token.o \
+	${OBJECTDIR}/_greedy_agentsTasksAllocator.o \
 	${OBJECTDIR}/_map.o \
 	${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o \
@@ -70,16 +81,18 @@ OBJECTFILES= \
 	${OBJECTDIR}/_selectChargingTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectChargingTaskToAgentThresholdAlgorithm.o \
 	${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm.o \
+	${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectTaskToAgentThresholdAlgorithm.o \
 	${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm.o \
 	${OBJECTDIR}/_stepPathAlgorithm.o \
 	${OBJECTDIR}/_taskIndexerAlgorithm.o \
+	${OBJECTDIR}/_taskToAgentAlgorithm.o \
 	${OBJECTDIR}/_token.o \
 	${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_updateEndpointToAgentAlgorithm.o \
+	${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm.o \
 	${OBJECTDIR}/_updateTaskToAgentAlgorithm.o \
-	${OBJECTDIR}/_updateToAgentAlgorithm.o \
 	${OBJECTDIR}/_updateTokenAlgorithms.o \
 	${OBJECTDIR}/_updateTrivialPathToAgentAlgorithm.o \
 	${OBJECTDIR}/main.o
@@ -125,6 +138,11 @@ ${OBJECTDIR}/Circle.o: Circle.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Circle.o Circle.cpp
+
+${OBJECTDIR}/GA_SystemExperiment.o: GA_SystemExperiment.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GA_SystemExperiment.o GA_SystemExperiment.cpp
 
 ${OBJECTDIR}/Rectangle.o: Rectangle.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -221,6 +239,16 @@ ${OBJECTDIR}/_agent_state.o: _agent_state.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_state.o _agent_state.cpp
 
+${OBJECTDIR}/_agentsPlanningPath.o: _agentsPlanningPath.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agentsPlanningPath.o _agentsPlanningPath.cpp
+
+${OBJECTDIR}/_agentsUpdatePath.o: _agentsUpdatePath.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agentsUpdatePath.o _agentsUpdatePath.cpp
+
 ${OBJECTDIR}/_astarAlgorithm.o: _astarAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -230,6 +258,11 @@ ${OBJECTDIR}/_astarDistanceAlgorithm.o: _astarDistanceAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarDistanceAlgorithm.o _astarDistanceAlgorithm.cpp
+
+${OBJECTDIR}/_chargingTaskToAgentAlgorithm.o: _chargingTaskToAgentAlgorithm.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_chargingTaskToAgentAlgorithm.o _chargingTaskToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm.o: _closerCooperatorAgentIndexerAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -260,6 +293,41 @@ ${OBJECTDIR}/_endpointsDistanceAlgorithm.o: _endpointsDistanceAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointsDistanceAlgorithm.o _endpointsDistanceAlgorithm.cpp
+
+${OBJECTDIR}/_ga_agent.o: _ga_agent.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent.o _ga_agent.cpp
+
+${OBJECTDIR}/_ga_agent_state.o: _ga_agent_state.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state.o _ga_agent_state.cpp
+
+${OBJECTDIR}/_ga_agent_state_buzy.o: _ga_agent_state_buzy.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_buzy.o _ga_agent_state_buzy.cpp
+
+${OBJECTDIR}/_ga_agent_state_free.o: _ga_agent_state_free.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_free.o _ga_agent_state_free.cpp
+
+${OBJECTDIR}/_ga_system.o: _ga_system.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_system.o _ga_system.cpp
+
+${OBJECTDIR}/_ga_token.o: _ga_token.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token.o _ga_token.cpp
+
+${OBJECTDIR}/_greedy_agentsTasksAllocator.o: _greedy_agentsTasksAllocator.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_greedy_agentsTasksAllocator.o _greedy_agentsTasksAllocator.cpp
 
 ${OBJECTDIR}/_map.o: _map.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -296,6 +364,11 @@ ${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm.o: _selectRestEndpointToAgentAl
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm.o _selectRestEndpointToAgentAlgorithm.cpp
 
+${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm.o: _selectTaskSwapToAgentAlgorithm.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm.o _selectTaskSwapToAgentAlgorithm.cpp
+
 ${OBJECTDIR}/_selectTaskToAgentAlgorithm.o: _selectTaskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -321,6 +394,11 @@ ${OBJECTDIR}/_taskIndexerAlgorithm.o: _taskIndexerAlgorithm.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_taskIndexerAlgorithm.o _taskIndexerAlgorithm.cpp
 
+${OBJECTDIR}/_taskToAgentAlgorithm.o: _taskToAgentAlgorithm.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_taskToAgentAlgorithm.o _taskToAgentAlgorithm.cpp
+
 ${OBJECTDIR}/_token.o: _token.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -336,15 +414,15 @@ ${OBJECTDIR}/_updateEndpointToAgentAlgorithm.o: _updateEndpointToAgentAlgorithm.
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateEndpointToAgentAlgorithm.o _updateEndpointToAgentAlgorithm.cpp
 
+${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm.o: _updateTaskSwapToAgentAlgorithm.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm.o _updateTaskSwapToAgentAlgorithm.cpp
+
 ${OBJECTDIR}/_updateTaskToAgentAlgorithm.o: _updateTaskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskToAgentAlgorithm.o _updateTaskToAgentAlgorithm.cpp
-
-${OBJECTDIR}/_updateToAgentAlgorithm.o: _updateToAgentAlgorithm.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateToAgentAlgorithm.o _updateToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_updateTokenAlgorithms.o: _updateTokenAlgorithms.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -400,6 +478,19 @@ ${OBJECTDIR}/Circle_nomain.o: ${OBJECTDIR}/Circle.o Circle.cpp
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Circle_nomain.o Circle.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/Circle.o ${OBJECTDIR}/Circle_nomain.o;\
+	fi
+
+${OBJECTDIR}/GA_SystemExperiment_nomain.o: ${OBJECTDIR}/GA_SystemExperiment.o GA_SystemExperiment.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/GA_SystemExperiment.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GA_SystemExperiment_nomain.o GA_SystemExperiment.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/GA_SystemExperiment.o ${OBJECTDIR}/GA_SystemExperiment_nomain.o;\
 	fi
 
 ${OBJECTDIR}/Rectangle_nomain.o: ${OBJECTDIR}/Rectangle.o Rectangle.cpp 
@@ -649,6 +740,32 @@ ${OBJECTDIR}/_agent_state_nomain.o: ${OBJECTDIR}/_agent_state.o _agent_state.cpp
 	    ${CP} ${OBJECTDIR}/_agent_state.o ${OBJECTDIR}/_agent_state_nomain.o;\
 	fi
 
+${OBJECTDIR}/_agentsPlanningPath_nomain.o: ${OBJECTDIR}/_agentsPlanningPath.o _agentsPlanningPath.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agentsPlanningPath.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agentsPlanningPath_nomain.o _agentsPlanningPath.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_agentsPlanningPath.o ${OBJECTDIR}/_agentsPlanningPath_nomain.o;\
+	fi
+
+${OBJECTDIR}/_agentsUpdatePath_nomain.o: ${OBJECTDIR}/_agentsUpdatePath.o _agentsUpdatePath.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agentsUpdatePath.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agentsUpdatePath_nomain.o _agentsUpdatePath.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_agentsUpdatePath.o ${OBJECTDIR}/_agentsUpdatePath_nomain.o;\
+	fi
+
 ${OBJECTDIR}/_astarAlgorithm_nomain.o: ${OBJECTDIR}/_astarAlgorithm.o _astarAlgorithm.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_astarAlgorithm.o`; \
@@ -673,6 +790,19 @@ ${OBJECTDIR}/_astarDistanceAlgorithm_nomain.o: ${OBJECTDIR}/_astarDistanceAlgori
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarDistanceAlgorithm_nomain.o _astarDistanceAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_astarDistanceAlgorithm.o ${OBJECTDIR}/_astarDistanceAlgorithm_nomain.o;\
+	fi
+
+${OBJECTDIR}/_chargingTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_chargingTaskToAgentAlgorithm.o _chargingTaskToAgentAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_chargingTaskToAgentAlgorithm.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_chargingTaskToAgentAlgorithm_nomain.o _chargingTaskToAgentAlgorithm.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_chargingTaskToAgentAlgorithm.o ${OBJECTDIR}/_chargingTaskToAgentAlgorithm_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm.o _closerCooperatorAgentIndexerAlgorithm.cpp 
@@ -751,6 +881,97 @@ ${OBJECTDIR}/_endpointsDistanceAlgorithm_nomain.o: ${OBJECTDIR}/_endpointsDistan
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointsDistanceAlgorithm_nomain.o _endpointsDistanceAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_endpointsDistanceAlgorithm.o ${OBJECTDIR}/_endpointsDistanceAlgorithm_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_agent_nomain.o: ${OBJECTDIR}/_ga_agent.o _ga_agent.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_agent.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_nomain.o _ga_agent.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_agent.o ${OBJECTDIR}/_ga_agent_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_agent_state_nomain.o: ${OBJECTDIR}/_ga_agent_state.o _ga_agent_state.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_agent_state.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_nomain.o _ga_agent_state.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_agent_state.o ${OBJECTDIR}/_ga_agent_state_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_agent_state_buzy_nomain.o: ${OBJECTDIR}/_ga_agent_state_buzy.o _ga_agent_state_buzy.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_agent_state_buzy.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_buzy_nomain.o _ga_agent_state_buzy.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_agent_state_buzy.o ${OBJECTDIR}/_ga_agent_state_buzy_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_agent_state_free_nomain.o: ${OBJECTDIR}/_ga_agent_state_free.o _ga_agent_state_free.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_agent_state_free.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_free_nomain.o _ga_agent_state_free.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_agent_state_free.o ${OBJECTDIR}/_ga_agent_state_free_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_system_nomain.o: ${OBJECTDIR}/_ga_system.o _ga_system.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_system.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_system_nomain.o _ga_system.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_system.o ${OBJECTDIR}/_ga_system_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_token_nomain.o: ${OBJECTDIR}/_ga_token.o _ga_token.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_token.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token_nomain.o _ga_token.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_token.o ${OBJECTDIR}/_ga_token_nomain.o;\
+	fi
+
+${OBJECTDIR}/_greedy_agentsTasksAllocator_nomain.o: ${OBJECTDIR}/_greedy_agentsTasksAllocator.o _greedy_agentsTasksAllocator.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_greedy_agentsTasksAllocator.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_greedy_agentsTasksAllocator_nomain.o _greedy_agentsTasksAllocator.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_greedy_agentsTasksAllocator.o ${OBJECTDIR}/_greedy_agentsTasksAllocator_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_map_nomain.o: ${OBJECTDIR}/_map.o _map.cpp 
@@ -844,6 +1065,19 @@ ${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectR
 	    ${CP} ${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm.o ${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm_nomain.o;\
 	fi
 
+${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm.o _selectTaskSwapToAgentAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm_nomain.o _selectTaskSwapToAgentAlgorithm.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm.o ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm_nomain.o;\
+	fi
+
 ${OBJECTDIR}/_selectTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectTaskToAgentAlgorithm.o _selectTaskToAgentAlgorithm.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_selectTaskToAgentAlgorithm.o`; \
@@ -909,6 +1143,19 @@ ${OBJECTDIR}/_taskIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_taskIndexerAlgorithm.
 	    ${CP} ${OBJECTDIR}/_taskIndexerAlgorithm.o ${OBJECTDIR}/_taskIndexerAlgorithm_nomain.o;\
 	fi
 
+${OBJECTDIR}/_taskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_taskToAgentAlgorithm.o _taskToAgentAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_taskToAgentAlgorithm.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_taskToAgentAlgorithm_nomain.o _taskToAgentAlgorithm.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_taskToAgentAlgorithm.o ${OBJECTDIR}/_taskToAgentAlgorithm_nomain.o;\
+	fi
+
 ${OBJECTDIR}/_token_nomain.o: ${OBJECTDIR}/_token.o _token.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_token.o`; \
@@ -948,6 +1195,19 @@ ${OBJECTDIR}/_updateEndpointToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateEndpo
 	    ${CP} ${OBJECTDIR}/_updateEndpointToAgentAlgorithm.o ${OBJECTDIR}/_updateEndpointToAgentAlgorithm_nomain.o;\
 	fi
 
+${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm.o _updateTaskSwapToAgentAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm_nomain.o _updateTaskSwapToAgentAlgorithm.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm.o ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm_nomain.o;\
+	fi
+
 ${OBJECTDIR}/_updateTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateTaskToAgentAlgorithm.o _updateTaskToAgentAlgorithm.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_updateTaskToAgentAlgorithm.o`; \
@@ -959,19 +1219,6 @@ ${OBJECTDIR}/_updateTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateTaskToAge
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskToAgentAlgorithm_nomain.o _updateTaskToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_updateTaskToAgentAlgorithm.o ${OBJECTDIR}/_updateTaskToAgentAlgorithm_nomain.o;\
-	fi
-
-${OBJECTDIR}/_updateToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateToAgentAlgorithm.o _updateToAgentAlgorithm.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/_updateToAgentAlgorithm.o`; \
-	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
-	then  \
-	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateToAgentAlgorithm_nomain.o _updateToAgentAlgorithm.cpp;\
-	else  \
-	    ${CP} ${OBJECTDIR}/_updateToAgentAlgorithm.o ${OBJECTDIR}/_updateToAgentAlgorithm_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_updateTokenAlgorithms_nomain.o: ${OBJECTDIR}/_updateTokenAlgorithms.o _updateTokenAlgorithms.cpp 

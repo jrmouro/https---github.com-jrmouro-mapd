@@ -21,9 +21,10 @@ public:
     TokenPass(
             const _map& map, 
             const _stepMap& stepMap,
-            const _agent_energy_system& agent_energy_system) : _token(map, stepMap, agent_energy_system) { }
+            const _agent_energy_system& agent_energy_system,
+            unsigned task_threshold) : _token(map, stepMap, agent_energy_system), task_threshold(task_threshold) { }
     
-//    TokenPass(const TokenPass& other) : _token(other) { }
+    TokenPass(const TokenPass& other) : _token(other), task_threshold(other.task_threshold) { }
 
     virtual ~TokenPass(){}
             
@@ -35,31 +36,20 @@ public:
     
     virtual std::string name() const {
         
-        return "TP";
+        std::stringstream s;
+        s << "TP[" << _token::name() << "]"; 
+        
+        return s.str();
         
     }
     
-//    virtual _token* builderToken(
-//            const _map& map, 
-//            const _stepMap& stepMap, 
-//            const _agent_energy_system& agent_energy_system,
-//            float pickup_threshold = 0, 
-//            float delivery_threshold = 0) const{
-//        
-//        
-//        return new TokenPass(map, stepMap, agent_energy_system);
-//        
-//    }
-    
-//    virtual _token* getInstance() const {
-//        return new TokenPass(*this);
-//    }
+    virtual _token* getClone() const {
+        return new TokenPass(*this);
+    }
     
     virtual _token::TokenUpdateType updatePath(_agent& agent){
-        
-        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNumBots());
-        
-        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerThresholdAlgorithm);
+                
+        auto uta = _updateTokenAlgorithms::getInstance(task_threshold);
                         
         TokenUpdateType ret = TokenUpdateType::none;
     
@@ -117,10 +107,8 @@ public:
     }
     
     virtual _token::TokenUpdateType updateChargingPath(_agent& agent){
-        
-        _closerTaskIndexerThresholdAlgorithm closerTaskIndexerThresholdAlgorithm(this->getMap().getNumBots());
-        
-        auto uta = _updateTokenAlgorithms::getInstance(closerTaskIndexerThresholdAlgorithm);
+                
+        auto uta = _updateTokenAlgorithms::getInstance(task_threshold);
         
         TokenUpdateType ret = TokenUpdateType::none;
     
@@ -176,7 +164,11 @@ public:
 
     }
     
-
+    
+protected:
+    
+    unsigned task_threshold;
+    
 };
 
 #endif /* TOKENPASS_H */

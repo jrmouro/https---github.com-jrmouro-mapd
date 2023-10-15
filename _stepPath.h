@@ -8,6 +8,7 @@
 #ifndef _STEPPATH_H
 #define _STEPPATH_H
 
+#include <climits>
 #include <vector>
 #include <functional>
 #include "_stepSite.h"
@@ -64,11 +65,7 @@ public:
         
     const _stepSite& goalSite()const{
         
-        if(!this->sites.empty()){   
-            
-            return this->sites.front();
-            
-        } else {
+        if(this->sites.empty()){
             
              try {
                 std::ostringstream stream;
@@ -81,15 +78,13 @@ public:
             
         }  
         
+        return this->sites.front();
+        
     }
     
     const _stepSite& currentSite() const{
-        
-        if(!this->sites.empty()){   
-            
-            return this->sites.back();
-            
-        } else {
+                
+        if(this->sites.empty()){
             
              try {
                 std::ostringstream stream;
@@ -100,17 +95,15 @@ public:
                 std::abort();
             }
             
-        }   
+        }  
+        
+        return this->sites.back();
         
     }
     
     const _stepSite& futureSite() const{
-        
-        if(this->sites.size() > 1){   
-            
-            return this->sites[sites.size() - 2];
-            
-        } else {
+                
+        if(this->sites.size() < 2){
             
              try {
                 std::ostringstream stream;
@@ -123,6 +116,7 @@ public:
             
         }   
         
+        return this->sites[sites.size() - 2];
         
     }
     
@@ -190,7 +184,7 @@ public:
         this->sites.clear();
     }
     
-    bool empty(){
+    bool empty() const {
         return this->sites.empty();
     }
         
@@ -255,7 +249,31 @@ public:
     
     bool isTrivial()const{
         return sites.size() == 1;
-    }          
+    }    
+    
+    unsigned stepToArrive(const _site& goal) const {
+        
+        unsigned count = 0;
+            
+        std::vector<_stepSite>::const_reverse_iterator it = sites.crbegin();
+        
+        for(; it != sites.crend(); it++){
+            
+            if(goal.match(*it)){
+                    
+                return count;                   
+
+            }
+
+            count++;
+            
+        }       
+        
+        return UINT_MAX;
+        
+    }
+    
+    
         
 private:
         

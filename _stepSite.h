@@ -55,8 +55,13 @@ public:
         const unsigned step = this->step + 1;
         
         if(step < size.step && this->row < size.row && this->colunm < size.colunm){
-                
+            
             int neighbor_row = (int)this->row - 1;
+            
+            if(this->row < size.row && this->colunm < size.colunm){
+                function(_stepSite(step, this->row, this->colunm));  
+            }
+                        
             if(neighbor_row > -1 && neighbor_row < size.row){
                 if(function(_stepSite(step, neighbor_row, this->colunm))) return;
             }
@@ -77,20 +82,20 @@ public:
                 if(function(_stepSite(step, this->row, neighbor_colunm))) return;
             }
 
-            if(this->row < size.row && this->colunm < size.colunm){
-                function(_stepSite(step, this->row, this->colunm));  
-            }
+//            if(this->row < size.row && this->colunm < size.colunm){
+//                function(_stepSite(step, this->row, this->colunm));  
+//            }
         
         } else {
             
-            try {
-                std::ostringstream stream;
-                stream << "invalid neighbor site";
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
+//            try {
+//                std::ostringstream stream;
+//                stream << "invalid neighbor site";
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            }
             
         }        
         

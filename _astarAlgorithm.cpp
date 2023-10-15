@@ -1,5 +1,6 @@
 #include "_astarAlgorithm.h"
 #include "_map.h"
+#include "_path.h"
 
 _astarAlgorithm::_astarAlgorithm() {}
 

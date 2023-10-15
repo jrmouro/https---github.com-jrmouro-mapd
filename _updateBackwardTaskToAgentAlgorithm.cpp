@@ -13,15 +13,19 @@
 #include "_selectBackwardTaskToAgentAlgorithm.h"
 
 _updateBackwardTaskToAgentAlgorithm::_updateBackwardTaskToAgentAlgorithm(
-        _selectBackwardTaskToAgentAlgorithm& selectBackwardTaskToAgentAlgorithm,
-        _closerCooperatorAgentIndexerAlgorithm& closerCooperatorAgentIndexerAlgorithm) :
-                selectBackwardTaskToAgentAlgorithm(selectBackwardTaskToAgentAlgorithm),
-                closerCooperatorAgentIndexerAlgorithm(closerCooperatorAgentIndexerAlgorithm){}
+        _selectBackwardTaskToAgentAlgorithm& selectBackwardTaskToAgentAlgorithm//,
+//        _closerCooperatorAgentIndexerAlgorithm& closerCooperatorAgentIndexerAlgorithm
+) :
+                selectBackwardTaskToAgentAlgorithm(selectBackwardTaskToAgentAlgorithm)
+//,
+//                closerCooperatorAgentIndexerAlgorithm(closerCooperatorAgentIndexerAlgorithm)
+{}
 
 _updateBackwardTaskToAgentAlgorithm::_updateBackwardTaskToAgentAlgorithm(
         const _updateBackwardTaskToAgentAlgorithm& orig) :
-                selectBackwardTaskToAgentAlgorithm(orig.selectBackwardTaskToAgentAlgorithm),
-                closerCooperatorAgentIndexerAlgorithm(orig.closerCooperatorAgentIndexerAlgorithm){}
+                selectBackwardTaskToAgentAlgorithm(orig.selectBackwardTaskToAgentAlgorithm)//,
+//                closerCooperatorAgentIndexerAlgorithm(orig.closerCooperatorAgentIndexerAlgorithm)
+{}
 
 void _updateBackwardTaskToAgentAlgorithm::setTaskIndexerAlgorithm(
         _taskIndexerAlgorithm& taskIndexerAlgorithm) {
@@ -51,7 +55,7 @@ bool _updateBackwardTaskToAgentAlgorithm::solve(
             
             bool orig = originalTask.getDelivery().match(selectedTask.getDelivery());
             
-            token.assignTask(originalTask, agent);
+            token.assignTask(originalTask.id(), agent.id());
                         
             if(orig){
                 
@@ -67,7 +71,7 @@ bool _updateBackwardTaskToAgentAlgorithm::solve(
                 token.finishTask(originalTask);
                 
                 token.addPendingTask(selectedTask);               
-                token.assignTask(selectedTask, agent);
+                token.assignTask(selectedTask.id(), agent.id());
                 token.reportTaskUpdate(agent, selectedTask, ReportTask::PathType::backward_task, selectedPath);                
                 agent.assignTask(selectedTask, selectedPath);
                 

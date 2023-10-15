@@ -19,7 +19,7 @@
 _selectBackwardChargingTaskToAgentAlgorithm::_selectBackwardChargingTaskToAgentAlgorithm(
         const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm,
         _taskIndexerAlgorithm& taskIndexerAlgorithm,
-        const _endpointIndexerAlgorithm& endpointIndexerAlgorithm,
+        _endpointIndexerAlgorithm& endpointIndexerAlgorithm,
         float delivery_threshold) :
             _selectBackwardTaskToAgentAlgorithm(
                 taskPathToAgentAlgorithm,
@@ -101,7 +101,7 @@ bool _selectBackwardChargingTaskToAgentAlgorithm::solve(
 
                 taskPath.backward(
                         [&ret, &token, agent, &taskPath, thresholdAlgorithm,
-                        pickupSite, deliverySite, deliverySite, &originalTask,
+                        pickupSite, deliverySite, &originalTask,
                         &selectedTask, &pendingTask, &selectedPath, this](const _stepSite & site) {
 
                             if (site.step_match(pickupSite)) return true;
