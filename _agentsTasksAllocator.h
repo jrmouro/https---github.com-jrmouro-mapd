@@ -9,11 +9,19 @@
 #define _AGENTSTASKSALLOCATOR_H
 
 #include <vector>
-#include <map>
+#include <unordered_map>
+
+class _map;
+class _ga_token;
+class _stepMap;
 
 class _agentsTasksAllocator {
 public:
-    virtual void solve(const _ga_token&, const _map&, const _stepMap&, std::unordered_map<int, std::vector<int>>&) const = 0;
+    virtual void solve(
+        const _ga_token&, 
+        const _map&, 
+        const _stepMap&, 
+        std::unordered_map<int, std::vector<int>>&) const = 0;
 };
 
 #endif /* _AGENTSTASKSALLOCATOR_H */

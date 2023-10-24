@@ -91,6 +91,15 @@ public:
     unsigned linearIndex(unsigned colunm_size) const{
         return row * colunm_size + colunm;
     }
+    
+    void SetColunm(unsigned colunm) {
+        this->colunm = colunm;
+    }
+
+    void SetRow(unsigned row) {
+        this->row = row;
+    }
+
         
 protected:
     unsigned row, colunm;

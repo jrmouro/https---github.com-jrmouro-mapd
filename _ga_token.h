@@ -24,7 +24,11 @@ class __stepPathAlgorithm;
 class _ga_token  : public Identifiable<std::string>, public Drawable, public Writable{
 public:
     
-    _ga_token(const std::vector<_site>&, const _agent_energy_system&);    
+    _ga_token(
+            const _map& map, 
+            const _stepMap& stepMap,
+            const _agent_energy_system& agent_energy_system);  
+    
     _ga_token(const _ga_token& other);   
     virtual ~_ga_token();
     
@@ -52,20 +56,29 @@ public:
     bool isAgentAtTrivialPath(int agentId)const;
     
     
-    virtual void writeHeader(std::ostream& fs) const;
+    virtual void writeHeader(std::ostream& fs) const;    
+    virtual void writeRow(std::ostream& fs) const;   
     
-    virtual void writeRow(std::ostream& fs) const;
-    
-    unsigned getStep() const;
-    
-    void stepping(const _map&);
+    unsigned getCurrentStep() const;    
+    void stepping();    
+    unsigned numberOfpendingTasks()const;    
+    unsigned numberOfAgents()const;    
+    const _map& getMap() const;
+    const _stepMap& getStepMap() const;
+
+    const _agent_energy_system& getAgent_energy_system() const {
+        return agent_energy_system;
+    }
+
     
 private:
+    const _map& map;
+    _stepMap stepMap;
     std::map<int, _task> pendingTasks, assignedTasks, runningTasks, finishedTasks;
     std::map<int, _ga_agent> agents;
     std::map<int, int> assignTaskAgent;
-    _agent_energy_system agent_energy_system;
-    unsigned step = 0;
+    const _agent_energy_system& agent_energy_system;
+    unsigned currentStep = 0;
 };
 
 #endif /* _GA_TOKEN_H */

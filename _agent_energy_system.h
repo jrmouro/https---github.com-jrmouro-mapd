@@ -64,6 +64,12 @@ public:
         return ret;
     }
     
+    int getMovingRegime()const{
+        int ret = 0;
+        regime.get(AERT::moving, ret);
+        return ret;
+    }
+    
     virtual bool isAtDeadLevel() const{
         return 0 > this->current_level;
     }

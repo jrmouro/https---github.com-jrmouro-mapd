@@ -16,34 +16,24 @@
 _ga_system::_ga_system(
             const _agentsPlanningPath& agentsPlanningPath, 
             const _agentsTasksAllocator& agentsTasksAllocator, 
-            const _agentsUpdatePath& agentsUpdatePath, 
-            const _map& map, 
-            const _stepMap& stepMap) :
+            const _agentsUpdatePath& agentsUpdatePath) :
                 agentsPlanningPath(agentsPlanningPath), 
                 agentsTasksAllocator(agentsTasksAllocator), 
-                agentsUpdatePath(agentsUpdatePath), 
-                map(map), 
-                stepMap(stepMap) {}
+                agentsUpdatePath(agentsUpdatePath) {}
                 
 _ga_system::_ga_system(const _ga_system& other) :
             agentsTasksAllocation(other.agentsTasksAllocation), 
             agentsPlanningPath(other.agentsPlanningPath), 
             agentsTasksAllocator(other.agentsTasksAllocator), 
-            agentsUpdatePath(other.agentsUpdatePath), 
-            map(other.map), 
-            stepMap(other.stepMap) {}
-
-const _map& _ga_system::getMap() const {
-    return map;
-}
+            agentsUpdatePath(other.agentsUpdatePath) {}
 
 bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){ 
     
-    if(token.getStep() < stepMap.getStep_size() || (taskMap.getLastTask() < token.getStep() && token.isIdle())){
+    if(token.getCurrentStep() < token.getStepMap().getStep_size() || (taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())){
         
         bool addNewTask = false;
         
-        taskMap.listTasksByStep(token.getStep(), [&token, &addNewTask](const _task& task){
+        taskMap.listTasksByStep(token.getCurrentStep(), [&token, &addNewTask](const _task& task){
 
             token.addPendingTask(task);
             
@@ -58,17 +48,17 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
             
             agentsTasksAllocation.clear();
             
-            agentsTasksAllocator.solve(token, map, stepMap, agentsTasksAllocation);
+            agentsTasksAllocator.solve(token, agentsTasksAllocation);
             
         }
         
         std::vector<std::pair<int, int>> planning;
         
-        agentsPlanningPath.solve(token, map, stepMap, agentsTasksAllocation, planning);
+        agentsPlanningPath.solve(token, agentsTasksAllocation, planning);
         
-        agentsUpdatePath.solve(token, stepMap, planning);
+        agentsUpdatePath.solve(token, planning);
         
-        token.stepping(map);       
+        token.stepping();       
         
         return true;
         
@@ -80,11 +70,11 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
 
 void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
     
-    while(token.getStep() < stepMap.getStep_size() || (taskMap.getLastTask() < token.getStep() && token.isIdle())){
+    while(token.getCurrentStep() < token.getStepMap().getStep_size() || (taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())){
         
         bool addNewTask = false;
         
-        taskMap.listTasksByStep(token.getStep(), [&token, &addNewTask](const _task& task){
+        taskMap.listTasksByStep(token.getCurrentStep(), [&token, &addNewTask](const _task& task){
 
             token.addPendingTask(task);
             
@@ -98,17 +88,17 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
             
             agentsTasksAllocation.clear();
             
-            agentsTasksAllocator.solve(token, map, stepMap, agentsTasksAllocation);
+            agentsTasksAllocator.solve(token, agentsTasksAllocation);
             
         }
         
         std::vector<std::pair<int, int>> planning;
         
-        agentsPlanningPath.solve(token, map, stepMap, agentsTasksAllocation, planning);
+        agentsPlanningPath.solve(token, agentsTasksAllocation, planning);
         
-        agentsUpdatePath.solve(token, stepMap, planning);
+        agentsUpdatePath.solve(token, planning);
         
-        token.stepping(map);
+        token.stepping();
         
     }
     

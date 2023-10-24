@@ -142,3 +142,8 @@ bool _ga_agent::updateTaskPath(const _stepPathAlgorithm& astar, _stepMap& map, c
     return false;
 
 }
+
+std::ostream& operator<<(std::ostream& os, const _ga_agent& obj) {
+    os << "id: "<< obj.id();
+    return os;
+}

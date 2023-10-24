@@ -27,25 +27,19 @@ public:
     _ga_system(
             const _agentsPlanningPath&, 
             const _agentsTasksAllocator&, 
-            const _agentsUpdatePath&, 
-            const _map&, 
-            const _stepMap&);
+            const _agentsUpdatePath&);
                 
     _ga_system(const _ga_system&);
     
     virtual void run(const _taskMap& taskMap, _ga_token& token);
     
     virtual bool step(const _taskMap& taskMap, _ga_token& token);
-    
-    const _map& getMap() const;
-        
+            
 private:
     std::unordered_map<int, std::vector<int>> agentsTasksAllocation;
     const _agentsPlanningPath& agentsPlanningPath;
     const _agentsTasksAllocator& agentsTasksAllocator;
     const _agentsUpdatePath& agentsUpdatePath;
-    const _map& map;
-    _stepMap stepMap;
 
 };
 

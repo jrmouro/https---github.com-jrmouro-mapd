@@ -39,7 +39,7 @@ void GA_SystemExperiment::run(){
                 this->id());
 
         Text textStep(
-                std::to_string(token.getStep()),
+                std::to_string(token.getCurrentStep()),
                 sf::Vector2f(
                     system.getMap().getColumn_size()/2 * render.GetCell().first, 
                     0),
@@ -55,7 +55,7 @@ void GA_SystemExperiment::run(){
         bool stepping = true;
         render.loop(timestep, [this, &textStep, &stepping](){
 
-            textStep.setDrawText(std::to_string(token.getStep())); 
+            textStep.setDrawText(std::to_string(token.getCurrentStep())); 
 
             if(stepping){
                 stepping = system.step(taskMap, token);

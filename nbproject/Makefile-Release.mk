@@ -71,10 +71,16 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ga_agent_state.o \
 	${OBJECTDIR}/_ga_agent_state_buzy.o \
 	${OBJECTDIR}/_ga_agent_state_free.o \
+	${OBJECTDIR}/_ga_objective_function.o \
+	${OBJECTDIR}/_ga_population.o \
+	${OBJECTDIR}/_ga_pseudo_solution.o \
+	${OBJECTDIR}/_ga_solution.o \
+	${OBJECTDIR}/_ga_solution_comparison.o \
 	${OBJECTDIR}/_ga_system.o \
 	${OBJECTDIR}/_ga_token.o \
 	${OBJECTDIR}/_greedy_agentsTasksAllocator.o \
 	${OBJECTDIR}/_map.o \
+	${OBJECTDIR}/_nsga.o \
 	${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm.o \
@@ -314,6 +320,31 @@ ${OBJECTDIR}/_ga_agent_state_free.o: _ga_agent_state_free.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_free.o _ga_agent_state_free.cpp
 
+${OBJECTDIR}/_ga_objective_function.o: _ga_objective_function.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_objective_function.o _ga_objective_function.cpp
+
+${OBJECTDIR}/_ga_population.o: _ga_population.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_population.o _ga_population.cpp
+
+${OBJECTDIR}/_ga_pseudo_solution.o: _ga_pseudo_solution.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_pseudo_solution.o _ga_pseudo_solution.cpp
+
+${OBJECTDIR}/_ga_solution.o: _ga_solution.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solution.o _ga_solution.cpp
+
+${OBJECTDIR}/_ga_solution_comparison.o: _ga_solution_comparison.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solution_comparison.o _ga_solution_comparison.cpp
+
 ${OBJECTDIR}/_ga_system.o: _ga_system.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -333,6 +364,11 @@ ${OBJECTDIR}/_map.o: _map.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_map.o _map.cpp
+
+${OBJECTDIR}/_nsga.o: _nsga.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_nsga.o _nsga.cpp
 
 ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o: _selectBackwardChargingTaskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -935,6 +971,71 @@ ${OBJECTDIR}/_ga_agent_state_free_nomain.o: ${OBJECTDIR}/_ga_agent_state_free.o 
 	    ${CP} ${OBJECTDIR}/_ga_agent_state_free.o ${OBJECTDIR}/_ga_agent_state_free_nomain.o;\
 	fi
 
+${OBJECTDIR}/_ga_objective_function_nomain.o: ${OBJECTDIR}/_ga_objective_function.o _ga_objective_function.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_objective_function.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_objective_function_nomain.o _ga_objective_function.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_objective_function.o ${OBJECTDIR}/_ga_objective_function_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_population_nomain.o: ${OBJECTDIR}/_ga_population.o _ga_population.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_population.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_population_nomain.o _ga_population.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_population.o ${OBJECTDIR}/_ga_population_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_pseudo_solution_nomain.o: ${OBJECTDIR}/_ga_pseudo_solution.o _ga_pseudo_solution.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_pseudo_solution.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_pseudo_solution_nomain.o _ga_pseudo_solution.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_pseudo_solution.o ${OBJECTDIR}/_ga_pseudo_solution_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_solution_nomain.o: ${OBJECTDIR}/_ga_solution.o _ga_solution.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_solution.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solution_nomain.o _ga_solution.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_solution.o ${OBJECTDIR}/_ga_solution_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_solution_comparison_nomain.o: ${OBJECTDIR}/_ga_solution_comparison.o _ga_solution_comparison.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_solution_comparison.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solution_comparison_nomain.o _ga_solution_comparison.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_solution_comparison.o ${OBJECTDIR}/_ga_solution_comparison_nomain.o;\
+	fi
+
 ${OBJECTDIR}/_ga_system_nomain.o: ${OBJECTDIR}/_ga_system.o _ga_system.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_system.o`; \
@@ -985,6 +1086,19 @@ ${OBJECTDIR}/_map_nomain.o: ${OBJECTDIR}/_map.o _map.cpp
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_map_nomain.o _map.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_map.o ${OBJECTDIR}/_map_nomain.o;\
+	fi
+
+${OBJECTDIR}/_nsga_nomain.o: ${OBJECTDIR}/_nsga.o _nsga.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_nsga.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_nsga_nomain.o _nsga.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_nsga.o ${OBJECTDIR}/_nsga_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o _selectBackwardChargingTaskToAgentAlgorithm.cpp 

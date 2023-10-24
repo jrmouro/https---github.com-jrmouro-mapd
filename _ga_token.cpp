@@ -11,27 +11,32 @@
 #include "_task.h"
 
 _ga_token::_ga_token(
-    const std::vector<_site>& initialAgentSites,
-    const _agent_energy_system& agent_energy_system):
+        const _map& map, 
+        const _stepMap& stepMap,
+        const _agent_energy_system& agent_energy_system):
+    map(map),
+    stepMap(stepMap),
     agent_energy_system(agent_energy_system){
-
-    int count = 0;
-    for (const auto& site : initialAgentSites) {
-
+    
+    map.listBotsEndPoints([this, agent_energy_system](unsigned botId, const _site& endpoint){
+            
         agents.insert(
-            std::pair<int, _ga_agent>(
-                count, 
+            std::pair<unsigned, _ga_agent>(
+                botId, 
                 _ga_agent(
-                    count++, 
-                    _stepSite(site.GetRow(), site.GetColunm(), 0), 
+                    botId, 
+                    _stepSite(0, endpoint.GetRow(), endpoint.GetColunm()), 
                     agent_energy_system)));
 
-    }
+        return false;
 
-
+    });
+    
 }
 
 _ga_token::_ga_token(const _ga_token& other) :
+    map(other.map),
+    stepMap(other.stepMap),
     pendingTasks(other.pendingTasks), 
     assignedTasks(other.assignedTasks), 
     runningTasks(other.runningTasks), 
@@ -39,7 +44,7 @@ _ga_token::_ga_token(const _ga_token& other) :
     agents(other.agents), 
     assignTaskAgent(other.assignTaskAgent), 
     agent_energy_system(other.agent_energy_system), 
-    step(other.step) { }
+    currentStep(other.currentStep) { }
 
 
 _ga_token::~_ga_token(){}  
@@ -87,17 +92,17 @@ void _ga_token::writeHeader(std::ostream& fs) const {
 void _ga_token::writeRow(std::ostream& fs) const {
     Writable::strWrite(*this, fs, id(), true); 
     Writable::strWrite(*this, fs, name(), true); 
-    Writable::uintWrite(*this, fs, step, true);
+    Writable::uintWrite(*this, fs, currentStep, true);
     Writable::strWrite(*this, fs, agent_energy_system.id(), true);
     Writable::intWrite(*this, fs, energyExpenditure(), true);
     Writable::uintWrite(*this, fs, finishedTasks.size(), false);
 }
 
-unsigned _ga_token::getStep() const {
-    return step;
+unsigned _ga_token::getCurrentStep() const {
+    return currentStep;
 }
 
-void _ga_token::stepping(const _map& map){
+void _ga_token::stepping(){
     
     for (auto pagent : agents) {
         
@@ -105,8 +110,24 @@ void _ga_token::stepping(const _map& map){
 
     }
     
-    step++;
+    currentStep++;
     
+}
+
+const _map& _ga_token::getMap() const {
+    return map;
+}
+
+const _stepMap& _ga_token::getStepMap() const {
+    return stepMap;
+}
+
+unsigned _ga_token::numberOfpendingTasks()const{
+    return pendingTasks.size();
+}
+
+unsigned _ga_token::numberOfAgents()const{
+    return agents.size();
 }
 
 std::string _ga_token::id() const{

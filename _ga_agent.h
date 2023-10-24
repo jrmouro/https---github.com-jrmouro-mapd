@@ -51,6 +51,9 @@ public:
     void stepping(const _map& map);
     
     bool updateTaskPath(const _stepPathAlgorithm& astar, _stepMap& map, const _task* const task);
+    
+    friend std::ostream& operator<<(std::ostream& os, const _ga_agent& obj);
+
         
 private:
     
