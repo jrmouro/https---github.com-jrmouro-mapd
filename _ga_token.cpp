@@ -126,6 +126,26 @@ unsigned _ga_token::numberOfpendingTasks()const{
     return pendingTasks.size();
 }
 
+unsigned _ga_token::getRunningTaskAmount()const{
+    return runningTasks.size();
+}
+
+unsigned _ga_token::getAssignedTaskAmount()const{
+    return assignedTasks.size();
+}
+
+unsigned _ga_token::getPendingTaskAmount()const{
+    return pendingTasks.size();
+}
+
+unsigned _ga_token::getFinishedTaskAmount()const{
+    return finishedTasks.size();
+}
+
+const _agent_energy_system& _ga_token::getAgent_energy_system() const {
+    return agent_energy_system;
+}
+
 unsigned _ga_token::numberOfAgents()const{
     return agents.size();
 }
@@ -144,7 +164,7 @@ std::string _ga_token::name() const {
 
 int _ga_token::energyExpenditure() const {
     int ret = 0;
-    listConstAgents([&ret](const _ga_agent& agent) {
+    listConstAgents([&ret](unsigned index, const _ga_agent& agent) {
         ret += (agent.getAgentEnergySystem().getCharging() - agent.getAgentEnergySystem().currentLevel());
         return false;
     });
@@ -171,9 +191,9 @@ bool _ga_token::isIdle()const{
 
 bool _ga_token::updateAgentTaskPath(
         int agentId, 
-        int taskId, 
-        const _stepPathAlgorithm& astar, 
-        _stepMap& map){
+        int taskId){
+    
+    _stepAstarAlgorithm astar;
     
     std::map<int, _ga_agent>::iterator agent_it = agents.find(agentId);
     
@@ -233,11 +253,11 @@ bool _ga_token::updateAgentTaskPath(
             assignedTasks.insert(std::pair<int, _task>(task_it->second.id(), task_it->second));
             pendingTasks.erase(task_it);
             
-            return agent_it->second.updateTaskPath(astar, map, &task_it->second);
+            return agent_it->second.updateTaskPath(astar, stepMap, &task_it->second);
             
         } else {
             
-            return agent_it->second.updateTaskPath(astar, map, nullptr);
+            return agent_it->second.updateTaskPath(astar, stepMap, nullptr);
             
         }
         
@@ -516,11 +536,13 @@ void _ga_token::addPendingTask(const _task& task){
 //    
 //}
 
-void _ga_token::listPendingTasks(const std::function<bool(const _task&)> function)const{
+void _ga_token::listPendingTasks(const std::function<bool(unsigned, const _task&)> function)const{
         
-    for (auto taskPair : pendingTasks) {
+    unsigned index = 0;
+    
+    for (auto &taskPair : pendingTasks) {
 
-        if(function(taskPair.second))return;
+        if(function(index++, taskPair.second))return;
 
     }
 
@@ -528,7 +550,7 @@ void _ga_token::listPendingTasks(const std::function<bool(const _task&)> functio
 
 void _ga_token::listAgents(const std::function<bool(_ga_agent&)> function){
     
-    for (auto agentPair : agents) {
+    for (auto &agentPair : agents) {
 
         if(function(agentPair.second))return;
 
@@ -536,11 +558,13 @@ void _ga_token::listAgents(const std::function<bool(_ga_agent&)> function){
     
 }
 
-void _ga_token::listConstAgents(const std::function<bool(const _ga_agent&)> function)const{
+void _ga_token::listConstAgents(const std::function<bool(unsigned, const _ga_agent&)> function)const{
     
-    for (auto agentPair : agents) {
+    unsigned index = 0;
+    
+    for (auto &agentPair : agents) {
 
-        if(function(agentPair.second))return;
+        if(function(index++, agentPair.second))return;
 
     }
     

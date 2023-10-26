@@ -15,31 +15,28 @@
 
 class _taskMap;
 class _ga_token;
-class _agentsPlanningPath;
 class _agentsTasksAllocator;
-class _agentsUpdatePath;
 class _map;
 class _stepMap;
+class _allocation;
 
 class _ga_system {
 public:
     
-    _ga_system(
-            const _agentsPlanningPath&, 
-            const _agentsTasksAllocator&, 
-            const _agentsUpdatePath&);
+    _ga_system(const _agentsTasksAllocator&);
                 
     _ga_system(const _ga_system&);
+    
+    virtual ~_ga_system();
     
     virtual void run(const _taskMap& taskMap, _ga_token& token);
     
     virtual bool step(const _taskMap& taskMap, _ga_token& token);
             
 private:
-    std::unordered_map<int, std::vector<int>> agentsTasksAllocation;
-    const _agentsPlanningPath& agentsPlanningPath;
-    const _agentsTasksAllocator& agentsTasksAllocator;
-    const _agentsUpdatePath& agentsUpdatePath;
+    
+    _allocation* allocation = nullptr;    
+    const _agentsTasksAllocator& agentsTasksAllocator;   
 
 };
 

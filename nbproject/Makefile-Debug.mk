@@ -56,8 +56,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_agent_parked.o \
 	${OBJECTDIR}/_agent_parker_CL.o \
 	${OBJECTDIR}/_agent_state.o \
-	${OBJECTDIR}/_agentsPlanningPath.o \
-	${OBJECTDIR}/_agentsUpdatePath.o \
+	${OBJECTDIR}/_allocation.o \
 	${OBJECTDIR}/_astarAlgorithm.o \
 	${OBJECTDIR}/_astarDistanceAlgorithm.o \
 	${OBJECTDIR}/_chargingTaskToAgentAlgorithm.o \
@@ -71,14 +70,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ga_agent_state.o \
 	${OBJECTDIR}/_ga_agent_state_buzy.o \
 	${OBJECTDIR}/_ga_agent_state_free.o \
-	${OBJECTDIR}/_ga_objective_function.o \
 	${OBJECTDIR}/_ga_population.o \
 	${OBJECTDIR}/_ga_pseudo_solution.o \
 	${OBJECTDIR}/_ga_solution.o \
-	${OBJECTDIR}/_ga_solution_comparison.o \
+	${OBJECTDIR}/_ga_solutionAllocator.o \
 	${OBJECTDIR}/_ga_system.o \
 	${OBJECTDIR}/_ga_token.o \
-	${OBJECTDIR}/_greedy_agentsTasksAllocator.o \
 	${OBJECTDIR}/_map.o \
 	${OBJECTDIR}/_nsga.o \
 	${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o \
@@ -245,15 +242,10 @@ ${OBJECTDIR}/_agent_state.o: _agent_state.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_state.o _agent_state.cpp
 
-${OBJECTDIR}/_agentsPlanningPath.o: _agentsPlanningPath.cpp
+${OBJECTDIR}/_allocation.o: _allocation.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agentsPlanningPath.o _agentsPlanningPath.cpp
-
-${OBJECTDIR}/_agentsUpdatePath.o: _agentsUpdatePath.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agentsUpdatePath.o _agentsUpdatePath.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_allocation.o _allocation.cpp
 
 ${OBJECTDIR}/_astarAlgorithm.o: _astarAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -320,11 +312,6 @@ ${OBJECTDIR}/_ga_agent_state_free.o: _ga_agent_state_free.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_free.o _ga_agent_state_free.cpp
 
-${OBJECTDIR}/_ga_objective_function.o: _ga_objective_function.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_objective_function.o _ga_objective_function.cpp
-
 ${OBJECTDIR}/_ga_population.o: _ga_population.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -340,10 +327,10 @@ ${OBJECTDIR}/_ga_solution.o: _ga_solution.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solution.o _ga_solution.cpp
 
-${OBJECTDIR}/_ga_solution_comparison.o: _ga_solution_comparison.cpp
+${OBJECTDIR}/_ga_solutionAllocator.o: _ga_solutionAllocator.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solution_comparison.o _ga_solution_comparison.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solutionAllocator.o _ga_solutionAllocator.cpp
 
 ${OBJECTDIR}/_ga_system.o: _ga_system.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -354,11 +341,6 @@ ${OBJECTDIR}/_ga_token.o: _ga_token.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token.o _ga_token.cpp
-
-${OBJECTDIR}/_greedy_agentsTasksAllocator.o: _greedy_agentsTasksAllocator.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_greedy_agentsTasksAllocator.o _greedy_agentsTasksAllocator.cpp
 
 ${OBJECTDIR}/_map.o: _map.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -776,30 +758,17 @@ ${OBJECTDIR}/_agent_state_nomain.o: ${OBJECTDIR}/_agent_state.o _agent_state.cpp
 	    ${CP} ${OBJECTDIR}/_agent_state.o ${OBJECTDIR}/_agent_state_nomain.o;\
 	fi
 
-${OBJECTDIR}/_agentsPlanningPath_nomain.o: ${OBJECTDIR}/_agentsPlanningPath.o _agentsPlanningPath.cpp 
+${OBJECTDIR}/_allocation_nomain.o: ${OBJECTDIR}/_allocation.o _allocation.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agentsPlanningPath.o`; \
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_allocation.o`; \
 	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agentsPlanningPath_nomain.o _agentsPlanningPath.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_allocation_nomain.o _allocation.cpp;\
 	else  \
-	    ${CP} ${OBJECTDIR}/_agentsPlanningPath.o ${OBJECTDIR}/_agentsPlanningPath_nomain.o;\
-	fi
-
-${OBJECTDIR}/_agentsUpdatePath_nomain.o: ${OBJECTDIR}/_agentsUpdatePath.o _agentsUpdatePath.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/_agentsUpdatePath.o`; \
-	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
-	then  \
-	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agentsUpdatePath_nomain.o _agentsUpdatePath.cpp;\
-	else  \
-	    ${CP} ${OBJECTDIR}/_agentsUpdatePath.o ${OBJECTDIR}/_agentsUpdatePath_nomain.o;\
+	    ${CP} ${OBJECTDIR}/_allocation.o ${OBJECTDIR}/_allocation_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_astarAlgorithm_nomain.o: ${OBJECTDIR}/_astarAlgorithm.o _astarAlgorithm.cpp 
@@ -971,19 +940,6 @@ ${OBJECTDIR}/_ga_agent_state_free_nomain.o: ${OBJECTDIR}/_ga_agent_state_free.o 
 	    ${CP} ${OBJECTDIR}/_ga_agent_state_free.o ${OBJECTDIR}/_ga_agent_state_free_nomain.o;\
 	fi
 
-${OBJECTDIR}/_ga_objective_function_nomain.o: ${OBJECTDIR}/_ga_objective_function.o _ga_objective_function.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_objective_function.o`; \
-	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
-	then  \
-	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_objective_function_nomain.o _ga_objective_function.cpp;\
-	else  \
-	    ${CP} ${OBJECTDIR}/_ga_objective_function.o ${OBJECTDIR}/_ga_objective_function_nomain.o;\
-	fi
-
 ${OBJECTDIR}/_ga_population_nomain.o: ${OBJECTDIR}/_ga_population.o _ga_population.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_population.o`; \
@@ -1023,17 +979,17 @@ ${OBJECTDIR}/_ga_solution_nomain.o: ${OBJECTDIR}/_ga_solution.o _ga_solution.cpp
 	    ${CP} ${OBJECTDIR}/_ga_solution.o ${OBJECTDIR}/_ga_solution_nomain.o;\
 	fi
 
-${OBJECTDIR}/_ga_solution_comparison_nomain.o: ${OBJECTDIR}/_ga_solution_comparison.o _ga_solution_comparison.cpp 
+${OBJECTDIR}/_ga_solutionAllocator_nomain.o: ${OBJECTDIR}/_ga_solutionAllocator.o _ga_solutionAllocator.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_solution_comparison.o`; \
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_solutionAllocator.o`; \
 	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solution_comparison_nomain.o _ga_solution_comparison.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solutionAllocator_nomain.o _ga_solutionAllocator.cpp;\
 	else  \
-	    ${CP} ${OBJECTDIR}/_ga_solution_comparison.o ${OBJECTDIR}/_ga_solution_comparison_nomain.o;\
+	    ${CP} ${OBJECTDIR}/_ga_solutionAllocator.o ${OBJECTDIR}/_ga_solutionAllocator_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_ga_system_nomain.o: ${OBJECTDIR}/_ga_system.o _ga_system.cpp 
@@ -1060,19 +1016,6 @@ ${OBJECTDIR}/_ga_token_nomain.o: ${OBJECTDIR}/_ga_token.o _ga_token.cpp
 	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token_nomain.o _ga_token.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_token.o ${OBJECTDIR}/_ga_token_nomain.o;\
-	fi
-
-${OBJECTDIR}/_greedy_agentsTasksAllocator_nomain.o: ${OBJECTDIR}/_greedy_agentsTasksAllocator.o _greedy_agentsTasksAllocator.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/_greedy_agentsTasksAllocator.o`; \
-	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
-	then  \
-	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_greedy_agentsTasksAllocator_nomain.o _greedy_agentsTasksAllocator.cpp;\
-	else  \
-	    ${CP} ${OBJECTDIR}/_greedy_agentsTasksAllocator.o ${OBJECTDIR}/_greedy_agentsTasksAllocator_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_map_nomain.o: ${OBJECTDIR}/_map.o _map.cpp 

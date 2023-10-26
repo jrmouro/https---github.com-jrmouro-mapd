@@ -11,11 +11,12 @@
 #include <map>
 #include <vector>
 #include "_ga_pseudo_solution.h"
+#include "_allocation.h"
 
 class _endpointsDistanceAlgorithm;
 class _agent_energy_system;
 
-class _ga_solution : public _ga_pseudo_solution{
+class _ga_solution : public _ga_pseudo_solution, public _allocation{
 public:
     
     enum EvalType{
@@ -35,7 +36,13 @@ public:
     
     unsigned evaluate(const _ga_token& token, const EvalType&);
     
-    void planning(const _ga_token& token, const std::function<bool(const _ga_agent*, const _task*)>&);
+    virtual _allocation* clone() const;
+    
+    virtual bool isValid()const;
+    
+    virtual void nextPlanningUpdate(
+        const _ga_token&,
+        const std::function<bool(const _ga_agent* agent, const _task* task)>&);
     
     _ga_solution* randon(unsigned seed) const;
     
@@ -45,22 +52,20 @@ public:
     virtual _ga_solution* get_disturb(unsigned seed) const;    
     virtual _ga_solution* get_disturb(unsigned agents_size, unsigned task_size, unsigned seed) const;
     
-    virtual std::pair<_ga_solution*,_ga_solution*> get_crossover(const _ga_solution& other) const{
-        
-        _ga_solution* childA = new _ga_solution();
-        _ga_solution* childB = new _ga_solution();
-        
-        crossover(*this, other, *childA, *childB);
-        
-        return std::pair<_ga_solution*,_ga_solution*>(childA, childB);
-        
-    }
+    virtual std::pair<_ga_solution*,_ga_solution*> get_crossover(const _ga_solution& other) const;
     
-    virtual bool dominate(const _ga_token& token, const _ga_solution&) const;
+    _ga_solution& operator=(const _ga_solution& right);
+    
+    friend std::ostream& operator<<(std::ostream& os, const _ga_solution& obj);
+    
+    bool isEvaluated()const;
+
+    
+    virtual bool dominate(const _ga_token& token, _ga_solution&);
     
 private:
     
-    std::map<const _ga_agent*,std::vector<const _task*>> allocation;
+    std::map<const _ga_agent*,std::vector<const _task*>> allocation_map;
     std::map<EvalType, unsigned> evals;
     
     void alloc(const _ga_token& token);

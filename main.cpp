@@ -9,6 +9,8 @@
 #include "_updateTokenAlgorithms.h"
 #include "_agent_energy_system.h"
 #include "_energy_charge.h"
+#include "_agentsTasksAllocator.h"
+#include "_ga_solutionAllocator.h"
 
 using namespace std;
 
@@ -18,6 +20,7 @@ void test(){
     std::vector<std::string> mapFilenames, taskFilenames, tokenIds;   
     std::vector<std::pair<float, float>> thresholds;
     std::vector<_agent_energy_system> agent_energy_systems;
+    std::vector<_agentsTasksAllocator*> agentsTasksAllocators;
     
     thresholds.push_back(std::make_pair(.0f, 1.0f));
 //    thresholds.push_back(std::make_pair(.7f, .7f));
@@ -30,8 +33,8 @@ void test(){
     
     taskFilenames.push_back("./Instances/test/test_1.task");
     
-    tokenIds.push_back("TP");
-    tokenIds.push_back("TSTP");
+//    tokenIds.push_back("TP");
+//    tokenIds.push_back("TSTP");
 //    tokenIds.push_back("BTT");
 
     
@@ -45,8 +48,11 @@ void test(){
     _agent_energy_system aes_2("ES_2", ec_2, aer_2);
     
     agent_energy_systems.push_back(aes_1);
-    agent_energy_systems.push_back(aes_2);
+//    agent_energy_systems.push_back(aes_2);
     
+    tokenIds.push_back("GA");
+    _ga_solutionAllocator ga_solutionAllocator;
+    agentsTasksAllocators.push_back(&ga_solutionAllocator);
         
     auto experiment = MultiSystemExperiment(
         resultFile,
@@ -54,7 +60,8 @@ void test(){
         thresholds,
         taskFilenames,                      
         mapFilenames,                      
-        agent_energy_systems,  
+        agent_energy_systems,              
+        agentsTasksAllocators,
         500,
         80,                               
         0);                              
@@ -72,6 +79,7 @@ void small(){
     std::vector<std::string> mapFilenames, taskFilenames, tokenIds;
     std::vector<std::pair<float, float>> thresholds;    
     std::vector<_agent_energy_system> agent_energy_systems;
+    std::vector<_agentsTasksAllocator*> agentsTasksAllocators;
 //    
     thresholds.push_back(std::make_pair(.0f, 1.0f));
 //    thresholds.push_back(std::make_pair(.7f, .7f));
@@ -93,7 +101,7 @@ void small(){
     taskFilenames.push_back("./Instances/small/kiva-500.task");
     
 //    tokenIds.push_back("TP");
-    tokenIds.push_back("TSTP");
+//    tokenIds.push_back("TSTP");
 //    tokenIds.push_back("BTT");
 //    tokenIds.push_back("TTP");
     
@@ -110,9 +118,12 @@ void small(){
     _agent_energy_system aes_3("E_3", ec_3, aer_3);
     
     agent_energy_systems.push_back(aes_1);
-    agent_energy_systems.push_back(aes_2);
-    agent_energy_systems.push_back(aes_3);
+//    agent_energy_systems.push_back(aes_2);
+//    agent_energy_systems.push_back(aes_3);
     
+    tokenIds.push_back("GA");
+    _ga_solutionAllocator ga_solutionAllocator;
+    agentsTasksAllocators.push_back(&ga_solutionAllocator);
         
     auto experiment = MultiSystemExperiment(
         resultFile,
@@ -120,7 +131,8 @@ void small(){
         thresholds,
         taskFilenames,                      
         mapFilenames,                      
-        agent_energy_systems,   
+        agent_energy_systems,  
+        agentsTasksAllocators,
         500,
         46,                               
         10);                              

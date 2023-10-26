@@ -11,21 +11,24 @@
 #include "_taskMap.h"
 #include "_agentsTasksAllocator.h"
 #include "_agentsUpdatePath.h"
-#include "_agentsPlanningPath.h"
+#include "_allocation.h"
 
-_ga_system::_ga_system(
-            const _agentsPlanningPath& agentsPlanningPath, 
-            const _agentsTasksAllocator& agentsTasksAllocator, 
-            const _agentsUpdatePath& agentsUpdatePath) :
-                agentsPlanningPath(agentsPlanningPath), 
-                agentsTasksAllocator(agentsTasksAllocator), 
-                agentsUpdatePath(agentsUpdatePath) {}
+_ga_system::_ga_system(const _agentsTasksAllocator& agentsTasksAllocator) :
+                agentsTasksAllocator(agentsTasksAllocator){}
                 
 _ga_system::_ga_system(const _ga_system& other) :
-            agentsTasksAllocation(other.agentsTasksAllocation), 
-            agentsPlanningPath(other.agentsPlanningPath), 
-            agentsTasksAllocator(other.agentsTasksAllocator), 
-            agentsUpdatePath(other.agentsUpdatePath) {}
+            allocation(other.allocation->clone()),  
+            agentsTasksAllocator(other.agentsTasksAllocator){}
+
+_ga_system::~_ga_system(){
+    
+    if(allocation != nullptr){
+                
+        delete allocation;
+
+    }
+    
+}
 
 bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){ 
     
@@ -41,22 +44,41 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
 
             return false;
 
-        });
-                
+        });                
         
-        if(addNewTask){
-            
-            agentsTasksAllocation.clear();
-            
-            agentsTasksAllocator.solve(token, agentsTasksAllocation);
-            
+        if(allocation == nullptr){
+
+            allocation = agentsTasksAllocator.solve(token);
+
+        } else {
+
+            if(addNewTask || !allocation->isValid()){
+
+               if(allocation != nullptr){
+
+                   delete allocation;
+
+               }
+
+               allocation = agentsTasksAllocator.solve(token);
+
+           } 
+
         }
         
-        std::vector<std::pair<int, int>> planning;
-        
-        agentsPlanningPath.solve(token, agentsTasksAllocation, planning);
-        
-        agentsUpdatePath.solve(token, planning);
+        allocation->nextPlanningUpdate(token, [&token](const _ga_agent* agent, const _task* task){
+            
+            if(task != nullptr){
+            
+                return token.updateAgentTaskPath(agent->id(), task->id());
+            
+            } else {
+                
+                return token.updateAgentTaskPath(agent->id(), INT_MIN);
+                
+            }
+            
+        });
         
         token.stepping();       
         
@@ -68,8 +90,8 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
 
 }
 
-void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
-    
+void _ga_system::run(const _taskMap& taskMap, _ga_token& token){    
+        
     while(token.getCurrentStep() < token.getStepMap().getStep_size() || (taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())){
         
         bool addNewTask = false;
@@ -83,20 +105,40 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
             return false;
 
         });
-                        
-        if(addNewTask){
-            
-            agentsTasksAllocation.clear();
-            
-            agentsTasksAllocator.solve(token, agentsTasksAllocation);
-            
+        
+        if(allocation == nullptr){
+
+            allocation = agentsTasksAllocator.solve(token);
+
+        } else {
+
+            if(addNewTask || !allocation->isValid()){
+
+               if(allocation != nullptr){
+
+                   delete allocation;
+
+               }
+
+               allocation = agentsTasksAllocator.solve(token);
+
+           } 
+
         }
         
-        std::vector<std::pair<int, int>> planning;
-        
-        agentsPlanningPath.solve(token, agentsTasksAllocation, planning);
-        
-        agentsUpdatePath.solve(token, planning);
+        allocation->nextPlanningUpdate(token, [&token](const _ga_agent* agent, const _task* task){
+            
+            if(task != nullptr){
+            
+                return token.updateAgentTaskPath(agent->id(), task->id());
+            
+            } else {
+                
+                return token.updateAgentTaskPath(agent->id(), INT_MIN);
+                
+            }
+            
+        });
         
         token.stepping();
         

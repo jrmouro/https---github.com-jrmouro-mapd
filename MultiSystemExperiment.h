@@ -10,10 +10,12 @@
 
 #include <set>
 #include "SystemExperiment.h"
+#include "GA_SystemExperiment.h"
 #include "ThresholdTokenPass.h"
 #include "TokenPass.h"
 #include "TaskSwapTokenPass.h"
 #include "BackwardTaskToken.h"
+#include "_agentsTasksAllocator.h"
 
 
 class MultiSystemExperiment : public Experiment<std::string>{
@@ -27,6 +29,7 @@ public:
             const std::vector<std::string>& taskFilenames,             
             const std::vector<std::string>& mapFilenames,
             const std::vector<_agent_energy_system>& agent_energy_systems,
+            const std::vector<_agentsTasksAllocator*>& agentsTasksAllocators,
             const unsigned task_threshold,
             const unsigned cell_size = 0, 
             const unsigned timestep = 0) :
@@ -37,6 +40,7 @@ public:
                     taskFilenames(taskFilenames), 
                     tokenIds(tokenIds), 
                     agent_energy_systems(agent_energy_systems),
+                    agentsTasksAllocators(agentsTasksAllocators),
                     task_threshold(task_threshold),
                     cell_size(cell_size), 
                     timestep(timestep) {}
@@ -49,6 +53,7 @@ public:
             taskFilenames(other.taskFilenames), 
             tokenIds(other.tokenIds), 
             agent_energy_systems(other.agent_energy_systems),
+            agentsTasksAllocators(other.agentsTasksAllocators),
             task_threshold(other.task_threshold),
             cell_size(other.cell_size), 
             timestep(other.timestep) { }
@@ -78,10 +83,19 @@ public:
                 });
                 
                 std::vector<_token*> ptokens;
+                std::vector<_ga_token*> p_ga_tokens;
                 
                 for (auto tokenId : tokenIds) {
                     
-                    if(tokenId == "TP") {
+                    if(tokenId == "GA"){
+                        
+                        for (auto agent_energy_system : agent_energy_systems) {
+                            
+                            p_ga_tokens.push_back(new _ga_token(imap->getMap(), imap->getStepMap(), agent_energy_system));
+
+                        }
+                    
+                    } else if(tokenId == "TP") {
                         
                         for (auto agent_energy_system : agent_energy_systems) {
                             
@@ -134,6 +148,70 @@ public:
                         
                     }        
 
+                }
+                
+                for (auto ptoken : p_ga_tokens) { 
+                    
+                    for (auto agentsTasksAllocator : agentsTasksAllocators) {
+                        
+                        GA_SystemExperiment se(
+                                    ptoken->name() + " ;" + mapFilename + " ;" + taskFilename,
+                                    *agentsTasksAllocator,
+                                    *ptoken,  
+                                    itasks->getTaskMap(),
+                                    cell_size,
+                                    timestep);  
+                    
+    //                    std::cout << " - token: " << *ptoken << std::endl;
+                        std::cout << "System Experiment: " << std::endl;
+                        std::cout << " - id: " << se.id() << std::endl;
+                        std::cout << " - energy system: " << ptoken->getAgent_energy_system().id() << std::endl;
+
+                        std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+
+                        se.run();
+
+                        std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+                        std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+
+                        std::cout << " - makespan: " << ptoken->getCurrentStep() << std::endl;
+                        std::cout << " - energy expenditure: " << ptoken->energyExpenditure() << std::endl;
+                        std::cout << " - pending tasks: " << ptoken->getPendingTaskAmount() << std::endl;
+                        std::cout << " - assigned tasks: " << ptoken->getAssignedTaskAmount() << std::endl;
+                        std::cout << " - running tasks: " << ptoken->getRunningTaskAmount() << std::endl;
+                        std::cout << " - finished tasks: " << ptoken->getFinishedTaskAmount() << std::endl;
+                        std::cout << " - duration: " << time_span.count() << " seconds." << std::endl << std::endl; 
+    //                    std::cout << " - report: " << std::endl << se.getToken().getReportTaskMap() <<  std::endl << std::endl;
+    //                    std::cout << " - token: " << *ptoken << std::endl;
+
+                        if(headerFlag){
+
+                            headerFlag = false;
+
+                            Writable::strWrite(*imap, ofs, "mapFilename", true);
+                            Writable::strWrite(*imap, ofs, "taskFilename", true); 
+                            imap->writeHeader(ofs);
+                            Writable::sepWrite(*imap, ofs);
+                            itasks->writeHeader(ofs);
+                            Writable::sepWrite(*imap, ofs);
+                            ptoken->writeHeader(ofs);
+                            Writable::endlWrite(*imap, ofs);
+
+                        }
+
+                        Writable::strWrite(*imap, ofs, mapFilename, true);
+                        Writable::strWrite(*imap, ofs, taskFilename, true);
+                        imap->writeRow(ofs);
+                        Writable::sepWrite(*imap, ofs);
+                        itasks->writeRow(ofs);
+                        Writable::sepWrite(*imap, ofs);
+                        ptoken->writeRow(ofs);
+                        Writable::endlWrite(*imap, ofs);  
+
+                    }
+
+                    delete ptoken;
+                    
                 }
                 
                 for (auto ptoken : ptokens) {                   
@@ -192,7 +270,7 @@ public:
                     ptoken->writeRow(ofs);
                     Writable::endlWrite(*imap, ofs);               
                     
-//                    delete ptoken;
+                    delete ptoken;
                     
                 }
                 
@@ -215,7 +293,8 @@ private:
     const std::string& resultFilename; 
     const std::vector<std::pair<float, float>>& thresholds;
     const std::vector<std::string>& tokenIds, taskFilenames, mapFilenames;  
-    const std::vector<_agent_energy_system>& agent_energy_systems;            
+    const std::vector<_agent_energy_system>& agent_energy_systems; 
+    const std::vector<_agentsTasksAllocator*>& agentsTasksAllocators;
     const unsigned cell_size = 0, timestep = 0, task_threshold = UINT_MAX;
 
 };

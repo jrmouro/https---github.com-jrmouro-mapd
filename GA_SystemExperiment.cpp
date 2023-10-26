@@ -11,13 +11,13 @@
 
 GA_SystemExperiment::GA_SystemExperiment(
         const std::string id, 
-        const _ga_system& system, 
+        const _agentsTasksAllocator& agentsTasksAllocator,
         const _ga_token& token, 
         const _taskMap& taskMap,
         unsigned cell_size, 
         unsigned timestep) :
     Experiment<std::string>(id), 
-    system(system), 
+    system(agentsTasksAllocator), 
     token(token), 
     taskMap(taskMap),
     cell_size(cell_size),
@@ -34,21 +34,21 @@ void GA_SystemExperiment::run(){
         Render render(
                 std::pair<unsigned, unsigned>(cell_size,cell_size),
                 std::pair<unsigned, unsigned>(
-                    system.getMap().getColumn_size(),
-                    system.getMap().getRow_size()),
+                    token.getMap().getColumn_size(),
+                    token.getMap().getRow_size()),
                 this->id());
 
         Text textStep(
                 std::to_string(token.getCurrentStep()),
                 sf::Vector2f(
-                    system.getMap().getColumn_size()/2 * render.GetCell().first, 
+                    token.getMap().getColumn_size()/2 * render.GetCell().first, 
                     0),
                 sf::Vector2f(
                     render.GetCell().first, 
                     0),
                 sf::Color::White);
 
-        render.add(&system.getMap());
+        render.add(&token.getMap());
         render.add(&token);
         render.add(&textStep);
 

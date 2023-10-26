@@ -25,6 +25,12 @@ public:
     void listConstAgents(const std::function<bool(const _ga_agent*)>&) const;
     void listConstTasks(const std::function<bool(const _task*)>&) const;
     
+    _ga_pseudo_solution& operator=(const _ga_pseudo_solution& right);
+    
+    friend std::ostream& operator<<(std::ostream& os, const _ga_pseudo_solution& obj);
+
+
+    
 protected:
     
     virtual void disturb(unsigned, unsigned, unsigned);  
@@ -33,12 +39,12 @@ protected:
     void swapAgentsByIndexes(unsigned indexAgentA, unsigned indexAgentB);    
     void swapTasksByIndexes(unsigned indexTaskA, unsigned indexTaskB);
     
-    void swapAgents(std::set<unsigned> swapSet);      
-    void swapTasks(std::set<unsigned> swapSet); 
+    void swapAgents(const std::set<unsigned>& swapSet);      
+    void swapTasks(const std::set<unsigned>& swapSet); 
     
     void swap(
-        std::set<unsigned> swapAgentsSet, 
-        std::set<unsigned> swapTasksSet);       
+        const std::set<unsigned>& swapAgentsSet, 
+        const std::set<unsigned>& swapTasksSet);       
     
     friend void crossover(
         const _ga_pseudo_solution& parentA,
@@ -48,7 +54,7 @@ protected:
     
     void reset(const _ga_token& token);    
     bool empty() const;    
-    void clear(unsigned agentsSize = 0, unsigned tasksSize = 0);
+    void clearResize(unsigned agentsSize = 0, unsigned tasksSize = 0);
     
     bool isConsistentWith(const _ga_pseudo_solution& other) const;
         

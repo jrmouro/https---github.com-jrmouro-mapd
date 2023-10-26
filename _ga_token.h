@@ -40,12 +40,11 @@ public:
     
     void addPendingTask(const _task&);
     
-    bool updateAgentTaskPath(int, int, const _stepPathAlgorithm&, _stepMap&);
-    
-    
-    void listPendingTasks(const std::function<bool(const _task&)> function) const;    
+    bool updateAgentTaskPath(int, int);
+        
+    void listPendingTasks(const std::function<bool(unsigned, const _task&)> function) const;    
     void listAgents(const std::function<bool(_ga_agent&)> function);
-    void listConstAgents(const std::function<bool(const _ga_agent&)> function) const;
+    void listConstAgents(const std::function<bool(unsigned, const _ga_agent&)> function) const;
     
     virtual bool isIdle() const;
     
@@ -66,9 +65,15 @@ public:
     const _map& getMap() const;
     const _stepMap& getStepMap() const;
 
-    const _agent_energy_system& getAgent_energy_system() const {
-        return agent_energy_system;
-    }
+    const _agent_energy_system& getAgent_energy_system() const;
+    
+    unsigned getRunningTaskAmount()const;
+    
+    unsigned getAssignedTaskAmount()const;
+    
+    unsigned getPendingTaskAmount()const;
+    
+    unsigned getFinishedTaskAmount()const;
 
     
 private:
@@ -77,7 +82,7 @@ private:
     std::map<int, _task> pendingTasks, assignedTasks, runningTasks, finishedTasks;
     std::map<int, _ga_agent> agents;
     std::map<int, int> assignTaskAgent;
-    const _agent_energy_system& agent_energy_system;
+    const _agent_energy_system agent_energy_system;
     unsigned currentStep = 0;
 };
 

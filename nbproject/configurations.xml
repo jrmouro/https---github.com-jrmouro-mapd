@@ -56,10 +56,6 @@
       </logicalFolder>
       <logicalFolder name="f1" displayName="Algorithm" projectFiles="true">
         <logicalFolder name="f8" displayName="GA" projectFiles="true">
-          <logicalFolder name="f4" displayName="ObjectiveFunction" projectFiles="true">
-            <itemPath>_ga_objective_function.cpp</itemPath>
-            <itemPath>_ga_objective_function.h</itemPath>
-          </logicalFolder>
           <logicalFolder name="f5" displayName="Population" projectFiles="true">
             <itemPath>_ga_population.cpp</itemPath>
             <itemPath>_ga_population.h</itemPath>
@@ -71,22 +67,16 @@
           <logicalFolder name="f3" displayName="Solution" projectFiles="true">
             <itemPath>_ga_solution.cpp</itemPath>
             <itemPath>_ga_solution.h</itemPath>
-            <itemPath>_ga_solution_comparison.cpp</itemPath>
-            <itemPath>_ga_solution_comparison.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f1" displayName="Token" projectFiles="true">
             <logicalFolder name="f1" displayName="Allocator" projectFiles="true">
               <itemPath>_agentsTasksAllocator.h</itemPath>
-              <itemPath>_greedy_agentsTasksAllocator.cpp</itemPath>
-              <itemPath>_greedy_agentsTasksAllocator.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="Planning" projectFiles="true">
-              <itemPath>_agentsPlanningPath.cpp</itemPath>
-              <itemPath>_agentsPlanningPath.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f3" displayName="Update" projectFiles="true">
-              <itemPath>_agentsUpdatePath.cpp</itemPath>
-              <itemPath>_agentsUpdatePath.h</itemPath>
+              <itemPath>_allocation.cpp</itemPath>
+              <itemPath>_allocation.h</itemPath>
+              <itemPath>_ga_solutionAllocator.cpp</itemPath>
+              <itemPath>_ga_solutionAllocator.h</itemPath>
+              <itemPath>_nsga.cpp</itemPath>
+              <itemPath>_nsga.h</itemPath>
             </logicalFolder>
           </logicalFolder>
         </logicalFolder>
@@ -94,10 +84,6 @@
           <itemPath>_astarAlgorithm.cpp</itemPath>
           <itemPath>_astarAlgorithm.h</itemPath>
           <itemPath>_pathAlgorithm.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="f9" displayName="NSGA" projectFiles="true">
-          <itemPath>_nsga.cpp</itemPath>
-          <itemPath>_nsga.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f6" displayName="Site" projectFiles="true">
           <itemPath>_astarDistanceAlgorithm.cpp</itemPath>
@@ -448,15 +434,11 @@
       </item>
       <item path="_agent_state.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_agentsPlanningPath.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="_agentsPlanningPath.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="_agentsTasksAllocator.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_agentsUpdatePath.cpp" ex="false" tool="1" flavor2="0">
+      <item path="_allocation.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="_agentsUpdatePath.h" ex="false" tool="3" flavor2="0">
+      <item path="_allocation.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_astarAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -535,10 +517,6 @@
       </item>
       <item path="_ga_agent_state_free.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_ga_objective_function.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="_ga_objective_function.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="_ga_population.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_population.h" ex="false" tool="3" flavor2="0">
@@ -551,9 +529,9 @@
       </item>
       <item path="_ga_solution.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_ga_solution_comparison.cpp" ex="false" tool="1" flavor2="0">
+      <item path="_ga_solutionAllocator.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="_ga_solution_comparison.h" ex="false" tool="3" flavor2="0">
+      <item path="_ga_solutionAllocator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_ga_system.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -562,10 +540,6 @@
       <item path="_ga_token.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_token.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="_greedy_agentsTasksAllocator.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="_greedy_agentsTasksAllocator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_manhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -940,15 +914,11 @@
       </item>
       <item path="_agent_state.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_agentsPlanningPath.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="_agentsPlanningPath.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="_agentsTasksAllocator.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_agentsUpdatePath.cpp" ex="false" tool="1" flavor2="0">
+      <item path="_allocation.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="_agentsUpdatePath.h" ex="false" tool="3" flavor2="0">
+      <item path="_allocation.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_astarAlgorithm.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1027,10 +997,6 @@
       </item>
       <item path="_ga_agent_state_free.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_ga_objective_function.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="_ga_objective_function.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="_ga_population.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_population.h" ex="false" tool="3" flavor2="0">
@@ -1043,9 +1009,9 @@
       </item>
       <item path="_ga_solution.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_ga_solution_comparison.cpp" ex="false" tool="1" flavor2="0">
+      <item path="_ga_solutionAllocator.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="_ga_solution_comparison.h" ex="false" tool="3" flavor2="0">
+      <item path="_ga_solutionAllocator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_ga_system.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1054,10 +1020,6 @@
       <item path="_ga_token.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_token.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="_greedy_agentsTasksAllocator.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="_greedy_agentsTasksAllocator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_manhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>

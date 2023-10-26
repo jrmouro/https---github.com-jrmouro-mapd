@@ -8,8 +8,9 @@
 #ifndef _GA_POPULATION_H
 #define _GA_POPULATION_H
 
-#include <vector>
+#include <set>
 #include <functional>
+#include <random>
 
 #include "_ga_solution.h"
 
@@ -17,7 +18,7 @@
 class _ga_population {
 public:
     
-    _ga_population(const _ga_solution&, unsigned, unsigned, unsigned);
+    _ga_population(const _ga_solution&, std::default_random_engine& generator, unsigned, unsigned);
     
     _ga_population(unsigned, unsigned);
     
@@ -25,19 +26,23 @@ public:
     
     virtual ~_ga_population();
     
-    void add(_ga_solution*);
+    bool add(_ga_solution*);
+    bool remove(_ga_solution*);
         
     void listConstSolutions(const std::function<bool(unsigned, const _ga_solution&)>) const; 
+    void listSolutions(const std::function<bool(unsigned, _ga_solution*)>) const; 
     
-    virtual void populate_random(const _ga_solution&, unsigned);
-    virtual void populate_random(_ga_solution*, unsigned);
+    virtual void populate_random(const _ga_solution&, std::default_random_engine& generator);
         
-    virtual _ga_solution* get_random(unsigned) const;
+    virtual _ga_solution* get_random(std::default_random_engine& generator) const;
+    
+    bool isExpandable()const;    
+    bool isReducible()const;
     
 private:
     
     const unsigned size_max, size_min;
-    std::vector<_ga_solution*> solutions;
+    std::set<_ga_solution*> solutions;
     
 };
 

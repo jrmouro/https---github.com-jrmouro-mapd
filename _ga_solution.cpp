@@ -16,7 +16,7 @@ _ga_solution::_ga_solution(const _ga_token& token):_ga_pseudo_solution(token){}
 
 _ga_solution::_ga_solution(const _ga_solution& other) :
         _ga_pseudo_solution(other),
-        allocation(other.allocation), 
+        allocation_map(other.allocation_map), 
         evals(other.evals) {}
     
 _ga_solution::~_ga_solution(){}
@@ -58,20 +58,20 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_solution::evaluate(const _
 
 void _ga_solution::disturb(unsigned seed){
     evals.clear();
-    allocation.clear();
+    allocation_map.clear();
     _ga_pseudo_solution::disturb(seed);
 }
 
 void _ga_solution::disturb(unsigned agents_size, unsigned task_size, unsigned seed){
     evals.clear();
-    allocation.clear();
+    allocation_map.clear();
     _ga_pseudo_solution::disturb(agents_size, task_size, seed);
 }
 
 _ga_solution* _ga_solution::get_disturb(unsigned seed) const{
         
     auto ret = new _ga_solution(*this);
-    ret.disturb(seed);
+    ret->disturb(seed);
     return ret;
 
 }
@@ -79,7 +79,7 @@ _ga_solution* _ga_solution::get_disturb(unsigned seed) const{
 _ga_solution* _ga_solution::get_disturb(unsigned agents_size, unsigned task_size, unsigned seed) const{
 
     auto ret = new _ga_solution(*this);
-    ret.disturb(agents_size, task_size, seed);
+    ret->disturb(agents_size, task_size, seed);
     return ret;
 
 }
@@ -95,7 +95,7 @@ std::pair<_ga_solution*,_ga_solution*> _ga_solution::get_crossover(const _ga_sol
 
 }
 
-bool _ga_solution::dominate(const _ga_token& token, const _ga_solution& other)const{
+bool _ga_solution::dominate(const _ga_token& token, _ga_solution& other){
     
     auto other_eval = other.evaluate(token);
     auto this_eval = evaluate(token);
@@ -136,36 +136,46 @@ _ga_solution* _ga_solution::randon(unsigned seed) const{
     
 }
 
-void _ga_solution::planning(const _ga_token& token, const std::function<bool(const _ga_agent* agent, const _task* task)>& function){
+_allocation* _ga_solution::clone() const{
+    return new _ga_solution(*this);
+}
+
+bool _ga_solution::isValid()const{
+    return true;
+}
+
+void _ga_solution::nextPlanningUpdate(
+        const _ga_token& token,
+        const std::function<bool(const _ga_agent* agent, const _task* task)>& function){
     
     if(evals.empty()){
         
         alloc(token);
 
-    }
+    } 
     
     for (const _ga_agent* agent : agents) {
-        
-        std::map<const _ga_agent*,std::vector<const _task*>>::iterator agent_alloc_it = allocation.find(agent);
-        
-        if(agent_alloc_it != allocation.end()){
-            
+
+        std::map<const _ga_agent*,std::vector<const _task*>>::iterator agent_alloc_it = allocation_map.find(agent);
+
+        if(agent_alloc_it != allocation_map.end()){
+
             if(agent_alloc_it->second.empty()){
-                
+
                 function(agent, nullptr);
-                
+
             } else {
-                
+
                 if(function(agent, agent_alloc_it->second.front())){
-                    
+
                     agent_alloc_it->second.erase(agent_alloc_it->second.begin());
-                    
+
                 }
-                
+
             }
-            
+
         } else {
-            
+
             try {
                 std::ostringstream stream;
                 stream << "allocation error - agent not found: " << *agent;
@@ -174,11 +184,62 @@ void _ga_solution::planning(const _ga_token& token, const std::function<bool(con
                 std::cout << e.what() << std::endl;
                 std::abort();
             }
-            
+
         }
-        
+
     }
     
+    
+    
+}
+
+_ga_solution& _ga_solution::operator=(const _ga_solution& right) {
+
+    if (this == &right)
+        return *this;
+
+    (_ga_pseudo_solution&)(*this) = (_ga_pseudo_solution&)right;
+
+    evals = right.evals;    
+    allocation_map = right.allocation_map;
+
+    return *this;
+
+}
+
+std::ostream& operator<<(std::ostream& os, const _ga_solution& obj) {
+
+    os << (_ga_pseudo_solution&)obj;
+
+    if(obj.isEvaluated()){           
+
+        os << "makespan eval: " << obj.evals.find(_ga_solution::EvalType::makespan)->second << std::endl;
+        os << "energy eval: " << obj.evals.find(_ga_solution::EvalType::energy)->second << std::endl;
+
+        os << "allocation:" << std::endl;
+
+        for (auto alloc : obj.allocation_map) {
+
+            os << *alloc.first << ": "; 
+
+            for(auto task: alloc.second){
+
+                os << *task << ", ";
+
+            }
+
+            os << std::endl;
+
+        }
+
+    }
+
+    return os;
+
+}
+
+bool _ga_solution::isEvaluated()const{
+    return !evals.empty();
 }
 
 void _ga_solution::alloc(const _ga_token& token){
@@ -188,7 +249,7 @@ void _ga_solution::alloc(const _ga_token& token){
     _stepSite stepSite_min;
     unsigned makespan = 0, energy = 0;
     
-    allocation.clear();
+    allocation_map.clear();
     evals.clear();
 
     for (const _ga_agent* agent : agents) {
@@ -217,7 +278,7 @@ void _ga_solution::alloc(const _ga_token& token){
 
         agentGoalSites.insert(std::pair<const _ga_agent*, _stepSite>(agent, goal));
         
-        allocation.insert(std::pair<const _ga_agent*,std::vector<const _task*>>(agent, std::vector<const _task*>()));
+        allocation_map.insert(std::pair<const _ga_agent*,std::vector<const _task*>>(agent, std::vector<const _task*>()));
 
     }
 
@@ -247,9 +308,9 @@ void _ga_solution::alloc(const _ga_token& token){
 
                 }
                 
-                std::map<const _ga_agent*,std::vector<const _task*>>::iterator alloc_it = allocation.find(agent_min);
+                std::map<const _ga_agent*,std::vector<const _task*>>::iterator alloc_it = allocation_map.find(agent_min);
 
-                if(alloc_it != allocation.end()){
+                if(alloc_it != allocation_map.end()){
 
                     alloc_it->second.push_back(task);
 
