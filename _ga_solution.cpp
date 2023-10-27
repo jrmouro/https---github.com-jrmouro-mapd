@@ -326,14 +326,19 @@ void _ga_solution::alloc(const _ga_token& token){
                     }
 
                 }
+                
+                unsigned min = UINT_MAX;
 
                 for (const auto& goal : agentGoalSites) {
-
-                    if(stepSite_min.GetStep() < goal.second.GetStep()){
-
+                    
+                    unsigned step = goal.second.GetStep();
+                    
+                    if(step < min ){
+                        
+                        min = step;                        
                         agent_min = goal.first;
                         stepSite_min = goal.second;
-
+                        
                     }
 
                 }                    

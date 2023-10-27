@@ -104,7 +104,7 @@ unsigned _ga_token::getCurrentStep() const {
 
 void _ga_token::stepping(){
     
-    for (auto pagent : agents) {
+    for (auto &pagent : agents) {
         
         pagent.second.stepping(map);       
 
@@ -199,68 +199,159 @@ bool _ga_token::updateAgentTaskPath(
     
     if(agent_it != agents.end()){
         
-        if(agent_it->second.isPickuping()){
+        if(agent_it->second.isAtTrivialPath()){
+            
+            _stepPath newAgentPath(agent_it->second.getCurrentSite());
+            
+            const _task* currentTask = agent_it->second.getCurrentTask();
+            
+            if(agent_it->second.isPickuping()){
+                               
+                if(currentTask != nullptr){
                 
-            std::map<int, _task>::const_iterator currentTask = assignedTasks.find(agent_it->second.getCurrentTask()->id());
+                    std::map<int, _task>::const_iterator currentTaskIt = assignedTasks.find(currentTask->id());
 
-            if(currentTask != assignedTasks.end()){
+                    if(currentTaskIt != assignedTasks.end()){
 
-                runningTasks.insert(std::pair<int, _task>(agent_it->second.getCurrentTask()->id(), currentTask->second));
-                assignedTasks.erase(currentTask);
+                        bool flag = astar.solve(stepMap, newAgentPath, currentTaskIt->second.getDelivery(), agent_it->second.id());
+                        
+                        if(flag){
+                            
+                            agent_it->second.assignPath(newAgentPath);
+                            stepMap.setMoving(newAgentPath, agent_it->second.id());
+                            
+                            runningTasks.insert(std::pair<int, _task>(currentTaskIt->first, currentTaskIt->second));
+                            assignedTasks.erase(currentTaskIt);
+                            
+                        } else {
+                            
+                            try {
+                                std::ostringstream stream;
+                                stream << "delivery site path not found" << currentTaskIt->second.getDelivery();
+                                MAPD_EXCEPTION(stream.str());
+                            } catch (std::exception& e) {
+                                std::cout << e.what() << std::endl;
+                                std::abort();
+                            }
+                            
+                        }
 
-            } else {
+                    } else {
 
-                try {
-                    std::ostringstream stream;
-                    stream << "assigned task id not found: " << agent_it->second.getCurrentTask()->id();
-                    MAPD_EXCEPTION(stream.str());
-                } catch (std::exception& e) {
-                    std::cout << e.what() << std::endl;
-                    std::abort();
+                        try {
+                            std::ostringstream stream;
+                            stream << "assigned task id not found: " << currentTask->id();
+                            MAPD_EXCEPTION(stream.str());
+                        } catch (std::exception& e) {
+                            std::cout << e.what() << std::endl;
+                            std::abort();
+                        }
+
+                    }
+                
+                } else {
+                    
+                    try {
+                        std::ostringstream stream;
+                        stream << "nill current task";
+                        MAPD_EXCEPTION(stream.str());
+                    } catch (std::exception& e) {
+                        std::cout << e.what() << std::endl;
+                        std::abort();
+                    }
+                    
                 }
 
-            }
-
-        } else if(agent_it->second.isDelivering()){
-
-            std::map<int, _task>::const_iterator currentTask_it = runningTasks.find(agent_it->second.getCurrentTask()->id());
-
-            if(currentTask_it != runningTasks.end()){
-
-                finishedTasks.insert(std::pair<int, _task>(agent_it->second.getCurrentTask()->id(), currentTask_it->second));
-                runningTasks.erase(currentTask_it);
-
             } else {
+                
+                if(agent_it->second.isDelivering()){
+                
+                    if(currentTask != nullptr){
 
-                try {
-                    std::ostringstream stream;
-                    stream << "running task id not found: " << agent_it->second.getCurrentTask()->id();
-                    MAPD_EXCEPTION(stream.str());
-                } catch (std::exception& e) {
-                    std::cout << e.what() << std::endl;
-                    std::abort();
+                        std::map<int, _task>::const_iterator currentTask_it = runningTasks.find(currentTask->id());
+
+                        if(currentTask_it != runningTasks.end()){                           
+
+                            agent_it->second.unassignTask();
+
+                            finishedTasks.insert(std::pair<int, _task>(currentTask_it->first, currentTask_it->second));
+                            runningTasks.erase(currentTask_it);
+
+                        } else {
+
+                            try {
+                                std::ostringstream stream;
+                                stream << "running task id not found: " << currentTask->id();
+                                MAPD_EXCEPTION(stream.str());
+                            } catch (std::exception& e) {
+                                std::cout << e.what() << std::endl;
+                                std::abort();
+                            }
+
+                        }
+
+                    }else{
+
+                        try {
+                            std::ostringstream stream;
+                            stream << "nill current task";
+                            MAPD_EXCEPTION(stream.str());
+                        } catch (std::exception& e) {
+                            std::cout << e.what() << std::endl;
+                            std::abort();
+                        }
+
+                    }                
+
+                } 
+            
+                std::map<int, _task>::const_iterator task_it = pendingTasks.find(taskId);
+
+                if(task_it != pendingTasks.end()){
+
+                    bool flag = astar.solve(stepMap, newAgentPath, task_it->second.getPickup(), agent_it->second.id());
+
+                    if(flag){
+
+                        agent_it->second.assignPath(newAgentPath);
+                        stepMap.setMoving(newAgentPath, agent_it->second.id());
+
+                        agent_it->second.assignTask(task_it->second);
+
+                        assignTaskAgent.insert(std::pair<int, int>(taskId, agentId));
+                        assignedTasks.insert(std::pair<int, _task>(task_it->second.id(), task_it->second));
+                        pendingTasks.erase(task_it);                    
+
+                    } else {
+
+                        try {
+                            std::ostringstream stream;
+                            stream << "pickup site path not found" << task_it->second.getPickup();
+                            MAPD_EXCEPTION(stream.str());
+                        } catch (std::exception& e) {
+                            std::cout << e.what() << std::endl;
+                            std::abort();
+                        }
+
+                    }
+
+                    return true;
+
+                } else {  
+
+                    _stepSite future = agent_it->second.getCurrentSite();
+                    future.SetStep(future.GetStep() + 1);                
+                    newAgentPath.progress(future);
+
+                    agent_it->second.assignPath(newAgentPath);
+                    stepMap.setMoving(newAgentPath, agent_it->second.id());
+
                 }
-
+            
             }
-
+                           
         }
-        
-        std::map<int, _task>::const_iterator task_it = pendingTasks.find(taskId);
-        
-        if(task_it != pendingTasks.end()){
-            
-            assignTaskAgent.insert(std::pair<int, int>(taskId, agentId));
-            assignedTasks.insert(std::pair<int, _task>(task_it->second.id(), task_it->second));
-            pendingTasks.erase(task_it);
-            
-            return agent_it->second.updateTaskPath(astar, stepMap, &task_it->second);
-            
-        } else {
-            
-            return agent_it->second.updateTaskPath(astar, stepMap, nullptr);
-            
-        }
-        
+                
     } else {
         
         try {

@@ -12,27 +12,26 @@
 #include "_agentsTasksAllocator.h"
 #include "_agentsUpdatePath.h"
 #include "_allocation.h"
+#include "_ga_solution.h"
 
 _ga_system::_ga_system(const _agentsTasksAllocator& agentsTasksAllocator) :
                 agentsTasksAllocator(agentsTasksAllocator){}
                 
-_ga_system::_ga_system(const _ga_system& other) :
-            allocation(other.allocation->clone()),  
-            agentsTasksAllocator(other.agentsTasksAllocator){}
+_ga_system::_ga_system(const _ga_system& other) :  
+            agentsTasksAllocator(other.agentsTasksAllocator){
+    if(other.allocation != nullptr)
+        allocation = other.allocation->clone();
+}
 
 _ga_system::~_ga_system(){
-    
-    if(allocation != nullptr){
                 
-        delete allocation;
-
-    }
+    if(allocation != nullptr) delete (_ga_solution*)allocation;
     
 }
 
 bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){ 
     
-    if(token.getCurrentStep() < token.getStepMap().getStep_size() || (taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())){
+    if(token.getCurrentStep() < token.getStepMap().getStep_size() && !(taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())){
         
         bool addNewTask = false;
         
@@ -54,13 +53,9 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
 
             if(addNewTask || !allocation->isValid()){
 
-               if(allocation != nullptr){
-
-                   delete allocation;
-
-               }
-
-               allocation = agentsTasksAllocator.solve(token);
+                delete allocation;
+              
+                allocation = agentsTasksAllocator.solve(token);
 
            } 
 
@@ -92,7 +87,7 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
 
 void _ga_system::run(const _taskMap& taskMap, _ga_token& token){    
         
-    while(token.getCurrentStep() < token.getStepMap().getStep_size() || (taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())){
+    while(token.getCurrentStep() < token.getStepMap().getStep_size() && !(taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())){
         
         bool addNewTask = false;
         
@@ -114,13 +109,9 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
 
             if(addNewTask || !allocation->isValid()){
 
-               if(allocation != nullptr){
+                delete allocation;
 
-                   delete allocation;
-
-               }
-
-               allocation = agentsTasksAllocator.solve(token);
+                allocation = agentsTasksAllocator.solve(token);
 
            } 
 

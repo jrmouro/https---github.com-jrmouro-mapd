@@ -28,10 +28,10 @@ void test(){
 //    thresholds.push_back(std::make_pair(.3f, .5f));
     
     mapFilenames.push_back("./Instances/test/test_2.map");
-    mapFilenames.push_back("./Instances/test/test_3.map");
-    mapFilenames.push_back("./Instances/test/test_4.map");  
+//    mapFilenames.push_back("./Instances/test/test_3.map");
+//    mapFilenames.push_back("./Instances/test/test_4.map");  
     
-    taskFilenames.push_back("./Instances/test/test_1.task");
+    taskFilenames.push_back("./Instances/test/ga_test_1.task");
     
 //    tokenIds.push_back("TP");
 //    tokenIds.push_back("TSTP");
@@ -135,7 +135,7 @@ void small(){
         agentsTasksAllocators,
         500,
         46,                               
-        10);                              
+        100);                              
            
     experiment.run();
     

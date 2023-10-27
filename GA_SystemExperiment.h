@@ -22,17 +22,23 @@ public:
     GA_SystemExperiment(
             const std::string id, 
             const _agentsTasksAllocator&, 
-            const _ga_token& token, 
+            _ga_token& token, 
             const _taskMap& taskMap,
             unsigned cell_size = 0, 
             unsigned timestep = 0);
     
+    
+    GA_SystemExperiment(const GA_SystemExperiment& other);
+
+    
     virtual void run();
+    
+    virtual ~GA_SystemExperiment();
     
 private:
     
     _ga_system system;
-    _ga_token token;
+    _ga_token& token;
     const _taskMap& taskMap;
     const unsigned cell_size = 0, timestep = 0;
 

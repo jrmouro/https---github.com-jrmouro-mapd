@@ -12,7 +12,7 @@
 GA_SystemExperiment::GA_SystemExperiment(
         const std::string id, 
         const _agentsTasksAllocator& agentsTasksAllocator,
-        const _ga_token& token, 
+        _ga_token& token, 
         const _taskMap& taskMap,
         unsigned cell_size, 
         unsigned timestep) :
@@ -22,6 +22,18 @@ GA_SystemExperiment::GA_SystemExperiment(
     taskMap(taskMap),
     cell_size(cell_size),
     timestep(timestep){ }
+
+GA_SystemExperiment::GA_SystemExperiment(const GA_SystemExperiment& other) :
+            Experiment<std::string>(other),
+            system(other.system), 
+            token(other.token), 
+            taskMap(other.taskMap), 
+            cell_size(other.cell_size), 
+            timestep(other.timestep) {}
+
+    
+    
+GA_SystemExperiment::~GA_SystemExperiment(){}
 
 void GA_SystemExperiment::run(){
 

@@ -59,7 +59,6 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const _ga_solution& obj);
     
     bool isEvaluated()const;
-
     
     virtual bool dominate(const _ga_token& token, _ga_solution&);
     
