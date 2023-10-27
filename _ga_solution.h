@@ -62,6 +62,8 @@ public:
     
     virtual bool dominate(const _ga_token& token, _ga_solution&);
     
+    
+    
 private:
     
     std::map<const _ga_agent*,std::vector<const _task*>> allocation_map;

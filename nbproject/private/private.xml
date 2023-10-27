@@ -20,9 +20,9 @@
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/Experiment.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/Render.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_token.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_greedy_agentsTasksAllocator.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_site.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agentsUpdatePath.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/main.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agent_goingToDelivery.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_agent_state.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_agent_state_free.h</file>
@@ -40,15 +40,12 @@
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_pseudo_solution.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_system.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_agent_state.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agentsPlanningPath.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_pseudo_solution.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_greedy_agentsTasksAllocator.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_stepSite.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_token.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_map.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agent.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agent_energy_system.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agentsPlanningPath.cpp</file>
         </group>
     </open-files>
 </project-private>

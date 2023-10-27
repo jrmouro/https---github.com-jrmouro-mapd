@@ -11,6 +11,7 @@
 #include "_energy_charge.h"
 #include "_agentsTasksAllocator.h"
 #include "_ga_solutionAllocator.h"
+#include "_nsga.h"
 
 using namespace std;
 
@@ -52,7 +53,13 @@ void test(){
     
     tokenIds.push_back("GA");
     _ga_solutionAllocator ga_solutionAllocator;
+    _nsga nsga(
+            [](const _ga_solution& solution, unsigned generation){ return generation == 100; },
+            40,
+            20,
+            5);
     agentsTasksAllocators.push_back(&ga_solutionAllocator);
+    agentsTasksAllocators.push_back(&nsga);
         
     auto experiment = MultiSystemExperiment(
         resultFile,
@@ -123,6 +130,11 @@ void small(){
     
     tokenIds.push_back("GA");
     _ga_solutionAllocator ga_solutionAllocator;
+    _nsga nsga(
+            [](const _ga_solution& solution, unsigned generation){ return generation == 100; },
+            40,
+            20,
+            5);
     agentsTasksAllocators.push_back(&ga_solutionAllocator);
         
     auto experiment = MultiSystemExperiment(

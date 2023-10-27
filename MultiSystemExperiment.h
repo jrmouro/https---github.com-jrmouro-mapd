@@ -154,18 +154,20 @@ public:
                     
                     for (auto agentsTasksAllocator : agentsTasksAllocators) {
                         
+                        _ga_token token(*ptoken);
+                        
                         GA_SystemExperiment se(
-                                    ptoken->name() + " ;" + mapFilename + " ;" + taskFilename,
+                                    token.name() + " ;" + mapFilename + " ;" + taskFilename,
                                     *agentsTasksAllocator,
-                                    *ptoken,  
+                                    token,  
                                     itasks->getTaskMap(),
                                     cell_size,
                                     timestep);  
                     
     //                    std::cout << " - token: " << *ptoken << std::endl;
-                        std::cout << "System Experiment: " << std::endl;
+                        std::cout << "GA System Experiment: " << std::endl;
                         std::cout << " - id: " << se.id() << std::endl;
-                        std::cout << " - energy system: " << ptoken->getAgent_energy_system().id() << std::endl;
+                        std::cout << " - energy system: " << token.getAgent_energy_system().id() << std::endl;
 
                         std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 
@@ -174,12 +176,12 @@ public:
                         std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
                         std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
 
-                        std::cout << " - makespan: " << ptoken->getCurrentStep() << std::endl;
-                        std::cout << " - energy expenditure: " << ptoken->energyExpenditure() << std::endl;
-                        std::cout << " - pending tasks: " << ptoken->getPendingTaskAmount() << std::endl;
-                        std::cout << " - assigned tasks: " << ptoken->getAssignedTaskAmount() << std::endl;
-                        std::cout << " - running tasks: " << ptoken->getRunningTaskAmount() << std::endl;
-                        std::cout << " - finished tasks: " << ptoken->getFinishedTaskAmount() << std::endl;
+                        std::cout << " - makespan: " << token.getCurrentStep() << std::endl;
+                        std::cout << " - energy expenditure: " << token.energyExpenditure() << std::endl;
+                        std::cout << " - pending tasks: " << token.getPendingTaskAmount() << std::endl;
+                        std::cout << " - assigned tasks: " << token.getAssignedTaskAmount() << std::endl;
+                        std::cout << " - running tasks: " << token.getRunningTaskAmount() << std::endl;
+                        std::cout << " - finished tasks: " << token.getFinishedTaskAmount() << std::endl;
                         std::cout << " - duration: " << time_span.count() << " seconds." << std::endl << std::endl; 
     //                    std::cout << " - report: " << std::endl << se.getToken().getReportTaskMap() <<  std::endl << std::endl;
     //                    std::cout << " - token: " << *ptoken << std::endl;

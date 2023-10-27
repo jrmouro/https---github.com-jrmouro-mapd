@@ -60,6 +60,9 @@ void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
     _ga_population population(greedy, generator, population_size_max, population_size_min);
 
     while(true){
+        
+        std::cout << "generation: " << generation << std::endl;
+        std::cout << "solution: " << *best << std::endl;
 
         expand_population(token, generator, population);
 
@@ -67,7 +70,7 @@ void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
         
         if(best != nullptr){
 
-            if(!stopCondition(*best, generation++)) break;
+            if(stopCondition(*best, generation++)) break;
         
         } else {
             

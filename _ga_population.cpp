@@ -30,13 +30,13 @@ _ga_solution* _ga_population::get_random(std::default_random_engine& generator) 
 
 void _ga_population::populate_random(const _ga_solution& solution, std::default_random_engine& generator){
     
-    if(size_min < solutions.size()){
+    if(size_min > solutions.size()){
         
         std::uniform_int_distribution<unsigned> distribution(1,1000000);
         
         solutions.insert(new _ga_solution(solution));        
     
-        while(size_min < solutions.size()){
+        while(size_min > solutions.size()){
 
             solutions.insert(solution.randon(distribution(generator)));
 
