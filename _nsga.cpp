@@ -19,6 +19,7 @@ _nsga::_nsga(
     unsigned mutation_children_distribution_size,
     unsigned generic_distribution_size,        
     unsigned seed) :
+        _ga_solutionAllocator("NSGA-II"),
         population_size_max(population_size_max), 
         population_size_min(population_size_min), 
         mutation_children_distribution_size(mutation_children_distribution_size),
@@ -27,6 +28,7 @@ _nsga::_nsga(
         seed(seed){ }
 
 _nsga::_nsga(const _nsga& other) :
+        _ga_solutionAllocator(other),
         population_size_max(other.population_size_max), 
         population_size_min(other.population_size_min), 
         mutation_children_distribution_size(other.mutation_children_distribution_size), 
@@ -35,11 +37,13 @@ _nsga::_nsga(const _nsga& other) :
         stopCondition(other.stopCondition) { }
 
 
-_allocation* _nsga::solve(const _ga_token& token) const{
+_allocation* _nsga::borrow(const _ga_token& token) {
 
     _ga_solution* solution = new _ga_solution();
 
     solve(token, *solution);
+    
+    borrowed.insert(solution);
 
     return solution;
 
@@ -58,21 +62,17 @@ void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
     _ga_solution* best = &greedy;
 
     _ga_population population(greedy, generator, population_size_max, population_size_min);
-
-    while(true){
+    
+    while(!stopCondition(*best, generation++)){
         
-        std::cout << "generation: " << generation << std::endl;
-        std::cout << "solution: " << *best << std::endl;
+//        std::cout << "generation: " << generation << std::endl;
+//        std::cout << "solution: " << *best << std::endl;
 
         expand_population(token, generator, population);
 
         best = reduce_population(token, generator, population);
         
-        if(best != nullptr){
-
-            if(stopCondition(*best, generation++)) break;
-        
-        } else {
+        if(best == nullptr){
             
             try {
                 std::ostringstream stream;
@@ -87,6 +87,34 @@ void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
 
     }
 
+//    while(true){
+//        
+//        std::cout << "generation: " << generation << std::endl;
+//        std::cout << "solution: " << *best << std::endl;
+//
+//        expand_population(token, generator, population);
+//
+//        best = reduce_population(token, generator, population);
+//        
+//        if(best != nullptr){
+//
+//            if(stopCondition(*best, generation++)) break;
+//        
+//        } else {
+//            
+//            try {
+//                std::ostringstream stream;
+//                stream << "nill solution fail";
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            } 
+//            
+//        }
+//
+//    }
+
     solution = *best;
 
 }
@@ -99,38 +127,77 @@ void _nsga::expand_population(const _ga_token& token, std::default_random_engine
     std::map<_ga_solution*, unsigned> solution_border_map;
     std::vector<std::vector<_ga_solution*>> borders;
     nds_population(token, population, borders, solution_border_map);
-
-    while(population.isExpandable()){
-
+    
+    unsigned n_children = population.getSize_max() - population.getSize_min();
+    
+    std::vector<_ga_solution*> children_pool(n_children, nullptr);
+    
+    for (int i = 0; i < n_children; i = i + 2) {
+        
         auto parents = crossover_select_parents(token, population,  generator, solution_border_map);
 
         auto children = parents.first->get_crossover(*parents.second);
-
-        population.add(children.first);
-
-        if(mutation_children_distribution(generator) == 0){
-
-            children.first->disturb(distribution(generator));
-
+        
+        children_pool[i] = children.first;
+        
+        if(i + 1 < n_children){
+            
+            children_pool[i + 1] = children.second;
+            
+        }
+        
+    }
+    
+    for (auto child : children_pool) {
+        
+        if(!population.add(child)){
+            
+            try {
+                std::ostringstream stream;
+                stream << "add solution fail: " << child;
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
         }
 
-        if(population.isExpandable()){
-
-            population.add(children.second);
-
-            if(mutation_children_distribution(generator) == 0){
-
-                children.second->disturb(distribution(generator));
-
-            }
-
-        } else {
-
-            delete children.second;
-
-        }                
-
     }
+
+
+
+//    while(population.isExpandable()){
+//
+//        auto parents = crossover_select_parents(token, population,  generator, solution_border_map);
+//
+//        auto children = parents.first->get_crossover(*parents.second);
+//
+//        population.add(children.first);
+//
+//        if(mutation_children_distribution(generator) == 0){
+//
+//            children.first->disturb(distribution(generator));
+//
+//        }
+//
+//        if(population.isExpandable()){
+//
+//            population.add(children.second);
+//
+//            if(mutation_children_distribution(generator) == 0){
+//
+//                children.second->disturb(distribution(generator));
+//
+//            }
+//
+//        } else {
+//
+//            delete children.second;
+//
+//        }                
+//
+//    }
 
 }
 
@@ -142,57 +209,105 @@ _ga_solution* _nsga::reduce_population(const _ga_token& token, std::default_rand
     nds_population(token, population, borders, solution_border_map);
 
     auto rit = borders.rbegin();
+    bool scape = false;
 
-    for(; rit != borders.rend(); ++rit){
-
-        for (auto solution : *rit) {
-
+    for(; rit != borders.rend() && !scape; ++rit){
+        
+        for(auto sit = rit->begin(); sit != rit->end(); /*sit++*/){
+            
             if(population.isReducible()){
 
-                bool result = population.remove(solution);
+                bool result = population.remove(*sit);
 
-                if(!result){
+                if(result){
 
+                    sit = rit->erase(sit);
+
+                } else {
+                    
                     try {
                         std::ostringstream stream;
-                        stream << "remove solution fail: " << solution;
+                        stream << "remove solution fail: " << *sit;
                         MAPD_EXCEPTION(stream.str());
                     } catch (std::exception& e) {
                         std::cout << e.what() << std::endl;
                         std::abort();
                     } 
-
+                    
                 }
 
+            } else {
+                
+                scape = true;
+                break;
+                
             }
-
+            
         }
 
+//        for (auto solution : *rit) {
+//
+//            if(population.isReducible()){
+//
+//                bool result = population.remove(solution);
+//
+//                if(!result){
+//
+//                    try {
+//                        std::ostringstream stream;
+//                        stream << "remove solution fail: " << solution;
+//                        MAPD_EXCEPTION(stream.str());
+//                    } catch (std::exception& e) {
+//                        std::cout << e.what() << std::endl;
+//                        std::abort();
+//                    } 
+//
+//                }
+//
+//            }
+//
+//        }
+
     }
+    
+    _ga_solution* ret = nullptr;
     
     if(!borders.empty()){
         
         if(borders.at(0).size() > 2){
     
             std::map<_ga_solution*, float> solution_distance_map;
-
-            return crowding_distance(token, borders.at(0), solution_distance_map); 
+            
+            ret = crowding_distance(token, borders.at(0), solution_distance_map); 
         
         } if(borders.at(0).size() > 1){
             
             std::uniform_int_distribution<unsigned> distribution(0, 1);
             
-            return borders.at(0).at(distribution(generator));
+            unsigned index = distribution(generator);
+            
+            ret = borders.at(0).at(index);
             
         } if(borders.at(0).size() > 0){
             
-            return borders.at(0).at(0);
+            ret = borders.at(0).at(0);
             
         }
     
+    } else {
+        
+        try {
+            std::ostringstream stream;
+            stream << "empty border";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        } 
+        
     }
     
-    return nullptr;
+    return ret;
 
 }
 
@@ -260,7 +375,7 @@ void _nsga::tournament_selection(
 
                 try {
                     std::ostringstream stream;
-                    stream << "solution not mapped: " << *sb;
+                    stream << "solution not mapped: " << sb;
                     MAPD_EXCEPTION(stream.str());
                 } catch (std::exception& e) {
                     std::cout << e.what() << std::endl;
@@ -343,6 +458,14 @@ _ga_solution* _nsga::crowding_distance(
         if(dit !=  solution_distance_map.end()){
         
             dit->second += dist;
+            
+            if(dit->second > crowding_distance_max){
+                
+                crowding_distance_max = dit->second;
+                
+                ret = dit->first;
+                
+            }
         
         } else {
             
@@ -440,7 +563,7 @@ void _nsga::nds_population(
 
     unsigned border_index = 0;  
 
-    population.listSolutions([border_index, &dominated_count_map, &domination_map, &nextBorder, &solution_border_map, population, token](unsigned index, _ga_solution* solution1){
+    population.listSolutions([border_index, &dominated_count_map, &domination_map, &nextBorder, &solution_border_map, &population, token](unsigned index, _ga_solution* solution1){
 
         auto ins_pair = domination_map.insert(std::pair<_ga_solution*, std::vector<_ga_solution*>>(solution1, std::vector<_ga_solution*>()));
 
@@ -481,13 +604,13 @@ void _nsga::nds_population(
 
     borders.push_back(nextBorder);
 
-    std::vector<_ga_solution*>& currentBorder = borders.at(border_index++);
+    std::vector<_ga_solution*>* currentBorder = &borders.at(border_index++);
 
-    while(!currentBorder.empty()){
+    while(!currentBorder->empty()){
 
         nextBorder.clear();
 
-        for (auto solution1 : currentBorder) {
+        for (auto solution1 : *currentBorder) {
 
             auto dom = domination_map.find(solution1);
 
@@ -496,27 +619,54 @@ void _nsga::nds_population(
                 for (auto solution2 : dom->second) {
 
                     auto s2nit = dominated_count_map.find(solution2);
+                    
+                    if(s2nit != dominated_count_map.end()){
 
-                    unsigned n = s2nit->second - 1;
+                        unsigned n = s2nit->second - 1;
 
-                    s2nit->second = n;
+                        s2nit->second = n;
 
-                    if(n == 0){
+                        if(n == 0){
 
-                        nextBorder.push_back(solution2);    
-                        solution_border_map.insert(std::pair<_ga_solution*, unsigned>(solution2, border_index));
+                            nextBorder.push_back(solution2);    
+                            solution_border_map.insert(std::pair<_ga_solution*, unsigned>(solution2, border_index));
 
+                        }
+                    
+                    } else {
+                        
+                        try {
+                            std::ostringstream stream;
+                            stream << "solution not mapped: " << *solution2;
+                            MAPD_EXCEPTION(stream.str());
+                        } catch (std::exception& e) {
+                            std::cout << e.what() << std::endl;
+                            std::abort();
+                        } 
+                        
                     }
 
                 }
 
+            } else {                
+                
+                try {
+                    std::ostringstream stream;
+                    stream << "solution not mapped: " << *solution1;
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
+                } 
+                
             }
 
         }
 
         borders.push_back(nextBorder);
 
-        currentBorder = borders.at(border_index++);
+        currentBorder = &borders.at(border_index++);       
+        
 
     } 
 

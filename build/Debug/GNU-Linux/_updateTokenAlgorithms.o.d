@@ -10,8 +10,8 @@ build/Debug/GNU-Linux/_updateTokenAlgorithms.o: \
  _distanceAlgorithm.h _endpointsDistanceAlgorithm.h \
  _astarDistanceAlgorithm.h _path.h _astarAlgorithm.h _pathAlgorithm.h \
  ReportTaskMap.h _taskIndexerAlgorithm.h _endpointIndexerAlgorithm.h \
- _updateTaskToAgentAlgorithm.h _updateEndpointToAgentAlgorithm.h \
- _selectEndpointToAgentAlgorithm.h \
+ _ga_agent.h _ga_agent_state.h _updateTaskToAgentAlgorithm.h \
+ _updateEndpointToAgentAlgorithm.h _selectEndpointToAgentAlgorithm.h \
  _selectChargingTaskToAgentThresholdAlgorithm.h \
  _selectTaskToAgentThresholdAlgorithm.h _selectTaskToAgentAlgorithm.h \
  _selectBackwardTaskToAgentAlgorithm.h \
@@ -61,6 +61,8 @@ _pathAlgorithm.h:
 ReportTaskMap.h:
 _taskIndexerAlgorithm.h:
 _endpointIndexerAlgorithm.h:
+_ga_agent.h:
+_ga_agent_state.h:
 _updateTaskToAgentAlgorithm.h:
 _updateEndpointToAgentAlgorithm.h:
 _selectEndpointToAgentAlgorithm.h:

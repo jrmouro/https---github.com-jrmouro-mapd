@@ -36,15 +36,27 @@ public:
     virtual void draw(const Render& render) const;
     
     bool isTaskAssigned()const;
-    bool isDelivering()const;
-    bool isPickuping()const;
+    
+    bool isGoingToDelivering()const;
+    bool isGoingToPickuping()const;
+    bool isGoingToResting()const;
+    bool isGoingToRestPickuping()const;
+    bool isGoingToRestDelivering()const;
+    
+    bool isAtResting()const;
+    bool isAtDelivering()const;
+    bool isAtPickuping()const;
+    bool isAtRestPickuping()const;
+    bool isAtRestDelivering()const;
+    
+    
     bool isAtTrivialPath()const;
     bool isAtEnergyChargedLevel()const;        
     bool isAtEnergyCriticalLevel()const;    
     bool isAtEnergyDeadLevel()const;
     
-    _stepSite getGoalSite()const; 
-    _stepSite getCurrentSite()const;
+    _stepSite goalSite()const; 
+    _stepSite currentSite()const;
     _stepSite getFutureSite()const; 
     const _agent_energy_system& getAgentEnergySystem() const;
 
@@ -53,6 +65,16 @@ public:
     bool updateTaskPath(const _stepPathAlgorithm& astar, _stepMap& map, const _task* const task);
     
     friend std::ostream& operator<<(std::ostream& os, const _ga_agent& obj);
+    
+    bool isFree()const;    
+    bool isBuzy()const;
+    
+    void setStateFree();
+    void setStateBuzy();
+    
+    const _stepSite& previousSite() const {
+        return _previousSite;
+    }
 
         
 private:
@@ -63,6 +85,8 @@ private:
     void assignTask(const _task& task);
     void unassignTask();
     void assignPath(const _stepPath& path);
+    
+    const _stepPath& getPath() const;
     
 private:
     friend class _ga_agent_state;
@@ -76,6 +100,7 @@ private:
     int _id;
     _ga_agent_state* state = nullptr;
     _task* currentTask = nullptr;
+    _stepSite _previousSite;
 //    _stepPath path;
 //    _agent_energy_system agent_energy_system;
 

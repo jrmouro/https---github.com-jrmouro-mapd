@@ -28,8 +28,8 @@ void _ga_agent_state::onDraw(const Render& render, const _ga_agent& agent) const
     }
 
     sf::Vector2f position(
-            agent.getCurrentSite().GetColunm() * render.GetCell().first,
-            agent.getCurrentSite().GetRow() * render.GetCell().second);
+            agent.currentSite().GetColunm() * render.GetCell().first,
+            agent.currentSite().GetRow() * render.GetCell().second);
 
     Circle background(
             position,

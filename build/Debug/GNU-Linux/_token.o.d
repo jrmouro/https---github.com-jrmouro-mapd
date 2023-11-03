@@ -9,9 +9,9 @@ build/Debug/GNU-Linux/_token.o: _token.cpp _token.h Writable.h _map.h \
  _thresholdAlgorithm.h _updateTokenAlgorithms.h \
  _updateTrivialPathToAgentAlgorithm.h _updateToAgentAlgorithm.h \
  _selectTrivialPathToAgentAlgorithm.h _taskPathToAgentAlgorithm.h \
- _taskIndexerAlgorithm.h _endpointIndexerAlgorithm.h \
- _updateTaskToAgentAlgorithm.h _updateEndpointToAgentAlgorithm.h \
- _selectEndpointToAgentAlgorithm.h \
+ _taskIndexerAlgorithm.h _endpointIndexerAlgorithm.h _ga_agent.h \
+ _ga_agent_state.h _updateTaskToAgentAlgorithm.h \
+ _updateEndpointToAgentAlgorithm.h _selectEndpointToAgentAlgorithm.h \
  _selectChargingTaskToAgentThresholdAlgorithm.h \
  _selectTaskToAgentThresholdAlgorithm.h _selectTaskToAgentAlgorithm.h \
  _selectBackwardTaskToAgentAlgorithm.h \
@@ -62,6 +62,8 @@ _selectTrivialPathToAgentAlgorithm.h:
 _taskPathToAgentAlgorithm.h:
 _taskIndexerAlgorithm.h:
 _endpointIndexerAlgorithm.h:
+_ga_agent.h:
+_ga_agent_state.h:
 _updateTaskToAgentAlgorithm.h:
 _updateEndpointToAgentAlgorithm.h:
 _selectEndpointToAgentAlgorithm.h:

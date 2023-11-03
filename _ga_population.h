@@ -39,6 +39,9 @@ public:
     bool isExpandable()const;    
     bool isReducible()const;
     
+    const unsigned getSize_max() const;
+    const unsigned getSize_min() const;
+    
 private:
     
     const unsigned size_max, size_min;

@@ -15,7 +15,7 @@
 
 class _ga_agent;
 
-class _ga_agent_state : public Identifiable<std::string>{
+class _ga_agent_state : public Identifiable<int>{
 public:
     void changeState(_ga_agent&, _ga_agent_state*) const;
     virtual void onDraw(const Render&, const _ga_agent&) const;

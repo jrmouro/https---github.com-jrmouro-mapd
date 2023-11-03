@@ -10,8 +10,8 @@ build/Debug/GNU-Linux/_selectBackwardChargingTaskToAgentAlgorithm.o: \
  _astarDistanceAlgorithm.h _path.h _astarAlgorithm.h _pathAlgorithm.h \
  _stepAstarAlgorithm.h _stepPathAlgorithm.h ReportTaskMap.h \
  _closerCooperatorAgentIndexerAlgorithm.h _endpointIndexerAlgorithm.h \
- _taskPathToAgentAlgorithm.h _taskIndexerAlgorithm.h \
- _thresholdAlgorithm.h
+ _ga_agent.h _ga_agent_state.h _taskPathToAgentAlgorithm.h \
+ _taskIndexerAlgorithm.h _thresholdAlgorithm.h
 _selectBackwardChargingTaskToAgentAlgorithm.h:
 _selectBackwardTaskToAgentAlgorithm.h:
 _token.h:
@@ -47,6 +47,8 @@ _stepPathAlgorithm.h:
 ReportTaskMap.h:
 _closerCooperatorAgentIndexerAlgorithm.h:
 _endpointIndexerAlgorithm.h:
+_ga_agent.h:
+_ga_agent_state.h:
 _taskPathToAgentAlgorithm.h:
 _taskIndexerAlgorithm.h:
 _thresholdAlgorithm.h:

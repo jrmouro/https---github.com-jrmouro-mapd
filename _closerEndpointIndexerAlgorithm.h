@@ -12,6 +12,7 @@
 #include "_token.h"
 
 class _token;
+class _ga_token;
 class _closerEndpointIndexerAlgorithm : public _endpointIndexerAlgorithm{
 public:
     
@@ -23,6 +24,12 @@ public:
     
     virtual void solve(
             const _token& token,
+            const _site& endpoint, 
+            const _site& endpointReference, 
+            std::vector<_site>& siteIndex) const;
+    
+    virtual void ga_solve_to_site(
+            const _ga_token& token,
             const _site& endpoint, 
             const _site& endpointReference, 
             std::vector<_site>& siteIndex) const;

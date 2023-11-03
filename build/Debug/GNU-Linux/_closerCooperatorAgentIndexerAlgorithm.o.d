@@ -8,7 +8,8 @@ build/Debug/GNU-Linux/_closerCooperatorAgentIndexerAlgorithm.o: \
  _distanceAlgorithm.h _endpointsDistanceAlgorithm.h \
  _astarDistanceAlgorithm.h _path.h _astarAlgorithm.h _pathAlgorithm.h \
  _stepAstarAlgorithm.h _stepPathAlgorithm.h ReportTaskMap.h \
- _closerEndpointIndexerAlgorithm.h _endpointIndexerAlgorithm.h
+ _closerEndpointIndexerAlgorithm.h _endpointIndexerAlgorithm.h \
+ _ga_agent.h _ga_agent_state.h
 _closerCooperatorAgentIndexerAlgorithm.h:
 _token.h:
 Writable.h:
@@ -43,3 +44,5 @@ _stepPathAlgorithm.h:
 ReportTaskMap.h:
 _closerEndpointIndexerAlgorithm.h:
 _endpointIndexerAlgorithm.h:
+_ga_agent.h:
+_ga_agent_state.h:

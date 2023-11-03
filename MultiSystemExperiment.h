@@ -157,7 +157,7 @@ public:
                         _ga_token token(*ptoken);
                         
                         GA_SystemExperiment se(
-                                    token.name() + " ;" + mapFilename + " ;" + taskFilename,
+                                    token.name() + "(" + agentsTasksAllocator->id() + ");" + mapFilename + " ;" + taskFilename,
                                     *agentsTasksAllocator,
                                     token,  
                                     itasks->getTaskMap(),

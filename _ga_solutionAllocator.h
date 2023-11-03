@@ -10,9 +10,29 @@
 
 #include "_agentsTasksAllocator.h"
 
+#include <set>
+
+
+class _ga_solution;
+
 class _ga_solutionAllocator : public _agentsTasksAllocator{
+
 public:
-    virtual _allocation* solve(const _ga_token&) const;
+    
+    _ga_solutionAllocator(const std::string id = "witless");
+    
+    _ga_solutionAllocator(const _ga_solutionAllocator& other);
+    
+    virtual ~_ga_solutionAllocator();
+
+    virtual _allocation* borrow(const _ga_token&) ;
+    virtual void giveBack(_allocation*) ;
+    virtual _allocation* borrowClone(_allocation*) ;
+    
+protected:
+    
+    std::set<_ga_solution*> borrowed;
+        
 };
 
 #endif /* _GA_SOLUTIONALLOCATOR_H */

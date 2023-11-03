@@ -8,12 +8,29 @@
 #ifndef _AGENTSTASKSALLOCATOR_H
 #define _AGENTSTASKSALLOCATOR_H
 
+#include "Identifiable.h"
+#include <string>
+
 class _ga_token;
 class _allocation;
 
-class _agentsTasksAllocator {
+class _agentsTasksAllocator : public Identifiable<std::string>{
 public:
-    virtual _allocation* solve(const _ga_token&) const = 0;
+    
+    _agentsTasksAllocator(const std::string id) :  _id(id) {}
+    
+    _agentsTasksAllocator(const _agentsTasksAllocator& other) :  _id(other._id) { }
+
+    virtual _allocation* borrow(const _ga_token&)  = 0;
+    virtual void giveBack(_allocation*)  = 0;
+    virtual _allocation* borrowClone(_allocation*)  = 0;
+    
+    virtual std::string id() const{
+        return _id;
+    }
+    
+private:
+    std::string _id;
 };
 
 #endif /* _AGENTSTASKSALLOCATOR_H */

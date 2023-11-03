@@ -29,17 +29,20 @@ void test(){
 //    thresholds.push_back(std::make_pair(.3f, .5f));
     
     mapFilenames.push_back("./Instances/test/test_2.map");
-//    mapFilenames.push_back("./Instances/test/test_3.map");
-//    mapFilenames.push_back("./Instances/test/test_4.map");  
+    mapFilenames.push_back("./Instances/test/test_3.map");
+    mapFilenames.push_back("./Instances/test/test_4.map");   
     
-    taskFilenames.push_back("./Instances/test/ga_test_1.task");
+    taskFilenames.push_back("./Instances/test/test_1.task");
+    taskFilenames.push_back("./Instances/test/test_4.task");
+       taskFilenames.push_back("./Instances/test/test_7.task");
+          taskFilenames.push_back("./Instances/test/test_20.task");
     
 //    tokenIds.push_back("TP");
 //    tokenIds.push_back("TSTP");
 //    tokenIds.push_back("BTT");
 
     
-    _energy_charge<int> ec_1(200, 200, 150, 30);
+    _energy_charge<int> ec_1(2000, 2000, 1500, 300);
     _energy_charge<int> ec_2(2000, 2000, 1500, 300);
     
     _agent_energy_regime aer_1("R_1", -20, 1, 3, 2, 10);
@@ -54,12 +57,12 @@ void test(){
     tokenIds.push_back("GA");
     _ga_solutionAllocator ga_solutionAllocator;
     _nsga nsga(
-            [](const _ga_solution& solution, unsigned generation){ return generation == 100; },
+            [](const _ga_solution& solution, unsigned generation){ return generation == 10; },
             40,
             20,
             5);
     agentsTasksAllocators.push_back(&ga_solutionAllocator);
-    agentsTasksAllocators.push_back(&nsga);
+//    agentsTasksAllocators.push_back(&nsga);
         
     auto experiment = MultiSystemExperiment(
         resultFile,
@@ -70,7 +73,7 @@ void test(){
         agent_energy_systems,              
         agentsTasksAllocators,
         500,
-        80,                               
+        60,                               
         0);                              
            
 
@@ -134,7 +137,7 @@ void small(){
             [](const _ga_solution& solution, unsigned generation){ return generation == 100; },
             40,
             20,
-            5);
+            3);
     agentsTasksAllocators.push_back(&ga_solutionAllocator);
         
     auto experiment = MultiSystemExperiment(
@@ -147,7 +150,7 @@ void small(){
         agentsTasksAllocators,
         500,
         46,                               
-        100);                              
+        300);                              
            
     experiment.run();
     

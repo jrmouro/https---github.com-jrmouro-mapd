@@ -84,7 +84,7 @@ _ga_population::~_ga_population(){
 
 bool _ga_population::add(_ga_solution* solution){
     
-    if(size_max < solutions.size()){    
+    if(size_max > solutions.size()){    
         auto insit = solutions.insert(solution);
         return insit.second;
     }
@@ -115,6 +115,14 @@ bool _ga_population::remove(_ga_solution* solution){
     
 }
 
+const unsigned _ga_population::getSize_max() const {
+    return size_max;
+}
+
+const unsigned _ga_population::getSize_min() const {
+    return size_min;
+}
+
 bool _ga_population::isExpandable()const{
     return solutions.size() < size_max;
 }
@@ -137,7 +145,7 @@ void _ga_population::listConstSolutions(const std::function<bool(unsigned, const
 void _ga_population::listSolutions(const std::function<bool(unsigned, _ga_solution*)> function) const{
     
     unsigned index = 0;
-    for (auto solution : solutions) {
+    for (auto &solution : solutions) {
 
         if(function(index++, solution))break;
         

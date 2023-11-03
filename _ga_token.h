@@ -39,9 +39,11 @@ public:
     virtual void draw(const Render&) const;
     
     void addPendingTask(const _task&);
+    void listNonTaskEndpoints(const std::function<bool(const _site&)> function)const;
     
     bool updateAgentTaskPath(int, int);
-        
+    
+            
     void listPendingTasks(const std::function<bool(unsigned, const _task&)> function) const;    
     void listAgents(const std::function<bool(_ga_agent&)> function);
     void listConstAgents(const std::function<bool(unsigned, const _ga_agent&)> function) const;
@@ -74,16 +76,40 @@ public:
     unsigned getPendingTaskAmount()const;
     
     unsigned getFinishedTaskAmount()const;
-
+    
+    void error_site_collision_check() const;
+    void error_edge_collision_check() const;
     
 private:
     const _map& map;
     _stepMap stepMap;
+    std::map<unsigned, _site> nonTaskEndpoints;
     std::map<int, _task> pendingTasks, assignedTasks, runningTasks, finishedTasks;
     std::map<int, _ga_agent> agents;
     std::map<int, int> assignTaskAgent;
     const _agent_energy_system agent_energy_system;
     unsigned currentStep = 0;
+    
+//    bool updateAgentRestPath(_ga_agent&);
+    bool updateAgentRestPathCloserEndpoint(_ga_agent&, const _site&);
+//    bool updateAgentPickupRestPath(_ga_agent&);
+    
+    bool updateAgentTaskPath_resting(_ga_agent&, int);
+    bool updateAgentTaskPath_going_to_resting(_ga_agent&, int);
+    bool updateAgentTaskPath_pickuping(_ga_agent&, int);
+    bool updateAgentTaskPath_going_to_pickuping(_ga_agent&, int);
+    bool updateAgentTaskPath_going_to_rest_pickuping(_ga_agent&, int);
+    bool updateAgentTaskPath_going_to_rest_pickuping_to_pickuping(_ga_agent&, int);
+    bool updateAgentTaskPath_delivering(_ga_agent&, int);
+    bool updateAgentTaskPath_rest_pickuping(_ga_agent&, int);
+    bool updateAgentTaskPath_rest_delivering(_ga_agent&);
+    bool updateAgentTaskPath_going_to_rest_delivering_to_delivering(_ga_agent&, int);
+    
+    
+    _ga_agent* endpointObstruction(const _ga_agent& agent, const _site& endpoint);
+    
+//    bool liberateEndpoint(const _ga_agent& agent, const _site& endpoint);
+    
 };
 
 #endif /* _GA_TOKEN_H */

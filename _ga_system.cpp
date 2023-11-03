@@ -14,24 +14,27 @@
 #include "_allocation.h"
 #include "_ga_solution.h"
 
-_ga_system::_ga_system(const _agentsTasksAllocator& agentsTasksAllocator) :
+_ga_system::_ga_system(_agentsTasksAllocator& agentsTasksAllocator) :
                 agentsTasksAllocator(agentsTasksAllocator){}
                 
 _ga_system::_ga_system(const _ga_system& other) :  
             agentsTasksAllocator(other.agentsTasksAllocator){
     if(other.allocation != nullptr)
-        allocation = other.allocation->clone();
+        allocation = other.agentsTasksAllocator.borrowClone(other.allocation);
 }
 
 _ga_system::~_ga_system(){
                 
-    if(allocation != nullptr) delete (_ga_solution*)allocation;
+    if(allocation != nullptr) agentsTasksAllocator.giveBack(allocation);
     
 }
 
 bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){ 
     
     if(token.getCurrentStep() < token.getStepMap().getStep_size() && !(taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())){
+        
+        token.error_site_collision_check();
+        token.error_edge_collision_check();
         
         bool addNewTask = false;
         
@@ -47,15 +50,19 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
         
         if(allocation == nullptr){
 
-            allocation = agentsTasksAllocator.solve(token);
+            allocation = agentsTasksAllocator.borrow(token);
+            
+//            std::cout << "solution: " << *((_ga_solution*)allocation) << std::endl;
 
         } else {
 
             if(addNewTask || !allocation->isValid()){
 
-                delete allocation;
+                agentsTasksAllocator.giveBack(allocation);
               
-                allocation = agentsTasksAllocator.solve(token);
+                allocation = agentsTasksAllocator.borrow(token);
+                
+//                std::cout << "solution: " << *((_ga_solution*)allocation) << std::endl;
 
            } 
 
@@ -89,6 +96,9 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
         
     while(token.getCurrentStep() < token.getStepMap().getStep_size() && !(taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())){
         
+        token.error_site_collision_check();
+        token.error_edge_collision_check();
+        
         bool addNewTask = false;
         
         taskMap.listTasksByStep(token.getCurrentStep(), [&token, &addNewTask](const _task& task){
@@ -103,15 +113,19 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
         
         if(allocation == nullptr){
 
-            allocation = agentsTasksAllocator.solve(token);
+            allocation = agentsTasksAllocator.borrow(token);
+            
+//            std::cout << "solution: " << *((_ga_solution*)allocation) << std::endl;
 
         } else {
 
             if(addNewTask || !allocation->isValid()){
 
-                delete allocation;
+                agentsTasksAllocator.giveBack(allocation);
 
-                allocation = agentsTasksAllocator.solve(token);
+                allocation = agentsTasksAllocator.borrow(token);
+                
+//                std::cout << "solution: " << *((_ga_solution*)allocation) << std::endl;
 
            } 
 

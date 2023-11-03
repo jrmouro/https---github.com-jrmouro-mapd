@@ -11,7 +11,7 @@
 
 GA_SystemExperiment::GA_SystemExperiment(
         const std::string id, 
-        const _agentsTasksAllocator& agentsTasksAllocator,
+        _agentsTasksAllocator& agentsTasksAllocator,
         _ga_token& token, 
         const _taskMap& taskMap,
         unsigned cell_size, 

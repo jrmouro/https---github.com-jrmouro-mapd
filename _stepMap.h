@@ -416,7 +416,51 @@ public:
 
             });
         
+        } else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "empty path";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
         }
+        
+    }
+    
+    void joinMoving(const _stepPath& currentPath, const _stepPath& newPath,int type){
+        
+        if(!newPath.empty()){
+            
+            auto goal = currentPath.goalSite();
+            this->setTypesFrom(goal.GetStep() + 1, goal.GetRow(), goal.GetColunm(), type, NodeType::freeNode);
+        
+            setMoving(newPath, type);
+        
+        } else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "empty path";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }
+        
+    }
+    
+    
+    
+    void resetMoving(const _stepPath& currentPath, const _stepPath& newPath,int type){
+        
+        deleteMoving(currentPath, type);
+        setMoving(newPath, type);
         
     }
     
@@ -424,11 +468,9 @@ public:
         
         if(!path.empty()){
         
-            auto current = path.currentSite();
             auto goal = path.goalSite();
-            this->setTypesFrom(goal.GetStep(), goal.GetRow(), goal.GetColunm(), type, NodeType::freeNode);        
-
-
+            this->setTypesFrom(goal.GetStep(), goal.GetRow(), goal.GetColunm(), type, NodeType::freeNode);      
+            
             path.movingList([this](const _stepSite& s, const _stepSite& g){
 
                 this->setNodeType(s, NodeType::freeNode);
@@ -438,9 +480,18 @@ public:
 
             });
             
-//            this->setNodeType(current, type);
-            this->setTypesFrom(current.GetStep(), current.GetRow(), current.GetColunm(), NodeType::freeNode, type);  
         
+        } else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "empty path";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
         }
         
     }

@@ -16,8 +16,9 @@ public:
     static _ga_agent_state* getInstance();
     
     virtual ~_ga_agent_state_free();
-    virtual std::string id() const;
+    virtual int id() const;
     
+    virtual void onDraw(const Render&, const _ga_agent&) const;
     virtual void onStepping(const _map&, _ga_agent&) const;
     
 protected:

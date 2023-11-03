@@ -357,11 +357,17 @@ private:
             
             visitedStates.push_back(current);
             
-            if(goal.GetRow() == current->getSite().GetRow() && goal.GetColunm() == current->getSite().GetColunm()){
+            if(goal.match(current->getSite()) && map.isPathDefinitelyFree(current->getSite(), type)){
                         
                 return current;
 
             }
+            
+//            if(goal.GetRow() == current->getSite().GetRow() && goal.GetColunm() == current->getSite().GetColunm()){
+//                        
+//                return current;
+//
+//            }
             
             map.listNeighborFreePaths(current->getSite(), type, [type, current, goal, &closedStates, &priorityStates, this](const _stepSite& site){
             

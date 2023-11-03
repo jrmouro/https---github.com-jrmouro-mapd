@@ -23,7 +23,7 @@ class _allocation;
 class _ga_system {
 public:
     
-    _ga_system(const _agentsTasksAllocator&);
+    _ga_system(_agentsTasksAllocator&);
                 
     _ga_system(const _ga_system&);
     
@@ -36,7 +36,7 @@ public:
 private:
     
     _allocation* allocation = nullptr;    
-    const _agentsTasksAllocator& agentsTasksAllocator;   
+    _agentsTasksAllocator& agentsTasksAllocator;   
 
 };
 

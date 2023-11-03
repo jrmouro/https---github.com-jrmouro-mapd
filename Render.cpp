@@ -31,6 +31,7 @@ void Render::loop(unsigned elapse, std::function<void()> update){
     
     sf::Clock clock;
     sf::Time time = sf::milliseconds(0);
+    
         
     while (window->isOpen()){
         
@@ -53,8 +54,9 @@ void Render::loop(unsigned elapse, std::function<void()> update){
 
         window->display();
         
-        this->elapsed = clock.restart();
-        time += this->elapsed;
+//        this->elapsed = clock.restart();
+        sf::Time current = clock.restart();
+        time += current;
         if(time > sf::milliseconds(elapse)){
             time = time - sf::milliseconds(elapse);
             update();

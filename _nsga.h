@@ -16,14 +16,14 @@
 #include <functional>
 #include <random>
 
-#include "_agentsTasksAllocator.h"
+#include "_ga_solutionAllocator.h"
 
 class _ga_token;
 class _ga_population;
 class _ga_solution;
 class _allocation;
 
-class _nsga : public _agentsTasksAllocator{
+class _nsga : public _ga_solutionAllocator{
     
 public:
     
@@ -37,7 +37,7 @@ public:
             
     _nsga(const _nsga& other);
 
-    virtual _allocation* solve(const _ga_token& token) const;   
+    virtual _allocation* borrow(const _ga_token& token) ;   
     
     void setSeed(unsigned seed) {
         this->seed = seed;

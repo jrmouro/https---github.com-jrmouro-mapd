@@ -146,8 +146,8 @@ void agentsCrossover(
 
     if(parentA.isConsistentWith(parentB)){
 
-        childA.clearResize(parentA.agents.size(), -1);
-        childB.clearResize(parentA.agents.size(), -1);
+        childA.clearResize(parentA.agents.size(), 0);
+        childB.clearResize(parentA.agents.size(), 0);
         
         std::set<const _ga_agent*> agentsSetA, agentsSetB;
         
@@ -166,6 +166,8 @@ void agentsCrossover(
             agentsSetB.insert(paB);            
 
         }   
+        
+        int l = i;
                 
         for(int j = 0; j < parentA.agents.size(); j++){
             
@@ -175,11 +177,9 @@ void agentsCrossover(
             auto ita = agentsSetA.find(paB);
             auto itb = agentsSetB.find(paA);
             
-            if(ita == agentsSetA.end()) childA.agents[i] = paB;
-            if(itb == agentsSetB.end()) childB.agents[i] = paA;
-            
-            i++;
-            
+            if(ita == agentsSetA.end()) childA.agents[l++] = paB;
+            if(itb == agentsSetB.end()) childB.agents[i++] = paA;
+                        
         }
 
     } else {
@@ -205,8 +205,8 @@ void tasksCrossover(
 
     if(parentA.isConsistentWith(parentB)){
 
-        childA.clearResize(-1, parentA.tasks.size());
-        childB.clearResize(-1, parentA.tasks.size());
+        childA.clearResize(0, parentA.tasks.size());
+        childB.clearResize(0, parentA.tasks.size());
         
         std::set<const _task*> tasksSetA, tasksSetB;
         
@@ -224,7 +224,9 @@ void tasksCrossover(
             tasksSetA.insert(paA);
             tasksSetB.insert(paB);            
 
-        }   
+        } 
+        
+        int l = i;
                 
         for(int j = 0; j < parentA.tasks.size(); j++){
             
@@ -234,10 +236,9 @@ void tasksCrossover(
             auto ita = tasksSetA.find(paB);
             auto itb = tasksSetB.find(paA);
             
-            if(ita == tasksSetA.end()) childA.tasks[i] = paB;
-            if(itb == tasksSetB.end()) childB.tasks[i] = paA;
+            if(ita == tasksSetA.end()) childA.tasks[i++] = paB;
+            if(itb == tasksSetB.end()) childB.tasks[l++] = paA;
             
-            i++;
             
         }
 

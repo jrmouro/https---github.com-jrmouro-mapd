@@ -8,7 +8,7 @@ build/Debug/GNU-Linux/_chargingTaskToAgentAlgorithm.o: \
  _endpointsDistanceAlgorithm.h _astarDistanceAlgorithm.h _path.h \
  _astarAlgorithm.h _pathAlgorithm.h _stepAstarAlgorithm.h \
  _stepPathAlgorithm.h ReportTaskMap.h _taskPathToAgentAlgorithm.h \
- _endpointIndexerAlgorithm.h
+ _endpointIndexerAlgorithm.h _ga_agent.h _ga_agent_state.h
 _chargingTaskToAgentAlgorithm.h:
 _token.h:
 Writable.h:
@@ -43,3 +43,5 @@ _stepPathAlgorithm.h:
 ReportTaskMap.h:
 _taskPathToAgentAlgorithm.h:
 _endpointIndexerAlgorithm.h:
+_ga_agent.h:
+_ga_agent_state.h:

@@ -224,7 +224,7 @@ std::ostream& operator<<(std::ostream& os, const _ga_solution& obj) {
 
             for(auto task: alloc.second){
 
-                os << *task << ", ";
+                os << task->id() << ", ";
 
             }
 
@@ -254,7 +254,7 @@ void _ga_solution::alloc(const _ga_token& token){
 
     for (const _ga_agent* agent : agents) {
 
-        _stepSite goal = agent->getGoalSite();
+        _stepSite goal = agent->goalSite();
         
         if(makespan < goal.GetStep()){
             

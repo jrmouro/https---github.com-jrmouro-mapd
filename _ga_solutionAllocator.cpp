@@ -8,9 +8,84 @@
 #include "_ga_solutionAllocator.h"
 #include "_ga_solution.h"
 
-
-_allocation* _ga_solutionAllocator::solve(const _ga_token& token) const{
+_ga_solutionAllocator::_ga_solutionAllocator(const std::string id) : _agentsTasksAllocator(id) { }
     
-    return new _ga_solution(token);
+_ga_solutionAllocator::_ga_solutionAllocator(const _ga_solutionAllocator& other) : _agentsTasksAllocator(other) { }
+    
+
+_ga_solutionAllocator::~_ga_solutionAllocator(){
+    
+    for (auto solution : borrowed) {
+
+        delete solution;
+        
+    }
+
+}
+    
+_allocation* _ga_solutionAllocator::borrow(const _ga_token& token) {
+    
+    _ga_solution* ret = new _ga_solution(token);
+    ret->evaluate(token);
+    
+    borrowed.insert(ret);
+    
+    return ret;
+    
+}
+
+void _ga_solutionAllocator::giveBack(_allocation* allocation) {
+    
+    std::set<_ga_solution*>::iterator it = borrowed.find((_ga_solution*)allocation);
+    
+    if(it != borrowed.end()){
+        
+        _ga_solution* solution = *it;
+                
+        borrowed.erase(it);
+        
+        delete solution;
+        
+    } else {
+        
+        try {
+            std::ostringstream stream;
+            stream << "unrecognized allocation";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+    }
+    
+}
+
+_allocation* _ga_solutionAllocator::borrowClone(_allocation* allocation) {
+    
+    std::set<_ga_solution*>::iterator it = borrowed.find((_ga_solution*)allocation);
+    
+    if(it != borrowed.end()){
+        
+        _ga_solution* solution = (_ga_solution*)(*it)->clone();   
+        
+        borrowed.insert(solution);
+                
+        return solution;
+        
+    } else {
+        
+        try {
+            std::ostringstream stream;
+            stream << "unrecognized allocation";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+    }  
+    
+    return nullptr;
     
 }
