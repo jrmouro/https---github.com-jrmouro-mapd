@@ -16,12 +16,23 @@ _nsga::_nsga(
     const std::function<bool(const _ga_solution&, unsigned)>& stopCondition,
     unsigned population_size_max, 
     unsigned population_size_min, 
+    unsigned solution_validity,
+    float population_mutation_rate,
+    float agents_crossover_point_rate,
+    float tasks_crossover_point_rate,
+    float agents_mutation_rate,
+    float tasks_mutation_rate,
     unsigned mutation_children_distribution_size,
     unsigned generic_distribution_size,        
     unsigned seed) :
-        _ga_solutionAllocator("NSGA-II"),
+        _ga_solutionAllocator(solution_validity, "NSGA-II"),
         population_size_max(population_size_max), 
         population_size_min(population_size_min), 
+        population_mutation_rate(population_mutation_rate),
+        agents_crossover_point_rate(agents_crossover_point_rate),
+        tasks_crossover_point_rate(tasks_crossover_point_rate),
+        agents_mutation_rate(agents_mutation_rate),
+        tasks_mutation_rate(tasks_mutation_rate),
         mutation_children_distribution_size(mutation_children_distribution_size),
         generic_distribution_size(generic_distribution_size),
         stopCondition(stopCondition),
@@ -31,6 +42,11 @@ _nsga::_nsga(const _nsga& other) :
         _ga_solutionAllocator(other),
         population_size_max(other.population_size_max), 
         population_size_min(other.population_size_min), 
+        population_mutation_rate(other.population_mutation_rate),
+        agents_crossover_point_rate(other.agents_crossover_point_rate),
+        tasks_crossover_point_rate(other.tasks_crossover_point_rate),
+        agents_mutation_rate(other.agents_mutation_rate),
+        tasks_mutation_rate(other.tasks_mutation_rate),
         mutation_children_distribution_size(other.mutation_children_distribution_size), 
         generic_distribution_size(other.generic_distribution_size), 
         seed(other.seed), 
@@ -39,7 +55,7 @@ _nsga::_nsga(const _nsga& other) :
 
 _allocation* _nsga::borrow(const _ga_token& token) {
 
-    _ga_solution* solution = new _ga_solution();
+    _ga_solution* solution = new _ga_solution(token, solution_validity); // TODO greedy?
 
     solve(token, *solution);
     
@@ -47,6 +63,16 @@ _allocation* _nsga::borrow(const _ga_token& token) {
 
     return solution;
 
+}
+
+_allocation* _nsga::restore(const _ga_token& token, _allocation* allocation){
+    
+    ((_ga_solution*)allocation)->restore(token);
+    
+    solve(token, *((_ga_solution*)allocation));
+    
+    return allocation;
+    
 }
 
 void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
@@ -57,20 +83,25 @@ void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
     
     unsigned generation = 0;
 
-    _ga_solution greedy(token); //TODO        
+//    _ga_solution greedy(token, solution_validity); //TODO        
 
-    _ga_solution* best = &greedy;
+    _ga_solution* best = &solution;
 
-    _ga_population population(greedy, generator, population_size_max, population_size_min);
+    _ga_population population(*best, generator, population_size_max, population_size_min);
     
     while(!stopCondition(*best, generation++)){
         
 //        std::cout << "generation: " << generation << std::endl;
 //        std::cout << "solution: " << *best << std::endl;
 
-        expand_population(token, generator, population);
+        expand_population(token, *best, generator, population);
 
         best = reduce_population(token, generator, population);
+        
+//        std::cout << "generation: " << generation << std::endl;
+//        std::cout << "Polulation: " << std::endl << population << std::endl;        
+//        std::cout << "solution: " << *best << std::endl;
+//        std::cout << std::endl;
         
         if(best == nullptr){
             
@@ -87,39 +118,15 @@ void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
 
     }
 
-//    while(true){
-//        
-//        std::cout << "generation: " << generation << std::endl;
-//        std::cout << "solution: " << *best << std::endl;
-//
-//        expand_population(token, generator, population);
-//
-//        best = reduce_population(token, generator, population);
-//        
-//        if(best != nullptr){
-//
-//            if(stopCondition(*best, generation++)) break;
-//        
-//        } else {
-//            
-//            try {
-//                std::ostringstream stream;
-//                stream << "nill solution fail";
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            } 
-//            
-//        }
-//
-//    }
-
     solution = *best;
 
 }
 
-void _nsga::expand_population(const _ga_token& token, std::default_random_engine& generator, _ga_population& population) const {
+void _nsga::expand_population(
+        const _ga_token& token, 
+        const _ga_solution& solution,
+        std::default_random_engine& generator, 
+        _ga_population& population) const {
 
     std::uniform_int_distribution<unsigned> distribution(0, generic_distribution_size);
     std::uniform_int_distribution<unsigned> mutation_children_distribution(0, mutation_children_distribution_size);
@@ -129,20 +136,57 @@ void _nsga::expand_population(const _ga_token& token, std::default_random_engine
     nds_population(token, population, borders, solution_border_map);
     
     unsigned n_children = population.getSize_max() - population.getSize_min();
+    unsigned agentsCrossoverPoint = solution.agentsSize() * agents_crossover_point_rate;        
+    unsigned tasksCrossoverPoint = solution.tasksSize() * tasks_crossover_point_rate;
+    unsigned pop_mutation_size = population.getSize_min() * population_mutation_rate;
+    unsigned agents_mutation_size = solution.agentsSize() * agents_mutation_rate;
+    unsigned tasks_mutation_size = solution.tasksSize() * tasks_mutation_rate;
     
     std::vector<_ga_solution*> children_pool(n_children, nullptr);
     
     for (int i = 0; i < n_children; i = i + 2) {
         
-        auto parents = crossover_select_parents(token, population,  generator, solution_border_map);
+        auto parents = crossover_select_parents(token, population,  generator, solution_border_map);       
 
-        auto children = parents.first->get_crossover(*parents.second);
+        auto children = parents.first->get_crossover(*parents.second, agentsCrossoverPoint, tasksCrossoverPoint);
         
         children_pool[i] = children.first;
         
         if(i + 1 < n_children){
             
             children_pool[i + 1] = children.second;
+            
+        }
+        
+    }
+    
+    for(int i = 0; i < pop_mutation_size; i++){
+           
+        
+        if(!children_pool.empty()){
+            
+            std::uniform_int_distribution<unsigned> distribution(0, children_pool.size() - 1);
+            
+            unsigned index =  distribution(generator);
+            
+            std::vector<_ga_solution*>::iterator it = children_pool.begin() + index;
+            
+            (*it)->disturb(agents_mutation_size, tasks_mutation_size, generator);
+            
+            if(!population.add(*it)){
+            
+                try {
+                    std::ostringstream stream;
+                    stream << "add solution fail: " << *it;
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
+                }
+
+            }
+            
+            children_pool.erase(it);
             
         }
         
@@ -164,40 +208,6 @@ void _nsga::expand_population(const _ga_token& token, std::default_random_engine
         }
 
     }
-
-
-
-//    while(population.isExpandable()){
-//
-//        auto parents = crossover_select_parents(token, population,  generator, solution_border_map);
-//
-//        auto children = parents.first->get_crossover(*parents.second);
-//
-//        population.add(children.first);
-//
-//        if(mutation_children_distribution(generator) == 0){
-//
-//            children.first->disturb(distribution(generator));
-//
-//        }
-//
-//        if(population.isExpandable()){
-//
-//            population.add(children.second);
-//
-//            if(mutation_children_distribution(generator) == 0){
-//
-//                children.second->disturb(distribution(generator));
-//
-//            }
-//
-//        } else {
-//
-//            delete children.second;
-//
-//        }                
-//
-//    }
 
 }
 
@@ -244,29 +254,6 @@ _ga_solution* _nsga::reduce_population(const _ga_token& token, std::default_rand
             }
             
         }
-
-//        for (auto solution : *rit) {
-//
-//            if(population.isReducible()){
-//
-//                bool result = population.remove(solution);
-//
-//                if(!result){
-//
-//                    try {
-//                        std::ostringstream stream;
-//                        stream << "remove solution fail: " << solution;
-//                        MAPD_EXCEPTION(stream.str());
-//                    } catch (std::exception& e) {
-//                        std::cout << e.what() << std::endl;
-//                        std::abort();
-//                    } 
-//
-//                }
-//
-//            }
-//
-//        }
 
     }
     
@@ -323,7 +310,8 @@ std::pair<_ga_solution*, _ga_solution*> _nsga::crossover_select_parents(
     tournament_selection(token, population, solution_border_map, generator, &solutionB);
 
 
-    while(solutionA == solutionB){
+    unsigned count = 3;
+    while(solutionA == solutionB && count-- > 0){
 
         tournament_selection(token, population, solution_border_map, generator, &solutionB);     
 

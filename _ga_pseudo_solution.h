@@ -8,6 +8,7 @@
 #ifndef _GA_PSEUDO_SOLUTION_H
 #define _GA_PSEUDO_SOLUTION_H
 
+#include <random>
 #include "_ga_token.h"
 
 
@@ -29,12 +30,13 @@ public:
     
     friend std::ostream& operator<<(std::ostream& os, const _ga_pseudo_solution& obj);
 
-
+    unsigned agentsSize()const;    
+    unsigned tasksSize()const;
     
 protected:
     
-    virtual void disturb(unsigned, unsigned, unsigned);  
-    virtual void disturb(unsigned); 
+    virtual void disturb(unsigned, unsigned, std::default_random_engine&);  
+    virtual void disturb(std::default_random_engine&); 
     
     void swapAgentsByIndexes(unsigned indexAgentA, unsigned indexAgentB);    
     void swapTasksByIndexes(unsigned indexTaskA, unsigned indexTaskB);
@@ -50,7 +52,9 @@ protected:
         const _ga_pseudo_solution& parentA,
         const _ga_pseudo_solution& parentB, 
         _ga_pseudo_solution& childA, 
-        _ga_pseudo_solution& childB);
+        _ga_pseudo_solution& childB,
+        unsigned agentsCrossoverPoint,
+        unsigned tasksCrossoverPoint);
     
     void reset(const _ga_token& token);    
     bool empty() const;    
@@ -62,13 +66,15 @@ protected:
         const _ga_pseudo_solution& parentA,
         const _ga_pseudo_solution& parentB, 
         _ga_pseudo_solution& childA, 
-        _ga_pseudo_solution& childB);
+        _ga_pseudo_solution& childB,
+        unsigned crossoverPoint);
     
     friend void tasksCrossover(
         const _ga_pseudo_solution& parentA,
         const _ga_pseudo_solution& parentB, 
         _ga_pseudo_solution& childA, 
-        _ga_pseudo_solution& childB);
+        _ga_pseudo_solution& childB,
+        unsigned crossoverPoint);
             
     std::vector<const _ga_agent*> agents;
     std::vector<const _task*> tasks;

@@ -21,6 +21,14 @@ _ga_pseudo_solution::_ga_pseudo_solution(const _ga_pseudo_solution& other) :
         agents(other.agents), tasks(other.tasks) {}
 
 _ga_pseudo_solution::~_ga_pseudo_solution(){}
+
+unsigned _ga_pseudo_solution::agentsSize()const{
+    return agents.size();
+}
+
+unsigned _ga_pseudo_solution::tasksSize()const{
+    return tasks.size();
+}
       
 void _ga_pseudo_solution::swapAgentsByIndexes(unsigned indexAgentA, unsigned indexAgentB){
 
@@ -116,12 +124,14 @@ void crossover(
     const _ga_pseudo_solution& parentA,
     const _ga_pseudo_solution& parentB, 
     _ga_pseudo_solution& childA, 
-    _ga_pseudo_solution& childB){
+    _ga_pseudo_solution& childB,
+    unsigned agentsCrossoverPoint,
+    unsigned tasksCrossoverPoint){
 
     if(parentA.isConsistentWith(parentB)){
 
-        agentsCrossover(parentA, parentB, childA, childB);
-        tasksCrossover(parentA, parentB, childA, childB);
+        agentsCrossover(parentA, parentB, childA, childB, agentsCrossoverPoint);
+        tasksCrossover(parentA, parentB, childA, childB, tasksCrossoverPoint);
 
     } else {
 
@@ -142,58 +152,63 @@ void agentsCrossover(
     const _ga_pseudo_solution& parentA,
     const _ga_pseudo_solution& parentB, 
     _ga_pseudo_solution& childA, 
-    _ga_pseudo_solution& childB){
+    _ga_pseudo_solution& childB,
+    unsigned crossoverPoint){
+    
+    if(!parentA.agents.empty()){
 
-    if(parentA.isConsistentWith(parentB)){
+        if(parentA.isConsistentWith(parentB)){
 
-        childA.clearResize(parentA.agents.size(), 0);
-        childB.clearResize(parentA.agents.size(), 0);
-        
-        std::set<const _ga_agent*> agentsSetA, agentsSetB;
-        
-        int size = parentA.agents.size()/2;
+            childA.clearResize(parentA.agents.size(), 0);
+            childB.clearResize(parentA.agents.size(), 0);
 
-        int i = 0;
-        for(; i < size; i++){
-            
-            auto paA = parentA.agents[i];
-            auto paB = parentB.agents[i];
-            
-            childA.agents[i] = paA;
-            childB.agents[i] = paB;
-            
-            agentsSetA.insert(paA);
-            agentsSetB.insert(paB);            
+            std::set<const _ga_agent*> agentsSetA, agentsSetB;
+
+            int size = crossoverPoint % parentA.agents.size();
+
+            int i = 0;
+            for(; i < size; i++){
+
+                auto paA = parentA.agents[i];
+                auto paB = parentB.agents[i];
+
+                childA.agents[i] = paA;
+                childB.agents[i] = paB;
+
+                agentsSetA.insert(paA);
+                agentsSetB.insert(paB);            
+
+            }   
+
+            int l = i;
+
+            for(int j = 0; j < parentA.agents.size(); j++){
+
+                auto paA = parentA.agents[j];
+                auto paB = parentB.agents[j];
+
+                auto ita = agentsSetA.find(paB);
+                auto itb = agentsSetB.find(paA);
+
+                if(ita == agentsSetA.end()) childA.agents[l++] = paB;
+                if(itb == agentsSetB.end()) childB.agents[i++] = paA;
+
+            }
+
+        } else {
+
+            try {
+                std::ostringstream stream;
+                stream << "inconsistent pseudo solutions";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
 
         }   
-        
-        int l = i;
-                
-        for(int j = 0; j < parentA.agents.size(); j++){
-            
-            auto paA = parentA.agents[j];
-            auto paB = parentB.agents[j];
-            
-            auto ita = agentsSetA.find(paB);
-            auto itb = agentsSetB.find(paA);
-            
-            if(ita == agentsSetA.end()) childA.agents[l++] = paB;
-            if(itb == agentsSetB.end()) childB.agents[i++] = paA;
-                        
-        }
-
-    } else {
-
-        try {
-            std::ostringstream stream;
-            stream << "inconsistent pseudo solutions";
-            MAPD_EXCEPTION(stream.str());
-        } catch (std::exception& e) {
-            std::cout << e.what() << std::endl;
-            std::abort();
-        }
-
-    }           
+    
+    }
 
 }
 
@@ -201,67 +216,70 @@ void tasksCrossover(
     const _ga_pseudo_solution& parentA,
     const _ga_pseudo_solution& parentB, 
     _ga_pseudo_solution& childA, 
-    _ga_pseudo_solution& childB){
+    _ga_pseudo_solution& childB,
+    unsigned crossoverPoint){
+    
+    if(!parentA.tasks.empty()){
 
-    if(parentA.isConsistentWith(parentB)){
+        if(parentA.isConsistentWith(parentB)){
 
-        childA.clearResize(0, parentA.tasks.size());
-        childB.clearResize(0, parentA.tasks.size());
-        
-        std::set<const _task*> tasksSetA, tasksSetB;
-        
-        int size = parentA.tasks.size()/2;
+            childA.clearResize(0, parentA.tasks.size());
+            childB.clearResize(0, parentA.tasks.size());
 
-        int i = 0;
-        for(; i < size; i++){
-            
-            auto paA = parentA.tasks[i];
-            auto paB = parentB.tasks[i];
-            
-            childA.tasks[i] = paA;
-            childB.tasks[i] = paB;
-            
-            tasksSetA.insert(paA);
-            tasksSetB.insert(paB);            
+            std::set<const _task*> tasksSetA, tasksSetB;
 
-        } 
-        
-        int l = i;
-                
-        for(int j = 0; j < parentA.tasks.size(); j++){
-            
-            auto paA = parentA.tasks[j];
-            auto paB = parentB.tasks[j];
-            
-            auto ita = tasksSetA.find(paB);
-            auto itb = tasksSetB.find(paA);
-            
-            if(ita == tasksSetA.end()) childA.tasks[i++] = paB;
-            if(itb == tasksSetB.end()) childB.tasks[l++] = paA;
-            
-            
-        }
+            int size = crossoverPoint % parentA.tasks.size();
 
-    } else {
+            int i = 0;
+            for(; i < size; i++){
 
-        try {
-            std::ostringstream stream;
-            stream << "inconsistent pseudo solutions";
-            MAPD_EXCEPTION(stream.str());
-        } catch (std::exception& e) {
-            std::cout << e.what() << std::endl;
-            std::abort();
-        }
+                auto paA = parentA.tasks[i];
+                auto paB = parentB.tasks[i];
 
-    }           
+                childA.tasks[i] = paA;
+                childB.tasks[i] = paB;
+
+                tasksSetA.insert(paA);
+                tasksSetB.insert(paB);            
+
+            } 
+
+            int l = i;
+
+            for(int j = 0; j < parentA.tasks.size(); j++){
+
+                auto paA = parentA.tasks[j];
+                auto paB = parentB.tasks[j];
+
+                auto ita = tasksSetA.find(paB);
+                auto itb = tasksSetB.find(paA);
+
+                if(ita == tasksSetA.end()) childA.tasks[i++] = paB;
+                if(itb == tasksSetB.end()) childB.tasks[l++] = paA;
+
+
+            }
+
+        } else {
+
+            try {
+                std::ostringstream stream;
+                stream << "inconsistent pseudo solutions";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+
+        }  
+    
+    }
 
 }
 
-void _ga_pseudo_solution::disturb(unsigned agents_size, unsigned task_size, unsigned seed){
+void _ga_pseudo_solution::disturb(unsigned agents_size, unsigned task_size, std::default_random_engine& generator){
     
-    std::default_random_engine generator1(seed);
-    std::default_random_engine generator2(seed+1);
-
+    
     std::uniform_int_distribution<unsigned> distribution1(0, agents.size());
     std::uniform_int_distribution<unsigned> distribution2(0, tasks.size());
         
@@ -269,13 +287,13 @@ void _ga_pseudo_solution::disturb(unsigned agents_size, unsigned task_size, unsi
     
     while(swapAgentsSet.size() < agents_size){
         
-        swapAgentsSet.insert(distribution1(generator1));
+        swapAgentsSet.insert(distribution1(generator));
         
     }
     
     while(swapTasksSet.size() < task_size){
         
-        swapTasksSet.insert(distribution2(generator2));
+        swapTasksSet.insert(distribution2(generator));
         
     }
 
@@ -283,25 +301,22 @@ void _ga_pseudo_solution::disturb(unsigned agents_size, unsigned task_size, unsi
     
 }
 
-void _ga_pseudo_solution::disturb(unsigned seed){
+void _ga_pseudo_solution::disturb(std::default_random_engine& generator){
     
-    std::default_random_engine generator1(seed);
-    std::default_random_engine generator2(seed+1);
-
     std::uniform_int_distribution<unsigned> distribution1(0, agents.size());
     std::uniform_int_distribution<unsigned> distribution2(0, tasks.size());
     
-    unsigned number1 = distribution1(generator1);
-    unsigned number2 = distribution2(generator2);
+    unsigned number1 = distribution1(generator);
+    unsigned number2 = distribution2(generator);
     
     std::set<unsigned> swapAgentsSet, swapTasksSet;
     
     for (unsigned i = 0; i < number1; i++) {
-        swapAgentsSet.insert(distribution1(generator1));
+        swapAgentsSet.insert(distribution1(generator));
     }
     
     for (unsigned i = 0; i < number2; i++) {
-        swapTasksSet.insert(distribution2(generator2));
+        swapTasksSet.insert(distribution2(generator));
     }
 
     swap(swapAgentsSet, swapTasksSet);

@@ -38,7 +38,7 @@ void _ga_population::populate_random(const _ga_solution& solution, std::default_
     
         while(size_min > solutions.size()){
 
-            solutions.insert(solution.randon(distribution(generator)));
+            solutions.insert(solution.randon(generator));
 
         }
         
@@ -151,4 +151,27 @@ void _ga_population::listSolutions(const std::function<bool(unsigned, _ga_soluti
         
     }
 
+}
+
+std::ostream& operator<<(std::ostream& os, const _ga_population& obj) {
+        
+    obj.listConstSolutions([&os](unsigned index, const _ga_solution& solution){
+
+        const std::map<_ga_solution::EvalType, unsigned>& evals = solution.getEvals();
+        if(evals.empty()){
+
+            os << index << ": not evaluated" << std::endl;
+
+        }else{
+
+            os << index << ": " << evals.find(_ga_solution::EvalType::makespan)->second;
+            os << " / " << evals.find(_ga_solution::EvalType::energy)->second << std::endl;
+
+        }
+
+        return false;
+
+    });
+
+    return os;
 }

@@ -8,9 +8,15 @@
 #include "_ga_solutionAllocator.h"
 #include "_ga_solution.h"
 
-_ga_solutionAllocator::_ga_solutionAllocator(const std::string id) : _agentsTasksAllocator(id) { }
+_ga_solutionAllocator::_ga_solutionAllocator(
+    unsigned solution_validity, 
+    const std::string id) : _agentsTasksAllocator(id),
+        solution_validity(solution_validity) { }
     
-_ga_solutionAllocator::_ga_solutionAllocator(const _ga_solutionAllocator& other) : _agentsTasksAllocator(other) { }
+_ga_solutionAllocator::_ga_solutionAllocator(
+    const _ga_solutionAllocator& other) : 
+        _agentsTasksAllocator(other),
+        solution_validity(other.solution_validity){ }
     
 
 _ga_solutionAllocator::~_ga_solutionAllocator(){
@@ -22,10 +28,18 @@ _ga_solutionAllocator::~_ga_solutionAllocator(){
     }
 
 }
+
+_allocation* _ga_solutionAllocator::restore(const _ga_token& token, _allocation* allocation){
+    
+    ((_ga_solution*)allocation)->restore(token);
+    
+    return allocation;
+    
+}
     
 _allocation* _ga_solutionAllocator::borrow(const _ga_token& token) {
     
-    _ga_solution* ret = new _ga_solution(token);
+    _ga_solution* ret = new _ga_solution(token, solution_validity);
     ret->evaluate(token);
     
     borrowed.insert(ret);

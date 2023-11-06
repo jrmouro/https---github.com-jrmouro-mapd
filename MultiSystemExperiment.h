@@ -156,6 +156,8 @@ public:
                         
                         _ga_token token(*ptoken);
                         
+                        token.setName(agentsTasksAllocator->id());
+                        
                         GA_SystemExperiment se(
                                     token.name() + "(" + agentsTasksAllocator->id() + ");" + mapFilename + " ;" + taskFilename,
                                     *agentsTasksAllocator,
@@ -196,7 +198,7 @@ public:
                             Writable::sepWrite(*imap, ofs);
                             itasks->writeHeader(ofs);
                             Writable::sepWrite(*imap, ofs);
-                            ptoken->writeHeader(ofs);
+                            token.writeHeader(ofs);
                             Writable::endlWrite(*imap, ofs);
 
                         }
@@ -207,7 +209,7 @@ public:
                         Writable::sepWrite(*imap, ofs);
                         itasks->writeRow(ofs);
                         Writable::sepWrite(*imap, ofs);
-                        ptoken->writeRow(ofs);
+                        token.writeRow(ofs);
                         Writable::endlWrite(*imap, ofs);  
 
                     }

@@ -22,6 +22,9 @@ public:
     _agentsTasksAllocator(const _agentsTasksAllocator& other) :  _id(other._id) { }
 
     virtual _allocation* borrow(const _ga_token&)  = 0;
+    
+    virtual _allocation* restore(const _ga_token&, _allocation*)  = 0;
+    
     virtual void giveBack(_allocation*)  = 0;
     virtual _allocation* borrowClone(_allocation*)  = 0;
     

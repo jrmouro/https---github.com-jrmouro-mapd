@@ -33,7 +33,12 @@ public:
     virtual ~_ga_token();
     
     virtual std::string id() const;    
-    virtual std::string name() const;    
+    virtual const std::string& name() const;   
+    
+    void setName(const std::string& name){
+        this->_name = name;
+    }
+    
     int energyExpenditure() const;
     
     virtual void draw(const Render&) const;
@@ -44,6 +49,7 @@ public:
     bool updateAgentTaskPath(int, int);
     
             
+    const _task* getPendingTaskById(int)const;
     void listPendingTasks(const std::function<bool(unsigned, const _task&)> function) const;    
     void listAgents(const std::function<bool(_ga_agent&)> function);
     void listConstAgents(const std::function<bool(unsigned, const _ga_agent&)> function) const;
@@ -81,6 +87,7 @@ public:
     void error_edge_collision_check() const;
     
 private:
+    std::string _name = "GAT";
     const _map& map;
     _stepMap stepMap;
     std::map<unsigned, _site> nonTaskEndpoints;

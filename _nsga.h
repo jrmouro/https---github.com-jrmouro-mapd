@@ -31,13 +31,20 @@ public:
         const std::function<bool(const _ga_solution&, unsigned)>& stopCondition,
         unsigned population_size_max, 
         unsigned population_size_min, 
+        unsigned solution_validity = UINT_MAX,
+        float population_mutation_rate = .4f,
+        float agents_crossover_point_rate = .5f,
+        float tasks_crossover_point_rate = .5f,
+        float agents_mutation_rate = .2f,
+        float tasks_mutation_rate = .2f,
         unsigned mutation_children_distribution_size = 3,
         unsigned generic_distribution_size = 100000000,        
         unsigned seed = 1);
             
     _nsga(const _nsga& other);
 
-    virtual _allocation* borrow(const _ga_token& token) ;   
+    virtual _allocation* borrow(const _ga_token& token) ; 
+    virtual _allocation* restore(const _ga_token&, _allocation*);
     
     void setSeed(unsigned seed) {
         this->seed = seed;
@@ -48,9 +55,16 @@ protected:
     
     virtual void solve(const _ga_token& token, _ga_solution& solution) const;
     
-    virtual void expand_population(const _ga_token& token, std::default_random_engine&, _ga_population& population) const;
+    virtual void expand_population(
+        const _ga_token& token,
+        const _ga_solution&,
+        std::default_random_engine&, 
+        _ga_population& population) const;
     
-    virtual _ga_solution* reduce_population(const _ga_token& token, std::default_random_engine& generator, _ga_population& population) const;
+    virtual _ga_solution* reduce_population(
+        const _ga_token& token, 
+        std::default_random_engine& generator, 
+        _ga_population& population) const;
     
     virtual std::pair<_ga_solution*, _ga_solution*> crossover_select_parents(
         const _ga_token& token, 
@@ -76,6 +90,12 @@ protected:
             std::vector<std::vector<_ga_solution*>>& borders,
             std::map<_ga_solution*, unsigned>& solution_border_map) const ;
     
+    
+    float   population_mutation_rate,
+            agents_crossover_point_rate,
+            tasks_crossover_point_rate,
+            agents_mutation_rate,
+            tasks_mutation_rate;
     
     unsigned 
         population_size_max, 

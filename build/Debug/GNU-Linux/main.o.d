@@ -9,13 +9,14 @@ build/Debug/GNU-Linux/main.o: main.cpp MultiSystemExperiment.h \
  _energy_system.h _energy_regime.h _energy_charge.h \
  _agent_energy_regime.h _manhattanAlgorithm.h _stepAstarAlgorithm.h \
  _stepPathAlgorithm.h ReportTaskMap.h Text.h Shape.h \
- GA_SystemExperiment.h _ga_system.h _ga_token.h _ga_agent.h \
- _ga_agent_state.h ThresholdTokenPass.h TokenPass.h \
- _updateTokenAlgorithms.h _updateTrivialPathToAgentAlgorithm.h \
- _updateToAgentAlgorithm.h _selectTrivialPathToAgentAlgorithm.h \
- _taskPathToAgentAlgorithm.h _taskIndexerAlgorithm.h \
- _endpointIndexerAlgorithm.h _updateTaskToAgentAlgorithm.h \
- _updateEndpointToAgentAlgorithm.h _selectEndpointToAgentAlgorithm.h \
+ GA_SystemExperiment.h _ga_system.h _ga_solution.h _ga_pseudo_solution.h \
+ _ga_token.h _ga_agent.h _ga_agent_state.h _allocation.h \
+ ThresholdTokenPass.h TokenPass.h _updateTokenAlgorithms.h \
+ _updateTrivialPathToAgentAlgorithm.h _updateToAgentAlgorithm.h \
+ _selectTrivialPathToAgentAlgorithm.h _taskPathToAgentAlgorithm.h \
+ _taskIndexerAlgorithm.h _endpointIndexerAlgorithm.h \
+ _updateTaskToAgentAlgorithm.h _updateEndpointToAgentAlgorithm.h \
+ _selectEndpointToAgentAlgorithm.h \
  _selectChargingTaskToAgentThresholdAlgorithm.h \
  _selectTaskToAgentThresholdAlgorithm.h _selectTaskToAgentAlgorithm.h \
  _selectBackwardTaskToAgentAlgorithm.h \
@@ -72,9 +73,12 @@ Text.h:
 Shape.h:
 GA_SystemExperiment.h:
 _ga_system.h:
+_ga_solution.h:
+_ga_pseudo_solution.h:
 _ga_token.h:
 _ga_agent.h:
 _ga_agent_state.h:
+_allocation.h:
 ThresholdTokenPass.h:
 TokenPass.h:
 _updateTokenAlgorithms.h:

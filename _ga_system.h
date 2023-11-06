@@ -10,8 +10,10 @@
 
 #include <vector>
 #include <unordered_map>
+#include <map>
 
 #include "_stepMap.h"
+#include "_ga_solution.h"
 
 class _taskMap;
 class _ga_token;
@@ -19,6 +21,7 @@ class _agentsTasksAllocator;
 class _map;
 class _stepMap;
 class _allocation;
+class _ga_solution;
 
 class _ga_system {
 public:
@@ -32,6 +35,11 @@ public:
     virtual void run(const _taskMap& taskMap, _ga_token& token);
     
     virtual bool step(const _taskMap& taskMap, _ga_token& token);
+    
+    static const std::map<_ga_solution::EvalType, unsigned> evaluateSolution(
+        const _ga_token& token, 
+        const _ga_solution& solution, 
+        const _taskMap& taskMap);
             
 private:
     

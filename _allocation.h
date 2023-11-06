@@ -18,6 +18,9 @@ class _allocation {
 public:
     virtual _allocation* clone() const = 0;
     virtual bool isValid()const = 0;
+    virtual void valid() = 0;
+    virtual bool check(const _ga_token&) const = 0;
+    virtual void restore(const _ga_token&) = 0;
     virtual void nextPlanningUpdate(
         const _ga_token&,
         const std::function<bool(const _ga_agent*, const _task*)>&) = 0;

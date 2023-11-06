@@ -30,14 +30,16 @@ void test(){
     
     mapFilenames.push_back("./Instances/test/test_2.map");
     mapFilenames.push_back("./Instances/test/test_3.map");
-    mapFilenames.push_back("./Instances/test/test_4.map");   
+    mapFilenames.push_back("./Instances/test/test_4.map");  
+    
+//        taskFilenames.push_back("./Instances/test/test_0.task");
     
     taskFilenames.push_back("./Instances/test/test_1.task");
     taskFilenames.push_back("./Instances/test/test_4.task");
-       taskFilenames.push_back("./Instances/test/test_7.task");
-          taskFilenames.push_back("./Instances/test/test_20.task");
+    taskFilenames.push_back("./Instances/test/test_7.task");
+    taskFilenames.push_back("./Instances/test/test_20.task");
     
-//    tokenIds.push_back("TP");
+    tokenIds.push_back("TP");
 //    tokenIds.push_back("TSTP");
 //    tokenIds.push_back("BTT");
 
@@ -55,14 +57,20 @@ void test(){
 //    agent_energy_systems.push_back(aes_2);
     
     tokenIds.push_back("GA");
-    _ga_solutionAllocator ga_solutionAllocator;
+    _ga_solutionAllocator ga_solutionAllocator(5000);
     _nsga nsga(
-            [](const _ga_solution& solution, unsigned generation){ return generation == 10; },
-            40,
+            [](const _ga_solution& solution, unsigned generation){ return generation == 5; },
             20,
+            10,
+            5000,
+            .3f,
+            .5f,
+            .5f,
+            .2f,  
+            .2f,
             5);
     agentsTasksAllocators.push_back(&ga_solutionAllocator);
-//    agentsTasksAllocators.push_back(&nsga);
+    agentsTasksAllocators.push_back(&nsga);
         
     auto experiment = MultiSystemExperiment(
         resultFile,
@@ -103,12 +111,12 @@ void small(){
     mapFilenames.push_back("./Instances/small/kiva-50-500-5.map");
 ////    
     taskFilenames.push_back("./Instances/small/kiva-0.2.task");
-    taskFilenames.push_back("./Instances/small/kiva-0.5.task");
-    taskFilenames.push_back("./Instances/small/kiva-1.task");
-    taskFilenames.push_back("./Instances/small/kiva-2.task");
-    taskFilenames.push_back("./Instances/small/kiva-5.task");
-    taskFilenames.push_back("./Instances/small/kiva-10.task");
-    taskFilenames.push_back("./Instances/small/kiva-500.task");
+//    taskFilenames.push_back("./Instances/small/kiva-0.5.task");
+//    taskFilenames.push_back("./Instances/small/kiva-1.task");
+//    taskFilenames.push_back("./Instances/small/kiva-2.task");
+//    taskFilenames.push_back("./Instances/small/kiva-5.task");
+//    taskFilenames.push_back("./Instances/small/kiva-10.task");
+//    taskFilenames.push_back("./Instances/small/kiva-500.task");
     
 //    tokenIds.push_back("TP");
 //    tokenIds.push_back("TSTP");
@@ -132,12 +140,19 @@ void small(){
 //    agent_energy_systems.push_back(aes_3);
     
     tokenIds.push_back("GA");
-    _ga_solutionAllocator ga_solutionAllocator;
+    _ga_solutionAllocator ga_solutionAllocator(10000);
     _nsga nsga(
             [](const _ga_solution& solution, unsigned generation){ return generation == 100; },
             40,
             20,
+            100,
+            .5f,
+            .5f,
+            .5f,
+            .5f,  
+            .5f,
             3);
+            
     agentsTasksAllocators.push_back(&ga_solutionAllocator);
         
     auto experiment = MultiSystemExperiment(
@@ -150,7 +165,7 @@ void small(){
         agentsTasksAllocators,
         500,
         46,                               
-        300);                              
+        0);                              
            
     experiment.run();
     

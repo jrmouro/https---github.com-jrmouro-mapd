@@ -7,37 +7,26 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/GA_SystemExperiment.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_stepMap.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agentsTasksAllocator.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/Instances/test/test_4.map</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/GA_SystemExperiment.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_agent.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_agent.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_allocation.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_agent_state_free.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_agent_state_buzy.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/Instances/test/ga_test_1.task</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_solutionAllocator.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/Instances/test/test_7.task</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_solutionAllocator.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/Instances/test/test_1.task</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/main.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_nsga.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_task.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_agent_state.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agent.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_system.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/Instances/test/test_0.task</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_token.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_stepPath.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/Instances/test/test_20.task</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_token.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_solutionAllocator.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_population.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/main.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/MultiSystemExperiment.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_system.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_pseudo_solution.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_nsga.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_system.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_token.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_solution.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_nsga.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_energy_charge.h</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_population.cpp</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_token.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agent.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_solution.cpp</file>
         </group>
     </open-files>
 </project-private>

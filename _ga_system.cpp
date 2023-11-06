@@ -51,18 +51,21 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
         if(allocation == nullptr){
 
             allocation = agentsTasksAllocator.borrow(token);
+            allocation->valid();
             
-//            std::cout << "solution: " << *((_ga_solution*)allocation) << std::endl;
+            std::cout << "solution: " << *((_ga_solution*)allocation) << std::endl;
 
         } else {
 
             if(addNewTask || !allocation->isValid()){
 
-                agentsTasksAllocator.giveBack(allocation);
-              
-                allocation = agentsTasksAllocator.borrow(token);
+//                agentsTasksAllocator.giveBack(allocation);              
+//                allocation = agentsTasksAllocator.borrow(token);
                 
-//                std::cout << "solution: " << *((_ga_solution*)allocation) << std::endl;
+                allocation = agentsTasksAllocator.restore(token, allocation);                
+                allocation->valid();
+                
+                std::cout << "solution: " << *((_ga_solution*)allocation) << std::endl;
 
            } 
 
@@ -92,6 +95,8 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
 
 }
 
+
+
 void _ga_system::run(const _taskMap& taskMap, _ga_token& token){    
         
     while(token.getCurrentStep() < token.getStepMap().getStep_size() && !(taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())){
@@ -114,6 +119,7 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
         if(allocation == nullptr){
 
             allocation = agentsTasksAllocator.borrow(token);
+            allocation->valid();
             
 //            std::cout << "solution: " << *((_ga_solution*)allocation) << std::endl;
 
@@ -121,9 +127,12 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
 
             if(addNewTask || !allocation->isValid()){
 
-                agentsTasksAllocator.giveBack(allocation);
 
-                allocation = agentsTasksAllocator.borrow(token);
+//                 agentsTasksAllocator.giveBack(allocation);              
+//                allocation = agentsTasksAllocator.borrow(token);
+                
+                allocation = agentsTasksAllocator.restore(token, allocation);
+                allocation->valid();
                 
 //                std::cout << "solution: " << *((_ga_solution*)allocation) << std::endl;
 
