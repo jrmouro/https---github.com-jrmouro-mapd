@@ -280,6 +280,7 @@ public:
                         itasks->writeHeader(ofs);
                         Writable::sepWrite(*imap, ofs);
                         ptoken->writeHeader(ofs);
+                        Writable::strWrite(*imap, ofs, "time(s)", true);
                         Writable::endlWrite(*imap, ofs);
                         
                     }
@@ -291,6 +292,7 @@ public:
                     itasks->writeRow(ofs);
                     Writable::sepWrite(*imap, ofs);
                     ptoken->writeRow(ofs);
+                    Writable::strWrite(*imap, ofs, std::to_string(time_span.count()), true);
                     Writable::endlWrite(*imap, ofs);               
                     
                     delete ptoken;
