@@ -39,12 +39,16 @@ _allocation* _ga_solutionAllocator::restore(const _ga_token& token, _allocation*
     
 _allocation* _ga_solutionAllocator::borrow(const _ga_token& token) {
     
-    _ga_solution* ret = new _ga_solution(token, solution_validity);
-    ret->evaluate(token);
+    _ga_solution* best = new _ga_solution(token, solution_validity);
     
-    borrowed.insert(ret);
+//    ret->evaluate(token);
     
-    return ret;
+    borrowed.insert(best);
+    
+//    best->evaluate(token);
+//    std::cout << "solution: " << *best << std::endl;
+    
+    return best;
     
 }
 
@@ -73,6 +77,10 @@ void _ga_solutionAllocator::giveBack(_allocation* allocation) {
         
     }
     
+}
+
+_agentsTasksAllocator* _ga_solutionAllocator::emptyClone() const {
+    return new _ga_solutionAllocator(*this);
 }
 
 _allocation* _ga_solutionAllocator::borrowClone(_allocation* allocation) {

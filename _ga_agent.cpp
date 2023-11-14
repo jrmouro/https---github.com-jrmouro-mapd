@@ -196,15 +196,15 @@ bool _ga_agent::isGoingToRestPickuping() const {
             && !path.goalSite().match(currentTask->getPickup());
 }
 
-_stepSite _ga_agent::goalSite() const {
+const _stepSite& _ga_agent::goalSite() const {
     return path.goalSite();
 }
 
-_stepSite _ga_agent::currentSite() const {
+const _stepSite& _ga_agent::currentSite() const {
     return path.currentSite();
 }
 
-_stepSite _ga_agent::getFutureSite() const {
+const _stepSite& _ga_agent::getFutureSite() const {
     return path.futureSite();
 }
 
@@ -228,6 +228,9 @@ void _ga_agent::unassignTask() {
 
 void _ga_agent::assignPath(const _stepPath& path) {
     this->path = path;
+}
+void _ga_agent::progressPath(const _stepPath& path) {
+    this->path.progress(path);
 }
 
 const _stepPath& _ga_agent::getPath() const {

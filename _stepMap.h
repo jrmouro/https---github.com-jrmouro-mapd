@@ -40,10 +40,27 @@ public:
             row_size(row_size){
                 
         nodes_product = row_size * colunm_size;
-
+        
         unsigned size = step_size * nodes_product;
         
-        if(size > 0) nodes = new int[size];
+        if(nodes_product > 0){
+            
+            free_agent = new int[nodes_product];
+            free_step = new int[nodes_product];
+            
+            for (int i = 0; i < nodes_product; i++) {
+                free_agent[i] = NodeType::freeNode;
+                free_step[i] = 0;
+            }
+            
+            if(size > 0){            
+            
+                nodes = new int[size];
+
+            }
+            
+        }
+        
         
         if(row_size > 1){
             
@@ -81,12 +98,24 @@ public:
 
         unsigned size = step_size * nodes_product;
         
-        if(size > 0){ 
+        if(nodes_product > 0){
+            
+            free_agent = new int[nodes_product];
+            free_step = new int[nodes_product];
+            
+            for (int i = 0; i < nodes_product; i++) {
+                free_agent[i] = orig.free_agent[i];
+                free_step[i] = orig.free_step[i];
+            }
+        
+            if(size > 0){ 
 
-            this->nodes = new int[size];
+                this->nodes = new int[size];
 
-            for (unsigned i = 0; i < size; i++)
-                this->nodes[i] = orig.nodes[i];
+                for (unsigned i = 0; i < size; i++)
+                    this->nodes[i] = orig.nodes[i];
+
+            }
         
         }
         
@@ -129,10 +158,28 @@ public:
         if (nodes != nullptr) delete [] nodes;
         if (row_edge != nullptr) delete [] row_edge;
         if (colunm_edge != nullptr) delete [] colunm_edge;
+        
+        if (free_agent != nullptr) delete [] free_agent;
+        if (free_step != nullptr) delete [] free_step;
 
     }
     
+    void stepView(const _stepPath& path)const{
+        
+        stepView(path.currentSite().GetStep(), path.goalSite().GetStep());
+        
+    }
     
+    void stepView(unsigned from, unsigned to)const{
+        
+        for (int i = 0; i < to - from + 1; i++) {
+            
+            stepView(from + i);
+
+        }
+        
+    }
+        
     void stepView(unsigned step)const{
         
         unsigned p = step * nodes_product;
@@ -143,15 +190,25 @@ public:
             
             for (int c = 0; c < colunm_size; c++) {
                 
-                unsigned index = p + r * colunm_size + c;
+                unsigned index = r * colunm_size + c;
                 
-                if(nodes[index] < 0){
+                int nodotype = free_agent[index];
                 
-                    std::cout << nodes[index] << " ";
+//                 || nodotype != NodeType::freeNode
+                
+                if(nodotype == NodeType::freeNode || step < free_step[index]){
+                    
+                    nodotype = nodes[p + index];
+                    
+                }               
+                
+                if(nodotype < 0){
+                
+                    std::cout << nodotype << " ";
                 
                 } else {
                     
-                    std::cout << " " << nodes[index] << " ";
+                    std::cout << " " << nodotype << " ";
                     
                 }
 
@@ -166,7 +223,68 @@ public:
         
     }
     
+    void free_agent_view()const{
+        
+        std::cout << "free_agent" << std::endl;
+        
+        for (int r = 0; r < row_size; r++) {
+            
+            for (int c = 0; c < colunm_size; c++) {
+                
+                unsigned index = r * colunm_size + c;
+                
+                if(free_agent[index] < 0){
+                
+                    std::cout << free_agent[index] << " ";
+                
+                } else {
+                    
+                    std::cout << " " << free_agent[index] << " ";
+                    
+                }
+
+            }
+            
+            std::cout << std::endl;
+
+        }
+        
+        std::cout << std::endl;
+
+        
+    }
     
+    void free_step_view()const{
+        
+        std::cout << "free_step" << std::endl;
+        
+        for (int r = 0; r < row_size; r++) {
+            
+            for (int c = 0; c < colunm_size; c++) {
+                
+                unsigned index = r * colunm_size + c;
+                
+                if(free_step[index] < 0){
+                
+                    std::cout << free_step[index] << " ";
+                
+                } else {
+                    
+                    std::cout << " " << free_step[index] << " ";
+                    
+                }
+
+            }
+            
+            std::cout << std::endl;
+
+        }
+        
+        std::cout << std::endl;
+
+        
+    }
+        
     void setRowEdgeType(unsigned step, unsigned row, unsigned column, int type)const {
 
         int _size_colunm = colunm_size - 1;
@@ -328,25 +446,75 @@ public:
 
     }
     
-    bool isPathDefinitelyFree(unsigned step, unsigned row, unsigned column, int type) const {
-                
-        if (row < row_size && column < colunm_size){
+    void checkRowColunm(unsigned row, unsigned column)const{
+        
+        if (row < row_size){
             
-            for (int s = step; s < this->step_size; s++){
+            if(column < colunm_size){
                 
-                int t = this->nodes[s * nodes_product + row * colunm_size + column];
+                return;
                 
-                if(t != NodeType::freeNode && t != type){
-                    
-                    return false;
-                    
-                }                    
+            } else {
+                
+                try {
+                    std::ostringstream stream;
+                    stream << "invalid colunm: " << column;
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
+                }
                 
             }
             
         }
         
-        return true;
+        try {
+            std::ostringstream stream;
+            stream << "invalid row: " << row;
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }       
+        
+    }
+    
+    bool isPathDefinitelyFree(unsigned step, unsigned row, unsigned column, int type) const {
+                
+//        if (row < row_size && column < colunm_size){
+//            
+//            for (int s = step; s < this->step_size; s++){
+//                
+//                int t = this->nodes[s * nodes_product + row * colunm_size + column];
+//                
+//                if(t != NodeType::freeNode && t != type){
+//                    
+//                    return false;
+//                    
+//                }                    
+//                
+//            }
+//            
+//        }
+//        
+//        return true;
+        
+        /////////////
+        
+        checkRowColunm(row, column);
+        
+        unsigned index = row * colunm_size + column;
+        
+        if(//free_step[index] < step  && 
+                (free_agent[index] == NodeType::freeNode || 
+                    free_agent[index] == type)){
+            
+            return true;
+            
+        }
+        
+        return false;
         
     }
     
@@ -358,32 +526,100 @@ public:
     
     void setTypesFrom(unsigned fromStep, unsigned row, unsigned column, int from,  int to) {
 
-        if (row < row_size && column < colunm_size)
-            for (int step = fromStep; step < this->step_size; step++){
-                unsigned index = step * nodes_product + row * colunm_size + column;                
-                if(this->nodes[index] == from)
-                    this->nodes[index] = to;                
+//        if (row < row_size && column < colunm_size)
+//            for (int step = fromStep; step < this->step_size; step++){
+//                unsigned index = step * nodes_product + row * colunm_size + column;                
+//                if(this->nodes[index] == from)
+//                    this->nodes[index] = to;                
+//            }
+        
+        checkRowColunm(row, column);
+        
+        unsigned index = row * colunm_size + column;
+        
+        if(free_agent[index] == from || free_agent[index] == NodeType::freeNode){
+            
+//            if(free_step[index] <= fromStep){
+            
+            if(to == NodeType::freeNode){
+                free_step[index] = 0;
+            }else{
+                free_step[index] = fromStep;
             }
+                
+            free_agent[index] = to;
+
+//            }else{
+//                
+//                stepView(0, fromStep);
+//                free_agent_view();
+//                free_step_view();
+//                
+//                try {
+//                    std::ostringstream stream;
+//                    stream << "invalid step: " << fromStep;
+//                    MAPD_EXCEPTION(stream.str());
+//                } catch (std::exception& e) {
+//                    std::cout << e.what() << std::endl;
+//                    std::abort();
+//                } 
+//                
+//            }
+            
+        } 
+//        else {
+//            
+//            stepView(0, fromStep);
+//            free_agent_view();
+//            free_step_view();
+//            
+//            try {
+//                std::ostringstream stream;
+//                stream << "invalid type: " << from;
+//                MAPD_EXCEPTION(stream.str());
+//            } catch (std::exception& e) {
+//                std::cout << e.what() << std::endl;
+//                std::abort();
+//            } 
+//            
+//        }
+        
+        
+        
+        
 
     }
     
-    void resetTypes(unsigned row, unsigned column, int type) {
-
-        if (row < row_size && column < colunm_size)
-            for (int step = 0; step < this->step_size; step++){
-                unsigned index = step * nodes_product + row * colunm_size + column;    
-                this->nodes[index] = type;                
-            }
+    void resetTypesInStepColunm(unsigned row, unsigned column, int type) {
+        
+//        if (row < row_size && column < colunm_size){
+//        
+//            for (int step = 0; step < this->step_size; step++){
+//                unsigned index = step * nodes_product + row * colunm_size + column;    
+//                this->nodes[index] = type;                
+//            }
+//        
+//        }
+        
+        checkRowColunm(row, column); 
+        
+        int step = 0;
+        this->nodes[step++ * nodes_product + row * colunm_size + column] = type;
+        
+        for (; step < this->step_size; step++){
+            unsigned index = step * nodes_product + row * colunm_size + column;    
+            this->nodes[index] = NodeType::freeNode;                
+        }
+        
+        unsigned index = row * colunm_size + column;
+            
+        free_step[index] = 0;
+        free_agent[index] = type;   
+        
+        
 
     }
     
-    void setTypesUntil(unsigned fromStep, unsigned row, unsigned column, int type) {
-
-        if (row < row_size && column < colunm_size)
-            for (int step = 0; step <= fromStep; step++)
-                this->nodes[step * nodes_product + row * colunm_size + column] = type;
-
-    }
     
     void setTypesFrom(const _stepSite& site, int from,  int to) {
 
@@ -391,11 +627,6 @@ public:
 
     }
     
-    void setTypesUntil(const _stepSite& site, int type) {
-
-        setTypesUntil(site.GetStep(), site.GetRow(), site.GetColunm(), type);
-
-    }
     
     void setMoving(const _stepPath& path, int type){
         
@@ -430,40 +661,7 @@ public:
         }
         
     }
-    
-    void joinMoving(const _stepPath& currentPath, const _stepPath& newPath,int type){
         
-        if(!newPath.empty()){
-            
-            auto goal = currentPath.goalSite();
-            this->setTypesFrom(goal.GetStep() + 1, goal.GetRow(), goal.GetColunm(), type, NodeType::freeNode);
-        
-            setMoving(newPath, type);
-        
-        } else {
-            
-            try {
-                std::ostringstream stream;
-                stream << "empty path";
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
-            
-        }
-        
-    }
-    
-    
-    
-    void resetMoving(const _stepPath& currentPath, const _stepPath& newPath,int type){
-        
-        deleteMoving(currentPath, type);
-        setMoving(newPath, type);
-        
-    }
-    
     void deleteMoving(const _stepPath& path, int type){
         
         if(!path.empty()){
@@ -506,73 +704,33 @@ public:
     virtual void listNeighborFreePaths(const _stepSite& site, int type, const std::function<bool(const _stepSite&)>& function) const {
         
         _stepSite size = _stepSite(step_size, row_size, colunm_size);
-        
-//        if(this->isNodeBelonging(site)){
-        
-            site.listNeighbors(size, [this, type, &function, site](const _stepSite& neigh){
-
-//                if(this->isNodeBelonging(neigh)){ 
                 
-                    unsigned index = neigh.GetStep() * nodes_product + neigh.GetRow() * colunm_size + neigh.GetColunm();
+            site.listNeighbors(size, [this, type, &function, site](const _stepSite& neigh){
+                
+                unsigned index = neigh.GetRow() * colunm_size + neigh.GetColunm();
+                
+                int nodotype = free_agent[index];
+                
+                if(nodotype != NodeType::freeNode && 
+                    nodotype != type &&
+                        neigh.GetStep() >= free_step[index]){
+                    
+                    return false;
+                    
+                } 
+                
+                unsigned nodes_index = neigh.GetStep() * nodes_product + index;
+                    
+                nodotype = this->nodes[nodes_index];                                                 
 
-                    if((this->nodes[index] == type || this->nodes[index] == NodeType::freeNode) && this->hasPath(site, neigh)) 
-                        if(function(neigh)) return true;
-
-//                } 
+                if((nodotype == type || nodotype == NodeType::freeNode) && this->hasPath(site, neigh)) 
+                    if(function(neigh)) return true;
 
                 return false;
                 
             });
-        
-//        } else {
-//            
-//            try {
-//                std::ostringstream stream;
-//                stream << "invalid site";
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            }
-//            
-//        }
                 
     }
-    
-//    virtual void listNeighborFreeSites(const _stepSite& site, int type, const std::function<bool(const _stepSite&)>& function) const {
-//        
-//        if(this->isNodeBelonging(site)){
-//        
-//            site.listNeighbors([this, type, &function](const _stepSite& neigh){
-//
-//                if(this->isNodeBelonging(neigh)){ 
-//                
-//                    unsigned index = neigh.GetStep() * nodes_product + neigh.GetRow() * colunm_size + neigh.GetColunm();
-//
-//                    if(this->nodes[index] == type || this->nodes[index] == NodeType::freeNode) 
-//                        if(function(neigh)) return true;
-//
-//                } 
-//
-//                return false;
-//                
-//            });
-//        
-//        } else {
-//            
-//            try {
-//                std::ostringstream stream;
-//                stream << "invalid site";
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            }
-//            
-//        }
-//                
-//    }
-    
     
     int nodoType(const _stepSite& site) const {
         
@@ -646,7 +804,9 @@ private:
 
     int *nodes = nullptr, 
         *row_edge = nullptr, 
-        *colunm_edge = nullptr;
+        *colunm_edge = nullptr,
+            *free_agent = nullptr,
+            *free_step = nullptr;
     
     unsigned 
         step_size = 0, 

@@ -115,8 +115,25 @@ _ga_pseudo_solution& _ga_pseudo_solution::operator=(const _ga_pseudo_solution& r
 }
     
 std::ostream& operator<<(std::ostream& os, const _ga_pseudo_solution& obj) {
+    
     os << "agents (number): " << obj.agents.size() << std::endl;
-    os << "tasks (number): " << obj.tasks.size() << std::endl;
+    
+    for (auto agent : obj.agents) {
+        os << agent->id() << ", ";
+    }
+    
+    os << std::endl << "tasks (number): " << obj.tasks.size() << std::endl;
+    for (auto task : obj.tasks) {
+        
+        if(task != nullptr){
+            os << task->id() << ", ";        
+        } else {
+            os << "#, ";   
+        }
+    }
+    
+    os << std::endl;
+        
     return os;
 }
 
@@ -125,13 +142,15 @@ void crossover(
     const _ga_pseudo_solution& parentB, 
     _ga_pseudo_solution& childA, 
     _ga_pseudo_solution& childB,
+    _ga_pseudo_solution& childC, 
+    _ga_pseudo_solution& childD,
     unsigned agentsCrossoverPoint,
     unsigned tasksCrossoverPoint){
 
     if(parentA.isConsistentWith(parentB)){
 
-        agentsCrossover(parentA, parentB, childA, childB, agentsCrossoverPoint);
-        tasksCrossover(parentA, parentB, childA, childB, tasksCrossoverPoint);
+        agentsCrossover(parentA, parentB, childA, childB, childC, childD, agentsCrossoverPoint);
+        tasksCrossover(parentA, parentB, childA, childB, childC, childD, tasksCrossoverPoint);
 
     } else {
 
@@ -153,6 +172,8 @@ void agentsCrossover(
     const _ga_pseudo_solution& parentB, 
     _ga_pseudo_solution& childA, 
     _ga_pseudo_solution& childB,
+    _ga_pseudo_solution& childC, 
+    _ga_pseudo_solution& childD,
     unsigned crossoverPoint){
     
     if(!parentA.agents.empty()){
@@ -161,8 +182,10 @@ void agentsCrossover(
 
             childA.clearResize(parentA.agents.size(), 0);
             childB.clearResize(parentA.agents.size(), 0);
+            childC.clearResize(parentA.agents.size(), 0);
+            childD.clearResize(parentA.agents.size(), 0);
 
-            std::set<const _ga_agent*> agentsSetA, agentsSetB;
+            std::set<const _ga_agent*> agentsSetA, agentsSetB, agentsSetC, agentsSetD;
 
             int size = crossoverPoint % parentA.agents.size();
 
@@ -179,9 +202,25 @@ void agentsCrossover(
                 agentsSetB.insert(paB);            
 
             }   
+            
+            int f = size;
+            int ii = 0;
+            for(; f < parentA.agents.size(); f++){
+
+                auto paA = parentA.agents[f];
+                auto paB = parentB.agents[f];
+
+                childC.agents[ii] = paA;
+                childD.agents[ii] = paB;
+
+                agentsSetC.insert(paA);
+                agentsSetD.insert(paB);  
+                
+                ii++;
+
+            } 
 
             int l = i;
-
             for(int j = 0; j < parentA.agents.size(); j++){
 
                 auto paA = parentA.agents[j];
@@ -192,6 +231,20 @@ void agentsCrossover(
 
                 if(ita == agentsSetA.end()) childA.agents[l++] = paB;
                 if(itb == agentsSetB.end()) childB.agents[i++] = paA;
+
+            }
+            
+            int h = ii;            
+            for(int j = 0; j < parentA.agents.size(); j++){
+
+                auto paA = parentA.agents[j];
+                auto paB = parentB.agents[j];
+
+                auto ita = agentsSetC.find(paB);
+                auto itb = agentsSetD.find(paA);
+
+                if(ita == agentsSetC.end()) childC.agents[ii++] = paB;
+                if(itb == agentsSetD.end()) childD.agents[h++] = paA;
 
             }
 
@@ -217,6 +270,8 @@ void tasksCrossover(
     const _ga_pseudo_solution& parentB, 
     _ga_pseudo_solution& childA, 
     _ga_pseudo_solution& childB,
+    _ga_pseudo_solution& childC, 
+    _ga_pseudo_solution& childD,
     unsigned crossoverPoint){
     
     if(!parentA.tasks.empty()){
@@ -225,8 +280,10 @@ void tasksCrossover(
 
             childA.clearResize(0, parentA.tasks.size());
             childB.clearResize(0, parentA.tasks.size());
+            childC.clearResize(0, parentA.tasks.size());
+            childD.clearResize(0, parentA.tasks.size());
 
-            std::set<const _task*> tasksSetA, tasksSetB;
+            std::set<const _task*> tasksSetA, tasksSetB, tasksSetC, tasksSetD;
 
             int size = crossoverPoint % parentA.tasks.size();
 
@@ -243,9 +300,25 @@ void tasksCrossover(
                 tasksSetB.insert(paB);            
 
             } 
+            
+            int f = size;
+            int ii = 0;
+            for(; f < parentA.tasks.size(); f++){
+
+                auto paA = parentA.tasks[f];
+                auto paB = parentB.tasks[f];
+
+                childC.tasks[ii] = paA;
+                childD.tasks[ii] = paB;
+
+                tasksSetC.insert(paA);
+                tasksSetD.insert(paB);  
+                
+                ii++;
+
+            } 
 
             int l = i;
-
             for(int j = 0; j < parentA.tasks.size(); j++){
 
                 auto paA = parentA.tasks[j];
@@ -259,6 +332,21 @@ void tasksCrossover(
 
 
             }
+            
+            int h = ii;            
+            for(int j = 0; j < parentA.tasks.size(); j++){
+
+                auto paA = parentA.tasks[j];
+                auto paB = parentB.tasks[j];
+
+                auto ita = tasksSetC.find(paB);
+                auto itb = tasksSetD.find(paA);
+
+                if(ita == tasksSetC.end()) childC.tasks[ii++] = paB;
+                if(itb == tasksSetD.end()) childD.tasks[h++] = paA;
+
+            }
+            
 
         } else {
 

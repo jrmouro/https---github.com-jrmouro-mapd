@@ -13,6 +13,7 @@
 #include "_agent.h"
 
 class _token;
+class _ga_token;
 class _taskIndexerAlgorithm {
 public:
     
@@ -20,6 +21,12 @@ public:
     
     virtual void solve(
         const _token& token,
+        const _task& task, 
+        const _site& endPointReference, 
+        std::vector<_task>& taskIndex) const = 0;
+    
+    virtual void ga_solve(
+        const _ga_token& token,
         const _task& task, 
         const _site& endPointReference, 
         std::vector<_task>& taskIndex) const = 0;

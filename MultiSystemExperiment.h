@@ -16,6 +16,7 @@
 #include "TaskSwapTokenPass.h"
 #include "BackwardTaskToken.h"
 #include "_agentsTasksAllocator.h"
+#include "_ga_token_p.h"
 
 
 class MultiSystemExperiment : public Experiment<std::string>{
@@ -87,11 +88,19 @@ public:
                 
                 for (auto tokenId : tokenIds) {
                     
-                    if(tokenId == "GA"){
+                    if(tokenId == "GAT"){
                         
                         for (auto agent_energy_system : agent_energy_systems) {
                             
                             p_ga_tokens.push_back(new _ga_token(imap->getMap(), imap->getStepMap(), agent_energy_system));
+
+                        }
+                    
+                    } else if(tokenId == "GAT_P"){
+                        
+                        for (auto agent_energy_system : agent_energy_systems) {
+                            
+                            p_ga_tokens.push_back(new _ga_token_p(imap->getMap(), imap->getStepMap(), agent_energy_system));
 
                         }
                     
@@ -154,22 +163,26 @@ public:
                     
                     for (auto agentsTasksAllocator : agentsTasksAllocators) {
                         
-                        _ga_token token(*ptoken);
+//                        auto allocatorClone = agentsTasksAllocator->emptyClone();
                         
-                        token.setName(agentsTasksAllocator->id());
+                        _ga_token* token = ptoken->getClone();
+                        
+                        token->setName(token->id() + "("+ agentsTasksAllocator->id() + ")");
                         
                         GA_SystemExperiment se(
-                                    token.name() + "(" + agentsTasksAllocator->id() + ");" + mapFilename + " ;" + taskFilename,
+                                    token->getName() + ";" + mapFilename + " ;" + taskFilename,
                                     *agentsTasksAllocator,
-                                    token,  
+                                    *token,  
                                     itasks->getTaskMap(),
                                     cell_size,
                                     timestep);  
+                        
+                        
                     
     //                    std::cout << " - token: " << *ptoken << std::endl;
                         std::cout << "GA System Experiment: " << std::endl;
                         std::cout << " - id: " << se.id() << std::endl;
-                        std::cout << " - energy system: " << token.getAgent_energy_system().id() << std::endl;
+                        std::cout << " - energy system: " << token->getAgent_energy_system().id() << std::endl;
 
                         std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 
@@ -178,12 +191,12 @@ public:
                         std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
                         std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
 
-                        std::cout << " - makespan: " << token.getCurrentStep() << std::endl;
-                        std::cout << " - energy expenditure: " << token.energyExpenditure() << std::endl;
-                        std::cout << " - pending tasks: " << token.getPendingTaskAmount() << std::endl;
-                        std::cout << " - assigned tasks: " << token.getAssignedTaskAmount() << std::endl;
-                        std::cout << " - running tasks: " << token.getRunningTaskAmount() << std::endl;
-                        std::cout << " - finished tasks: " << token.getFinishedTaskAmount() << std::endl;
+                        std::cout << " - makespan: " << token->getCurrentStep() << std::endl;
+                        std::cout << " - energy expenditure: " << token->energyExpenditure() << std::endl;
+                        std::cout << " - pending tasks: " << token->getPendingTaskAmount() << std::endl;
+                        std::cout << " - assigned tasks: " << token->getAssignedTaskAmount() << std::endl;
+                        std::cout << " - running tasks: " << token->getRunningTaskAmount() << std::endl;
+                        std::cout << " - finished tasks: " << token->getFinishedTaskAmount() << std::endl;
                         std::cout << " - duration: " << time_span.count() << " seconds." << std::endl << std::endl; 
     //                    std::cout << " - report: " << std::endl << se.getToken().getReportTaskMap() <<  std::endl << std::endl;
     //                    std::cout << " - token: " << *ptoken << std::endl;
@@ -198,7 +211,8 @@ public:
                             Writable::sepWrite(*imap, ofs);
                             itasks->writeHeader(ofs);
                             Writable::sepWrite(*imap, ofs);
-                            token.writeHeader(ofs);
+                            token->writeHeader(ofs);
+                            Writable::strWrite(*imap, ofs, "time(s)", true);
                             Writable::endlWrite(*imap, ofs);
 
                         }
@@ -209,8 +223,13 @@ public:
                         Writable::sepWrite(*imap, ofs);
                         itasks->writeRow(ofs);
                         Writable::sepWrite(*imap, ofs);
-                        token.writeRow(ofs);
-                        Writable::endlWrite(*imap, ofs);  
+                        token->writeRow(ofs);
+                        Writable::strWrite(*imap, ofs, std::to_string(time_span.count()), true);
+                        Writable::endlWrite(*imap, ofs); 
+                        
+//                        delete allocatorClone;
+                        
+                        delete token;
 
                     }
 

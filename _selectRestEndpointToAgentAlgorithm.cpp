@@ -8,7 +8,7 @@ bool _selectRestEndpointToAgentAlgorithm::solve(
         _site& selectedNewSite,
         _stepPath& selectedPath) const {
 
-    bool flag = token.isTaskDeliveryEndpoint(agent.currentSite());
+    bool flag = token.isTaskEndpoint(agent.currentSite());
 
     if (flag) {
 

@@ -32,6 +32,8 @@ public:
         return _id;
     }
     
+    virtual _agentsTasksAllocator* emptyClone() const = 0;
+        
 private:
     std::string _id;
 };

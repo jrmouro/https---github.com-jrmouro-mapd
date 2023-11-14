@@ -13,7 +13,7 @@
 
 
 _nsga::_nsga(
-    const std::function<bool(const _ga_solution&, unsigned)>& stopCondition,
+    const std::function<bool(const _ga_solution&, unsigned, const std::chrono::duration<double>&)>& stopCondition,
     unsigned population_size_max, 
     unsigned population_size_min, 
     unsigned solution_validity,
@@ -21,9 +21,7 @@ _nsga::_nsga(
     float agents_crossover_point_rate,
     float tasks_crossover_point_rate,
     float agents_mutation_rate,
-    float tasks_mutation_rate,
-    unsigned mutation_children_distribution_size,
-    unsigned generic_distribution_size,        
+    float tasks_mutation_rate,       
     unsigned seed) :
         _ga_solutionAllocator(solution_validity, "NSGA-II"),
         population_size_max(population_size_max), 
@@ -33,8 +31,6 @@ _nsga::_nsga(
         tasks_crossover_point_rate(tasks_crossover_point_rate),
         agents_mutation_rate(agents_mutation_rate),
         tasks_mutation_rate(tasks_mutation_rate),
-        mutation_children_distribution_size(mutation_children_distribution_size),
-        generic_distribution_size(generic_distribution_size),
         stopCondition(stopCondition),
         seed(seed){ }
 
@@ -47,11 +43,10 @@ _nsga::_nsga(const _nsga& other) :
         tasks_crossover_point_rate(other.tasks_crossover_point_rate),
         agents_mutation_rate(other.agents_mutation_rate),
         tasks_mutation_rate(other.tasks_mutation_rate),
-        mutation_children_distribution_size(other.mutation_children_distribution_size), 
-        generic_distribution_size(other.generic_distribution_size), 
         seed(other.seed), 
         stopCondition(other.stopCondition) { }
 
+_nsga::~_nsga(){}
 
 _allocation* _nsga::borrow(const _ga_token& token) {
 
@@ -63,6 +58,10 @@ _allocation* _nsga::borrow(const _ga_token& token) {
 
     return solution;
 
+}
+
+_agentsTasksAllocator* _nsga::emptyClone() const {
+    return new _nsga(*this);
 }
 
 _allocation* _nsga::restore(const _ga_token& token, _allocation* allocation){
@@ -83,24 +82,36 @@ void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
     
     unsigned generation = 0;
 
-//    _ga_solution greedy(token, solution_validity); //TODO        
+    unsigned pop_min = std::min<unsigned>(token.numberOfAgents(), population_size_min);
+    unsigned pop_max = std::min<unsigned>(pop_min * 3, population_size_max); ;
+    
 
     _ga_solution* best = &solution;
-
-    _ga_population population(*best, generator, population_size_max, population_size_min);
     
-    while(!stopCondition(*best, generation++)){
+    _ga_population population(*best, generator, pop_max, pop_min);
+    
+    std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+    std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+    
+    while(!stopCondition(*best, generation++, time_span)){
         
 //        std::cout << "generation: " << generation << std::endl;
 //        std::cout << "solution: " << *best << std::endl;
 
         expand_population(token, *best, generator, population);
-
-        best = reduce_population(token, generator, population);
         
 //        std::cout << "generation: " << generation << std::endl;
 //        std::cout << "Polulation: " << std::endl << population << std::endl;        
-//        std::cout << "solution: " << *best << std::endl;
+//        std::cout << "Best solution: " << *best << std::endl;
+//        std::cout << std::endl;
+
+        best = reduce_population(token, generator, population);
+        
+        
+//        std::cout << "generation: " << generation << std::endl;
+//        std::cout << "Polulation: " << std::endl << population << std::endl;        
+//        std::cout << "Best solution: " << *best << std::endl;
 //        std::cout << std::endl;
         
         if(best == nullptr){
@@ -115,8 +126,16 @@ void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
             } 
             
         }
+        
+        t1 = t2;
+        t2 = std::chrono::high_resolution_clock::now();
+        time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+        
 
     }
+    
+//    best->evaluate(token);
+//    std::cout << "solution: " << *best << std::endl;
 
     solution = *best;
 
@@ -129,7 +148,7 @@ void _nsga::expand_population(
         _ga_population& population) const {
 
     std::uniform_int_distribution<unsigned> distribution(0, generic_distribution_size);
-    std::uniform_int_distribution<unsigned> mutation_children_distribution(0, mutation_children_distribution_size);
+//    std::uniform_int_distribution<unsigned> mutation_children_distribution(0, mutation_children_distribution_size);
 
     std::map<_ga_solution*, unsigned> solution_border_map;
     std::vector<std::vector<_ga_solution*>> borders;
@@ -138,31 +157,40 @@ void _nsga::expand_population(
     unsigned n_children = population.getSize_max() - population.getSize_min();
     unsigned agentsCrossoverPoint = solution.agentsSize() * agents_crossover_point_rate;        
     unsigned tasksCrossoverPoint = solution.tasksSize() * tasks_crossover_point_rate;
-    unsigned pop_mutation_size = population.getSize_min() * population_mutation_rate;
-    unsigned agents_mutation_size = solution.agentsSize() * agents_mutation_rate;
-    unsigned tasks_mutation_size = solution.tasksSize() * tasks_mutation_rate;
+    unsigned pop_mutation_size = std::min<unsigned>(1, population.getSize_min() * population_mutation_rate);
+    unsigned agents_mutation_size = std::min<unsigned>(1, solution.agentsSize() * agents_mutation_rate);
+    unsigned tasks_mutation_size = std::min<unsigned>(1, solution.tasksSize() * tasks_mutation_rate);
     
     std::vector<_ga_solution*> children_pool(n_children, nullptr);
     
-    for (int i = 0; i < n_children; i = i + 2) {
+    while(n_children > 0){
         
         auto parents = crossover_select_parents(token, population,  generator, solution_border_map);       
 
         auto children = parents.first->get_crossover(*parents.second, agentsCrossoverPoint, tasksCrossoverPoint);
         
-        children_pool[i] = children.first;
+        children_pool[n_children - 1] = children.first.first;
+        n_children--;
         
-        if(i + 1 < n_children){
-            
-            children_pool[i + 1] = children.second;
-            
-        }
+        if(n_children > 0){
+            children_pool[n_children - 1] = children.second.first;
+            n_children--;
+        } else { break; }
+        
+        if(n_children > 0){
+            children_pool[n_children - 1] = children.first.second;
+            n_children--;
+        } else { break; }
+        
+        if(n_children > 0){
+            children_pool[n_children - 1] = children.second.second;
+            n_children--;
+        } else { break; }
         
     }
     
     for(int i = 0; i < pop_mutation_size; i++){
-           
-        
+                   
         if(!children_pool.empty()){
             
             std::uniform_int_distribution<unsigned> distribution(0, children_pool.size() - 1);

@@ -53,6 +53,8 @@ protected:
         const _ga_pseudo_solution& parentB, 
         _ga_pseudo_solution& childA, 
         _ga_pseudo_solution& childB,
+        _ga_pseudo_solution& childC, 
+        _ga_pseudo_solution& childD,
         unsigned agentsCrossoverPoint,
         unsigned tasksCrossoverPoint);
     
@@ -67,6 +69,8 @@ protected:
         const _ga_pseudo_solution& parentB, 
         _ga_pseudo_solution& childA, 
         _ga_pseudo_solution& childB,
+        _ga_pseudo_solution& childC, 
+        _ga_pseudo_solution& childD,
         unsigned crossoverPoint);
     
     friend void tasksCrossover(
@@ -74,6 +78,8 @@ protected:
         const _ga_pseudo_solution& parentB, 
         _ga_pseudo_solution& childA, 
         _ga_pseudo_solution& childB,
+        _ga_pseudo_solution& childC, 
+        _ga_pseudo_solution& childD,
         unsigned crossoverPoint);
             
     std::vector<const _ga_agent*> agents;

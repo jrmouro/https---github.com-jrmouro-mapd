@@ -32,12 +32,12 @@ public:
     _ga_token(const _ga_token& other);   
     virtual ~_ga_token();
     
-    virtual std::string id() const;    
-    virtual const std::string& name() const;   
+    virtual _ga_token* getClone()const;
     
-    void setName(const std::string& name){
-        this->_name = name;
-    }
+    virtual std::string id() const; 
+    
+    virtual const std::string& getName() const;      
+    void setName(const std::string& name);
     
     int energyExpenditure() const;
     
@@ -46,7 +46,7 @@ public:
     void addPendingTask(const _task&);
     void listNonTaskEndpoints(const std::function<bool(const _site&)> function)const;
     
-    bool updateAgentTaskPath(int, int);
+    virtual bool updateAgentTaskPath(int, int);
     
             
     const _task* getPendingTaskById(int)const;
@@ -86,7 +86,9 @@ public:
     void error_site_collision_check() const;
     void error_edge_collision_check() const;
     
-private:
+    unsigned GetMaxPlannedStep() const;
+    
+protected:
     std::string _name = "GAT";
     const _map& map;
     _stepMap stepMap;
@@ -101,21 +103,22 @@ private:
     bool updateAgentRestPathCloserEndpoint(_ga_agent&, const _site&);
 //    bool updateAgentPickupRestPath(_ga_agent&);
     
-    bool updateAgentTaskPath_resting(_ga_agent&, int);
-    bool updateAgentTaskPath_going_to_resting(_ga_agent&, int);
-    bool updateAgentTaskPath_pickuping(_ga_agent&, int);
-    bool updateAgentTaskPath_going_to_pickuping(_ga_agent&, int);
-    bool updateAgentTaskPath_going_to_rest_pickuping(_ga_agent&, int);
-    bool updateAgentTaskPath_going_to_rest_pickuping_to_pickuping(_ga_agent&, int);
-    bool updateAgentTaskPath_delivering(_ga_agent&, int);
-    bool updateAgentTaskPath_rest_pickuping(_ga_agent&, int);
-    bool updateAgentTaskPath_rest_delivering(_ga_agent&);
-    bool updateAgentTaskPath_going_to_rest_delivering_to_delivering(_ga_agent&, int);
+    virtual bool updateAgentTaskPath_pendingTask(_ga_agent&, int, bool);
+    
+    virtual bool updateAgentTaskPath_resting(_ga_agent&, int);
+    virtual bool updateAgentTaskPath_going_to_resting(_ga_agent&, int);
+    virtual bool updateAgentTaskPath_pickuping(_ga_agent&, int);
+    virtual bool updateAgentTaskPath_going_to_pickuping(_ga_agent&, int);
+    virtual bool updateAgentTaskPath_going_to_rest_pickuping(_ga_agent&, int);
+    virtual bool updateAgentTaskPath_going_to_rest_pickuping_to_pickuping(_ga_agent&, int);
+    virtual bool updateAgentTaskPath_delivering(_ga_agent&, int);
+    virtual bool updateAgentTaskPath_rest_pickuping(_ga_agent&, int);
+    virtual bool updateAgentTaskPath_rest_delivering(_ga_agent&);
+    virtual bool updateAgentTaskPath_going_to_rest_delivering_to_delivering(_ga_agent&, int);
     
     
-    _ga_agent* endpointObstruction(const _ga_agent& agent, const _site& endpoint);
-    
-//    bool liberateEndpoint(const _ga_agent& agent, const _site& endpoint);
+    _ga_agent* getEndpointObstructor(const _ga_agent& agent, const _site& endpoint);    
+    bool liberateEndpoint(const _ga_agent& agent, const _site& endpoint);
     
 };
 

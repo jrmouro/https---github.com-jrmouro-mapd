@@ -19,7 +19,7 @@ class _ga_solutionAllocator : public _agentsTasksAllocator{
 
 public:
     
-    _ga_solutionAllocator(unsigned solution_validity, const std::string id = "witless");
+    _ga_solutionAllocator(unsigned solution_validity, const std::string id = "greedy");
     
     _ga_solutionAllocator(const _ga_solutionAllocator& other);
     
@@ -29,6 +29,7 @@ public:
     virtual _allocation* restore(const _ga_token&, _allocation*);
     virtual void giveBack(_allocation*) ;
     virtual _allocation* borrowClone(_allocation*) ;
+    virtual _agentsTasksAllocator* emptyClone() const;
     
 protected:
     

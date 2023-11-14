@@ -363,22 +363,12 @@ private:
 
             }
             
-//            if(goal.GetRow() == current->getSite().GetRow() && goal.GetColunm() == current->getSite().GetColunm()){
-//                        
-//                return current;
-//
-//            }
-            
             map.listNeighborFreePaths(current->getSite(), type, [type, current, goal, &closedStates, &priorityStates, this](const _stepSite& site){
             
             
                 if(!closedStates.closed(site)){
                     
-                    unsigned inc = 1;
-                    
-//                    if(site.match(current->getSite())) inc = 0;
-
-                    auto state = new AstarState(current->getTraveled() + inc, this->heuristic(site, goal), site, current);
+                    auto state = new AstarState(current->getTraveled() + 1, this->heuristic(site, goal), site, current);
                     
                     closedStates.add(state);
                     

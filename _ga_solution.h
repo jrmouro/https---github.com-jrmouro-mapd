@@ -13,6 +13,7 @@
 #include <vector>
 #include <random>
 #include "_ga_pseudo_solution.h"
+#include "_closerTaskIndexerAlgorithm.h"
 #include "_allocation.h"
 
 class _endpointsDistanceAlgorithm;
@@ -58,7 +59,7 @@ public:
     virtual _ga_solution* get_disturb(std::default_random_engine&) const;    
     virtual _ga_solution* get_disturb(unsigned agents_size, unsigned task_size, std::default_random_engine&) const;
     
-    virtual std::pair<_ga_solution*,_ga_solution*> get_crossover(
+    virtual std::pair<std::pair<_ga_solution*,_ga_solution*>,std::pair<_ga_solution*,_ga_solution*>> get_crossover(
         const _ga_solution& other,
         unsigned agentsCrossoverPoint,
         unsigned tasksCrossoverPoint) const;
@@ -68,6 +69,7 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const _ga_solution& obj);
     
     bool isEvaluated()const;
+    bool isAllocated()const;
     
     virtual bool dominate(const _ga_token&, _ga_solution&);
     
@@ -86,6 +88,8 @@ public:
         return evals;
     }
 
+    void greedySolution(const _ga_token& token);
+    void greedySolution_e(const _ga_token& token);
     
 private:
     
@@ -93,8 +97,10 @@ private:
     std::map<const _ga_agent*,std::vector<const _task*>> allocation_map;
     std::map<EvalType, unsigned> evals;
     
-    virtual void alloc(const _ga_token& token);    
+    virtual void alloc(const _ga_token& token);
+    virtual void alloc2(const _ga_token& token);    
     virtual const std::map<EvalType, unsigned>& evaluateAux(const _ga_token& token);
+    virtual const std::map<EvalType, unsigned>& evaluateAux2(const _ga_token& token);
     
 };
 

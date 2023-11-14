@@ -5,8 +5,10 @@ build/Debug/GNU-Linux/GA_SystemExperiment.o: GA_SystemExperiment.cpp \
  _agent.h _task.h _agent_state.h Drawable.h _agent_energy_system.h \
  _energy_system.h _energy_regime.h _energy_charge.h \
  _agent_energy_regime.h _map.h Render.h Writable.h _ga_agent.h \
- _stepAstarAlgorithm.h _ga_agent_state.h _allocation.h _taskMap.h Text.h \
- Shape.h
+ _stepAstarAlgorithm.h _ga_agent_state.h _closerTaskIndexerAlgorithm.h \
+ _taskIndexerAlgorithm.h _endpointsDistanceAlgorithm.h \
+ _distanceAlgorithm.h _astarDistanceAlgorithm.h _path.h _astarAlgorithm.h \
+ _pathAlgorithm.h _allocation.h _taskMap.h Text.h Shape.h
 GA_SystemExperiment.h:
 Experiment.h:
 Identifiable.h:
@@ -35,6 +37,14 @@ Writable.h:
 _ga_agent.h:
 _stepAstarAlgorithm.h:
 _ga_agent_state.h:
+_closerTaskIndexerAlgorithm.h:
+_taskIndexerAlgorithm.h:
+_endpointsDistanceAlgorithm.h:
+_distanceAlgorithm.h:
+_astarDistanceAlgorithm.h:
+_path.h:
+_astarAlgorithm.h:
+_pathAlgorithm.h:
 _allocation.h:
 _taskMap.h:
 Text.h:

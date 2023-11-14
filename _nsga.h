@@ -15,6 +15,8 @@
 #include <climits>
 #include <functional>
 #include <random>
+#include <ratio>
+#include <chrono>
 
 #include "_ga_solutionAllocator.h"
 
@@ -28,7 +30,7 @@ class _nsga : public _ga_solutionAllocator{
 public:
     
     _nsga(
-        const std::function<bool(const _ga_solution&, unsigned)>& stopCondition,
+        const std::function<bool(const _ga_solution&, unsigned, const std::chrono::duration<double>&)>& stopCondition,
         unsigned population_size_max, 
         unsigned population_size_min, 
         unsigned solution_validity = UINT_MAX,
@@ -36,15 +38,16 @@ public:
         float agents_crossover_point_rate = .5f,
         float tasks_crossover_point_rate = .5f,
         float agents_mutation_rate = .2f,
-        float tasks_mutation_rate = .2f,
-        unsigned mutation_children_distribution_size = 3,
-        unsigned generic_distribution_size = 100000000,        
+        float tasks_mutation_rate = .2f,      
         unsigned seed = 1);
             
     _nsga(const _nsga& other);
+    
+    virtual ~_nsga();
 
     virtual _allocation* borrow(const _ga_token& token) ; 
     virtual _allocation* restore(const _ga_token&, _allocation*);
+    virtual _agentsTasksAllocator* emptyClone() const;
     
     void setSeed(unsigned seed) {
         this->seed = seed;
@@ -100,12 +103,11 @@ protected:
     unsigned 
         population_size_max, 
         population_size_min,
-        mutation_children_distribution_size,
-        generic_distribution_size,
+        generic_distribution_size = 100000000,
         seed;
     
 
-    const std::function<bool(const _ga_solution&, unsigned)> stopCondition;
+    const std::function<bool(const _ga_solution&, unsigned, const std::chrono::duration<double>&)> stopCondition;
     
 };
 

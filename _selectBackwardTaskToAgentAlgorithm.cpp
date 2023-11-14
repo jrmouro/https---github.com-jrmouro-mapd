@@ -110,7 +110,7 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
 
                     if (site.step_match(pickupSite)) return true;
 
-                    if (token.isTaskDeliveryEndpoint(site) && token.getStepMap().isPathDefinitelyFree(site, agent.id())) {
+                    if (token.isTaskEndpoint(site) && token.getStepMap().isPathDefinitelyFree(site, agent.id())) {
 
                         ret = true;                       
 

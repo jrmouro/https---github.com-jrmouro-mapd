@@ -76,6 +76,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ga_solutionAllocator.o \
 	${OBJECTDIR}/_ga_system.o \
 	${OBJECTDIR}/_ga_token.o \
+	${OBJECTDIR}/_ga_token_p.o \
 	${OBJECTDIR}/_map.o \
 	${OBJECTDIR}/_nsga.o \
 	${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o \
@@ -105,13 +106,11 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 
 # Test Files
 TESTFILES= \
-	${TESTDIR}/TestFiles/f1 \
-	${TESTDIR}/TestFiles/f2
+	${TESTDIR}/TestFiles/f1
 
 # Test Object Files
 TESTOBJECTFILES= \
-	${TESTDIR}/tests/newsimpletest.o \
-	${TESTDIR}/tests/newsimpletest1.o
+	${TESTDIR}/tests/newsimpletest2.o
 
 # C Compiler Flags
 CFLAGS=
@@ -342,6 +341,11 @@ ${OBJECTDIR}/_ga_token.o: _ga_token.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token.o _ga_token.cpp
 
+${OBJECTDIR}/_ga_token_p.o: _ga_token_p.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token_p.o _ga_token_p.cpp
+
 ${OBJECTDIR}/_map.o: _map.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -464,25 +468,15 @@ ${OBJECTDIR}/main.o: main.cpp
 .build-tests-conf: .build-tests-subprojects .build-conf ${TESTFILES}
 .build-tests-subprojects:
 
-${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/newsimpletest.o ${OBJECTFILES:%.o=%_nomain.o}
+${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/newsimpletest2.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc} -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS}   
 
-${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/newsimpletest1.o ${OBJECTFILES:%.o=%_nomain.o}
-	${MKDIR} -p ${TESTDIR}/TestFiles
-	${LINK.cc} -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS}   
 
-
-${TESTDIR}/tests/newsimpletest.o: tests/newsimpletest.cpp 
+${TESTDIR}/tests/newsimpletest2.o: tests/newsimpletest2.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I. -std=c++14 -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest.o tests/newsimpletest.cpp
-
-
-${TESTDIR}/tests/newsimpletest1.o: tests/newsimpletest1.cpp 
-	${MKDIR} -p ${TESTDIR}/tests
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I. -std=c++14 -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest1.o tests/newsimpletest1.cpp
+	$(COMPILE.cc) -O2 -I. -std=c++14 -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest2.o tests/newsimpletest2.cpp
 
 
 ${OBJECTDIR}/Circle_nomain.o: ${OBJECTDIR}/Circle.o Circle.cpp 
@@ -1018,6 +1012,19 @@ ${OBJECTDIR}/_ga_token_nomain.o: ${OBJECTDIR}/_ga_token.o _ga_token.cpp
 	    ${CP} ${OBJECTDIR}/_ga_token.o ${OBJECTDIR}/_ga_token_nomain.o;\
 	fi
 
+${OBJECTDIR}/_ga_token_p_nomain.o: ${OBJECTDIR}/_ga_token_p.o _ga_token_p.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_token_p.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token_p_nomain.o _ga_token_p.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_token_p.o ${OBJECTDIR}/_ga_token_p_nomain.o;\
+	fi
+
 ${OBJECTDIR}/_map_nomain.o: ${OBJECTDIR}/_map.o _map.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_map.o`; \
@@ -1322,7 +1329,6 @@ ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp
 	@if [ "${TEST}" = "" ]; \
 	then  \
 	    ${TESTDIR}/TestFiles/f1 || true; \
-	    ${TESTDIR}/TestFiles/f2 || true; \
 	else  \
 	    ./${TEST} || true; \
 	fi

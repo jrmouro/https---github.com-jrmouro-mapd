@@ -106,7 +106,7 @@ bool _selectBackwardChargingTaskToAgentAlgorithm::solve(
 
                             if (site.step_match(pickupSite)) return true;
 
-                            if (token.isTaskDeliveryEndpoint(site)) {
+                            if (token.isTaskEndpoint(site)) {
 
                                 ret = true;
 

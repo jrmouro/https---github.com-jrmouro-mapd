@@ -99,7 +99,57 @@ public:
     void SetRow(unsigned row) {
         this->row = row;
     }
+    
+    unsigned siteBoxArea(const _site& other){
+        
+        if(row < other.row){
+            
+            if(colunm < other.colunm){
+                
+                return (other.row - row)*(other.colunm - colunm);
+                
+            } else {
+                
+                return (other.row - row)*(colunm - other.colunm);
+                
+            }
+            
+        } 
+        
+        if(colunm < other.colunm){
+            
+            return (row - other.row)*(other.colunm - colunm); 
+            
+        }
+        
+        return (row - other.row)*(colunm - other.colunm);
+        
+    }
+    
+    bool insideSiteBox(const _site& s1, const _site& s2){
+        
+        if(s1.row < s2.row){
+            
+            if(s1.colunm < s2.colunm){
+                
+                return row >= s1.row && row <= s2.row && colunm >= s1.colunm && colunm <= s2.colunm;
+                
+            }else{
+                
+                return row >= s1.row && row <= s2.row && colunm >= s2.colunm && colunm <= s1.colunm;
+                
+            }
+        }
+        
+        if(s1.colunm < s2.colunm){
+                
+            return row >= s2.row && row <= s1.row && colunm >= s1.colunm && colunm <= s2.colunm;
 
+        }
+
+        return row >= s2.row && row <= s1.row && colunm >= s2.colunm && colunm <= s1.colunm;        
+        
+    }
         
 protected:
     unsigned row, colunm;

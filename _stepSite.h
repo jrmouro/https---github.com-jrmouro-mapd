@@ -81,23 +81,8 @@ public:
             if(neighbor_colunm < size.colunm){
                 if(function(_stepSite(step, this->row, neighbor_colunm))) return;
             }
-
-//            if(this->row < size.row && this->colunm < size.colunm){
-//                function(_stepSite(step, this->row, this->colunm));  
-//            }
         
-        } else {
-            
-//            try {
-//                std::ostringstream stream;
-//                stream << "invalid neighbor site";
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            }
-            
-        }        
+        }   
         
     }
     
@@ -114,6 +99,30 @@ public:
             return this->step - other.step;
         }
         return other.step - this->step;
+    }
+    
+    unsigned siteStepBoxArea(const _stepSite& other){
+        
+        if(step < other.step){
+            
+            return (other.step - step) * siteBoxArea(other);
+            
+        } 
+        
+        return (step - other.step) * siteBoxArea(other);           
+        
+    }
+    
+    bool insideStepSiteBox(const _stepSite& s1, const _stepSite& s2){
+        
+        if(s1.step < s2.step){
+            
+            return step >= s1.step && step <= s2.step && insideSiteBox(s1, s2);
+            
+        }
+        
+        return step >= s2.step && step <= s1.step && insideSiteBox(s1, s2);
+        
     }
     
 protected:

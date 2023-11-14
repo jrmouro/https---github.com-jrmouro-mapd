@@ -46,11 +46,11 @@ public:
         this->_id = _id;
     }
     
-    _site getDelivery() const {
+    const _site& getDelivery() const {
         return delivery;
     }
 
-    _site getPickup() const {
+    const _site& getPickup() const {
         return pickup;
     }
     

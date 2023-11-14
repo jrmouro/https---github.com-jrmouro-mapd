@@ -98,15 +98,15 @@ public:
             
             if(siteType == _map::TypeOfSite::none){
                 
-                this->stepMap.resetTypes(row, colunm, _stepMap::NodeType::blockedNode);
+                this->stepMap.resetTypesInStepColunm(row, colunm, _stepMap::NodeType::blockedNode);
                 
             } else if(siteType == _map::TypeOfSite::bot){
                 
-                this->stepMap.resetTypes(row, colunm, j++);
+                this->stepMap.resetTypesInStepColunm(row, colunm, j++);
                 
             }else{
                 
-                this->stepMap.resetTypes(row, colunm, _stepMap::NodeType::freeNode);
+                this->stepMap.resetTypesInStepColunm(row, colunm, _stepMap::NodeType::freeNode);
                 
             }
                                     

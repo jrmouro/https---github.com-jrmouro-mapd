@@ -106,7 +106,7 @@ void _ga_token::writeHeader(std::ostream& fs) const {
 
 void _ga_token::writeRow(std::ostream& fs) const {
     Writable::strWrite(*this, fs, id(), true);
-    Writable::strWrite(*this, fs, name(), true);
+    Writable::strWrite(*this, fs, getName(), true);
     Writable::uintWrite(*this, fs, currentStep, true);
     Writable::strWrite(*this, fs, agent_energy_system.id(), true);
     Writable::intWrite(*this, fs, energyExpenditure(), true);
@@ -118,9 +118,13 @@ unsigned _ga_token::getCurrentStep() const {
 }
 
 void _ga_token::stepping() {
-    
-//    if(currentStep > 1120)
-//        stepMap.stepView(currentStep);
+
+//        if(currentStep > 10){
+//            stepMap.stepView(currentStep);
+//            stepMap.free_step_view();
+//            stepMap.free_agent_view();
+//            std::cout << std::endl;
+//        }
 
     for (auto &pagent : agents) {
 
@@ -168,15 +172,21 @@ unsigned _ga_token::numberOfAgents()const {
     return agents.size();
 }
 
+_ga_token* _ga_token::getClone()const {
+        return new _ga_token(*this);
+}
+
 std::string _ga_token::id() const {
     return "GAT";
 }
 
-const std::string& _ga_token::name() const {
-
+const std::string& _ga_token::getName() const {
     return _name;
-    
 }
+
+void _ga_token::setName(const std::string& name){
+        this->_name = name;
+    }
 
 int _ga_token::energyExpenditure() const {
     int ret = 0;
@@ -200,28 +210,28 @@ bool _ga_token::isAgentAtTrivialPath(int agentId) const {
 }
 
 bool _ga_token::isIdle()const {
-    
+
     return pendingTasks.empty() && runningTasks.empty();
-    
+
 }
 
-//bool _ga_token::liberateEndpoint(const _ga_agent& agent, const _site& endpoint) {
-//
-//    for (auto &agentPair : agents) {
-//
-//        if (agent.id() != agentPair.second.id() && agentPair.second.goalSite().match(endpoint)) { //other agents
-//
-//            return updateAgentRestPath(agentPair.second);
-//
-//        }
-//
-//    }
-//
-//    return true;
-//
-//}
+bool _ga_token::liberateEndpoint(const _ga_agent& agent, const _site& endpoint) {
 
-_ga_agent* _ga_token::endpointObstruction(const _ga_agent& agent, const _site& endpoint) {
+    _ga_agent* obstructor = getEndpointObstructor(agent, endpoint);
+
+    if (obstructor != nullptr) {
+
+        updateAgentRestPathCloserEndpoint(*obstructor, obstructor->currentSite());
+
+        return true;
+
+    }
+
+    return false;
+
+}
+
+_ga_agent* _ga_token::getEndpointObstructor(const _ga_agent& agent, const _site& endpoint) {
 
     for (auto &agentPair : agents) {
 
@@ -273,21 +283,33 @@ bool _ga_token::updateAgentRestPathCloserEndpoint(_ga_agent& agent, const _site&
 
         if (flag) {
 
-            _stepPath newAgentPath(agent.getPath());
+            _stepPath newAgentPath(agent.goalSite());
             bool flag = astar.solve(stepMap, newAgentPath, endpoint, agent.id());
 
             if (flag) {
 
                 if (newAgentPath.isTrivial()) {
 
-                    _stepSite future = agent.currentSite();
-                    future.SetStep(future.GetStep() + 1);
-                    newAgentPath.progress(future);
+//                    _stepSite future = agent.currentSite();
+//                    future.SetStep(future.GetStep() + 1);
+//                    newAgentPath.progress(future);
+                    
+                    try {
+                        std::ostringstream stream;
+                        stream << "trivial path to rest endpoint";
+                        MAPD_EXCEPTION(stream.str());
+                    } catch (std::exception& e) {
+                        std::cout << e.what() << std::endl;
+                        std::abort();
+                    }
+                    
 
                 }
 
-                agent.assignPath(newAgentPath);
+
                 stepMap.setMoving(newAgentPath, agent.id());
+                newAgentPath.pop();
+                agent.progressPath(newAgentPath);
 
                 return true;
 
@@ -307,7 +329,7 @@ bool _ga_token::updateAgentRestPathCloserEndpoint(_ga_agent& agent, const _site&
         }
 
     }
-    
+
     try {
         std::ostringstream stream;
         stream << "no endpoint available";
@@ -321,118 +343,269 @@ bool _ga_token::updateAgentRestPathCloserEndpoint(_ga_agent& agent, const _site&
 
 }
 
-bool _ga_token::updateAgentTaskPath_resting(_ga_agent& agent, int newTaskId) {
-
+bool _ga_token::updateAgentTaskPath_pendingTask(_ga_agent& agent, int newTaskId, bool trivialPath){
+    
     bool ret = false;
-
+    
     _stepPath newAgentPath(agent.currentSite());
-
+    
+    agent.unassignTask();
+    agent.setStateFree();
+    
     std::map<int, _task>::const_iterator new_task_it = pendingTasks.find(newTaskId);
 
     if (new_task_it != pendingTasks.end()) {
 
-        const _task& pendingTask = new_task_it->second;
-
+        const _task pendingTask = new_task_it->second;
+        
         if (pendingTask.getPickup().match(pendingTask.getDelivery())) { // innocuous pending task   
 
             finishedTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
             pendingTasks.erase(new_task_it);
             assignTaskAgent.insert(std::pair<int, int>(pendingTask.id(), agent.id()));
-
+            
             ret = true;
+            
+            if(!trivialPath){
+                
+                return true;
+                
+            }
 
-        } else { // go to pickup      
+        } else { // go to pickup   
+            
+            if(!trivialPath) stepMap.deleteMoving(agent.getPath(), agent.id());
+            
+            agent.assignTask(pendingTask);
 
             if (agent.currentSite().match(pendingTask.getPickup())) {
 
                 runningTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
                 pendingTasks.erase(new_task_it);
                 assignTaskAgent.insert(std::pair<int, int>(pendingTask.id(), agent.id()));
-
-                agent.assignTask(pendingTask);
-                agent.setStateBuzy();
                 
+                agent.setStateBuzy();
+
                 ret = true;
 
-                bool flag = endpointObstruction(agent, pendingTask.getDelivery()) == nullptr;
+                liberateEndpoint(agent, pendingTask.getDelivery());
 
-                if (flag) {
+                _stepAstarAlgorithm astar;
 
-                    _stepAstarAlgorithm astar;
+                bool flag = astar.solve(stepMap, newAgentPath, pendingTask.getDelivery(), agent.id());
 
-                    flag = astar.solve(stepMap, newAgentPath, pendingTask.getDelivery(), agent.id());
+                if (!flag) {
 
-                    if (!flag) {
-
-                        try {
-                            std::ostringstream stream;
-                            stream << "delivery site path not found: " << pendingTask.getDelivery();
-                            MAPD_EXCEPTION(stream.str());
-                        } catch (std::exception& e) {
-                            std::cout << e.what() << std::endl;
-                            std::abort();
-                        }
-
+                    try {
+                        std::ostringstream stream;
+                        stream << "delivery site path not found: " << pendingTask.getDelivery();
+                        MAPD_EXCEPTION(stream.str());
+                    } catch (std::exception& e) {
+                        std::cout << e.what() << std::endl;                        
+                        stepMap.stepView(currentStep);
+                        std::abort();
                     }
-
-                } else {
-
-                    return updateAgentRestPathCloserEndpoint(agent, pendingTask.getDelivery());
 
                 }
 
             } else {
-                
-//                assignedTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
 
-                agent.assignTask(pendingTask);
-                agent.setStateFree();
+                liberateEndpoint(agent, pendingTask.getPickup());
 
-                bool flag = endpointObstruction(agent, pendingTask.getPickup()) == nullptr;
+                _stepAstarAlgorithm astar;
 
-                if (flag) {
+                bool flag = astar.solve(stepMap, newAgentPath, pendingTask.getPickup(), agent.id());
 
-                    _stepAstarAlgorithm astar;
+                if (!flag) {
+                    
+                    for (int i = 0; i < 6; i++) {
+                        
+                        stepMap.stepView(0, currentStep + i);
+                        
 
-                    flag = astar.solve(stepMap, newAgentPath, pendingTask.getPickup(), agent.id());
+                    }
+                    
+                    stepMap.free_agent_view();
+                    stepMap.free_step_view();
+                    
+                    
 
-                    if (!flag) {
-
-                        try {
-                            std::ostringstream stream;
-                            stream << "pickup site path not found: " << pendingTask.getDelivery();
-                            MAPD_EXCEPTION(stream.str());
-                        } catch (std::exception& e) {
-                            std::cout << e.what() << std::endl;
-                            std::abort();
-                        }
-
+                    try {
+                        std::ostringstream stream;
+                        stream << "pickup site path not found: " << pendingTask.getPickup();
+                        MAPD_EXCEPTION(stream.str());
+                    } catch (std::exception& e) {
+                        std::cout << e.what() << std::endl;
+                        std::abort();
                     }
 
                 }
 
+            }      
+            
+        }
+        
+        
+        
+    } else {
+        
+        if(!trivialPath){
+
+            return false;
+
+        }
+                
+    }
+    
+    if (newAgentPath.isTrivial()) {
+
+        _stepSite future = agent.currentSite();
+        future.SetStep(future.GetStep() + 1);
+        newAgentPath.progress(future);
+
+    }
+
+    agent.assignPath(newAgentPath);
+    stepMap.setMoving(newAgentPath, agent.id());
+    
+    return ret;
+    
+}
+
+bool _ga_token::updateAgentTaskPath_resting(_ga_agent& agent, int newTaskId) {
+    
+    return updateAgentTaskPath_pendingTask(agent, newTaskId, true);
+
+}
+
+bool _ga_token::updateAgentTaskPath_going_to_resting(_ga_agent& agent, int newTaskId) {
+    
+    return updateAgentTaskPath_pendingTask(agent, newTaskId, false);
+    
+}
+
+bool _ga_token::updateAgentTaskPath_pickuping(_ga_agent& agent, int newTaskId) {
+
+//    bool ret = false;
+
+    _stepPath newAgentPath(agent.currentSite());
+
+    const _task* currentTask = agent.getCurrentTask();
+    
+    if(currentTask == nullptr){
+        
+        try {
+            std::ostringstream stream;
+            stream << "no task assigned";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+    }
+
+    if (currentTask->id() == newTaskId) {
+
+        pendingTasks.erase(currentTask->id());
+        runningTasks.insert(std::pair<int, _task>(currentTask->id(), *currentTask));
+        assignTaskAgent.insert(std::pair<int, int>(currentTask->id(), agent.id()));
+
+        agent.setStateBuzy();
+
+//        ret = true;
+
+        liberateEndpoint(agent, currentTask->getDelivery());
+
+        _stepAstarAlgorithm astar;
+
+        bool flag = astar.solve(stepMap, newAgentPath, currentTask->getDelivery(), agent.id());
+
+        if (!flag) {
+
+            try {
+                std::ostringstream stream;
+                stream << "delivery site path not found: " << currentTask->getDelivery();
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
             }
 
         }
+
+    } else { // different tasks
+        
+        
+        return updateAgentTaskPath_pendingTask(agent, newTaskId, true);
+
 
     }
 
     if (newAgentPath.isTrivial()) {
 
-//        bool flag = endpointObstruction(agent, agent.currentSite()) != nullptr;
-//
-//        if (flag) {
-//
-//            try {
-//                std::ostringstream stream;
-//                stream << "no task endpoint error: " << agent.currentSite();
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            }
-//
-//        }
+        _stepSite future = agent.currentSite();
+        future.SetStep(future.GetStep() + 1);
+        newAgentPath.progress(future);
+
+    }
+
+    agent.assignPath(newAgentPath);
+    stepMap.setMoving(newAgentPath, agent.id());
+    
+    return true;
+
+}
+
+bool _ga_token::updateAgentTaskPath_rest_pickuping(_ga_agent& agent, int newTaskId) {
+
+    bool ret = false;
+
+    _stepPath newAgentPath(agent.currentSite());
+
+    const _task* currentTask = agent.getCurrentTask();
+    
+    if(currentTask == nullptr){
+        
+        try {
+            std::ostringstream stream;
+            stream << "no task assigned";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+    }
+
+    if (currentTask->id() == newTaskId) {
+
+        liberateEndpoint(agent, currentTask->getPickup());
+
+        _stepAstarAlgorithm astar;
+
+        bool flag = astar.solve(stepMap, newAgentPath, currentTask->getPickup(), agent.id());
+
+        if (!flag) {
+
+            try {
+                std::ostringstream stream;
+                stream << "delivery site path not found: " << currentTask->getPickup();
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+
+        }
+
+    } else { // different tasks
+        
+        return updateAgentTaskPath_pendingTask(agent, newTaskId, true);
+
+    }
+
+    if (newAgentPath.isTrivial()) {
 
         _stepSite future = agent.currentSite();
         future.SetStep(future.GetStep() + 1);
@@ -447,78 +620,28 @@ bool _ga_token::updateAgentTaskPath_resting(_ga_agent& agent, int newTaskId) {
 
 }
 
-bool _ga_token::updateAgentTaskPath_going_to_resting(_ga_agent& agent, int newTaskId) {
+bool _ga_token::updateAgentTaskPath_going_to_pickuping(_ga_agent& agent, int newTaskId) {
 
-    bool ret = false;
+//    bool ret = false;
 
+    const _task* currentTask = agent.getCurrentTask();
     
-
-    std::map<int, _task>::const_iterator new_task_it = pendingTasks.find(newTaskId);
-
-    if (new_task_it != pendingTasks.end()) {
+    if(currentTask == nullptr){
         
-        
-
-        const _task& pendingTask = new_task_it->second;
-
-        if (pendingTask.getPickup().match(pendingTask.getDelivery())) { // innocuous pending task   
-
-            finishedTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
-            pendingTasks.erase(new_task_it);
-            assignTaskAgent.insert(std::pair<int, int>(pendingTask.id(), agent.id()));
-
-            return true;
-
-        } else { // go to pickup   
-            
-            _stepPath newAgentPath(agent.currentSite());
-            
-//            assignedTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
-
-            agent.assignTask(pendingTask);
-            agent.setStateFree();
-
-            stepMap.deleteMoving(agent.getPath(), agent.id());
-
-            bool flag = endpointObstruction(agent, pendingTask.getPickup()) == nullptr;
-
-            if (flag) {
-                
-                _stepAstarAlgorithm astar;
-
-                flag = astar.solve(stepMap, newAgentPath, pendingTask.getPickup(), agent.id());
-                
-                if(!flag){
-
-                    try {
-                        std::ostringstream stream;
-                        stream << "pickup site path not found: " << pendingTask.getPickup();
-                        MAPD_EXCEPTION(stream.str());
-                    } catch (std::exception& e) {
-                        std::cout << e.what() << std::endl;
-                        std::abort();
-                    }
-
-                }
-
-            } else {
-                
-                return !updateAgentRestPathCloserEndpoint(agent, pendingTask.getPickup());
-
-            }
-            
-            if (newAgentPath.isTrivial()) {
-
-                _stepSite future = agent.currentSite();
-                future.SetStep(future.GetStep() + 1);
-                newAgentPath.progress(future);
-
-            }
-
-            agent.assignPath(newAgentPath);
-            stepMap.setMoving(newAgentPath, agent.id());
-
+        try {
+            std::ostringstream stream;
+            stream << "no task assigned";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
         }
+        
+    }
+    
+    if (newTaskId != currentTask->id()) {
+
+        return updateAgentTaskPath_pendingTask(agent, newTaskId, false);
 
     }
     
@@ -526,582 +649,30 @@ bool _ga_token::updateAgentTaskPath_going_to_resting(_ga_agent& agent, int newTa
 
 }
 
-bool _ga_token::updateAgentTaskPath_pickuping(_ga_agent& agent, int newTaskId) {
-
-    bool ret = false;
-
-    _stepPath newAgentPath(agent.currentSite());
-
-    const _task* currentTask = agent.getCurrentTask();
-
-//    std::map<int, _task>::const_iterator currentTask_it = assignedTasks.find(currentTask->id());
-//
-//    if (currentTask_it != assignedTasks.end()) {
-
-        if (currentTask->id() == newTaskId) {
-
-//            assignedTasks.erase(currentTask->id());
-            pendingTasks.erase(currentTask->id());
-            runningTasks.insert(std::pair<int, _task>(currentTask->id(), *currentTask));
-            assignTaskAgent.insert(std::pair<int, int>(currentTask->id(), agent.id()));
-
-            agent.setStateBuzy();
-//            agent.assignTask(*currentTask);
-            
-            ret = true;
-
-            bool flag = endpointObstruction(agent, currentTask->getDelivery()) == nullptr;
-
-            if (flag) {
-
-                _stepAstarAlgorithm astar;
-
-                flag = astar.solve(stepMap, newAgentPath, currentTask->getDelivery(), agent.id());
-
-                if (!flag) {
-
-                    try {
-                        std::ostringstream stream;
-                        stream << "delivery site path not found: " << currentTask->getDelivery();
-                        MAPD_EXCEPTION(stream.str());
-                    } catch (std::exception& e) {
-                        std::cout << e.what() << std::endl;
-                        std::abort();
-                    }
-
-                }
-
-            } else {
-
-                return updateAgentRestPathCloserEndpoint(agent, currentTask->getDelivery());
-
-            }
-
-        } else { // different tasks
-
-            std::map<int, _task>::const_iterator new_task_it = pendingTasks.find(newTaskId);
-
-            if (new_task_it != pendingTasks.end()) {
-
-                const _task& pendingTask = new_task_it->second;
-
-                if (pendingTask.getPickup().match(pendingTask.getDelivery())) { // innocuous pending task   
-
-                    finishedTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
-                    pendingTasks.erase(new_task_it);
-                    assignTaskAgent.insert(std::pair<int, int>(pendingTask.id(), agent.id()));
-
-                    agent.unassignTask();
-                    agent.setStateFree();
-
-                    return updateAgentRestPathCloserEndpoint(agent, agent.currentSite());
-                    ;
-
-                } else { // go to pickup    
-
-//                    assignedTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
-
-                    agent.assignTask(pendingTask);
-                    agent.setStateFree();
-
-                    bool flag = endpointObstruction(agent, pendingTask.getPickup()) == nullptr;
-
-                    if (flag) {
-
-                        _stepAstarAlgorithm astar;
-
-                        flag = astar.solve(stepMap, newAgentPath, pendingTask.getPickup(), agent.id());
-
-                        if (!flag) {
-
-                            try {
-                                std::ostringstream stream;
-                                stream << "pickup site path not found: " << pendingTask.getDelivery();
-                                MAPD_EXCEPTION(stream.str());
-                            } catch (std::exception& e) {
-                                std::cout << e.what() << std::endl;
-                                std::abort();
-                            }
-
-                        }
-
-                    } else {
-
-                        return !updateAgentRestPathCloserEndpoint(agent, pendingTask.getPickup());
-
-                    }
-
-                }
-
-            }
-
-        }
-
-        if (newAgentPath.isTrivial()) {
-
-            _stepSite future = agent.currentSite();
-            future.SetStep(future.GetStep() + 1);
-            newAgentPath.progress(future);
-
-        }
-
-        agent.assignPath(newAgentPath);
-        stepMap.setMoving(newAgentPath, agent.id());
-
-//    } else {
-//
-//        try {
-//            std::ostringstream stream;
-//            stream << "assigned task id not found: " << currentTask->id();
-//            MAPD_EXCEPTION(stream.str());
-//        } catch (std::exception& e) {
-//            std::cout << e.what() << std::endl;
-//            std::abort();
-//        }
-//
-//    }
-
-    return ret;
-
-}
-
-bool _ga_token::updateAgentTaskPath_rest_pickuping(_ga_agent& agent, int newTaskId) {
-
-    bool ret = false;
-
-    _stepPath newAgentPath(agent.currentSite());
-
-    const _task* currentTask = agent.getCurrentTask();
-
-//    std::map<int, _task>::const_iterator currentTask_it = assignedTasks.find(currentTask->id());
-
-//    if (currentTask_it != assignedTasks.end()) {
-
-        if (currentTask->id() == newTaskId) {
-
-            bool flag = endpointObstruction(agent, currentTask->getPickup()) == nullptr;
-
-            if (flag) {
-
-                _stepAstarAlgorithm astar;
-
-                flag = astar.solve(stepMap, newAgentPath, currentTask->getPickup(), agent.id());
-
-                if (!flag) {
-
-                    try {
-                        std::ostringstream stream;
-                        stream << "delivery site path not found: " << currentTask->getDelivery();
-                        MAPD_EXCEPTION(stream.str());
-                    } catch (std::exception& e) {
-                        std::cout << e.what() << std::endl;
-                        std::abort();
-                    }
-
-                }
-
-            }
-
-        } else { // different tasks
-            
-//            assignedTasks.erase(currentTask->id());
-            agent.unassignTask();
-            agent.setStateFree();
-
-            std::map<int, _task>::const_iterator new_task_it = pendingTasks.find(newTaskId);
-
-            if (new_task_it != pendingTasks.end()) {
-
-                const _task& pendingTask = new_task_it->second;
-
-                if (pendingTask.getPickup().match(pendingTask.getDelivery())) { // innocuous pending task   
-
-                    finishedTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
-                    pendingTasks.erase(new_task_it);
-                    assignTaskAgent.insert(std::pair<int, int>(pendingTask.id(), agent.id()));
-
-                    agent.unassignTask();
-                    agent.setStateFree();
-
-                    ret = true;
-
-                } else { // go to pickup    
-                                        
-//                    assignedTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
-
-                    agent.assignTask(pendingTask);
-                    agent.setStateFree();
-
-                    bool flag = endpointObstruction(agent, pendingTask.getPickup()) == nullptr;
-
-                    if (flag) {
-
-                        _stepAstarAlgorithm astar;
-
-                        flag = astar.solve(stepMap, newAgentPath, pendingTask.getPickup(), agent.id());
-
-                        if (!flag) {
-
-                            try {
-                                std::ostringstream stream;
-                                stream << "pickup site path not found: " << pendingTask.getDelivery();
-                                MAPD_EXCEPTION(stream.str());
-                            } catch (std::exception& e) {
-                                std::cout << e.what() << std::endl;
-                                std::abort();
-                            }
-
-                        }
-
-                    } else {
-
-                        return !updateAgentRestPathCloserEndpoint(agent, pendingTask.getPickup());
-
-                    }
-
-                }
-
-            }
-
-        }
-
-        if (newAgentPath.isTrivial()) {
-
-            _stepSite future = agent.currentSite();
-            future.SetStep(future.GetStep() + 1);
-            newAgentPath.progress(future);
-
-        }
-
-        agent.assignPath(newAgentPath);
-        stepMap.setMoving(newAgentPath, agent.id());
-
-//    } else {
-//
-//        try {
-//            std::ostringstream stream;
-//            stream << "assigned task id not found: " << currentTask->id();
-//            MAPD_EXCEPTION(stream.str());
-//        } catch (std::exception& e) {
-//            std::cout << e.what() << std::endl;
-//            std::abort();
-//        }
-//
-//    }
-
-    return ret;
-
-}
-
-bool _ga_token::updateAgentTaskPath_going_to_pickuping(_ga_agent& agent, int newTaskId) {
-
-    bool ret = false;
-
-    const _task* currentTask = agent.getCurrentTask();
-
-//    std::map<int, _task>::const_iterator currentTask_it = assignedTasks.find(currentTask->id());
-//
-//    if (currentTask_it != assignedTasks.end()) {
-
-        if (newTaskId == currentTask->id()) {
-
-            return false;
-
-        } else {
-
-//            assignedTasks.erase(currentTask_it);
-            agent.unassignTask();
-
-            std::map<int, _task>::const_iterator newTask_it = pendingTasks.find(newTaskId);
-
-            if (newTask_it != pendingTasks.end()) {
-
-                const _task& newTask = newTask_it->second;
-
-                if (newTask.getPickup().match(newTask.getDelivery())) { // innocuous newTask
-
-                    pendingTasks.erase(newTask_it);
-                    finishedTasks.insert(std::pair<int, _task>(newTask.id(), newTask));
-                    assignTaskAgent.insert(std::pair<int, int>(newTask.id(), agent.id()));
-
-                    agent.setStateFree();
-                    agent.unassignTask();
-
-                    return updateAgentRestPathCloserEndpoint(agent, agent.currentSite());
-
-                } else {
-
-                    _stepAstarAlgorithm astar;
-
-                    _stepPath newAgentPath(agent.currentSite());
-
-                    stepMap.deleteMoving(agent.getPath(), agent.id());
-
-                    if (agent.currentSite().match(newTask.getPickup())) {
-
-                        runningTasks.insert(std::pair<int, _task>(newTask.id(), newTask));
-                        pendingTasks.erase(newTask_it);
-                        assignTaskAgent.insert(std::pair<int, int>(newTask.id(), agent.id()));
-
-                        agent.assignTask(newTask);
-                        agent.setStateBuzy();
-
-                        ret = true;
-
-                        bool flag = endpointObstruction(agent, newTask.getDelivery()) == nullptr;
-
-                        if (flag) {
-
-                            flag = astar.solve(stepMap, newAgentPath, newTask.getDelivery(), agent.id());
-
-                            if (!flag) {
-
-                                try {
-                                    std::ostringstream stream;
-                                    stream << "delivery site path not found: " << newTask.getDelivery();
-                                    MAPD_EXCEPTION(stream.str());
-                                } catch (std::exception& e) {
-                                    std::cout << e.what() << std::endl;
-                                    std::abort();
-                                }
-
-                            }
-
-                        } else {
-
-                            agent.assignPath(newAgentPath);
-                            stepMap.setMoving(agent.getPath(), agent.id());
-
-                            return updateAgentRestPathCloserEndpoint(agent, newTask.getDelivery());
-
-                        }
-
-                    } else {
-
-//                        assignedTasks.insert(std::pair<int, _task>(newTask.id(), newTask));
-
-                        agent.assignTask(newTask);
-                        agent.setStateFree();
-
-                        ret = false;
-
-                        bool flag = endpointObstruction(agent, newTask.getPickup()) == nullptr;
-
-                        if (flag) {
-
-                            flag = astar.solve(stepMap, newAgentPath, newTask.getPickup(), agent.id());
-
-                            if (!flag) {
-
-                                try {
-                                    std::ostringstream stream;
-                                    stream << "pickup site path not found: " << newTask.getPickup();
-                                    MAPD_EXCEPTION(stream.str());
-                                } catch (std::exception& e) {
-                                    std::cout << e.what() << std::endl;
-                                    std::abort();
-                                }
-
-                            }
-
-                        } else {
-
-                            agent.assignPath(newAgentPath);
-                            stepMap.setMoving(agent.getPath(), agent.id());
-
-                            return !updateAgentRestPathCloserEndpoint(agent, newTask.getPickup());
-
-                        }
-
-                    }
-
-                    if (newAgentPath.isTrivial()) {
-
-                        _stepSite future = agent.currentSite();
-                        future.SetStep(future.GetStep() + 1);
-                        newAgentPath.progress(future);
-
-                    }
-
-                    agent.assignPath(newAgentPath);
-                    stepMap.setMoving(newAgentPath, agent.id());
-
-                }
-
-            } 
-
-        }
-
-//    } else {
-//
-//        try {
-//            std::ostringstream stream;
-//            stream << "assigned task id not found: " << currentTask->id();
-//            MAPD_EXCEPTION(stream.str());
-//        } catch (std::exception& e) {
-//            std::cout << e.what() << std::endl;
-//            std::abort();
-//        }
-//
-//    }
-
-    return ret;
-
-}
-
 bool _ga_token::updateAgentTaskPath_going_to_rest_pickuping(_ga_agent& agent, int newTaskId) {
 
-    bool ret = false;
-
     const _task* currentTask = agent.getCurrentTask();
-
-//    std::map<int, _task>::const_iterator currentTask_it = assignedTasks.find(currentTask->id());
-//
-//    if (currentTask_it != assignedTasks.end()) {
-
-        if (newTaskId == currentTask->id()) {
-
-            return false;
-
-        } else {
-
-//            assignedTasks.erase(currentTask_it);
-            agent.unassignTask();
-
-            std::map<int, _task>::const_iterator newTask_it = pendingTasks.find(newTaskId);
-
-            if (newTask_it != pendingTasks.end()) {
-
-                const _task& newTask = newTask_it->second;
-
-                if (newTask.getPickup().match(newTask.getDelivery())) { // innocuous newTask
-
-                    pendingTasks.erase(newTask_it);
-                    finishedTasks.insert(std::pair<int, _task>(newTask.id(), newTask));
-                    assignTaskAgent.insert(std::pair<int, int>(newTask.id(), agent.id()));
-
-                    agent.setStateFree();
-                    agent.unassignTask();
-
-                    return updateAgentRestPathCloserEndpoint(agent, agent.currentSite());
-
-                } else {
-
-                    _stepAstarAlgorithm astar;
-
-                    _stepPath newAgentPath(agent.currentSite());
-
-                    stepMap.deleteMoving(agent.getPath(), agent.id());
-
-                    if (agent.currentSite().match(newTask.getPickup())) {
-
-                        runningTasks.insert(std::pair<int, _task>(newTask.id(), newTask));
-                        pendingTasks.erase(newTask_it);
-                        assignTaskAgent.insert(std::pair<int, int>(newTask.id(), agent.id()));
-
-                        agent.assignTask(newTask);
-                        agent.setStateBuzy();
-
-                        ret = true;
-
-                        bool flag = endpointObstruction(agent, newTask.getDelivery()) == nullptr;
-
-                        if (flag) {
-
-                            flag = astar.solve(stepMap, newAgentPath, newTask.getDelivery(), agent.id());
-
-                            if (!flag) {
-
-                                try {
-                                    std::ostringstream stream;
-                                    stream << "delivery site path not found: " << newTask.getDelivery();
-                                    MAPD_EXCEPTION(stream.str());
-                                } catch (std::exception& e) {
-                                    std::cout << e.what() << std::endl;
-                                    std::abort();
-                                }
-
-                            }
-
-                        } else {
-
-                            agent.assignPath(newAgentPath);
-                            stepMap.setMoving(agent.getPath(), agent.id());
-
-                            return updateAgentRestPathCloserEndpoint(agent, newTask.getDelivery());
-
-                        }
-
-                    } else {
-
-//                        assignedTasks.insert(std::pair<int, _task>(newTask.id(), newTask));
-
-                        agent.assignTask(newTask);
-                        agent.setStateFree();
-
-                        ret = false;
-
-                        bool flag = endpointObstruction(agent, newTask.getPickup()) == nullptr;
-
-                        if (flag) {
-
-                            flag = astar.solve(stepMap, newAgentPath, newTask.getPickup(), agent.id());
-
-                            if (!flag) {
-
-                                try {
-                                    std::ostringstream stream;
-                                    stream << "pickup site path not found: " << newTask.getPickup();
-                                    MAPD_EXCEPTION(stream.str());
-                                } catch (std::exception& e) {
-                                    std::cout << e.what() << std::endl;
-                                    std::abort();
-                                }
-
-                            }
-
-                        } else {
-
-                            agent.assignPath(newAgentPath);
-                            stepMap.setMoving(agent.getPath(), agent.id());
-
-                            return !updateAgentRestPathCloserEndpoint(agent, newTask.getPickup());
-
-                        }
-
-                    }
-
-                    if (newAgentPath.isTrivial()) {
-
-                        _stepSite future = agent.currentSite();
-                        future.SetStep(future.GetStep() + 1);
-                        newAgentPath.progress(future);
-
-                    }
-
-                    agent.assignPath(newAgentPath);
-                    stepMap.setMoving(newAgentPath, agent.id());
-
-                }
-
-            } 
-
+    
+    if(currentTask == nullptr){
+        
+        try {
+            std::ostringstream stream;
+            stream << "no task assigned";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
         }
+        
+    }
+    
+    if (newTaskId != currentTask->id()) {
 
-//    } else {
-//
-//        try {
-//            std::ostringstream stream;
-//            stream << "assigned task id not found: " << currentTask->id();
-//            MAPD_EXCEPTION(stream.str());
-//        } catch (std::exception& e) {
-//            std::cout << e.what() << std::endl;
-//            std::abort();
-//        }
-//
-//    }
+        return updateAgentTaskPath_pendingTask(agent, newTaskId, false);
 
-    return ret;
+    }
+    
+    return false;
 
 }
 
@@ -1110,190 +681,69 @@ bool _ga_token::updateAgentTaskPath_going_to_rest_pickuping_to_pickuping(_ga_age
     bool ret = false;
 
     const _task* currentTask = agent.getCurrentTask();
-
-//    std::map<int, _task>::const_iterator currentTask_it = assignedTasks.find(currentTask->id());
-//
-//    if (currentTask_it != assignedTasks.end()) {
+    
+    if(currentTask == nullptr){
         
-        _stepAstarAlgorithm astar;
-
-        _stepPath newAgentPath(agent.currentSite());
-        
-//        assignedTasks.erase(currentTask_it);
-
-        if (newTaskId == currentTask->id()) {
-            
-            runningTasks.insert(std::pair<int, _task>(currentTask->id(), *currentTask));
-            pendingTasks.erase(currentTask->id());
-            assignTaskAgent.insert(std::pair<int, int>(currentTask->id(), agent.id()));
-            
-            agent.setStateBuzy();
-            
-            stepMap.deleteMoving(agent.getPath(), agent.id());
-            
-            ret = true;
-            
-            bool flag = endpointObstruction(agent, currentTask->getDelivery()) == nullptr;
-
-            if (flag) {
-
-                flag = astar.solve(stepMap, newAgentPath, currentTask->getDelivery(), agent.id());
-
-                if (!flag) {
-
-                    try {
-                        std::ostringstream stream;
-                        stream << "delivery site path not found: " << currentTask->getDelivery();
-                        MAPD_EXCEPTION(stream.str());
-                    } catch (std::exception& e) {
-                        std::cout << e.what() << std::endl;
-                        std::abort();
-                    }
-
-                }
-
-            } else {
-
-                agent.assignPath(newAgentPath);
-                stepMap.setMoving(agent.getPath(), agent.id());
-
-                return updateAgentRestPathCloserEndpoint(agent, currentTask->getDelivery());
-
-            }            
-            
-        } else {
-            
-            agent.setStateFree();
-            agent.unassignTask();
-            
-            std::map<int, _task>::const_iterator newTask_it = pendingTasks.find(newTaskId);
-
-            if (newTask_it != pendingTasks.end()) {
-
-                const _task& newTask = newTask_it->second;
-
-                if (newTask.getPickup().match(newTask.getDelivery())) { // innocuous newTask
-
-                    pendingTasks.erase(newTask_it);
-                    finishedTasks.insert(std::pair<int, _task>(newTask.id(), newTask));
-                    assignTaskAgent.insert(std::pair<int, int>(newTask.id(), agent.id()));
-
-                    agent.setStateFree();
-                    agent.unassignTask();
-
-                    return true;
-
-                } else {
-
-                    stepMap.deleteMoving(agent.getPath(), agent.id());
-
-                    if (agent.currentSite().match(newTask.getPickup())) {
-
-                        runningTasks.insert(std::pair<int, _task>(newTask.id(), newTask));
-                        pendingTasks.erase(newTask_it);
-                        assignTaskAgent.insert(std::pair<int, int>(newTask.id(), agent.id()));
-
-                        agent.assignTask(newTask);
-                        agent.setStateBuzy();
-
-                        ret = true;
-
-                        bool flag = endpointObstruction(agent, newTask.getDelivery()) == nullptr;
-
-                        if (flag) {
-
-                            flag = astar.solve(stepMap, newAgentPath, newTask.getDelivery(), agent.id());
-
-                            if (!flag) {
-
-                                try {
-                                    std::ostringstream stream;
-                                    stream << "delivery site path not found: " << newTask.getDelivery();
-                                    MAPD_EXCEPTION(stream.str());
-                                } catch (std::exception& e) {
-                                    std::cout << e.what() << std::endl;
-                                    std::abort();
-                                }
-
-                            }
-
-                        } else {
-
-                            agent.assignPath(newAgentPath);
-                            stepMap.setMoving(agent.getPath(), agent.id());
-
-                            return updateAgentRestPathCloserEndpoint(agent, newTask.getDelivery());
-
-                        }
-
-                    } else {
-
-//                        assignedTasks.insert(std::pair<int, _task>(newTask.id(), newTask));
-
-                        agent.assignTask(newTask);
-                        agent.setStateFree();
-
-                        ret = false;
-
-                        bool flag = endpointObstruction(agent, newTask.getPickup()) == nullptr;
-
-                        if (flag) {
-
-                            flag = astar.solve(stepMap, newAgentPath, newTask.getPickup(), agent.id());
-
-                            if (!flag) {
-
-                                try {
-                                    std::ostringstream stream;
-                                    stream << "pickup site path not found: " << newTask.getPickup();
-                                    MAPD_EXCEPTION(stream.str());
-                                } catch (std::exception& e) {
-                                    std::cout << e.what() << std::endl;
-                                    std::abort();
-                                }
-
-                            }
-
-                        } else {
-
-                            agent.assignPath(newAgentPath);
-                            stepMap.setMoving(agent.getPath(), agent.id());
-
-                            return !updateAgentRestPathCloserEndpoint(agent, newTask.getPickup());
-
-                        }
-
-                    }                    
-
-                }
-
-            } 
-
+        try {
+            std::ostringstream stream;
+            stream << "no task assigned";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
         }
         
-        if (newAgentPath.isTrivial()) {
+    }
 
-            _stepSite future = agent.currentSite();
-            future.SetStep(future.GetStep() + 1);
-            newAgentPath.progress(future);
+    _stepAstarAlgorithm astar;
+
+    _stepPath newAgentPath(agent.currentSite());
+
+    if (newTaskId == currentTask->id()) {
+
+        runningTasks.insert(std::pair<int, _task>(currentTask->id(), *currentTask));
+        pendingTasks.erase(currentTask->id());
+        assignTaskAgent.insert(std::pair<int, int>(currentTask->id(), agent.id()));
+
+        agent.setStateBuzy();
+
+        stepMap.deleteMoving(agent.getPath(), agent.id());
+
+        ret = true;
+
+        liberateEndpoint(agent, currentTask->getDelivery());
+
+        bool flag = astar.solve(stepMap, newAgentPath, currentTask->getDelivery(), agent.id());
+
+        if (!flag) {
+
+            try {
+                std::ostringstream stream;
+                stream << "delivery site path not found: " << currentTask->getDelivery();
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
 
         }
 
-        agent.assignPath(newAgentPath);
-        stepMap.setMoving(newAgentPath, agent.id());
+    } else {
+        
+        return updateAgentTaskPath_pendingTask(agent, newTaskId, false);
 
-//    } else {
-//
-//        try {
-//            std::ostringstream stream;
-//            stream << "assigned task id not found: " << currentTask->id();
-//            MAPD_EXCEPTION(stream.str());
-//        } catch (std::exception& e) {
-//            std::cout << e.what() << std::endl;
-//            std::abort();
-//        }
-//
-//    }
+    }
+
+    if (newAgentPath.isTrivial()) {
+
+        _stepSite future = agent.currentSite();
+        future.SetStep(future.GetStep() + 1);
+        newAgentPath.progress(future);
+
+    }
+
+    agent.assignPath(newAgentPath);
+    stepMap.setMoving(newAgentPath, agent.id());
 
     return ret;
 
@@ -1303,9 +753,20 @@ bool _ga_token::updateAgentTaskPath_delivering(_ga_agent& agent, int newTaskId) 
 
     bool ret = false;
 
-    _stepPath newAgentPath(agent.currentSite());
-
     const _task* currentTask = agent.getCurrentTask();
+    
+    if(currentTask == nullptr){
+        
+        try {
+            std::ostringstream stream;
+            stream << "no task assigned";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+    }
 
     std::map<int, _task>::const_iterator currentTask_it = runningTasks.find(currentTask->id());
 
@@ -1313,122 +774,10 @@ bool _ga_token::updateAgentTaskPath_delivering(_ga_agent& agent, int newTaskId) 
 
         finishedTasks.insert(std::pair<int, _task>(currentTask_it->first, currentTask_it->second));
         runningTasks.erase(currentTask_it);
-
-        agent.unassignTask();
+        
         agent.setStateFree();
-
-        std::map<int, _task>::const_iterator new_task_it = pendingTasks.find(newTaskId);
-
-        if (new_task_it != pendingTasks.end()) {
-
-            const _task& pendingTask = new_task_it->second;
-
-            if (pendingTask.getPickup().match(agent.currentSite())) { // pickup
-
-                if (pendingTask.getDelivery().match(agent.currentSite())) { // innocuous task
-
-                    finishedTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
-                    pendingTasks.erase(new_task_it);
-                    assignTaskAgent.insert(std::pair<int, int>(pendingTask.id(), agent.id()));
-
-                    agent.unassignTask();
-                    agent.setStateFree();
-
-                    return updateAgentRestPathCloserEndpoint(agent, agent.currentSite());
-
-                } else { // go to delivery
-
-                    runningTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
-                    pendingTasks.erase(new_task_it);
-                    assignTaskAgent.insert(std::pair<int, int>(pendingTask.id(), agent.id()));
-
-                    agent.assignTask(pendingTask);
-                    agent.setStateBuzy();
-
-                    ret = true;
-
-                    bool flag = endpointObstruction(agent, pendingTask.getDelivery()) == nullptr;
-
-                    if (flag) {
-
-                        _stepAstarAlgorithm astar;
-
-                        flag = astar.solve(stepMap, newAgentPath, pendingTask.getDelivery(), agent.id());
-
-                        if (!flag) {
-
-                            try {
-                                std::ostringstream stream;
-                                stream << "delivery site path not found: " << pendingTask.getDelivery();
-                                MAPD_EXCEPTION(stream.str());
-                            } catch (std::exception& e) {
-                                std::cout << e.what() << std::endl;
-                                std::abort();
-                            }
-
-                        }
-
-                    } else {
-
-                        return updateAgentRestPathCloserEndpoint(agent, pendingTask.getDelivery());
-
-                    }
-
-                }
-
-            } else { // go to pickup
-
-//                assignedTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
-
-                agent.assignTask(pendingTask);
-                agent.setStateFree();
-
-                bool flag = endpointObstruction(agent, pendingTask.getPickup()) == nullptr;
-
-                if (flag) {
-
-                    _stepAstarAlgorithm astar;
-
-                    flag = astar.solve(stepMap, newAgentPath, pendingTask.getPickup(), agent.id());
-
-                    if (!flag) {
-
-                        try {
-                            std::ostringstream stream;
-                            stream << "pickup site path not found: " << pendingTask.getPickup();
-                            MAPD_EXCEPTION(stream.str());
-                        } catch (std::exception& e) {
-                            std::cout << e.what() << std::endl;
-                            std::abort();
-                        }
-
-                    }
-
-                } else {
-
-                    return !updateAgentRestPathCloserEndpoint(agent, pendingTask.getPickup());
-
-                }
-
-            }
-
-        } else {
-            
-            return !updateAgentRestPathCloserEndpoint(agent, agent.currentSite());
-            
-        }
-
-        if (newAgentPath.isTrivial()) {
-
-            _stepSite future = agent.currentSite();
-            future.SetStep(future.GetStep() + 1);
-            newAgentPath.progress(future);
-
-        }
-
-        agent.assignPath(newAgentPath);
-        stepMap.setMoving(newAgentPath, agent.id());
-
+        agent.unassignTask();
+        
     } else {
 
         try {
@@ -1441,43 +790,53 @@ bool _ga_token::updateAgentTaskPath_delivering(_ga_agent& agent, int newTaskId) 
         }
 
     }
-
-    return ret;
+    
+    return updateAgentTaskPath_pendingTask(agent, newTaskId, true);
 
 }
 
 bool _ga_token::updateAgentTaskPath_rest_delivering(_ga_agent& agent) {
 
     _stepPath newAgentPath(agent.currentSite());
+    
     const _task* currentTask = agent.getCurrentTask();
+    
+    if(currentTask == nullptr){
+        
+        try {
+            std::ostringstream stream;
+            stream << "no task assigned";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+    }
 
     std::map<int, _task>::const_iterator currentTask_it = runningTasks.find(currentTask->id());
 
     if (currentTask_it != runningTasks.end()) {
 
-        bool flag = endpointObstruction(agent, currentTask->getDelivery()) == nullptr;
+        liberateEndpoint(agent, currentTask->getDelivery());
 
-        if (flag) {
+        _stepAstarAlgorithm astar;
 
-            _stepAstarAlgorithm astar;
+        bool flag = astar.solve(stepMap, newAgentPath, currentTask->getDelivery(), agent.id());
 
-            bool flag = astar.solve(stepMap, newAgentPath, currentTask->getDelivery(), agent.id());
+        if (!flag) {
 
-            if (!flag) {
+            try {
+                std::ostringstream stream;
+                stream << "delivery site path not found" << currentTask->getDelivery();
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
 
-                try {
-                    std::ostringstream stream;
-                    stream << "delivery site path not found" << currentTask->getDelivery();
-                    MAPD_EXCEPTION(stream.str());
-                } catch (std::exception& e) {
-                    std::cout << e.what() << std::endl;
-                    std::abort();
-                }
-
-            }            
-            
         }
-        
+
         if (newAgentPath.isTrivial()) {
 
             _stepSite future = agent.currentSite();
@@ -1489,7 +848,6 @@ bool _ga_token::updateAgentTaskPath_rest_delivering(_ga_agent& agent) {
         agent.assignPath(newAgentPath);
         stepMap.setMoving(newAgentPath, agent.id());
 
-        
     } else {
 
         try {
@@ -1509,139 +867,28 @@ bool _ga_token::updateAgentTaskPath_rest_delivering(_ga_agent& agent) {
 
 bool _ga_token::updateAgentTaskPath_going_to_rest_delivering_to_delivering(_ga_agent& agent, int newTaskId) {
 
-    bool ret = false;
-
     const _task* currentTask = agent.getCurrentTask();
+    
+    if(currentTask == nullptr){
+        
+        try {
+            std::ostringstream stream;
+            stream << "no task assigned";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+    }
 
     std::map<int, _task>::const_iterator currentTask_it = runningTasks.find(currentTask->id());
 
     if (currentTask_it != runningTasks.end()) {
-        
-        _stepAstarAlgorithm astar;
 
-        _stepPath newAgentPath(agent.currentSite());
-        
         runningTasks.erase(currentTask_it);
         finishedTasks.insert(std::pair<int, _task>(currentTask->id(), *currentTask));
-        assignTaskAgent.insert(std::pair<int, int>(currentTask->id(), agent.id()));
-
-        agent.setStateFree();
-        agent.unassignTask();
-        
-        std::map<int, _task>::const_iterator newTask_it = pendingTasks.find(newTaskId);
-
-        if (newTask_it != pendingTasks.end()) {
-
-            const _task& newTask = newTask_it->second;
-
-            if (newTask.getPickup().match(newTask.getDelivery())) { // innocuous newTask
-
-                pendingTasks.erase(newTask_it);
-                finishedTasks.insert(std::pair<int, _task>(newTask.id(), newTask));
-                assignTaskAgent.insert(std::pair<int, int>(newTask.id(), agent.id()));
-
-                agent.setStateFree();
-                agent.unassignTask();
-                
-                return true;
-                
-            } else {
-
-                stepMap.deleteMoving(agent.getPath(), agent.id());
-
-                if (agent.currentSite().match(newTask.getPickup())) {
-
-                    runningTasks.insert(std::pair<int, _task>(newTask.id(), newTask));
-                    pendingTasks.erase(newTask_it);
-                    assignTaskAgent.insert(std::pair<int, int>(newTask.id(), agent.id()));
-
-                    agent.assignTask(newTask);
-                    agent.setStateBuzy();
-
-                    ret = true;
-
-                    bool flag = endpointObstruction(agent, newTask.getDelivery()) == nullptr;
-
-                    if (flag) {
-
-                        flag = astar.solve(stepMap, newAgentPath, newTask.getDelivery(), agent.id());
-
-                        if (!flag) {
-
-                            try {
-                                std::ostringstream stream;
-                                stream << "delivery site path not found: " << newTask.getDelivery();
-                                MAPD_EXCEPTION(stream.str());
-                            } catch (std::exception& e) {
-                                std::cout << e.what() << std::endl;
-                                std::abort();
-                            }
-
-                        }
-
-                    } else {
-
-                        agent.assignPath(newAgentPath);
-                        stepMap.setMoving(agent.getPath(), agent.id());
-
-                        return updateAgentRestPathCloserEndpoint(agent, newTask.getDelivery());
-
-                    }
-
-                } else {
-
-//                    assignedTasks.insert(std::pair<int, _task>(newTask.id(), newTask));
-
-                    agent.assignTask(newTask);
-                    agent.setStateFree();
-
-                    ret = false;
-
-                    bool flag = endpointObstruction(agent, newTask.getPickup()) == nullptr;
-
-                    if (flag) {
-
-                        flag = astar.solve(stepMap, newAgentPath, newTask.getPickup(), agent.id());
-
-                        if (!flag) {
-
-                            try {
-                                std::ostringstream stream;
-                                stream << "pickup site path not found: " << newTask.getPickup();
-                                MAPD_EXCEPTION(stream.str());
-                            } catch (std::exception& e) {
-                                std::cout << e.what() << std::endl;
-                                std::abort();
-                            }
-
-                        }
-
-                    } else {
-
-                        agent.assignPath(newAgentPath);
-                        stepMap.setMoving(agent.getPath(), agent.id());
-
-                        return !updateAgentRestPathCloserEndpoint(agent, newTask.getPickup());
-
-                    }
-
-                }  
-                
-                if (newAgentPath.isTrivial()) {
-
-                    _stepSite future = agent.currentSite();
-                    future.SetStep(future.GetStep() + 1);
-                    newAgentPath.progress(future);
-
-                }
-
-                agent.assignPath(newAgentPath);
-                stepMap.setMoving(newAgentPath, agent.id());
-
-            }
-
-        }     
-
+           
     } else {
 
         try {
@@ -1654,34 +901,49 @@ bool _ga_token::updateAgentTaskPath_going_to_rest_delivering_to_delivering(_ga_a
         }
 
     }
-
-    return ret;
+    
+    return updateAgentTaskPath_pendingTask(agent, newTaskId, false);
 
 }
 
 bool _ga_token::updateAgentTaskPath(
         int agentId,
         int newTaskId) {
+    
+//        if(currentStep >= 20)
+//            stepMap.stepView(currentStep);
+        
+//    std::cout << "step: " << currentStep << " - ";
 
     std::map<int, _ga_agent>::iterator agent_it = agents.find(agentId);
 
     if (agent_it != agents.end()) {
 
         _ga_agent& agent = agent_it->second;
+        
+//        std::cout << "agent: " << agent.id() << " - ";
 
         if (agent.isAtTrivialPath()) {
+            
+//            std::cout << "trivial" << " - ";
 
             if (agent.isFree()) {
 
                 if (agent.isAtPickuping()) {
+                    
+//                    std::cout << "agent.isAtPickuping() : "<< std::endl;
 
                     return updateAgentTaskPath_pickuping(agent, newTaskId);
 
                 } else if (agent.isAtResting()) {
+                    
+//                    std::cout << "agent.isAtResting() : "<< std::endl;
 
                     return updateAgentTaskPath_resting(agent, newTaskId);
 
                 } else if (agent.isAtRestPickuping()) {
+                    
+//                    std::cout << "agent.isAtRestPickuping() : "<< std::endl;
 
                     return updateAgentTaskPath_rest_pickuping(agent, newTaskId);
 
@@ -1701,10 +963,14 @@ bool _ga_token::updateAgentTaskPath(
             } else if (agent.isBuzy()) {
 
                 if (agent.isAtDelivering()) {
+                    
+//                    std::cout << "agent.isAtDelivering() : "<< std::endl;
 
                     return updateAgentTaskPath_delivering(agent, newTaskId);
 
                 } else if (agent.isAtRestDelivering()) {
+                    
+//                    std::cout << "agent.isAtRestDelivering() : "<< std::endl;
 
                     return updateAgentTaskPath_rest_delivering(agent);
 
@@ -1735,22 +1001,32 @@ bool _ga_token::updateAgentTaskPath(
             }
 
         } else { // !agent.isAtTrivialPath()
+            
+//            std::cout << "no trivial" << " - ";
 
             if (agent.isFree()) {
 
                 if (agent.isAtPickuping()) {
+                    
+//                    std::cout << "*agent.isAtPickuping() : "<< std::endl;
 
                     return updateAgentTaskPath_going_to_rest_pickuping_to_pickuping(agent, newTaskId);
 
                 } else if (agent.isGoingToPickuping()) {
+                    
+//                    std::cout << "*agent.isGoingToPickuping() : "<< std::endl;
 
                     return updateAgentTaskPath_going_to_pickuping(agent, newTaskId);
 
                 } else if (agent.isGoingToRestPickuping()) {
+                    
+//                    std::cout << "*agent.isGoingToRestPickuping() : "<< std::endl;
 
                     return updateAgentTaskPath_going_to_rest_pickuping(agent, newTaskId);
 
                 } else if (agent.isGoingToResting()) {
+                    
+//                    std::cout << "*agent.isGoingToResting() : "<< std::endl;
 
                     return updateAgentTaskPath_going_to_resting(agent, newTaskId);
 
@@ -1770,15 +1046,20 @@ bool _ga_token::updateAgentTaskPath(
             } else if (agent.isBuzy()) {
 
                 if (agent.isGoingToDelivering()) {
+                    
+//                    std::cout << "*agent.isGoingToDelivering() : "<< std::endl;
 
                     // nothing
 
                 } else if (agent.isAtDelivering()) {
+                    
+//                    std::cout << "*agent.isAtDelivering() : "<< std::endl;
 
                     return updateAgentTaskPath_going_to_rest_delivering_to_delivering(agent, newTaskId);
 
                 } else if (agent.isGoingToRestDelivering()) {
 
+//                    std::cout << "*agent.isGoingToRestDelivering() : "<< std::endl;
                     // nothing
 
                 } else {
@@ -1842,18 +1123,18 @@ void _ga_token::listNonTaskEndpoints(const std::function<bool(const _site&) > fu
 
 }
 
-const _task* _ga_token::getPendingTaskById(int taskId) const{
-    
+const _task* _ga_token::getPendingTaskById(int taskId) const {
+
     auto it = pendingTasks.find(taskId);
-    
-    if(it != pendingTasks.end()){
-        
+
+    if (it != pendingTasks.end()) {
+
         return &it->second;
-        
+
     }
-    
+
     return nullptr;
-    
+
 }
 
 void _ga_token::listPendingTasks(const std::function<bool(unsigned, const _task&) > function)const {
@@ -1912,6 +1193,7 @@ void _ga_token::error_site_collision_check() const {
                         MAPD_EXCEPTION(stream.str());
                     } catch (std::exception& e) {
                         std::cout << e.what() << std::endl;
+                        stepMap.stepView(currentStep);
                         std::abort();
                     }
 
@@ -1930,6 +1212,22 @@ void _ga_token::error_site_collision_check() const {
         count1--;
 
     }
+
+}
+
+unsigned _ga_token::GetMaxPlannedStep() const {
+
+    unsigned maxStep = 0;
+
+    for (const auto& agentPair : agents) {
+
+        unsigned aux = agentPair.second.goalSite().GetStep();
+
+        if (aux > maxStep) maxStep = aux;
+
+    }
+
+    return maxStep;
 
 }
 

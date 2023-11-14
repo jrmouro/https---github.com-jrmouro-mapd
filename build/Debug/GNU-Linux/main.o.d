@@ -10,11 +10,11 @@ build/Debug/GNU-Linux/main.o: main.cpp MultiSystemExperiment.h \
  _agent_energy_regime.h _manhattanAlgorithm.h _stepAstarAlgorithm.h \
  _stepPathAlgorithm.h ReportTaskMap.h Text.h Shape.h \
  GA_SystemExperiment.h _ga_system.h _ga_solution.h _ga_pseudo_solution.h \
- _ga_token.h _ga_agent.h _ga_agent_state.h _allocation.h \
- ThresholdTokenPass.h TokenPass.h _updateTokenAlgorithms.h \
- _updateTrivialPathToAgentAlgorithm.h _updateToAgentAlgorithm.h \
- _selectTrivialPathToAgentAlgorithm.h _taskPathToAgentAlgorithm.h \
- _taskIndexerAlgorithm.h _endpointIndexerAlgorithm.h \
+ _ga_token.h _ga_agent.h _ga_agent_state.h _closerTaskIndexerAlgorithm.h \
+ _taskIndexerAlgorithm.h _allocation.h ThresholdTokenPass.h TokenPass.h \
+ _updateTokenAlgorithms.h _updateTrivialPathToAgentAlgorithm.h \
+ _updateToAgentAlgorithm.h _selectTrivialPathToAgentAlgorithm.h \
+ _taskPathToAgentAlgorithm.h _endpointIndexerAlgorithm.h \
  _updateTaskToAgentAlgorithm.h _updateEndpointToAgentAlgorithm.h \
  _selectEndpointToAgentAlgorithm.h \
  _selectChargingTaskToAgentThresholdAlgorithm.h \
@@ -27,8 +27,8 @@ build/Debug/GNU-Linux/main.o: main.cpp MultiSystemExperiment.h \
  _pathToAgentAlgorithm.h _selectChargingEndpointToAgentAlgorithm.h \
  _updateBackwardTaskToAgentAlgorithm.h _updateTaskSwapToAgentAlgorithm.h \
  _selectChargingTaskToAgentAlgorithm.h _closerEndpointIndexerAlgorithm.h \
- _closerTaskIndexerAlgorithm.h _closerTaskIndexerThresholdAlgorithm.h \
- TaskSwapTokenPass.h BackwardTaskToken.h _agentsTasksAllocator.h \
+ _closerTaskIndexerThresholdAlgorithm.h TaskSwapTokenPass.h \
+ BackwardTaskToken.h _agentsTasksAllocator.h _ga_token_p.h \
  _ga_solutionAllocator.h _nsga.h
 MultiSystemExperiment.h:
 SystemExperiment.h:
@@ -78,6 +78,8 @@ _ga_pseudo_solution.h:
 _ga_token.h:
 _ga_agent.h:
 _ga_agent_state.h:
+_closerTaskIndexerAlgorithm.h:
+_taskIndexerAlgorithm.h:
 _allocation.h:
 ThresholdTokenPass.h:
 TokenPass.h:
@@ -86,7 +88,6 @@ _updateTrivialPathToAgentAlgorithm.h:
 _updateToAgentAlgorithm.h:
 _selectTrivialPathToAgentAlgorithm.h:
 _taskPathToAgentAlgorithm.h:
-_taskIndexerAlgorithm.h:
 _endpointIndexerAlgorithm.h:
 _updateTaskToAgentAlgorithm.h:
 _updateEndpointToAgentAlgorithm.h:
@@ -107,10 +108,10 @@ _updateBackwardTaskToAgentAlgorithm.h:
 _updateTaskSwapToAgentAlgorithm.h:
 _selectChargingTaskToAgentAlgorithm.h:
 _closerEndpointIndexerAlgorithm.h:
-_closerTaskIndexerAlgorithm.h:
 _closerTaskIndexerThresholdAlgorithm.h:
 TaskSwapTokenPass.h:
 BackwardTaskToken.h:
 _agentsTasksAllocator.h:
+_ga_token_p.h:
 _ga_solutionAllocator.h:
 _nsga.h:

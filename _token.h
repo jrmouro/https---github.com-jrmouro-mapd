@@ -44,7 +44,7 @@ public:
                     stepMap(stepMap),
                     agent_energy_system(agent_energy_system),
                     nonTaskDeliveryEndpoints(),
-                    taskDeliveryEndpoints(){
+                    taskEndpoints(){
         
         map.listEndpoints([this, map](const _site& endpoint){
             
@@ -77,7 +77,7 @@ public:
     map(other.map), stepMap(other.stepMap), 
     agent_energy_system(other.agent_energy_system), 
     nonTaskDeliveryEndpoints(other.nonTaskDeliveryEndpoints), 
-    taskDeliveryEndpoints(other.taskDeliveryEndpoints), 
+    taskEndpoints(other.taskEndpoints), 
     backwardTasks(other.backwardTasks), agents(other.agents), 
     pendingTasks(other.pendingTasks), assignedTasks(other.assignedTasks), 
     runningTasks(other.runningTasks), finishedTasks(other.finishedTasks), 
@@ -425,7 +425,7 @@ public:
     
     void listTaskDeliveryEndpoints(const std::function<bool(const _site&)> function)const{
         
-        for (auto pendpoint : taskDeliveryEndpoints) {
+        for (auto pendpoint : taskEndpoints) {
             
             if(function(pendpoint.second))return;
 
@@ -443,11 +443,11 @@ public:
 
     }
     
-    bool isTaskDeliveryEndpoint(const _site& site) const {
+    bool isTaskEndpoint(const _site& site) const {
         
-        std::map<unsigned, _site>::const_iterator it = taskDeliveryEndpoints.find(site.linearIndex(map.getColumn_size()));
+        std::map<unsigned, _site>::const_iterator it = taskEndpoints.find(site.linearIndex(map.getColumn_size()));
         
-        return it != taskDeliveryEndpoints.cend();
+        return it != taskEndpoints.cend();
         
     }
     
@@ -542,11 +542,11 @@ public:
         this->pendingTasks.insert(std::pair<unsigned, _task>(task.id(), task));
         this->reportTaskMap.addTask(task, currentStep);
         
-        this->taskDeliveryEndpoints.insert(std::pair<unsigned, _site>(task.getDelivery().linearIndex(map.getColumn_size()), task.getDelivery()));  
-//        this->taskDeliveryEndpoints.insert(std::pair<unsigned, _site>(task.getPickup().linearIndex(map.getColumn_size()), task.getPickup()));
+        this->taskEndpoints.insert(std::pair<unsigned, _site>(task.getDelivery().linearIndex(map.getColumn_size()), task.getDelivery()));  
+        this->taskEndpoints.insert(std::pair<unsigned, _site>(task.getPickup().linearIndex(map.getColumn_size()), task.getPickup()));
         
         this->nonTaskDeliveryEndpoints.erase(task.getDelivery().linearIndex(map.getColumn_size()));    
-//        this->nonTaskDeliveryEndpoints.erase(task.getPickup().linearIndex(map.getColumn_size()));
+        this->nonTaskDeliveryEndpoints.erase(task.getPickup().linearIndex(map.getColumn_size()));
     }  
     
     void addBackwardTask(unsigned step, const _task& task) {
@@ -696,7 +696,7 @@ private:
     _stepMap stepMap;        
     _agent_energy_system agent_energy_system;
     
-    std::map<unsigned,_site> nonTaskDeliveryEndpoints, taskDeliveryEndpoints;    
+    std::map<unsigned,_site> nonTaskDeliveryEndpoints, taskEndpoints;    
     
     std::map<unsigned, std::vector<_task>> backwardTasks;//step->task
     std::map<int, _agent> agents;

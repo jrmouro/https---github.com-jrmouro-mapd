@@ -247,6 +247,8 @@
         <logicalFolder name="f2" displayName="GA" projectFiles="true">
           <itemPath>_ga_token.cpp</itemPath>
           <itemPath>_ga_token.h</itemPath>
+          <itemPath>_ga_token_p.cpp</itemPath>
+          <itemPath>_ga_token_p.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="TP" projectFiles="true">
           <itemPath>BackwardTaskToken.h</itemPath>
@@ -271,17 +273,8 @@
                    displayName="Arquivos de Teste"
                    projectFiles="false"
                    kind="TEST_LOGICAL_FOLDER">
-      <logicalFolder name="f1"
-                     displayName="New Teste Simples C++"
-                     projectFiles="true"
-                     kind="TEST">
-        <itemPath>tests/newsimpletest.cpp</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f2"
-                     displayName="New Teste Simples C++ 1"
-                     projectFiles="true"
-                     kind="TEST">
-        <itemPath>tests/newsimpletest1.cpp</itemPath>
+      <logicalFolder name="f1" displayName="StepMap" projectFiles="true" kind="TEST">
+        <itemPath>tests/newsimpletest2.cpp</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -541,6 +534,10 @@
       </item>
       <item path="_ga_token.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_ga_token_p.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_token_p.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_manhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_map.cpp" ex="false" tool="1" flavor2="0">
@@ -749,26 +746,9 @@
           <output>${TESTDIR}/TestFiles/f1</output>
         </linkerTool>
       </folder>
-      <folder path="TestFiles/f2">
-        <cTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </cTool>
-        <ccTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </ccTool>
-        <linkerTool>
-          <output>${TESTDIR}/TestFiles/f2</output>
-        </linkerTool>
-      </folder>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="tests/newsimpletest.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="tests/newsimpletest1.cpp" ex="false" tool="1" flavor2="0">
+      <item path="tests/newsimpletest2.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -1021,6 +1001,10 @@
       </item>
       <item path="_ga_token.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_ga_token_p.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_token_p.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_manhattanAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_map.cpp" ex="false" tool="1" flavor2="0">
@@ -1229,26 +1213,9 @@
           <output>${TESTDIR}/TestFiles/f1</output>
         </linkerTool>
       </folder>
-      <folder path="TestFiles/f2">
-        <cTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </cTool>
-        <ccTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </ccTool>
-        <linkerTool>
-          <output>${TESTDIR}/TestFiles/f2</output>
-        </linkerTool>
-      </folder>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="tests/newsimpletest.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="tests/newsimpletest1.cpp" ex="false" tool="1" flavor2="0">
+      <item path="tests/newsimpletest2.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

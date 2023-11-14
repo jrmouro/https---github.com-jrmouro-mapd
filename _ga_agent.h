@@ -55,9 +55,9 @@ public:
     bool isAtEnergyCriticalLevel()const;    
     bool isAtEnergyDeadLevel()const;
     
-    _stepSite goalSite()const; 
-    _stepSite currentSite()const;
-    _stepSite getFutureSite()const; 
+    const _stepSite& goalSite()const; 
+    const _stepSite& currentSite()const;
+    const _stepSite& getFutureSite()const; 
     const _agent_energy_system& getAgentEnergySystem() const;
 
     void stepping(const _map& map);
@@ -80,11 +80,13 @@ public:
 private:
     
     friend class _ga_token;
+    friend class _ga_token_p;
        
     const _task* getCurrentTask() const;
     void assignTask(const _task& task);
     void unassignTask();
     void assignPath(const _stepPath& path);
+    void progressPath(const _stepPath& path);
     
     const _stepPath& getPath() const;
     

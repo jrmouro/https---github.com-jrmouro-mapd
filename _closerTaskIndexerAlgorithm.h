@@ -27,6 +27,12 @@ public:
             const _site& endPointReference, 
             std::vector<_task>& taskIndex) const;
     
+    virtual void ga_solve(
+            const _ga_token& token,
+            const _task& task, 
+            const _site& endPointReference, 
+            std::vector<_task>& taskIndex) const;
+    
     
 };
 

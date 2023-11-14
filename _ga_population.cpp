@@ -157,17 +157,20 @@ std::ostream& operator<<(std::ostream& os, const _ga_population& obj) {
         
     obj.listConstSolutions([&os](unsigned index, const _ga_solution& solution){
 
-        const std::map<_ga_solution::EvalType, unsigned>& evals = solution.getEvals();
-        if(evals.empty()){
-
-            os << index << ": not evaluated" << std::endl;
-
-        }else{
-
-            os << index << ": " << evals.find(_ga_solution::EvalType::makespan)->second;
-            os << " / " << evals.find(_ga_solution::EvalType::energy)->second << std::endl;
-
-        }
+//        const std::map<_ga_solution::EvalType, unsigned>& evals = solution.getEvals();
+//        if(evals.empty()){
+//
+//            os << index << ": not evaluated" << std::endl;
+//
+//        }else{
+//
+//            os << index << ": " << evals.find(_ga_solution::EvalType::makespan)->second;
+//            os << " / " << evals.find(_ga_solution::EvalType::energy)->second << std::endl;
+//
+//        }
+        
+        os << index << ":" << std::endl << solution << std::endl; 
+        
 
         return false;
 

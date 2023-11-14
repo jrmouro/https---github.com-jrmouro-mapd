@@ -1,0 +1,13 @@
+mapFilename;taskFilename;step_size;row_size;col_size;num_bots;num_endpoints;last_step;num_tasks;token_id;token_name;current_step;energy system id;energy expenditure;finished_taskstime(s);
+./Instances/test/test_2.map;./Instances/test/test_1.task;20000;5;9;2;16;1;28;GAT;GAT(NSGA-II);169;ES_1(R_1);2147;2810.000763;
+./Instances/test/test_2.map;./Instances/test/test_1.task;20000;5;9;2;16;1;28;GAT;GAT(greedy);161;ES_1(R_1);2223;280.004672;
+./Instances/test/test_2.map;./Instances/test/test_1.task;20000;5;9;2;16;1;28;GAT_P;GAT_P(NSGA-II);169;ES_1(R_1);2147;2810.077912;
+./Instances/test/test_2.map;./Instances/test/test_1.task;20000;5;9;2;16;1;28;GAT_P;GAT_P(greedy);161;ES_1(R_1);2223;280.004802;
+./Instances/test/test_2.map;./Instances/test/test_1.task;20000;5;9;2;16;1;28;TP;TP[ES_1(R_1)];165;ES_1(R_1);2257;28
+./Instances/test/test_2.map;./Instances/test/test_20.task;20000;5;9;2;16;20;28;GAT;GAT(NSGA-II);172;ES_1(R_1);2221;28317.090613;
+./Instances/test/test_2.map;./Instances/test/test_20.task;20000;5;9;2;16;20;28;GAT;GAT(greedy);159;ES_1(R_1);2177;280.007304;
+./Instances/test/test_2.map;./Instances/test/test_20.task;20000;5;9;2;16;20;28;GAT_P;GAT_P(NSGA-II);167;ES_1(R_1);2294;28273.452451;
+./Instances/test/test_2.map;./Instances/test/test_20.task;20000;5;9;2;16;20;28;GAT_P;GAT_P(greedy);167;ES_1(R_1);2294;280.007217;
+./Instances/test/test_2.map;./Instances/test/test_20.task;20000;5;9;2;16;20;28;TP;TP[ES_1(R_1)];175;ES_1(R_1);2275;28
+./Instances/test/test_2.map;./Instances/test/test_82.task;20000;5;9;2;16;82;28;GAT;GAT(NSGA-II);169;ES_1(R_1);2218;28493.942492;
+./Instances/test/test_2.map;./Instances/test/test_82.task;20000;5;9;2;16;82;28;GAT;GAT(greedy);148;ES_1(R_1);2210;280.004441;
