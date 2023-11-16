@@ -29,7 +29,8 @@ build/Debug/GNU-Linux/main.o: main.cpp MultiSystemExperiment.h \
  _selectChargingTaskToAgentAlgorithm.h _closerEndpointIndexerAlgorithm.h \
  _closerTaskIndexerThresholdAlgorithm.h TaskSwapTokenPass.h \
  BackwardTaskToken.h _agentsTasksAllocator.h _ga_token_p.h \
- _ga_solutionAllocator.h _nsga.h
+ _ga_solutionAllocator.h _nsga.h _ga_real_of.h _ga_objective_function.h \
+ _ga_estimate_of.h
 MultiSystemExperiment.h:
 SystemExperiment.h:
 Experiment.h:
@@ -115,3 +116,6 @@ _agentsTasksAllocator.h:
 _ga_token_p.h:
 _ga_solutionAllocator.h:
 _nsga.h:
+_ga_real_of.h:
+_ga_objective_function.h:
+_ga_estimate_of.h:

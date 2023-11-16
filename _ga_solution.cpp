@@ -242,40 +242,40 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_solution::evaluateAux2(con
 
 }
 
-unsigned _ga_solution::evaluate(const _ga_token& token, const _ga_solution::EvalType& evalType) {
+//unsigned _ga_solution::evaluate(const _ga_token& token, const _ga_solution::EvalType& evalType) {
+//
+//    auto evalMap = evaluate(token);
+//
+//    std::map<EvalType, unsigned>::const_iterator evalTypeIt = evals.find(evalType);
+//
+//    if (evalTypeIt == evals.end()) {
+//
+//        try {
+//            std::ostringstream stream;
+//            stream << "eval type not found: " << evalType;
+//            MAPD_EXCEPTION(stream.str());
+//        } catch (std::exception& e) {
+//            std::cout << e.what() << std::endl;
+//            std::abort();
+//        }
+//
+//    }
+//
+//    return evalTypeIt->second;
+//
+//}
 
-    auto evalMap = evaluate(token);
-
-    std::map<EvalType, unsigned>::const_iterator evalTypeIt = evals.find(evalType);
-
-    if (evalTypeIt == evals.end()) {
-
-        try {
-            std::ostringstream stream;
-            stream << "eval type not found: " << evalType;
-            MAPD_EXCEPTION(stream.str());
-        } catch (std::exception& e) {
-            std::cout << e.what() << std::endl;
-            std::abort();
-        }
-
-    }
-
-    return evalTypeIt->second;
-
-}
-
-const std::map<_ga_solution::EvalType, unsigned>& _ga_solution::evaluate(const _ga_token& token) {
-
-    if (evals.empty()) {
-
-        return evaluateAux(token);
-
-    }
-
-    return evals;
-
-}
+//const std::map<_ga_solution::EvalType, unsigned>& _ga_solution::evaluate(const _ga_token& token) {
+//
+//    if (evals.empty()) {
+//
+//        return evaluateAux(token);
+//
+//    }
+//
+//    return evals;
+//
+//}
 
 void _ga_solution::disturb(std::default_random_engine& generator) {
     evals.clear();
@@ -321,33 +321,60 @@ std::pair<std::pair<_ga_solution*, _ga_solution*>, std::pair<_ga_solution*, _ga_
 
 }
 
-bool _ga_solution::dominate(const _ga_token& token, _ga_solution& other) {
-
-    auto other_eval = other.evaluate(token);
-    auto this_eval = evaluate(token);
-
+bool _ga_solution::isDominatedBy(const _ga_token& token, _ga_solution& other) {
+    
     bool flag = false;
+    
+    if(this->isEvaluated()){
+        
+        if(other.isEvaluated()){
+            
+            for (auto tev : evals) {
 
-    for (auto tev : this_eval) {
+                std::map<_ga_solution::EvalType, unsigned>::const_iterator it = other.evals.find(tev.first);
 
-        std::map<_ga_solution::EvalType, unsigned>::const_iterator it = other_eval.find(tev.first);
+                if (it->second < tev.second) {
 
-        if (it->second < tev.second) {
+                    return false;
 
-            return false;
+                }
 
+
+                if (tev.second < it->second) {
+
+                    flag = true;
+
+                }
+
+
+            }  
+            
+        } else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "solution is not avaluated: " << other;
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
         }
-
-
-        if (tev.second < it->second) {
-
-            flag = true;
-
+        
+    } else {
+        
+        try {
+            std::ostringstream stream;
+            stream << "solution is not avaluated: " << *this;
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
         }
-
-
+        
     }
-
+    
     return flag;
 
 }

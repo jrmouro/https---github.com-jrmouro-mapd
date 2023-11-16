@@ -70,8 +70,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ga_agent_state.o \
 	${OBJECTDIR}/_ga_agent_state_buzy.o \
 	${OBJECTDIR}/_ga_agent_state_free.o \
+	${OBJECTDIR}/_ga_estimate_of.o \
+	${OBJECTDIR}/_ga_objective_function.o \
 	${OBJECTDIR}/_ga_population.o \
 	${OBJECTDIR}/_ga_pseudo_solution.o \
+	${OBJECTDIR}/_ga_real_of.o \
 	${OBJECTDIR}/_ga_solution.o \
 	${OBJECTDIR}/_ga_solutionAllocator.o \
 	${OBJECTDIR}/_ga_system.o \
@@ -311,6 +314,16 @@ ${OBJECTDIR}/_ga_agent_state_free.o: _ga_agent_state_free.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_free.o _ga_agent_state_free.cpp
 
+${OBJECTDIR}/_ga_estimate_of.o: _ga_estimate_of.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of.o _ga_estimate_of.cpp
+
+${OBJECTDIR}/_ga_objective_function.o: _ga_objective_function.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_objective_function.o _ga_objective_function.cpp
+
 ${OBJECTDIR}/_ga_population.o: _ga_population.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -320,6 +333,11 @@ ${OBJECTDIR}/_ga_pseudo_solution.o: _ga_pseudo_solution.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_pseudo_solution.o _ga_pseudo_solution.cpp
+
+${OBJECTDIR}/_ga_real_of.o: _ga_real_of.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_real_of.o _ga_real_of.cpp
 
 ${OBJECTDIR}/_ga_solution.o: _ga_solution.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -934,6 +952,32 @@ ${OBJECTDIR}/_ga_agent_state_free_nomain.o: ${OBJECTDIR}/_ga_agent_state_free.o 
 	    ${CP} ${OBJECTDIR}/_ga_agent_state_free.o ${OBJECTDIR}/_ga_agent_state_free_nomain.o;\
 	fi
 
+${OBJECTDIR}/_ga_estimate_of_nomain.o: ${OBJECTDIR}/_ga_estimate_of.o _ga_estimate_of.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_estimate_of.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_nomain.o _ga_estimate_of.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_estimate_of.o ${OBJECTDIR}/_ga_estimate_of_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_objective_function_nomain.o: ${OBJECTDIR}/_ga_objective_function.o _ga_objective_function.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_objective_function.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_objective_function_nomain.o _ga_objective_function.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_objective_function.o ${OBJECTDIR}/_ga_objective_function_nomain.o;\
+	fi
+
 ${OBJECTDIR}/_ga_population_nomain.o: ${OBJECTDIR}/_ga_population.o _ga_population.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_population.o`; \
@@ -958,6 +1002,19 @@ ${OBJECTDIR}/_ga_pseudo_solution_nomain.o: ${OBJECTDIR}/_ga_pseudo_solution.o _g
 	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_pseudo_solution_nomain.o _ga_pseudo_solution.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_pseudo_solution.o ${OBJECTDIR}/_ga_pseudo_solution_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_real_of_nomain.o: ${OBJECTDIR}/_ga_real_of.o _ga_real_of.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_real_of.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_real_of_nomain.o _ga_real_of.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_real_of.o ${OBJECTDIR}/_ga_real_of_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_ga_solution_nomain.o: ${OBJECTDIR}/_ga_solution.o _ga_solution.cpp 

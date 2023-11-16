@@ -9,10 +9,13 @@
 #include <cmath>
 #include "MapdException.h"
 #include "_ga_population.h"
+#include "_ga_objective_function.h"
 //#include "_ga_solution.h"
 
 
 _nsga::_nsga(
+    const std::string& id,
+    const _ga_objective_function& ga_objective_function, 
     const std::function<bool(const _ga_solution&, unsigned, const std::chrono::duration<double>&)>& stopCondition,
     unsigned population_size_max, 
     unsigned population_size_min, 
@@ -23,7 +26,8 @@ _nsga::_nsga(
     float agents_mutation_rate,
     float tasks_mutation_rate,       
     unsigned seed) :
-        _ga_solutionAllocator(solution_validity, "NSGA-II"),
+        _ga_solutionAllocator(id, solution_validity),
+        ga_objective_function(ga_objective_function),
         population_size_max(population_size_max), 
         population_size_min(population_size_min), 
         population_mutation_rate(population_mutation_rate),
@@ -36,6 +40,7 @@ _nsga::_nsga(
 
 _nsga::_nsga(const _nsga& other) :
         _ga_solutionAllocator(other),
+        ga_objective_function(other.ga_objective_function),
         population_size_max(other.population_size_max), 
         population_size_min(other.population_size_min), 
         population_mutation_rate(other.population_mutation_rate),
@@ -82,8 +87,9 @@ void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
     
     unsigned generation = 0;
 
-    unsigned pop_min = std::min<unsigned>(token.numberOfAgents(), population_size_min);
-    unsigned pop_max = std::min<unsigned>(pop_min * 3, population_size_max); ;
+    unsigned pop_min = std::max<unsigned>(2 * token.numberOfAgents(), population_size_min);
+//    unsigned pop_max = std::min<unsigned>(pop_min * 3, population_size_max); ;
+    unsigned pop_max = pop_min * 3;
     
 
     _ga_solution* best = &solution;
@@ -127,14 +133,13 @@ void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
             
         }
         
-        t1 = t2;
+//        t1 = t2;
         t2 = std::chrono::high_resolution_clock::now();
         time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
         
 
     }
     
-//    best->evaluate(token);
 //    std::cout << "solution: " << *best << std::endl;
 
     solution = *best;
@@ -146,6 +151,8 @@ void _nsga::expand_population(
         const _ga_solution& solution,
         std::default_random_engine& generator, 
         _ga_population& population) const {
+    
+    std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 
     std::uniform_int_distribution<unsigned> distribution(0, generic_distribution_size);
 //    std::uniform_int_distribution<unsigned> mutation_children_distribution(0, mutation_children_distribution_size);
@@ -236,11 +243,18 @@ void _nsga::expand_population(
         }
 
     }
+    
+    std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+
+//    std::cout << "expand_population time span: " << time_span.count() << std::endl;
 
 }
 
 _ga_solution* _nsga::reduce_population(const _ga_token& token, std::default_random_engine& generator, _ga_population& population) const {
 
+    std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+    
     std::map<_ga_solution*, unsigned> solution_border_map;
     
     std::vector<std::vector<_ga_solution*>> borders;
@@ -290,7 +304,7 @@ _ga_solution* _nsga::reduce_population(const _ga_token& token, std::default_rand
     if(!borders.empty()){
         
         if(borders.at(0).size() > 2){
-    
+                
             std::map<_ga_solution*, float> solution_distance_map;
             
             ret = crowding_distance(token, borders.at(0), solution_distance_map); 
@@ -321,6 +335,11 @@ _ga_solution* _nsga::reduce_population(const _ga_token& token, std::default_rand
         } 
         
     }
+    
+    std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+
+//    std::cout << "reduce_population time span: " << time_span.count() << std::endl;
     
     return ret;
 
@@ -416,7 +435,6 @@ void _nsga::tournament_selection(
     }
 
 }
-
 _ga_solution* _nsga::crowding_distance(
         const _ga_token& token,
         const std::vector<_ga_solution*>& border, 
@@ -434,9 +452,12 @@ _ga_solution* _nsga::crowding_distance(
     for (auto solution : border) {
 
         solution_distance_map.insert(std::pair<_ga_solution*, unsigned>(solution, .0f));
+        
+        unsigned msp = ga_objective_function.eval(token, *solution, _ga_solution::EvalType::makespan);
+        unsigned eng = ga_objective_function.eval(token, *solution, _ga_solution::EvalType::energy);
 
-        unsigned msp = solution->evaluate(token, _ga_solution::EvalType::makespan);
-        unsigned eng = solution->evaluate(token, _ga_solution::EvalType::energy);
+//        unsigned msp = solution->evaluate(token, _ga_solution::EvalType::makespan);
+//        unsigned eng = solution->evaluate(token, _ga_solution::EvalType::energy);
 
         msp_min = std::min<unsigned>(msp_min, msp);
         msp_max = std::max<unsigned>(msp_max, msp);
@@ -445,8 +466,10 @@ _ga_solution* _nsga::crowding_distance(
 
         bool flag = true;
         for(auto it = sort_border.begin(); it != sort_border.end(); it++){
+            
+            unsigned msp_aux = ga_objective_function.eval(token, *(*it), _ga_solution::EvalType::makespan);
 
-            if(msp < (*it)->evaluate(token, _ga_solution::EvalType::makespan)){
+            if(msp < msp_aux){
 
                 sort_border.insert(it, solution);
                 flag = false;
@@ -463,10 +486,10 @@ _ga_solution* _nsga::crowding_distance(
     float div = (float)msp_max - (float)msp_min;
 
     for(auto it = sort_border.begin() + 1; it != sort_border.end() - 1; it++){
-
-        float sa = (float)(*(it - 1))->evaluate(token, _ga_solution::EvalType::makespan);
-        float sp = (float)(*(it + 1))->evaluate(token, _ga_solution::EvalType::makespan);
-
+            
+        float sa = (float)ga_objective_function.eval(token, *(*(it - 1)), _ga_solution::EvalType::makespan);
+        float sp = (float)ga_objective_function.eval(token, *(*(it + 1)), _ga_solution::EvalType::makespan);
+        
         float dist = std::abs(sa - sp) / div;
 
         std::map<_ga_solution*, float>::iterator dit = solution_distance_map.find(*it);
@@ -501,13 +524,15 @@ _ga_solution* _nsga::crowding_distance(
 
     sort_border.clear();
     for (auto solution : border) {
-
-        unsigned eng = solution->evaluate(token, _ga_solution::EvalType::energy);
+        
+        unsigned eng = ga_objective_function.eval(token, *solution, _ga_solution::EvalType::energy);
 
         bool flag = true;
         for(auto it = sort_border.begin(); it != sort_border.end(); it++){
+            
+            unsigned eng_aux = ga_objective_function.eval(token, *(*it), _ga_solution::EvalType::energy);
 
-            if(eng < (*it)->evaluate(token, _ga_solution::EvalType::energy)){
+            if(eng < eng_aux){
 
                 sort_border.insert(it, solution);
                 flag = false;
@@ -525,9 +550,9 @@ _ga_solution* _nsga::crowding_distance(
     div = (float)eng_max - (float)eng_min;
 
     for(auto it = sort_border.begin() + 1; it != sort_border.end() - 1; it++){
-
-        float sa = (float)(*(it - 1))->evaluate(token, _ga_solution::EvalType::energy);
-        float sp = (float)(*(it + 1))->evaluate(token, _ga_solution::EvalType::energy);
+        
+        float sa = (float)ga_objective_function.eval(token, *(*(it - 1)), _ga_solution::EvalType::energy);
+        float sp = (float)ga_objective_function.eval(token, *(*(it + 1)), _ga_solution::EvalType::energy);
 
         float dist = std::abs(sa - sp) / div;
 
@@ -579,21 +604,24 @@ void _nsga::nds_population(
 
     unsigned border_index = 0;  
 
-    population.listSolutions([border_index, &dominated_count_map, &domination_map, &nextBorder, &solution_border_map, &population, token](unsigned index, _ga_solution* solution1){
+    population.listSolutions([border_index, &dominated_count_map, &domination_map, &nextBorder, &solution_border_map, &population, &token, this](unsigned index, _ga_solution* solution1){
 
         auto ins_pair = domination_map.insert(std::pair<_ga_solution*, std::vector<_ga_solution*>>(solution1, std::vector<_ga_solution*>()));
 
         unsigned n = 0;
 
-        population.listSolutions([&n, solution1, token, &ins_pair](unsigned index, _ga_solution* solution2){
+        population.listSolutions([&n, solution1, &token, &ins_pair, this](unsigned index, _ga_solution* solution2){
 
             if(solution1 != solution2){
+                
+                ga_objective_function.evals(token, *solution1);
+                ga_objective_function.evals(token, *solution2);
 
-                if(solution1->dominate(token, *solution2)){
+                if(solution1->isDominatedBy(token, *solution2)){
 
                     ins_pair.first->second.push_back(solution2);
 
-                } else if(solution2->dominate(token, *solution1)){
+                } else if(solution2->isDominatedBy(token, *solution1)){
 
                     n = n + 1;
 

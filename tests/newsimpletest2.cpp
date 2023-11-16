@@ -32,7 +32,7 @@ void test1() {
     
     sm.stepView(0,4);
     sm.free_agent_view();
-    sm.free_step_view();
+    sm.max_step_view();
     
     _stepPath sp1, sp2;
     
@@ -44,7 +44,7 @@ void test1() {
     
     sm.stepView(0,4);
     sm.free_agent_view();
-    sm.free_step_view();
+    sm.max_step_view();
     
     
     sp2.progress(_stepSite(2,1,1));
@@ -55,7 +55,13 @@ void test1() {
     
     sm.stepView(0,4);
     sm.free_agent_view();
-    sm.free_step_view();
+    sm.max_step_view();
+    
+    sm.deleteMoving(sp2, 0);
+    
+    sm.stepView(0,4);
+    sm.free_agent_view();
+    sm.max_step_view();
     
     
     std::cout << "newsimpletest2 test 1" << std::endl;

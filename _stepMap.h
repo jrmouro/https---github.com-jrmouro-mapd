@@ -16,6 +16,8 @@
 #include <sstream>
 #include <functional>
 #include <vector>
+#include <algorithm>
+#include <cstring>
 
 #include "_stepPath.h"
 
@@ -45,12 +47,14 @@ public:
         
         if(nodes_product > 0){
             
-            free_agent = new int[nodes_product];
-            free_step = new int[nodes_product];
+            free_type = new int[nodes_product];
+//            free_step = new unsigned[nodes_product];
+            max_step = new unsigned[nodes_product];
             
             for (int i = 0; i < nodes_product; i++) {
-                free_agent[i] = NodeType::freeNode;
-                free_step[i] = 0;
+                free_type[i] = NodeType::freeNode;
+//                free_step[i] = 0;
+                max_step[i] = 0;
             }
             
             if(size > 0){            
@@ -100,20 +104,23 @@ public:
         
         if(nodes_product > 0){
             
-            free_agent = new int[nodes_product];
-            free_step = new int[nodes_product];
+            free_type = new int[nodes_product];
+//            free_step = new unsigned[nodes_product];
+            max_step = new unsigned[nodes_product];
             
             for (int i = 0; i < nodes_product; i++) {
-                free_agent[i] = orig.free_agent[i];
-                free_step[i] = orig.free_step[i];
+                free_type[i] = orig.free_type[i];
+//                free_step[i] = orig.free_step[i];
+                max_step[i] = orig.max_step[i];
             }
         
             if(size > 0){ 
 
                 this->nodes = new int[size];
 
-                for (unsigned i = 0; i < size; i++)
-                    this->nodes[i] = orig.nodes[i];
+                memcpy(this->nodes, orig.nodes, sizeof(int)*size);
+//                for (unsigned i = 0; i < size; i++)
+//                    this->nodes[i] = orig.nodes[i];
 
             }
         
@@ -128,8 +135,9 @@ public:
                 
                 colunm_edge = new int[size];
             
-                for (unsigned i = 0; i < size; i++)
-                    this->colunm_edge[i] = orig.colunm_edge[i];
+                memcpy(this->colunm_edge, orig.colunm_edge, sizeof(int)*size);
+//                for (unsigned i = 0; i < size; i++) 
+//                    this->colunm_edge[i] = orig.colunm_edge[i];
                 
             }
             
@@ -144,8 +152,9 @@ public:
                 
                 row_edge = new int[size];
                 
-                for (unsigned i = 0; i < size; i++)
-                    this->row_edge[i] = orig.row_edge[i];
+                memcpy(this->row_edge, orig.row_edge, sizeof(int)*size);
+//                for (unsigned i = 0; i < size; i++)
+//                    this->row_edge[i] = orig.row_edge[i];
                 
             }
             
@@ -159,8 +168,9 @@ public:
         if (row_edge != nullptr) delete [] row_edge;
         if (colunm_edge != nullptr) delete [] colunm_edge;
         
-        if (free_agent != nullptr) delete [] free_agent;
-        if (free_step != nullptr) delete [] free_step;
+        if (free_type != nullptr) delete [] free_type;
+//        if (free_step != nullptr) delete [] free_step;
+        if (max_step != nullptr) delete [] max_step;
 
     }
     
@@ -192,23 +202,28 @@ public:
                 
                 unsigned index = r * colunm_size + c;
                 
-                int nodotype = free_agent[index];
+                int nodotype = free_type[index];
                 
 //                 || nodotype != NodeType::freeNode
                 
-                if(nodotype == NodeType::freeNode || step < free_step[index]){
+//                if(nodotype == NodeType::freeNode || step < free_step[index]){
+                if(nodotype == NodeType::freeNode || step < max_step[index]){
                     
                     nodotype = nodes[p + index];
                     
-                }               
+                }       
                 
-                if(nodotype < 0){
+                if(nodotype < -1){
+                    
+                    std::cout << "# ";
+                    
+                }else  if(nodotype < 0){
                 
-                    std::cout << nodotype << " ";
+                    std::cout << ". ";
                 
                 } else {
                     
-                    std::cout << " " << nodotype << " ";
+                    std::cout << nodotype << " ";
                     
                 }
 
@@ -233,13 +248,13 @@ public:
                 
                 unsigned index = r * colunm_size + c;
                 
-                if(free_agent[index] < 0){
+                if(free_type[index] < 0){
                 
-                    std::cout << free_agent[index] << " ";
+                    std::cout << free_type[index] << " ";
                 
                 } else {
                     
-                    std::cout << " " << free_agent[index] << " ";
+                    std::cout << " " << free_type[index] << " ";
                     
                 }
 
@@ -254,9 +269,32 @@ public:
         
     }
     
-    void free_step_view()const{
+//    void free_step_view()const{
+//        
+//        std::cout << "free_step" << std::endl;
+//        
+//        for (int r = 0; r < row_size; r++) {
+//            
+//            for (int c = 0; c < colunm_size; c++) {
+//                
+//                unsigned index = r * colunm_size + c;
+//                
+//                std::cout << free_step[index] << " ";                   
+//
+//            }
+//            
+//            std::cout << std::endl;
+//
+//        }
+//        
+//        std::cout << std::endl;
+//
+//        
+//    }
+    
+    void max_step_view()const{
         
-        std::cout << "free_step" << std::endl;
+        std::cout << "max_step" << std::endl;
         
         for (int r = 0; r < row_size; r++) {
             
@@ -264,16 +302,8 @@ public:
                 
                 unsigned index = r * colunm_size + c;
                 
-                if(free_step[index] < 0){
-                
-                    std::cout << free_step[index] << " ";
-                
-                } else {
-                    
-                    std::cout << " " << free_step[index] << " ";
-                    
-                }
-
+                std::cout << max_step[index] << " ";
+                 
             }
             
             std::cout << std::endl;
@@ -435,8 +465,37 @@ public:
 
     void setNodeType(unsigned step, unsigned row, unsigned column, int type) {
 
-        if (step < step_size && row < row_size && column < colunm_size)
-            this->nodes[step * nodes_product + row * colunm_size + column] = type;
+        if (step < step_size && row < row_size && column < colunm_size){
+            
+            unsigned index = row * colunm_size + column;
+            
+            this->nodes[step * nodes_product + index] = type;
+            
+            if(type == NodeType::freeNode){
+                
+                if(max_step[index] <= step){
+                 
+                    max_step[index] = 0;                
+                
+                    for (int s = step; s > 0; s--) {
+
+                        if(this->nodes[s * nodes_product + index] != NodeType::freeNode){
+
+                            max_step[index] = s;
+                            break;
+
+                        }
+
+                    }
+                    
+                }
+                    
+            } else if(step > max_step[index]){
+                
+                max_step[index] = step;
+                
+            }
+        }
 
     }
     
@@ -505,10 +564,10 @@ public:
         checkRowColunm(row, column);
         
         unsigned index = row * colunm_size + column;
-        
-        if(//free_step[index] < step  && 
-                (free_agent[index] == NodeType::freeNode || 
-                    free_agent[index] == type)){
+                
+        if(max_step[index] < step  && 
+                (free_type[index] == NodeType::freeNode || 
+                    free_type[index] == type)){
             
             return true;
             
@@ -537,56 +596,94 @@ public:
         
         unsigned index = row * colunm_size + column;
         
-        if(free_agent[index] == from || free_agent[index] == NodeType::freeNode){
+        if(from == NodeType::freeNode){
             
-//            if(free_step[index] <= fromStep){
-            
-            if(to == NodeType::freeNode){
-                free_step[index] = 0;
-            }else{
-                free_step[index] = fromStep;
-            }
+            if(free_type[index] == NodeType::freeNode){
                 
-            free_agent[index] = to;
-
-//            }else{
-//                
-//                stepView(0, fromStep);
-//                free_agent_view();
-//                free_step_view();
-//                
-//                try {
-//                    std::ostringstream stream;
-//                    stream << "invalid step: " << fromStep;
-//                    MAPD_EXCEPTION(stream.str());
-//                } catch (std::exception& e) {
-//                    std::cout << e.what() << std::endl;
-//                    std::abort();
-//                } 
-//                
-//            }
+                if(to != NodeType::freeNode){
+                
+//                    free_step[index] = fromStep;
+                    max_step[index] = fromStep;
+                    free_type[index] = to;
+                
+                } else {
+                    
+//                    free_step[index] = 0;
+//                    free_agent[index] = NodeType::freeNode;
+                    
+                    try {
+                        std::ostringstream stream;
+                        stream << "invalid to type: " << from;
+                        MAPD_EXCEPTION(stream.str());
+                    } catch (std::exception& e) {
+                        std::cout << e.what() << std::endl;
+                        std::abort();
+                    }
+                    
+                    
+                }
+                
+            } else {
+                
+                try {
+                    std::ostringstream stream;
+                    stream << "invalid from type: " << from;
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
+                }
+                
+            }
             
-        } 
-//        else {
-//            
-//            stepView(0, fromStep);
-//            free_agent_view();
-//            free_step_view();
-//            
-//            try {
-//                std::ostringstream stream;
-//                stream << "invalid type: " << from;
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            } 
-//            
-//        }
-        
-        
-        
-        
+        } else {
+            
+            if(free_type[index] == from){
+                
+                if(to != NodeType::freeNode){
+                    
+                    if(to == from){
+                        
+//                        free_step[index] = fromStep;
+                        max_step[index] = fromStep;
+                        free_type[index] = from;
+                        
+                    } else {
+                        
+                        try {
+                            std::ostringstream stream;
+                            stream << "invalid from type: " << from;
+                            MAPD_EXCEPTION(stream.str());
+                        } catch (std::exception& e) {
+                            std::cout << e.what() << std::endl;
+                            std::abort();
+                        }
+                        
+                    }
+                
+                } else {
+                    
+//                    free_step[index] = 0;
+                    free_type[index] = NodeType::freeNode;
+                    
+                    max_step[index] = 0;
+                
+                    for (int s = fromStep; s > 0; s--) {
+
+                        if(this->nodes[s * nodes_product + index] != NodeType::freeNode){
+
+                            max_step[index] = s;
+                            break;
+
+                        }
+
+                    }
+                    
+                }
+                
+            }     
+            
+        }
 
     }
     
@@ -613,8 +710,9 @@ public:
         
         unsigned index = row * colunm_size + column;
             
-        free_step[index] = 0;
-        free_agent[index] = type;   
+//        free_step[index] = 0;
+        max_step[index] = 0;
+        free_type[index] = type;   
         
         
 
@@ -701,34 +799,37 @@ public:
         
     }
     
+    bool isFreeToType(const _stepSite& site, int type)const{
+        
+        unsigned index = site.GetRow() * colunm_size + site.GetColunm();
+        
+        int nodotype = free_type[index];
+                
+//        if(nodotype == NodeType::freeNode || site.GetStep() < free_step[index]){
+        if(nodotype == NodeType::freeNode || site.GetStep() < max_step[index]){
+            
+            unsigned nodes_index = site.GetStep() * nodes_product + index;
+            
+            nodotype = this->nodes[nodes_index];             
+            
+        }
+        
+        return nodotype == NodeType::freeNode || nodotype == type;
+        
+    }
+    
     virtual void listNeighborFreePaths(const _stepSite& site, int type, const std::function<bool(const _stepSite&)>& function) const {
         
         _stepSite size = _stepSite(step_size, row_size, colunm_size);
                 
-            site.listNeighbors(size, [this, type, &function, site](const _stepSite& neigh){
-                
-                unsigned index = neigh.GetRow() * colunm_size + neigh.GetColunm();
-                
-                int nodotype = free_agent[index];
-                
-                if(nodotype != NodeType::freeNode && 
-                    nodotype != type &&
-                        neigh.GetStep() >= free_step[index]){
-                    
-                    return false;
-                    
-                } 
-                
-                unsigned nodes_index = neigh.GetStep() * nodes_product + index;
-                    
-                nodotype = this->nodes[nodes_index];                                                 
+        site.listNeighbors(size, [this, type, &function, site](const _stepSite& neigh){
 
-                if((nodotype == type || nodotype == NodeType::freeNode) && this->hasPath(site, neigh)) 
-                    if(function(neigh)) return true;
+            if(isFreeToType( neigh, type) && hasPath(site, neigh)) 
+                if(function(neigh)) return true;
 
-                return false;
-                
-            });
+            return false;
+
+        });
                 
     }
     
@@ -805,8 +906,11 @@ private:
     int *nodes = nullptr, 
         *row_edge = nullptr, 
         *colunm_edge = nullptr,
-            *free_agent = nullptr,
-            *free_step = nullptr;
+            *free_type = nullptr;
+    
+    unsigned
+//            *free_step = nullptr,
+            *max_step = nullptr;
     
     unsigned 
         step_size = 0, 

@@ -119,7 +119,7 @@ unsigned _ga_token::getCurrentStep() const {
 
 void _ga_token::stepping() {
 
-//        if(currentStep > 10){
+//        if(currentStep > 38){
 //            stepMap.stepView(currentStep);
 //            stepMap.free_step_view();
 //            stepMap.free_agent_view();
@@ -221,7 +221,8 @@ bool _ga_token::liberateEndpoint(const _ga_agent& agent, const _site& endpoint) 
 
     if (obstructor != nullptr) {
 
-        updateAgentRestPathCloserEndpoint(*obstructor, obstructor->currentSite());
+//        updateAgentRestPathCloserEndpoint(*obstructor, obstructor->currentSite());
+        updateAgentRestPathCloserEndpoint(*obstructor, endpoint);
 
         return true;
 
@@ -255,7 +256,7 @@ bool _ga_token::updateAgentRestPathCloserEndpoint(_ga_agent& agent, const _site&
 
     std::vector<_site> vsite;
 
-    listNonTaskEndpoints([closerEndpointIndexerAlgorithm, &vsite, agent, closerEndpoint, this](const _site & endpoint) {
+    listNonTaskEndpoints([&closerEndpointIndexerAlgorithm, &vsite, &agent, &closerEndpoint, this](const _site & endpoint) {
 
         closerEndpointIndexerAlgorithm.ga_solve_to_site(*this, endpoint, closerEndpoint, vsite);
 
@@ -263,11 +264,11 @@ bool _ga_token::updateAgentRestPathCloserEndpoint(_ga_agent& agent, const _site&
 
     });
 
-    for (auto endpoint : vsite) {
+    for (auto& endpoint : vsite) {
 
         bool flag = true;
 
-        listConstAgents([endpoint, agent, &flag](unsigned index, const _ga_agent & otherAgent) {
+        listConstAgents([&endpoint, &agent, &flag](unsigned index, const _ga_agent & otherAgent) {
 
             if (agent.id() != otherAgent.id() && otherAgent.goalSite().match(endpoint)) { //other agents
 
@@ -418,15 +419,28 @@ bool _ga_token::updateAgentTaskPath_pendingTask(_ga_agent& agent, int newTaskId,
 
                 if (!flag) {
                     
-                    for (int i = 0; i < 6; i++) {
+                    for (int i = std::max<int>((int)currentStep - 10 ,0); i < currentStep; i++) {
                         
-                        stepMap.stepView(0, currentStep + i);
+                        stepMap.stepView(i);                        
+
+                    }
+                    
+                    std::cout << "////////////////" << std::endl;
+                    
+                    std::cout << "current step:" << std::endl;
+                    
+                    stepMap.stepView(currentStep);
+                    
+                    std::cout << "////////////////" << std::endl;
+                    
+                    for (int i = currentStep + 1; i < currentStep + 10; i++) {
                         
+                        stepMap.stepView(i);                        
 
                     }
                     
                     stepMap.free_agent_view();
-                    stepMap.free_step_view();
+//                    stepMap.free_step_view();
                     
                     
 

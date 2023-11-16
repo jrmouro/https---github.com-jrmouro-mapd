@@ -30,6 +30,8 @@ class _nsga : public _ga_solutionAllocator{
 public:
     
     _nsga(
+        const std::string& id,
+        const _ga_objective_function& ga_objective_function, 
         const std::function<bool(const _ga_solution&, unsigned, const std::chrono::duration<double>&)>& stopCondition,
         unsigned population_size_max, 
         unsigned population_size_min, 
@@ -106,6 +108,8 @@ protected:
         generic_distribution_size = 100000000,
         seed;
     
+    
+    const _ga_objective_function& ga_objective_function;    
 
     const std::function<bool(const _ga_solution&, unsigned, const std::chrono::duration<double>&)> stopCondition;
     

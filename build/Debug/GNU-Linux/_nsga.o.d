@@ -8,7 +8,7 @@ build/Debug/GNU-Linux/_nsga.o: _nsga.cpp _nsga.h _ga_solutionAllocator.h \
  _closerTaskIndexerAlgorithm.h _taskIndexerAlgorithm.h \
  _endpointsDistanceAlgorithm.h _distanceAlgorithm.h \
  _astarDistanceAlgorithm.h _path.h _astarAlgorithm.h _pathAlgorithm.h \
- _allocation.h
+ _allocation.h _ga_objective_function.h
 _nsga.h:
 _ga_solutionAllocator.h:
 _agentsTasksAllocator.h:
@@ -47,3 +47,4 @@ _path.h:
 _astarAlgorithm.h:
 _pathAlgorithm.h:
 _allocation.h:
+_ga_objective_function.h:

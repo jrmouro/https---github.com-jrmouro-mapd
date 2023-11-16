@@ -24,13 +24,14 @@ void _agent_state::onStepping(_token& token, _agent& agent) const {
 
     agent.stepping();
 
-//    if (token.getCurrentStep() >= 135 && agent.id() == 1) {;
+//    if (token.getCurrentStep() >= 1 && agent.id() == 0) {;
 //        int i = 0;
-//        for (; i < 20; i++)
+//        for (; i < 5; i++)
 //            token.getStepMap().stepView(token.getCurrentStep() + i);        
 //        token.getStepMap().stepView(token.getCurrentStep() + i);
 //        token.getStepMap().free_agent_view();
 //        token.getStepMap().free_step_view();
+//        token.getStepMap().max_step_view();
 //        std::cout << std::endl;
 //    }
 

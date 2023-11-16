@@ -35,9 +35,9 @@ public:
 
     virtual ~_ga_solution();
     
-    const std::map<EvalType, unsigned>& evaluate(const _ga_token&);
+//    const std::map<EvalType, unsigned>& evaluate(const _ga_token&);
     
-    unsigned evaluate(const _ga_token&, const EvalType&);
+//    unsigned evaluate(const _ga_token&, const EvalType&);
     
 //    void setEvaluate(const EvalType&, unsigned);
     
@@ -71,7 +71,7 @@ public:
     bool isEvaluated()const;
     bool isAllocated()const;
     
-    virtual bool dominate(const _ga_token&, _ga_solution&);
+    virtual bool isDominatedBy(const _ga_token&, _ga_solution&);
     
     unsigned getValidity() const {
         return validity;
@@ -92,10 +92,18 @@ public:
     void greedySolution_e(const _ga_token& token);
     
 private:
+    friend class _ga_real_of;
+    friend class _ga_estimate_of;
+    std::map<EvalType, unsigned> evals;
+    
+private:
+    friend class _ga_estimate_of;
+    std::map<const _ga_agent*,std::vector<const _task*>> allocation_map;
+    
+private:
     
     unsigned validity, age = 0;
-    std::map<const _ga_agent*,std::vector<const _task*>> allocation_map;
-    std::map<EvalType, unsigned> evals;
+    
     
     virtual void alloc(const _ga_token& token);
     virtual void alloc2(const _ga_token& token);    

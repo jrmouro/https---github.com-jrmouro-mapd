@@ -9,8 +9,8 @@
 #include "_ga_solution.h"
 
 _ga_solutionAllocator::_ga_solutionAllocator(
-    unsigned solution_validity, 
-    const std::string id) : _agentsTasksAllocator(id),
+    const std::string id,            
+    unsigned solution_validity) : _agentsTasksAllocator(id),
         solution_validity(solution_validity) { }
     
 _ga_solutionAllocator::_ga_solutionAllocator(
