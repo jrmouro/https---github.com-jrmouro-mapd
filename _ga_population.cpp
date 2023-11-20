@@ -123,6 +123,10 @@ const unsigned _ga_population::getSize_min() const {
     return size_min;
 }
 
+const unsigned _ga_population::getSize_cur() const {
+    return solutions.size();
+}
+
 bool _ga_population::isExpandable()const{
     return solutions.size() < size_max;
 }

@@ -25,6 +25,30 @@ public:
     _path(const _path& orig) : sites(orig.sites) {}
     
     virtual ~_path() {}
+    
+    _path& operator=(const _path& right) {
+        
+        if (this == &right)
+            return *this; 
+        
+        sites = right.sites;
+        
+        return *this;
+    }
+    
+    void getReverse(_path& target)const{
+        
+        target.clear();
+        
+        std::vector<_site>::const_reverse_iterator sit = sites.crbegin();
+        
+        for(; sit != sites.crend(); ++sit){
+            
+            target.sites.push_back(*sit);
+            
+        }
+        
+    }
 
     void add(const _site& site) {
 

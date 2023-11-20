@@ -38,7 +38,7 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
         _task& selectedTask,
         _stepPath& selectedPath) const {
 
-    _thresholdAlgorithm thresholdAlgorithm(token.getEndpointsDistanceAlgorithm());
+    _thresholdAlgorithm thresholdAlgorithm(token.getEndpointsPathAlgorithm());
 
     std::vector<_task> vtask;
 

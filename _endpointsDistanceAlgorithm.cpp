@@ -3,9 +3,9 @@
 
 _endpointsDistanceAlgorithm::_endpointsDistanceAlgorithm(){}
     
-_endpointsDistanceAlgorithm::_endpointsDistanceAlgorithm(const _map& map){
-    reset(map);
-}
+//_endpointsDistanceAlgorithm::_endpointsDistanceAlgorithm(const _map& map){
+//    reset(map);
+//}
 
 _endpointsDistanceAlgorithm::_endpointsDistanceAlgorithm(const _endpointsDistanceAlgorithm& other) :
         size(other.size), 
@@ -30,7 +30,7 @@ _endpointsDistanceAlgorithm::~_endpointsDistanceAlgorithm(){
 
 }
 
-unsigned _endpointsDistanceAlgorithm::solve(const _site& start, const _site& goal) const{
+unsigned _endpointsDistanceAlgorithm::solve_distance(const _site& start, const _site& goal) const{
         
     if(distances != nullptr){
 
@@ -63,16 +63,7 @@ unsigned _endpointsDistanceAlgorithm::solve(const _site& start, const _site& goa
             
             _manhattanAlgorithm ma;
                         
-            return ma.solve(start, goal);
-            
-//            try {
-//                std::ostringstream stream;
-//                stream << "start site domain error: " << start;
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            }
+            return ma.solve_distance(start, goal);
 
         }
 
@@ -103,93 +94,98 @@ void _endpointsDistanceAlgorithm::reset(const _map& map){
 
     endpointsSize = map.getNumEndpoints();
     size = endpointsSize * endpointsSize;
-    mapColunmSize = map.getColumn_size();
+    
+    if(size > 0){
+    
+        mapColunmSize = map.getColumn_size();
 
-    distances = new unsigned[size];
+        distances = new unsigned[size];
 
-    for(unsigned i= 0; i < size; i++)
-        distances[i] = UINT_MAX;
+        for(unsigned i= 0; i < size; i++)
+            distances[i] = UINT_MAX;
 
-    unsigned index = 0;
+        unsigned index = 0;
 
-    map.listEndpoints([&index, this](const _site& endpoint){
+        map.listEndpoints([&index, this](const _site& endpoint){
 
-        domain.insert(std::pair<unsigned,unsigned>(
-            endpoint.GetRow() * mapColunmSize + endpoint.GetColunm(), 
-            index++));
+            domain.insert(std::pair<unsigned,unsigned>(
+                endpoint.GetRow() * mapColunmSize + endpoint.GetColunm(), 
+                index++));
 
-        return false;
+            return false;
 
-    });
+        });
 
-    map.listEndpoints(
-            
-    [astar, map,this](const _site& e1){
+        map.listEndpoints(
 
-        auto it1 = domain.find(e1.GetRow() * mapColunmSize + e1.GetColunm());
+        [&astar, &map, this](const _site& e1){
 
-        if(it1 != domain.end()){
+            auto it1 = domain.find(e1.GetRow() * mapColunmSize + e1.GetColunm());
 
-            unsigned row = it1->second;
+            if(it1 != domain.end()){
 
-            map.listEndpoints([astar, e1, row, this](const _site& e2){
+                unsigned row = it1->second;
 
-                auto it2 = domain.find(e2.GetRow() * mapColunmSize + e2.GetColunm());
+                map.listEndpoints([&astar, &e1, &row, this](const _site& e2){
 
-                if(it2 != domain.end()){
+                    auto it2 = domain.find(e2.GetRow() * mapColunmSize + e2.GetColunm());
 
-                    unsigned colunm = it2->second;
+                    if(it2 != domain.end()){
 
-                    unsigned l1 = row * endpointsSize + colunm;
-                    unsigned l2 = colunm * endpointsSize + row;
+                        unsigned colunm = it2->second;
 
-                    if(e1.match(e2)){
+                        unsigned l1 = row * endpointsSize + colunm;
+                        unsigned l2 = colunm * endpointsSize + row;
 
-                        distances[l1] = distances[l2] = 0;
+                        if(e1.match(e2)){
+
+                            distances[l1] = distances[l2] = 0;
+
+                        } else {
+
+                            if(distances[l1] == UINT_MAX){
+
+                                distances[l1] = distances[l2] = astar.solve_distance(e1, e2);
+
+                            }
+
+                        }
 
                     } else {
 
-                        if(distances[l1] == UINT_MAX){
-
-                            distances[l1] = distances[l2] = astar.solve(e1, e2);
-
+                        try {
+                            std::ostringstream stream;
+                            stream << "endpoint domain error: " << e2;
+                            MAPD_EXCEPTION(stream.str());
+                        } catch (std::exception& e) {
+                            std::cout << e.what() << std::endl;
+                            std::abort();
                         }
 
                     }
 
-                } else {
+                    return false;
 
-                    try {
-                        std::ostringstream stream;
-                        stream << "endpoint domain error: " << e2;
-                        MAPD_EXCEPTION(stream.str());
-                    } catch (std::exception& e) {
-                        std::cout << e.what() << std::endl;
-                        std::abort();
-                    }
+                });
 
+            } else {
+
+                try {
+                    std::ostringstream stream;
+                    stream << "endpoint domain error: " << e1;
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
                 }
 
-                return false;
-
-            });
-
-        } else {
-
-            try {
-                std::ostringstream stream;
-                stream << "endpoint domain error: " << e1;
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
             }
 
-        }
+            return false;
 
-        return false;
-
-    });
+        });
+    
+    }
 
 }
 

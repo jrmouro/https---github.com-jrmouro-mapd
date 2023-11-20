@@ -20,6 +20,8 @@ class _stepSite : public _site{
 public:
     
     _stepSite() : _stepSite(0,0,0){ }
+    
+    _stepSite(unsigned step, const _site& site) : _stepSite(step,site.GetRow(),site.GetColunm()){ }
 
     _stepSite(unsigned step, unsigned row, unsigned colunm) :
     _site(row, colunm), step(step) {}
@@ -82,7 +84,11 @@ public:
                 if(function(_stepSite(step, this->row, neighbor_colunm))) return;
             }
         
-        }   
+        } else if(step == size.step){
+            
+             std::cout << "\n#\n";             
+            
+        }  
         
     }
     

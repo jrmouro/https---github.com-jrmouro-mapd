@@ -431,6 +431,9 @@ bool _ga_token::updateAgentTaskPath_pendingTask(_ga_agent& agent, int newTaskId,
                     
                     stepMap.stepView(currentStep);
                     
+                    stepMap.free_agent_view();
+                    stepMap.max_step_view();
+                    
                     std::cout << "////////////////" << std::endl;
                     
                     for (int i = currentStep + 1; i < currentStep + 10; i++) {
@@ -438,10 +441,6 @@ bool _ga_token::updateAgentTaskPath_pendingTask(_ga_agent& agent, int newTaskId,
                         stepMap.stepView(i);                        
 
                     }
-                    
-                    stepMap.free_agent_view();
-//                    stepMap.free_step_view();
-                    
                     
 
                     try {
@@ -730,6 +729,28 @@ bool _ga_token::updateAgentTaskPath_going_to_rest_pickuping_to_pickuping(_ga_age
         bool flag = astar.solve(stepMap, newAgentPath, currentTask->getDelivery(), agent.id());
 
         if (!flag) {
+            
+            for (int i = std::max<int>((int)currentStep - 10 ,0); i < currentStep; i++) {
+                        
+                stepMap.stepView(i);                        
+
+            }
+
+            std::cout << "////////////////" << std::endl;
+
+            std::cout << "current step:" << std::endl;
+
+            stepMap.stepView(currentStep);
+
+            std::cout << "////////////////" << std::endl;
+
+            for (int i = currentStep + 1; i < currentStep + 10; i++) {
+
+                stepMap.stepView(i);                        
+
+            }
+
+            stepMap.free_agent_view();
 
             try {
                 std::ostringstream stream;

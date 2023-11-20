@@ -19,6 +19,7 @@
 #include <chrono>
 
 #include "_ga_solutionAllocator.h"
+#include "_ga_select_solution.h"
 
 class _ga_token;
 class _ga_population;
@@ -31,6 +32,7 @@ public:
     
     _nsga(
         const std::string& id,
+        const _ga_select_solution& select_solution,
         const _ga_objective_function& ga_objective_function, 
         const std::function<bool(const _ga_solution&, unsigned, const std::chrono::duration<double>&)>& stopCondition,
         unsigned population_size_max, 
@@ -66,10 +68,11 @@ protected:
         std::default_random_engine&, 
         _ga_population& population) const;
     
-    virtual _ga_solution* reduce_population(
+    virtual void reduce_population(
         const _ga_token& token, 
         std::default_random_engine& generator, 
-        _ga_population& population) const;
+        _ga_population& population,
+        std::vector<_ga_solution*>& border_zero) const;
     
     virtual std::pair<_ga_solution*, _ga_solution*> crossover_select_parents(
         const _ga_token& token, 
@@ -109,7 +112,8 @@ protected:
         seed;
     
     
-    const _ga_objective_function& ga_objective_function;    
+    const _ga_objective_function& objective_function;  
+    const _ga_select_solution& select_solution;
 
     const std::function<bool(const _ga_solution&, unsigned, const std::chrono::duration<double>&)> stopCondition;
     

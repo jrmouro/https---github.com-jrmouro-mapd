@@ -12,13 +12,13 @@ void _closerTaskIndexerAlgorithm::solve(
         const _site& endPointReference,
         std::vector<_task>& taskIndex) const {
 
-    const unsigned taskDistance = token.getEndpointsDistanceAlgorithm().solve(endPointReference, task.getPickup());
+    const unsigned taskDistance = token.getEndpointsPathAlgorithm().solve_distance(endPointReference, task.getPickup());
 
     std::vector<_task>::iterator it = taskIndex.begin();
 
     for (; it != taskIndex.end(); it++) {
 
-        const unsigned dist = token.getEndpointsDistanceAlgorithm().solve(endPointReference, it->getPickup());
+        const unsigned dist = token.getEndpointsPathAlgorithm().solve_distance(endPointReference, it->getPickup());
 
         if (taskDistance < dist) {
 
@@ -40,13 +40,13 @@ void _closerTaskIndexerAlgorithm::ga_solve(
         const _site& endPointReference,
         std::vector<_task>& taskIndex) const {
 
-    const unsigned taskDistance = token.getMap().getEndpointsDistanceAlgorithm().solve(endPointReference, task.getPickup());
+    const unsigned taskDistance = token.getMap().getEndpointsPathAlgorithm().solve_distance(endPointReference, task.getPickup());
 
     std::vector<_task>::iterator it = taskIndex.begin();
 
     for (; it != taskIndex.end(); it++) {
 
-        const unsigned dist = token.getMap().getEndpointsDistanceAlgorithm().solve(endPointReference, it->getPickup());
+        const unsigned dist = token.getMap().getEndpointsPathAlgorithm().solve_distance(endPointReference, it->getPickup());
 
         if (taskDistance < dist) {
 

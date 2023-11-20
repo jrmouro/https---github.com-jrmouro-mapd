@@ -11,7 +11,7 @@
 class _site;
 class _distanceAlgorithm {
 public:
-    virtual unsigned solve(const _site& start, const _site& goal) const = 0;
+    virtual unsigned solve_distance(const _site& start, const _site& goal) const = 0;
 };
 
 #endif /* _DISTANCEALGORITHM_H */

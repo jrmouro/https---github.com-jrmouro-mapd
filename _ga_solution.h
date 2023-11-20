@@ -16,7 +16,6 @@
 #include "_closerTaskIndexerAlgorithm.h"
 #include "_allocation.h"
 
-class _endpointsDistanceAlgorithm;
 class _agent_energy_system;
 
 class _ga_solution : public _ga_pseudo_solution, public _allocation{
@@ -94,10 +93,12 @@ public:
 private:
     friend class _ga_real_of;
     friend class _ga_estimate_of;
+    friend class _ga_estimate_of_path;
     std::map<EvalType, unsigned> evals;
     
 private:
-    friend class _ga_estimate_of;
+    friend class _ga_estimate_of;    
+    friend class _ga_estimate_of_path;
     std::map<const _ga_agent*,std::vector<const _task*>> allocation_map;
     
 private:

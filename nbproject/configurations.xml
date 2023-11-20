@@ -59,6 +59,8 @@
           <logicalFolder name="f4" displayName="ObjectiveFunction" projectFiles="true">
             <itemPath>_ga_estimate_of.cpp</itemPath>
             <itemPath>_ga_estimate_of.h</itemPath>
+            <itemPath>_ga_estimate_of_path.cpp</itemPath>
+            <itemPath>_ga_estimate_of_path.h</itemPath>
             <itemPath>_ga_objective_function.cpp</itemPath>
             <itemPath>_ga_objective_function.h</itemPath>
             <itemPath>_ga_real_of.cpp</itemPath>
@@ -71,6 +73,12 @@
           <logicalFolder name="f2" displayName="PseudoSolution" projectFiles="true">
             <itemPath>_ga_pseudo_solution.cpp</itemPath>
             <itemPath>_ga_pseudo_solution.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f6" displayName="SelectSolution" projectFiles="true">
+            <itemPath>_ga_balanced_solution.cpp</itemPath>
+            <itemPath>_ga_balanced_solution.h</itemPath>
+            <itemPath>_ga_select_solution.cpp</itemPath>
+            <itemPath>_ga_select_solution.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f3" displayName="Solution" projectFiles="true">
             <itemPath>_ga_solution.cpp</itemPath>
@@ -99,6 +107,8 @@
           <itemPath>_distanceAlgorithm.h</itemPath>
           <itemPath>_endpointsDistanceAlgorithm.cpp</itemPath>
           <itemPath>_endpointsDistanceAlgorithm.h</itemPath>
+          <itemPath>_endpointsPathAlgorithm.cpp</itemPath>
+          <itemPath>_endpointsPathAlgorithm.h</itemPath>
           <itemPath>_manhattanAlgorithm.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="StepMap" projectFiles="true">
@@ -305,7 +315,6 @@
           <standard>10</standard>
         </cTool>
         <ccTool>
-          <developmentMode>6</developmentMode>
           <standard>11</standard>
         </ccTool>
         <linkerTool>
@@ -497,6 +506,10 @@
       </item>
       <item path="_endpointsDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_endpointsPathAlgorithm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_endpointsPathAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_energy_charge.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_energy_regime.h" ex="false" tool="3" flavor2="0">
@@ -519,9 +532,17 @@
       </item>
       <item path="_ga_agent_state_free.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_ga_balanced_solution.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_balanced_solution.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_ga_estimate_of.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_estimate_of.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_estimate_of_path.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_estimate_of_path.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_ga_objective_function.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -538,6 +559,10 @@
       <item path="_ga_real_of.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_real_of.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_select_solution.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_select_solution.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_ga_solution.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -976,6 +1001,10 @@
       </item>
       <item path="_endpointsDistanceAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_endpointsPathAlgorithm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_endpointsPathAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_energy_charge.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_energy_regime.h" ex="false" tool="3" flavor2="0">
@@ -998,9 +1027,17 @@
       </item>
       <item path="_ga_agent_state_free.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_ga_balanced_solution.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_balanced_solution.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_ga_estimate_of.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_estimate_of.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_estimate_of_path.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_estimate_of_path.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_ga_objective_function.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1017,6 +1054,10 @@
       <item path="_ga_real_of.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_real_of.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_select_solution.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_select_solution.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_ga_solution.cpp" ex="false" tool="1" flavor2="0">
       </item>

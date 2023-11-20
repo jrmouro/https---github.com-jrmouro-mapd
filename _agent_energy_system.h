@@ -97,7 +97,7 @@ public:
         
         bool pickup_flag = true, delivery_flag = true;
         
-        path.movingList([map, task, moving_value, loaded_value, unloaded_value, carrying_value, charging_value, &pickup_flag, &delivery_flag, &ret, this](const _stepSite& orig, const _stepSite& dest){
+        path.movingList([&map, &task, moving_value, loaded_value, unloaded_value, carrying_value, charging_value, &pickup_flag, &delivery_flag, &ret, this](const _stepSite& orig, const _stepSite& dest){
                                    
             if(pickup_flag && orig.match(task.getPickup())){
                 
@@ -187,7 +187,7 @@ public:
         int charging_value;
         regime.get(AERT::charging, charging_value);
         
-        path.movingList([map, charging_value, moving_value, unloaded_value, &ret, this](const _stepSite& orig, const _stepSite& dest){
+        path.movingList([&map, charging_value, moving_value, unloaded_value, &ret, this](const _stepSite& orig, const _stepSite& dest){
             
             if(map.getTypeOfSite(orig.GetRow(), orig.GetColunm()) == _map::TypeOfSite::bot){
                 

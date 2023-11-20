@@ -22,15 +22,15 @@ public:
     
     _endpointsDistanceAlgorithm();
     
-    _endpointsDistanceAlgorithm(const _map& map);
+//    _endpointsDistanceAlgorithm(const _map& map);
     
     _endpointsDistanceAlgorithm(const _endpointsDistanceAlgorithm& other);
     
     virtual ~_endpointsDistanceAlgorithm();
     
-    virtual unsigned solve(const _site& start, const _site& goal) const;
+    virtual unsigned solve_distance(const _site& start, const _site& goal) const;
     
-    void reset(const _map& map);
+    virtual void reset(const _map& map);
     
     friend std::ostream& operator<<(std::ostream& os, const _endpointsDistanceAlgorithm& obj) {
         
@@ -49,7 +49,7 @@ public:
     }
 
     
-private:
+protected:
     
     unsigned size = 0, mapColunmSize = 0, endpointsSize = 0;
     unsigned *distances = nullptr;

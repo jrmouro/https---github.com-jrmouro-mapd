@@ -1,0 +1,10 @@
+mapFilename;taskFilename;step_size;row_size;col_size;num_bots;num_endpoints;last_step;num_tasks;token_id;token_name;current_step;energy system id;energy expenditure;finished_taskstime(s);
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;10;312;2496;500;GAT;GAT(Greedy);2561;E_1(R_1);25610;5000.179821;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;10;312;2496;500;GAT;GAT(NSGA-II_e);2525;E_1(R_1);25250;500320.681607;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;10;312;2496;500;GAT;GAT(NSGA-II_e_p);2553;E_1(R_1);25530;500374.739961././Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;10;312;2496;500;GAT;GAT(NSGA-II_r);2544;E_1(R_1);25440;50024262.685097;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;10;312;2496;500;GAT_P;GAT_P(Greedy);2550;E_1(R_1);25500;5000.371369;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;10;312;2496;500;GAT_P;GAT_P(NSGA-II_e);2550;E_1(R_1);25500;500140.233331;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;10;312;2496;500;GAT_P;GAT_P(NSGA-II_e_p);2553;E_1(R_1);25530;500141.901619;
+stances/small/kiva-10-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;10;312;2496;500;GAT_P;GAT_P(NSGA-II_r);2559;E_1(R_1);25590;5008645.384148;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;10;312;2496;500;TP;TP[E_1(R_1)];2558;E_1(R_1);25580;500253.164233;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.5.task;5000;21;35;10;312;999;500;GAT;GAT(Greedy);1320;E_1(R_1);13200;5000.341155././Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.5.task;5000;21;35;10;312;999;500;GAT;GAT(NSGA-II_e);1652;E_1(R_1);16520;500478.060771././Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.5.task;5000;21;35;10;312;999;500;GAT;GAT(NSGA-II_e_p);1607;E_1(R_1);16070;500375.776797;

@@ -17,7 +17,7 @@
 #include "ReportTask.h"
 #include "MapdException.h"
 #include "_manhattanAlgorithm.h"
-#include "_endpointsDistanceAlgorithm.h"
+#include "_endpointsPathAlgorithm.h"
 #include "_stepAstarAlgorithm.h"
 #include "_agent.h"
 #include "ReportTaskMap.h"
@@ -351,8 +351,8 @@ public:
         return map;
     }
     
-    const _endpointsDistanceAlgorithm& getEndpointsDistanceAlgorithm() const {
-        return map.getEndpointsDistanceAlgorithm();
+    const _endpointsPathAlgorithm& getEndpointsPathAlgorithm() const {
+        return map.getEndpointsPathAlgorithm();
     }
     
     bool anyBackwardTask()const{

@@ -1,14 +1,14 @@
 #include "_map.h"
 #include "Render.h"
 #include "Rectangle.h"
-#include "_endpointsDistanceAlgorithm.h"
+#include "_endpointsPathAlgorithm.h"
 
 const _map::_TypeColorMap _map::TypeColorMap;
 
 _map::~_map() {
 
     if (sites != nullptr) delete [] sites;
-    if (endpointsDistanceAlgorithm != nullptr) delete endpointsDistanceAlgorithm;
+    if (endpointsPathAlgorithm != nullptr) delete endpointsPathAlgorithm;
 
 }
 
@@ -30,9 +30,9 @@ _map::_map(const _map& other) :
 
     }
     
-    if(other.endpointsDistanceAlgorithm != nullptr){
+    if(other.endpointsPathAlgorithm != nullptr){
         
-        endpointsDistanceAlgorithm = new _endpointsDistanceAlgorithm(*(other.endpointsDistanceAlgorithm));
+        endpointsPathAlgorithm = new _endpointsPathAlgorithm(*(other.endpointsPathAlgorithm));
         
     }
     
@@ -91,11 +91,13 @@ void _map::load(std::ifstream& filestream, std::function<bool(unsigned, unsigned
 
     }
 
-    endpointsDistanceAlgorithm = new _endpointsDistanceAlgorithm(*this);
+//    endpointsPathAlgorithm = new _endpointsPathAlgorithm(*this);
+    endpointsPathAlgorithm = new _endpointsPathAlgorithm();
+    endpointsPathAlgorithm->reset(*this);
 
 }
 
-const _endpointsDistanceAlgorithm& _map::getEndpointsDistanceAlgorithm() const {
-    return *endpointsDistanceAlgorithm;
+const _endpointsPathAlgorithm& _map::getEndpointsPathAlgorithm() const {
+    return *endpointsPathAlgorithm;
 }
 

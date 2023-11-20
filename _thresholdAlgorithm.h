@@ -14,11 +14,11 @@
 
 class _thresholdAlgorithm {
 public:
-    _thresholdAlgorithm(const _endpointsDistanceAlgorithm& endpointsDistanceAlgorithm) :
-    endpointsDistanceAlgorithm(endpointsDistanceAlgorithm) {}
+    _thresholdAlgorithm(const _endpointsPathAlgorithm& endpointspathAlgorithm) :
+    endpointsPathAlgorithm(endpointsPathAlgorithm) {}
     
     _thresholdAlgorithm(const _thresholdAlgorithm& other) :
-    endpointsDistanceAlgorithm(other.endpointsDistanceAlgorithm) {}
+    endpointsPathAlgorithm(other.endpointsPathAlgorithm) {}
 
     virtual ~_thresholdAlgorithm(){}
     
@@ -34,8 +34,8 @@ public:
         
             _stepSite midler = path.get(midlerStep);
 
-            return ((float)endpointsDistanceAlgorithm.solve(path.currentSite(), midler) + 
-                    (float)endpointsDistanceAlgorithm.solve(midler, path.goalSite())) / (path.size() - 1);
+            return ((float)endpointsPathAlgorithm.solve_distance(path.currentSite(), midler) + 
+                    (float)endpointsPathAlgorithm.solve_distance(midler, path.goalSite())) / (path.size() - 1);
         
         } else {
             
@@ -61,7 +61,7 @@ public:
     
     virtual float solve(const _site& s1, const _site& s2, unsigned size) const {
                 
-        return (float)endpointsDistanceAlgorithm.solve(s1, s2) / (float)size;
+        return (float)endpointsPathAlgorithm.solve_distance(s1, s2) / (float)size;
         
     }
     
@@ -84,7 +84,7 @@ public:
     }
     
 private:
-    const _endpointsDistanceAlgorithm& endpointsDistanceAlgorithm;
+    const _endpointsPathAlgorithm& endpointsPathAlgorithm;
 };
 
 #endif /* _THRESHOLDALGORITHM_H */

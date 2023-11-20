@@ -24,7 +24,7 @@ public:
     
     virtual ~_astarDistanceAlgorithm();
     
-    virtual unsigned solve(const _site& start, const _site& goal) const ;    
+    virtual unsigned solve_distance(const _site& start, const _site& goal) const ; 
     
 private:
     

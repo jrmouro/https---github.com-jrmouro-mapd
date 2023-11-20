@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/testFiles/simpletest.cpp to edit this template
- */
-
 /* 
  * File:   newsimpletest2.cpp
  * Author: ronaldo
@@ -14,6 +9,7 @@
 #include <iostream>
 
 #include "_stepMap.h"
+#include "_stepAstarAlgorithm.h"
 
 /*
  * Simple C++ Test Suite
@@ -21,47 +17,114 @@
 
 void test1() {
     
-    _stepMap sm(5,5,5);
+    _stepAstarAlgorithm astar;
+    
+    _stepMap sm(50,5,5);
     
     for (int r = 0; r < 5; r++)        
         for (int c = 0; c < 5; c++)
             sm.resetTypesInStepColunm(r, c, _stepMap::NodeType::freeNode);
         
-    sm.resetTypesInStepColunm(0,0,0);
+    sm.resetTypesInStepColunm(2,0,0);
+    sm.resetTypesInStepColunm(1,2,1);
     
     
-    sm.stepView(0,4);
+    sm.stepView(0,1);
     sm.free_agent_view();
     sm.max_step_view();
     
-    _stepPath sp1, sp2;
+    _stepPath p0(_stepSite(0, 2, 0)), p1(_stepSite(0, 1, 2));
     
-    sp1.progress(_stepSite(0,0,0));
-    sp1.progress(_stepSite(1,0,1));
-    sp1.progress(_stepSite(2,1,1));
+    bool flag = astar.solve(sm, p0, _site(2, 4), 0);
     
-    sm.setMoving(sp1, 0);
+    if(flag){
+        
+        std::cout << p0 << std::endl;
+        
+        sm.setMoving(p0, 0);
+        
+        sm.stepView(1,5);
+        sm.free_agent_view();
+        sm.max_step_view();
+        
+    } else {
+        
+        std::cout << "path not found" << std::endl;
+        
+    }
     
-    sm.stepView(0,4);
-    sm.free_agent_view();
-    sm.max_step_view();
+    flag = astar.solve(sm, p1, _site(2, 2), 1);
+    
+    if(flag){
+        
+        std::cout << p1 << std::endl;
+        
+        sm.setMoving(p1, 1);
+        
+        sm.stepView(1,5);
+        sm.free_agent_view();
+        sm.max_step_view();
+        
+    } else {
+        
+        std::cout << "path not found" << std::endl;
+        
+    }
+    
+    _stepSite current = p0.goalSite();
+    p0.clear();
+    p0.add(current);
+    
+    flag = astar.solve(sm, p0, _site(2, 4), 0);
+    
+    if(flag){
+        
+        std::cout << p0 << std::endl;
+        
+        sm.setMoving(p0, 0);
+        
+        sm.stepView(5,9);
+        sm.free_agent_view();
+        sm.max_step_view();
+                
+        current = p0.currentSite();
+                
+        sm.deleteMoving(p0, 0);
+        
+        p0.clear();
+        p0.add(current);
+    
+        flag = astar.solve(sm, p0, _site(2, 0), 0);
+        
+        if(flag){
+            
+            std::cout << p0 << std::endl;
+            
+            sm.setMoving(p0, 0);
+            
+            sm.stepView(5,11);
+            sm.free_agent_view();
+            sm.max_step_view();
+            
+        }else{
+            
+            std::cout << "path not found" << std::endl;
+            
+        }
+        
+        
+    } else {
+        
+        std::cout << "path not found" << std::endl;
+        
+    }
     
     
-    sp2.progress(_stepSite(2,1,1));
-    sp2.progress(_stepSite(3,1,2));
-    sp2.progress(_stepSite(4,1,3));
     
-    sm.setMoving(sp2, 0);
     
-    sm.stepView(0,4);
-    sm.free_agent_view();
-    sm.max_step_view();
     
-    sm.deleteMoving(sp2, 0);
     
-    sm.stepView(0,4);
-    sm.free_agent_view();
-    sm.max_step_view();
+    
     
     
     std::cout << "newsimpletest2 test 1" << std::endl;

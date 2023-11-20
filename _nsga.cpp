@@ -15,6 +15,7 @@
 
 _nsga::_nsga(
     const std::string& id,
+    const _ga_select_solution& select_solution,
     const _ga_objective_function& ga_objective_function, 
     const std::function<bool(const _ga_solution&, unsigned, const std::chrono::duration<double>&)>& stopCondition,
     unsigned population_size_max, 
@@ -27,7 +28,8 @@ _nsga::_nsga(
     float tasks_mutation_rate,       
     unsigned seed) :
         _ga_solutionAllocator(id, solution_validity),
-        ga_objective_function(ga_objective_function),
+        select_solution(select_solution),
+        objective_function(ga_objective_function),
         population_size_max(population_size_max), 
         population_size_min(population_size_min), 
         population_mutation_rate(population_mutation_rate),
@@ -40,7 +42,8 @@ _nsga::_nsga(
 
 _nsga::_nsga(const _nsga& other) :
         _ga_solutionAllocator(other),
-        ga_objective_function(other.ga_objective_function),
+        select_solution(other.select_solution),
+        objective_function(other.objective_function),
         population_size_max(other.population_size_max), 
         population_size_min(other.population_size_min), 
         population_mutation_rate(other.population_mutation_rate),
@@ -89,7 +92,7 @@ void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
 
     unsigned pop_min = std::max<unsigned>(2 * token.numberOfAgents(), population_size_min);
 //    unsigned pop_max = std::min<unsigned>(pop_min * 3, population_size_max); ;
-    unsigned pop_max = pop_min * 3;
+    unsigned pop_max = pop_min * 2;
     
 
     _ga_solution* best = &solution;
@@ -112,7 +115,11 @@ void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
 //        std::cout << "Best solution: " << *best << std::endl;
 //        std::cout << std::endl;
 
-        best = reduce_population(token, generator, population);
+        std::vector<_ga_solution*> border_zero;
+        
+        reduce_population(token, generator, population, border_zero);
+        
+        best = select_solution.select(token, objective_function, border_zero);
         
         
 //        std::cout << "generation: " << generation << std::endl;
@@ -251,7 +258,11 @@ void _nsga::expand_population(
 
 }
 
-_ga_solution* _nsga::reduce_population(const _ga_token& token, std::default_random_engine& generator, _ga_population& population) const {
+void _nsga::reduce_population(
+        const _ga_token& token, 
+        std::default_random_engine& generator, 
+        _ga_population& population,
+        std::vector<_ga_solution*>& border_zero) const {
 
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
     
@@ -259,89 +270,163 @@ _ga_solution* _nsga::reduce_population(const _ga_token& token, std::default_rand
     
     std::vector<std::vector<_ga_solution*>> borders;
     nds_population(token, population, borders, solution_border_map);
-
-    auto rit = borders.rbegin();
-    bool scape = false;
-
-    for(; rit != borders.rend() && !scape; ++rit){
+    
+    
+    
+    int reduce_rcount = population.getSize_cur() - population.getSize_min();
+    
+    for (int i = borders.size() - 1; i >= 0  && reduce_rcount > 0; i--) {
         
-        for(auto sit = rit->begin(); sit != rit->end(); /*sit++*/){
+        if(reduce_rcount >= borders.at(i).size()){
             
-            if(population.isReducible()){
-
-                bool result = population.remove(*sit);
+            std::vector<_ga_solution*>::iterator it = borders.at(i).begin();
+            
+            for(; it != borders.at(i).end() && reduce_rcount > 0; ){
+                
+                bool result = population.remove(*it);
 
                 if(result){
+                    
+                    it = borders.at(i).erase(it);
 
-                    sit = rit->erase(sit);
+                    reduce_rcount--;
 
                 } else {
-                    
+
                     try {
                         std::ostringstream stream;
-                        stream << "remove solution fail: " << *sit;
+                        stream << "remove solution fail: " << *it;
                         MAPD_EXCEPTION(stream.str());
                     } catch (std::exception& e) {
                         std::cout << e.what() << std::endl;
                         std::abort();
                     } 
-                    
-                }
 
-            } else {
-                
-                scape = true;
-                break;
+                }
                 
             }
+        
+        } else {
+            
+            std::vector<unsigned> original_index;
+            std::vector<_ga_solution*> solution_order;
+            std::vector<float> dist_order;
+            std::map<_ga_solution*, float> solution_distance_map;
+            crowding_distance(token, borders.at(i), solution_distance_map);
+
+            for (auto& crow_dist_pair : solution_distance_map) {
+
+
+                int count = 0;
+                for(auto it = dist_order.begin(); it != dist_order.end(); it++){
+
+                    if(crow_dist_pair.second < *it){
+
+                        dist_order.insert(it, crow_dist_pair.second);
+                        solution_order.insert(solution_order.begin() + count, crow_dist_pair.first);
+                        count = -1;
+                        break;
+
+                    }
+
+                    count++;
+
+                }
+                if(count != -1){
+                    dist_order.push_back(crow_dist_pair.second);
+                    solution_order.push_back(crow_dist_pair.first);
+                }
+
+            }
+
+            auto it = solution_order.begin();
+            for(;it != solution_order.end() && reduce_rcount > 0; it++){
+
+                bool result = population.remove(*it);
+
+                if(result){
+                    
+                    std::vector<_ga_solution*>::iterator bit = borders.at(i).begin();
+            
+                    for(; bit != borders.at(i).end(); ){
+                        
+                        if((*bit) == (*it)){
+                            bit = borders.at(i).erase(bit);
+                            break;
+                        } else {
+                            bit++;
+                        }
+
+                    }
+
+                    reduce_rcount--;
+
+                } else {
+
+                    try {
+                        std::ostringstream stream;
+                        stream << "remove solution fail: " << *it;
+                        MAPD_EXCEPTION(stream.str());
+                    } catch (std::exception& e) {
+                        std::cout << e.what() << std::endl;
+                        std::abort();
+                    } 
+
+                }
+
+            }
+            
             
         }
 
     }
     
-    _ga_solution* ret = nullptr;
+    if(borders.size() > 0) border_zero = borders.at(0);
+
     
-    if(!borders.empty()){
-        
-        if(borders.at(0).size() > 2){
-                
-            std::map<_ga_solution*, float> solution_distance_map;
-            
-            ret = crowding_distance(token, borders.at(0), solution_distance_map); 
-        
-        } if(borders.at(0).size() > 1){
-            
-            std::uniform_int_distribution<unsigned> distribution(0, 1);
-            
-            unsigned index = distribution(generator);
-            
-            ret = borders.at(0).at(index);
-            
-        } if(borders.at(0).size() > 0){
-            
-            ret = borders.at(0).at(0);
-            
-        }
-    
-    } else {
-        
-        try {
-            std::ostringstream stream;
-            stream << "empty border";
-            MAPD_EXCEPTION(stream.str());
-        } catch (std::exception& e) {
-            std::cout << e.what() << std::endl;
-            std::abort();
-        } 
-        
-    }
+//    _ga_solution* ret = nullptr;
+//    
+//    if(!borders.empty()){
+//        
+//        if(borders.at(0).size() > 2){
+//                
+//            std::map<_ga_solution*, float> solution_distance_map;
+//            
+//            ret = crowding_distance(token, borders.at(0), solution_distance_map); 
+//        
+//        } else if(borders.at(0).size() > 1){
+//            
+//            std::uniform_int_distribution<unsigned> distribution(0, 1);
+//            
+//            unsigned index = distribution(generator);
+//            
+//            ret = borders.at(0).at(index);
+//            
+//        } else if(borders.at(0).size() > 0){
+//            
+//            ret = borders.at(0).at(0);
+//            
+//        }
+//    
+//    } else {
+//        
+//        try {
+//            std::ostringstream stream;
+//            stream << "empty border";
+//            MAPD_EXCEPTION(stream.str());
+//        } catch (std::exception& e) {
+//            std::cout << e.what() << std::endl;
+//            std::abort();
+//        } 
+//        
+//    }
     
     std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
 
 //    std::cout << "reduce_population time span: " << time_span.count() << std::endl;
     
-    return ret;
+//    return ret;
 
 }
 
@@ -446,15 +531,20 @@ _ga_solution* _nsga::crowding_distance(
     solution_distance_map.clear();
 
     unsigned msp_min = UINT_MAX, msp_max = 0, eng_min = UINT_MAX, eng_max = 0;
+    
     std::vector<_ga_solution*> sort_border;
 
+    
+    for(int i = 0; i < border.size(); i++){
+        
+        _ga_solution* solution = border.at(i);
 
-    for (auto solution : border) {
+//    for (auto solution : border) {
 
         solution_distance_map.insert(std::pair<_ga_solution*, unsigned>(solution, .0f));
         
-        unsigned msp = ga_objective_function.eval(token, *solution, _ga_solution::EvalType::makespan);
-        unsigned eng = ga_objective_function.eval(token, *solution, _ga_solution::EvalType::energy);
+        unsigned msp = objective_function.eval(token, *solution, _ga_solution::EvalType::makespan);
+        unsigned eng = objective_function.eval(token, *solution, _ga_solution::EvalType::energy);
 
 //        unsigned msp = solution->evaluate(token, _ga_solution::EvalType::makespan);
 //        unsigned eng = solution->evaluate(token, _ga_solution::EvalType::energy);
@@ -467,7 +557,7 @@ _ga_solution* _nsga::crowding_distance(
         bool flag = true;
         for(auto it = sort_border.begin(); it != sort_border.end(); it++){
             
-            unsigned msp_aux = ga_objective_function.eval(token, *(*it), _ga_solution::EvalType::makespan);
+            unsigned msp_aux = objective_function.eval(token, *(*it), _ga_solution::EvalType::makespan);
 
             if(msp < msp_aux){
 
@@ -484,53 +574,60 @@ _ga_solution* _nsga::crowding_distance(
     }
 
     float div = (float)msp_max - (float)msp_min;
+    
+    if(div > .0f){
 
-    for(auto it = sort_border.begin() + 1; it != sort_border.end() - 1; it++){
-            
-        float sa = (float)ga_objective_function.eval(token, *(*(it - 1)), _ga_solution::EvalType::makespan);
-        float sp = (float)ga_objective_function.eval(token, *(*(it + 1)), _ga_solution::EvalType::makespan);
-        
-        float dist = std::abs(sa - sp) / div;
+        for(auto it = sort_border.begin() + 1; it != sort_border.end() - 1; it++){
 
-        std::map<_ga_solution*, float>::iterator dit = solution_distance_map.find(*it);
-        
-        if(dit !=  solution_distance_map.end()){
-        
-            dit->second += dist;
-            
-            if(dit->second > crowding_distance_max){
-                
-                crowding_distance_max = dit->second;
-                
-                ret = dit->first;
-                
+            float sa = (float)objective_function.eval(token, *(*(it - 1)), _ga_solution::EvalType::makespan);
+            float sp = (float)objective_function.eval(token, *(*(it + 1)), _ga_solution::EvalType::makespan);
+
+            float dist = std::abs(sa - sp) / div;
+
+            std::map<_ga_solution*, float>::iterator dit = solution_distance_map.find(*it);
+
+            if(dit !=  solution_distance_map.end()){
+
+                dit->second += dist;
+
+                if(dit->second > crowding_distance_max){
+
+                    crowding_distance_max = dit->second;
+
+                    ret = dit->first;
+
+                }
+
+            } else {
+
+                try {
+                    std::ostringstream stream;
+                    stream << "solution not mapped: " << *(*it);
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
+                } 
+
             }
-        
-        } else {
-            
-            try {
-                std::ostringstream stream;
-                stream << "solution not mapped: " << *(*it);
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            } 
-            
+
         }
 
+    } else {
+        
+        ret = sort_border.at(0);
+        
     }
-
 
     sort_border.clear();
     for (auto solution : border) {
         
-        unsigned eng = ga_objective_function.eval(token, *solution, _ga_solution::EvalType::energy);
+        unsigned eng = objective_function.eval(token, *solution, _ga_solution::EvalType::energy);
 
         bool flag = true;
         for(auto it = sort_border.begin(); it != sort_border.end(); it++){
             
-            unsigned eng_aux = ga_objective_function.eval(token, *(*it), _ga_solution::EvalType::energy);
+            unsigned eng_aux = objective_function.eval(token, *(*it), _ga_solution::EvalType::energy);
 
             if(eng < eng_aux){
 
@@ -548,41 +645,45 @@ _ga_solution* _nsga::crowding_distance(
 
 
     div = (float)eng_max - (float)eng_min;
+    
+    if(div > .0f){
 
-    for(auto it = sort_border.begin() + 1; it != sort_border.end() - 1; it++){
-        
-        float sa = (float)ga_objective_function.eval(token, *(*(it - 1)), _ga_solution::EvalType::energy);
-        float sp = (float)ga_objective_function.eval(token, *(*(it + 1)), _ga_solution::EvalType::energy);
+        for(auto it = sort_border.begin() + 1; it != sort_border.end() - 1; it++){
 
-        float dist = std::abs(sa - sp) / div;
+            float sa = (float)objective_function.eval(token, *(*(it - 1)), _ga_solution::EvalType::energy);
+            float sp = (float)objective_function.eval(token, *(*(it + 1)), _ga_solution::EvalType::energy);
 
-        std::map<_ga_solution*, float>::iterator dit = solution_distance_map.find(*it);
-        
-        if(dit !=  solution_distance_map.end()){
-        
-            dit->second += dist;           
-            
-            if(dit->second > crowding_distance_max){
-                
-                crowding_distance_max = dit->second;
-                
-                ret = dit->first;
-                
+            float dist = std::abs(sa - sp) / div;
+
+            std::map<_ga_solution*, float>::iterator dit = solution_distance_map.find(*it);
+
+            if(dit !=  solution_distance_map.end()){
+
+                dit->second += dist;           
+
+                if(dit->second > crowding_distance_max){
+
+                    crowding_distance_max = dit->second;
+
+                    ret = dit->first;
+
+                }
+
+            } else {
+
+                try {
+                    std::ostringstream stream;
+                    stream << "solution not mapped: " << *(*it);
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
+                } 
+
             }
-        
-        } else {
-            
-            try {
-                std::ostringstream stream;
-                stream << "solution not mapped: " << *(*it);
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            } 
-            
-        }
 
+        }
+    
     }
     
     return ret;
@@ -614,8 +715,8 @@ void _nsga::nds_population(
 
             if(solution1 != solution2){
                 
-                ga_objective_function.evals(token, *solution1);
-                ga_objective_function.evals(token, *solution2);
+                objective_function.evals(token, *solution1);
+                objective_function.evals(token, *solution2);
 
                 if(solution1->isDominatedBy(token, *solution2)){
 
@@ -648,13 +749,13 @@ void _nsga::nds_population(
 
     borders.push_back(nextBorder);
 
-    std::vector<_ga_solution*>* currentBorder = &borders.at(border_index++);
+    std::vector<_ga_solution*> currentBorder(borders.at(border_index++));
 
-    while(!currentBorder->empty()){
+    while(!currentBorder.empty()){
 
         nextBorder.clear();
 
-        for (auto solution1 : *currentBorder) {
+        for (auto solution1 : currentBorder) {
 
             auto dom = domination_map.find(solution1);
 
@@ -709,9 +810,8 @@ void _nsga::nds_population(
 
         borders.push_back(nextBorder);
 
-        currentBorder = &borders.at(border_index++);       
+        currentBorder = borders.at(border_index++);       
         
-
     } 
 
 }

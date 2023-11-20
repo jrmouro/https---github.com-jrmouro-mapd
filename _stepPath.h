@@ -13,6 +13,7 @@
 #include <functional>
 #include "_stepSite.h"
 #include "MapdException.h"
+#include "_path.h"
 
 class _stepPath{
 public:
@@ -270,6 +271,90 @@ public:
         }       
         
         return UINT_MAX;
+        
+    }
+    
+    static void buildFromPath(unsigned initialStep, const _path& path, _stepPath& stepPath){
+        
+        stepPath.clear();
+        
+        path.rlist([&initialStep, &stepPath](const _site& site){
+            
+            stepPath.progress(_stepSite(initialStep++, site));            
+            
+            return false;
+            
+        });
+        
+    }
+    
+    bool collideWith(const _stepPath& other) const{
+        
+        if(!sites.empty() && !other.sites.empty()){
+            
+            unsigned initialStepThis = sites.back().GetStep();
+            unsigned initialStepOther = other.sites.back().GetStep();
+            int diff = initialStepOther - initialStepThis;
+                    
+            int i, j;
+            
+            if(diff < 0){
+                
+                i = sites.size() - 1;
+                j = other.sites.size() - 1 + diff;
+                
+            } else {
+                
+                i = sites.size() - 1 - diff;
+                j = other.sites.size() - 1;
+                                                
+            }
+            
+            for (; i >= 0 && j  >= 0; i--, j--) {
+                    
+                if(sites[i].match(other.sites[j])) return true;         
+
+            }       
+                    
+        }
+        
+        return false;
+        
+    }
+    
+    unsigned collideCount(const _stepPath& other) const{
+        
+        unsigned ret = 0;
+        
+        if(!sites.empty() && !other.sites.empty()){
+            
+            unsigned initialStepThis = sites.back().GetStep();
+            unsigned initialStepOther = other.sites.back().GetStep();
+            int diff = initialStepOther - initialStepThis;
+                    
+            int i, j;
+            
+            if(diff < 0){
+                
+                i = sites.size() - 1;
+                j = other.sites.size() - 1 + diff;
+                
+            } else {
+                
+                i = sites.size() - 1 - diff;
+                j = other.sites.size() - 1;
+                                                
+            }
+            
+            for (; i >= 0 && j  >= 0; i--, j--) {
+                    
+                if(sites[i].match(other.sites[j])) ret++;         
+
+            }       
+                    
+        }
+        
+        return ret;
         
     }
     

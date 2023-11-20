@@ -21,9 +21,8 @@
 #include "Render.h"
 #include "_site.h"
 #include "MapdException.h"
-//#include "_endpointsDistanceAlgorithm.h"
 
-class _endpointsDistanceAlgorithm;
+class _endpointsPathAlgorithm;
 class _map : public Drawable{
 public:
     
@@ -279,7 +278,7 @@ public:
         
     }
     
-    const _endpointsDistanceAlgorithm& getEndpointsDistanceAlgorithm() const;
+    const _endpointsPathAlgorithm& getEndpointsPathAlgorithm() const;
        
 private:
 
@@ -293,7 +292,7 @@ private:
     std::map<unsigned,_site> endpointMap;
     std::map<unsigned,_site> botMap;
     
-    _endpointsDistanceAlgorithm* endpointsDistanceAlgorithm = nullptr;
+    _endpointsPathAlgorithm* endpointsPathAlgorithm = nullptr;
 
 };
 

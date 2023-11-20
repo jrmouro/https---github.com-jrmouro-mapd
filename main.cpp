@@ -11,9 +11,11 @@
 #include "_energy_charge.h"
 #include "_agentsTasksAllocator.h"
 #include "_ga_solutionAllocator.h"
+#include "_ga_balanced_solution.h"
 #include "_nsga.h"
 #include "_ga_real_of.h"
 #include "_ga_estimate_of.h"
+#include "_ga_estimate_of_path.h"
 #include <string>
 
 using namespace std;
@@ -56,15 +58,15 @@ void bug(int map = 0, std::string of = "*"){
     }
 //    
 ////    
-//    taskFilenames.push_back("./Instances/small/kiva-0.2.task");
-//    taskFilenames.push_back("./Instances/small/kiva-0.5.task");
-//    taskFilenames.push_back("./Instances/small/kiva-1.task");
-//    taskFilenames.push_back("./Instances/small/kiva-2.task");
-//    taskFilenames.push_back("./Instances/small/kiva-5.task");
+    taskFilenames.push_back("./Instances/small/kiva-0.2.task");
+    taskFilenames.push_back("./Instances/small/kiva-0.5.task");
+    taskFilenames.push_back("./Instances/small/kiva-1.task");
+    taskFilenames.push_back("./Instances/small/kiva-2.task");
+    taskFilenames.push_back("./Instances/small/kiva-5.task");
     taskFilenames.push_back("./Instances/small/kiva-10.task");
-//    taskFilenames.push_back("./Instances/small/kiva-500.task");
+    taskFilenames.push_back("./Instances/small/kiva-500.task");
     
-//    tokenIds.push_back("TP");
+    tokenIds.push_back("TP");
 //    tokenIds.push_back("TSTP");
 //    tokenIds.push_back("BTT");
 //    tokenIds.push_back("TTP");
@@ -86,16 +88,31 @@ void bug(int map = 0, std::string of = "*"){
 //    agent_energy_systems.push_back(aes_3);
     
     _ga_real_of ga_real_of;
-    _ga_estimate_of ga_estimate_of; 
+    _ga_estimate_of ga_estimate_of;     
+    _ga_estimate_of_path ga_estimate_of_path; 
     
-    tokenIds.push_back("GAT");
+    _ga_balanced_solution select_solution;
+    
+//    tokenIds.push_back("GAT");
 //    tokenIds.push_back("GAT_P");
     
     _ga_solutionAllocator ga_solutionAllocator("Greedy", 25000);
     
     _nsga nsga_estimative(
             "NSGA-II_e",
+            select_solution,
             ga_estimate_of,
+            [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
+                                
+//                return time_span.count() > 5.0 || generation > 29;
+                return generation > 5;
+                
+            },  30,   10,  25000, .4f, .5f, .5f,  .3f,  .3f, 1);
+            
+    _nsga nsga_estimative_path(
+            "NSGA-II_e_p",
+            select_solution,
+            ga_estimate_of_path,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                                 
 //                return time_span.count() > 5.0 || generation > 29;
@@ -105,6 +122,7 @@ void bug(int map = 0, std::string of = "*"){
             
     _nsga nsga_real(
             "NSGA-II_r",
+            select_solution,
             ga_real_of,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                 
@@ -122,6 +140,16 @@ void bug(int map = 0, std::string of = "*"){
         
         agentsTasksAllocators.push_back(&nsga_estimative);    
         
+    } else if(of == "p"){
+        
+        agentsTasksAllocators.push_back(&nsga_estimative_path);    
+        
+    } else if(of == "ep"){
+        
+        agentsTasksAllocators.push_back(&ga_solutionAllocator); 
+        agentsTasksAllocators.push_back(&nsga_estimative); 
+        agentsTasksAllocators.push_back(&nsga_estimative_path);     
+        
     } else if(of == "r"){
         
         agentsTasksAllocators.push_back(&nsga_real);
@@ -130,6 +158,7 @@ void bug(int map = 0, std::string of = "*"){
                 
         agentsTasksAllocators.push_back(&ga_solutionAllocator);
         agentsTasksAllocators.push_back(&nsga_estimative);
+        agentsTasksAllocators.push_back(&nsga_estimative_path); 
         agentsTasksAllocators.push_back(&nsga_real);   
         
     }
@@ -210,16 +239,31 @@ void test(int map = 0, std::string of = "e"){
 //    agent_energy_systems.push_back(aes_2);
     
     _ga_real_of ga_real_of;
-    _ga_estimate_of ga_estimate_of;        
+    _ga_estimate_of ga_estimate_of; 
+    _ga_estimate_of_path ga_estimate_of_path; 
+    _ga_balanced_solution select_solution;    
 //    
-    tokenIds.push_back("GAT");
-    tokenIds.push_back("GAT_P");
+//    tokenIds.push_back("GAT");
+//    tokenIds.push_back("GAT_P");
     
     _ga_solutionAllocator ga_solutionAllocator("Greedy", 25000);
     
     _nsga nsga_estimative(
             "NSGA_II_e",
+            select_solution,
             ga_estimate_of,
+            [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
+                
+//                 return time_span.count() > 5.0 || generation > 99;
+                 return generation > 100;
+                
+            },
+            30, 10,  25000, .4f, .5f, .5f, .3f,  .3f, 1);
+            
+    _nsga nsga_estimative_path(
+            "NSGA_II_e_p",
+            select_solution,
+            ga_estimate_of_path,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                 
 //                 return time_span.count() > 5.0 || generation > 99;
@@ -231,6 +275,7 @@ void test(int map = 0, std::string of = "e"){
             
     _nsga nsga_real(
             "NSGA_II_r",
+            select_solution,
             ga_real_of,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                 
@@ -248,6 +293,16 @@ void test(int map = 0, std::string of = "e"){
         
         agentsTasksAllocators.push_back(&nsga_estimative);    
         
+    } else if(of == "p"){
+        
+        agentsTasksAllocators.push_back(&nsga_estimative_path);    
+        
+    } else if(of == "ep"){
+        
+        agentsTasksAllocators.push_back(&ga_solutionAllocator); 
+        agentsTasksAllocators.push_back(&nsga_estimative); 
+        agentsTasksAllocators.push_back(&nsga_estimative_path);     
+        
     } else if(of == "r"){
         
         agentsTasksAllocators.push_back(&nsga_real);
@@ -256,6 +311,7 @@ void test(int map = 0, std::string of = "e"){
         
         agentsTasksAllocators.push_back(&ga_solutionAllocator);
         agentsTasksAllocators.push_back(&nsga_estimative);
+        agentsTasksAllocators.push_back(&nsga_estimative_path);
         agentsTasksAllocators.push_back(&nsga_real);                
         
     }
@@ -347,6 +403,8 @@ void small(int map, std::string of = "e"){
     
     _ga_real_of ga_real_of;
     _ga_estimate_of ga_estimate_of; 
+    _ga_estimate_of ga_estimate_of_path;
+    _ga_balanced_solution select_solution;
     
     tokenIds.push_back("GAT");
     tokenIds.push_back("GAT_P");
@@ -355,24 +413,37 @@ void small(int map, std::string of = "e"){
     
     _nsga nsga_estimative(
             "NSGA-II_e",
+            select_solution,
             ga_estimate_of,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                                 
 //                return time_span.count() > 5.0 || generation > 29;
-                return generation > 50;
+                return generation > 30;
                 
-            },  60,   20,  25000, .4f, .5f, .5f,  .3f,  .3f, 1);
+            },  30,   10,  25000, .4f, .5f, .5f,  .3f,  .3f, 1);
+            
+    _nsga nsga_estimative_path(
+            "NSGA-II_e_p",
+            select_solution,
+            ga_estimate_of_path,
+            [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
+                                
+//                return time_span.count() > 5.0 || generation > 29;
+                return generation > 30;
+                
+            },  30,   10,  25000, .4f, .5f, .5f,  .3f,  .3f, 1);
             
     _nsga nsga_real(
             "NSGA-II_r",
+            select_solution,
             ga_real_of,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                 
                 
 //                return time_span.count() > 5.0 || generation > 29;
-                return generation > 50;
+                return generation > 30;
                 
-            },  60,   20,  25000, .4f, .5f, .5f,  .3f,  .3f, 1);
+            },  30,   10,  25000, .4f, .5f, .5f,  .3f,  .3f, 1);
             
     if(of == "g"){
         
@@ -380,18 +451,31 @@ void small(int map, std::string of = "e"){
         
     } else if(of == "e"){
         
+        agentsTasksAllocators.push_back(&ga_solutionAllocator); 
         agentsTasksAllocators.push_back(&nsga_estimative);     
+        
+    } else if(of == "p"){
+        
+        agentsTasksAllocators.push_back(&ga_solutionAllocator); 
+        agentsTasksAllocators.push_back(&nsga_estimative_path);     
+        
+    } else if(of == "ep"){
+        
+        agentsTasksAllocators.push_back(&ga_solutionAllocator); 
+        agentsTasksAllocators.push_back(&nsga_estimative); 
+        agentsTasksAllocators.push_back(&nsga_estimative_path);     
         
     } else if(of == "r"){
         
+        agentsTasksAllocators.push_back(&ga_solutionAllocator); 
         agentsTasksAllocators.push_back(&nsga_real);
         
     } else {
         
         agentsTasksAllocators.push_back(&ga_solutionAllocator);   
         agentsTasksAllocators.push_back(&nsga_estimative);
-        agentsTasksAllocators.push_back(&nsga_real);
-             
+        agentsTasksAllocators.push_back(&nsga_estimative_path); 
+        agentsTasksAllocators.push_back(&nsga_real);             
         
     }
         
@@ -420,7 +504,7 @@ void small(int map, std::string of = "e"){
 int main(int argc, char** argv) {
     
     char* instance = "small";
-    char* of = "*"; // * -> all obj func
+    char* of = "ep"; // * -> all obj func
     
     int map_index = 0; // 0 -> all maps
     

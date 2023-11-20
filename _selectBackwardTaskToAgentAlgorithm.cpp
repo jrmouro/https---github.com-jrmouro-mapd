@@ -44,7 +44,7 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
         _task& pendingTask,
         _stepPath& selectedPath) const {
 
-    _thresholdAlgorithm thresholdAlgorithm(token.getEndpointsDistanceAlgorithm());
+    _thresholdAlgorithm thresholdAlgorithm(token.getEndpointsPathAlgorithm());
 
     bool ret = false;
 

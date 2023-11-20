@@ -41,6 +41,7 @@ public:
     
     const unsigned getSize_max() const;
     const unsigned getSize_min() const;
+    const unsigned getSize_cur() const;
     
     friend std::ostream& operator<<(std::ostream& os, const _ga_population& obj);
     

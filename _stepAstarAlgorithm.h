@@ -57,18 +57,26 @@ public:
 
                     ret = true;
                 
+                } else {
+                    
+                    std::cout << "\nno path Definitely Free"; 
+                    
                 }
+                
+                std::cout << "\npath found - closedStates: "<< closedStates.getCount() << "\n";
 
             } else {
                 
-//                try {
-//                    std::ostringstream stream;
-//                    stream << "unsolved path";
-//                    MAPD_EXCEPTION(stream.str());
-//                } catch (std::exception& e) {
-//                    std::cout << e.what() << std::endl;
-//                    std::abort();
-//                } 
+                try {
+                    std::ostringstream stream;
+                    stream << "unsolved path";
+                    MAPD_EXCEPTION(stream.str());
+                } catch (std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                    std::abort();
+                } 
+                
+                std::cout << "\nno path found\n";
                 
             }
             
@@ -94,65 +102,6 @@ public:
         return ret;
         
     }
-    
-//    virtual bool solve(const _stepMap& map, const _site& start, const _site& goal, _stepPath& path, unsigned step, int type) const {
-//        
-//        bool ret = false;  
-//        unsigned rowColunm = map.getRow_size()*map.getColumn_size();
-//        ClosedStates closedStates(rowColunm, map.getColumn_size() ,map.getStep_size() * rowColunm);
-//        PriorityStates priorityStates;
-//        std::vector<AstarState*> visitedStates;
-//        
-//        auto bstart = _stepSite(step, start.GetRow(), start.GetColunm());
-//        
-//        AstarState* startState = new AstarState(.0f, this->heuristic(start, goal), bstart, nullptr);        
-//        AstarState* solved = this->solveAux_iterative(startState, map, goal, closedStates, priorityStates, visitedStates, type);
-//                  
-////        std::cout << map << std::endl;
-//        
-//        if(solved != nullptr){
-//            
-//            bool flag = map.isPathDefinitelyFree(solved->getSite());
-//                
-//            if(flag){
-//            
-//                path.clear();
-//
-//                while(solved != nullptr){            
-//                    path.add(solved->getSite());
-//                    solved = solved->getPrevious();
-//                } 
-//
-//    //            path.pop(); // retira o site inicial
-//
-//                ret = true;
-//            
-//            }
-//        
-//        } else {
-//                
-//            try {
-//                std::ostringstream stream;
-//                stream << "unsolved path";
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            } 
-//
-//        }
-//        
-//        for (auto elem : visitedStates) {
-//            
-//            delete elem;
-//
-//        }
-//        
-//        
-//                
-//        return ret;
-//        
-//    }
     
     virtual ~_stepAstarAlgorithm(){ }
     
@@ -269,6 +218,7 @@ private:
         rowColunm(other.rowColunm), colunm(other.colunm), states(other.states) { }
 
         void add(AstarState* state){
+            count++;
             states[
                 state->getSite().GetStep() * rowColunm + 
                 state->getSite().GetRow() * colunm + 
@@ -284,7 +234,12 @@ private:
             
         }
         
+        unsigned getCount() const {
+            return count;
+        }
+        
     private:
+        unsigned count = 0;
         unsigned rowColunm, colunm;
         std::vector<bool> states;
     };
@@ -295,55 +250,7 @@ private:
         
     }    
         
-    AstarState* solveAux_recursive(
-        AstarState* current,
-        const _stepMap& map,
-        const _site& goal,
-        ClosedStates& closedStates,
-        PriorityStates& priorityStates,
-        std::vector<AstarState*>& visitedStates,
-        int type) const {
         
-        
-        visitedStates.push_back(current);
-                
-        if(goal.GetRow() == current->getSite().GetRow() && goal.GetColunm() == current->getSite().GetColunm()){
-                        
-            return current;
-            
-        }
-                    
-        map.listNeighborFreePaths(current->getSite(), type, [type, current, goal, &closedStates, &priorityStates, this](const _stepSite& site){
-            
-            
-            if(!closedStates.closed(site)){
-                
-                auto state = new AstarState(current->getTraveled() + 1, this->heuristic(site, goal), site, current);
-
-                priorityStates.push(state);
-                
-                closedStates.add(current);
-
-            }
-            
-            return false;
-            
-        });
-        
-        if(!priorityStates.empty()){
-            
-            auto state = priorityStates.pop();
-            
-            return this->solveAux_recursive(state, map, goal, closedStates, priorityStates, visitedStates, type);
-            
-        }  
-                   
-        return nullptr;
-        
-        
-        
-    }
-    
     AstarState* solveAux_iterative(
         AstarState* current,
         const _stepMap& map,
@@ -357,13 +264,13 @@ private:
             
             visitedStates.push_back(current);
             
-            if(goal.match(current->getSite()) && map.isPathDefinitelyFree(current->getSite(), type)){
+            if(goal.match(current->getSite()) /*&& map.isPathDefinitelyFree(current->getSite(), type)*/){
                         
                 return current;
 
             }
             
-            map.listNeighborFreePaths(current->getSite(), type, [type, current, goal, &closedStates, &priorityStates, this](const _stepSite& site){
+            map.listNeighborFreePaths(current->getSite(), type, [type, current, &goal, &closedStates, &priorityStates, this](const _stepSite& site){
             
             
                 if(!closedStates.closed(site)){

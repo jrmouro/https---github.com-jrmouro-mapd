@@ -12,7 +12,7 @@
 
 class _manhattanAlgorithm : public _distanceAlgorithm{
 public:
-    virtual unsigned solve(const _site& start, const _site& goal) const {
+    virtual unsigned solve_distance(const _site& start, const _site& goal) const {
         return std::abs((int)start.GetRow() - (int)goal.GetRow()) + 
                 std::abs((int)start.GetColunm() - (int)goal.GetColunm());        
     }

@@ -13,7 +13,7 @@ _astarDistanceAlgorithm::_astarDistanceAlgorithm(const _astarDistanceAlgorithm& 
 
 _astarDistanceAlgorithm::~_astarDistanceAlgorithm() {}
 
-unsigned _astarDistanceAlgorithm::solve(const _site& start, const _site& goal) const{
+unsigned _astarDistanceAlgorithm::solve_distance(const _site& start, const _site& goal) const{
         
     if(map.isNodeBelonging(start)){
 

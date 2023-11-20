@@ -9,6 +9,7 @@
 
 #include "_ga_estimate_of.h"
 #include "_manhattanAlgorithm.h"
+#include "_endpointsPathAlgorithm.h"
 
 const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of::evals(const _ga_token& token, _ga_solution& solution) const{
     
@@ -24,7 +25,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of::evals(const _
             
         }
                 
-        _manhattanAlgorithm manhattanAlgorithm;
+        _astarDistanceAlgorithm astar(token.getMap());
 
         unsigned makespan = 0;
         double energy = .0;
@@ -48,16 +49,30 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of::evals(const _
 
                 if(true){
 
-                    pickupDist = manhattanAlgorithm.solve(currentSite, task->getPickup());
+                    pickupDist = astar.solve_distance(currentSite, task->getPickup());
+                    
+                    if(pickupDist == UINT_MAX){
+                        
+                        try {
+                            std::ostringstream stream;
+                            stream << "path not found from " << currentSite << " to " << task->getPickup();
+                            MAPD_EXCEPTION(stream.str());
+                        } catch (std::exception& e) {
+                            std::cout << e.what() << std::endl;
+                            std::abort();
+                        }
+                        
+                    }
+                                        
                     flag = false;
 
                 } else {
 
-                    pickupDist = token.getMap().getEndpointsDistanceAlgorithm().solve(currentSite, task->getPickup());
+                    pickupDist = token.getMap().getEndpointsPathAlgorithm().solve_distance(currentSite, task->getPickup());
 
                 }
 
-                deliveryDist = token.getMap().getEndpointsDistanceAlgorithm().solve(task->getPickup(), task->getDelivery());
+                deliveryDist = token.getMap().getEndpointsPathAlgorithm().solve_distance(task->getPickup(), task->getDelivery());
 
                 currentSite.SetRow(task->getPickup().GetRow());
                 currentSite.SetColunm(task->getPickup().GetColunm());
@@ -120,21 +135,32 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of::evals(const _
             for (int i = 1; i < size; i++) {
 
                 double area = agentSites_pair1.second[i+1].siteStepBoxArea(agentSites_pair1.second[i]);
-
-                double energy_cost = (agentSites_pair1.second[i + 1].GetStep() - agentSites_pair1.second[i].GetStep()) *
-                                    token.getAgent_energy_system().getMovingRegime();
-
+                
                 if(area != 0){
 
                     for (auto agentSites_pair2 : agentSites) {
 
                         if(agentSites_pair1.first != agentSites_pair2.first){
+                            
+                            double energy_cost = (agentSites_pair1.second[i + 1].GetStep() - agentSites_pair1.second[i].GetStep());
+                
+                            if(i % 2 == 0){
+
+                                energy_cost *= token.getAgent_energy_system().getMovingRegime();
+
+                            } else {
+
+                                energy_cost *= token.getAgent_energy_system().getCarringRegime();
+
+                            }
+                            
+                            energy_cost /= area;
 
                             for (auto stepSite : agentSites_pair2.second) {
 
                                 if(stepSite.insideStepSiteBox(agentSites_pair1.second[i], agentSites_pair1.second[i+1])){
 
-                                    energy += energy_cost / area;
+                                    energy += energy_cost;
 
                                 }
 

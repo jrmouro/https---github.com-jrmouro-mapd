@@ -43,13 +43,13 @@ void _closerCooperatorAgentIndexerAlgorithm::solve(
 
         if(agent.isFree() && !agent.isCharging() && !agent.isAtEnergyCriticalLevel()) {
         
-            const unsigned pickup_delivery_site_dist = manhattanAlgorithm.solve(delivery, pickup);
-            const unsigned agent_delivery_site_dist = manhattanAlgorithm.solve(delivery, agent.currentSite());
+            const unsigned pickup_delivery_site_dist = manhattanAlgorithm.solve_distance(delivery, pickup);
+            const unsigned agent_delivery_site_dist = manhattanAlgorithm.solve_distance(delivery, agent.currentSite());
 
             if(agent_delivery_site_dist <= pickup_delivery_site_dist){
 
                 const unsigned pickup_step_dist = agent.currentSite().step_distance(pickup);
-                const unsigned pickup_site_dist = token.getEndpointsDistanceAlgorithm().solve(pickup, agent.currentSite());
+                const unsigned pickup_site_dist = token.getEndpointsPathAlgorithm().solve_distance(pickup, agent.currentSite());
 
                 if (pickup_step_dist >= min_step_distance && 
                     pickup_site_dist >= min_endpoint_distance && 
