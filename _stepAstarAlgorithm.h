@@ -57,26 +57,28 @@ public:
 
                     ret = true;
                 
-                } else {
-                    
-                    std::cout << "\nno path Definitely Free"; 
-                    
-                }
-                
-                std::cout << "\npath found - closedStates: "<< closedStates.getCount() << "\n";
+                } 
 
             } else {
                 
+                map.max_step_view();
+                map.free_agent_view();
+                std::cout << std::endl;
+                
+                for (int i = 0; i < path.goalSite().GetStep() + 10; i++) {
+                    map.stepView(i);                    
+                    std::cout << std::endl;
+                }
+        
+                
                 try {
                     std::ostringstream stream;
-                    stream << "unsolved path";
+                    stream << "unsolved path from " << path.goalSite() << " to " << goal;
                     MAPD_EXCEPTION(stream.str());
                 } catch (std::exception& e) {
                     std::cout << e.what() << std::endl;
                     std::abort();
                 } 
-                
-                std::cout << "\nno path found\n";
                 
             }
             
@@ -264,7 +266,7 @@ private:
             
             visitedStates.push_back(current);
             
-            if(goal.match(current->getSite()) /*&& map.isPathDefinitelyFree(current->getSite(), type)*/){
+            if(goal.match(current->getSite()) && map.isPathDefinitelyFree(current->getSite(), type)){
                         
                 return current;
 

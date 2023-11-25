@@ -184,6 +184,28 @@ public:
         }
         
     }
+    
+    void rlistPortion(unsigned portion, const std::function<bool(const _path&)>& function) const {
+        
+        
+        for (int i = sites.size() - 1; i >= 0; i = i - portion) {
+            
+            _path aux;
+            
+            for (int j = 0; j < portion; j++) {
+                
+                if(i - j < 0) break;
+                
+                aux.progress(sites[i - j]);
+
+            }
+            
+            
+            if(function(aux)) break;
+
+        }
+        
+    }
           
         
 private:

@@ -1,7 +1,7 @@
 build/Debug/GNU-Linux/main.o: main.cpp MultiSystemExperiment.h \
  SystemExperiment.h Experiment.h Identifiable.h InstanceMAPD.h \
  InstanceMap.h _map.h Drawable.h Render.h _site.h MapdException.h \
- _stepMap.h _stepPath.h _stepSite.h _path.h Writable.h \
+ _stepMap.h _stepPath.h _path.h _stepSite.h Writable.h \
  _endpointsDistanceAlgorithm.h _distanceAlgorithm.h \
  _astarDistanceAlgorithm.h _astarAlgorithm.h _pathAlgorithm.h \
  InstanceTask.h _taskMap.h _task.h _system.h _token.h _c_task.h \
@@ -31,7 +31,8 @@ build/Debug/GNU-Linux/main.o: main.cpp MultiSystemExperiment.h \
  BackwardTaskToken.h _agentsTasksAllocator.h _ga_token_p.h \
  _ga_solutionAllocator.h _ga_balanced_solution.h _ga_select_solution.h \
  _ga_objective_function.h _nsga.h _ga_real_of.h _ga_estimate_of.h \
- _ga_estimate_of_path.h
+ _task_path.h _ga_estimate_of_path_count.h _ga_estimate_of_path_check.h \
+ _ga_estimate_of_path_collision.h _ga_best_solution_selector.h
 MultiSystemExperiment.h:
 SystemExperiment.h:
 Experiment.h:
@@ -45,8 +46,8 @@ _site.h:
 MapdException.h:
 _stepMap.h:
 _stepPath.h:
-_stepSite.h:
 _path.h:
+_stepSite.h:
 Writable.h:
 _endpointsDistanceAlgorithm.h:
 _distanceAlgorithm.h:
@@ -123,4 +124,8 @@ _ga_objective_function.h:
 _nsga.h:
 _ga_real_of.h:
 _ga_estimate_of.h:
-_ga_estimate_of_path.h:
+_task_path.h:
+_ga_estimate_of_path_count.h:
+_ga_estimate_of_path_check.h:
+_ga_estimate_of_path_collision.h:
+_ga_best_solution_selector.h:

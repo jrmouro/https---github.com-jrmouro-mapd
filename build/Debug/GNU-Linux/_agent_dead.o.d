@@ -1,6 +1,6 @@
 build/Debug/GNU-Linux/_agent_dead.o: _agent_dead.cpp _agent_dead.h \
  _agent_state.h _task.h Identifiable.h _site.h _stepMap.h _stepPath.h \
- _stepSite.h MapdException.h _path.h _agent.h Drawable.h \
+ MapdException.h _path.h _stepSite.h _agent.h Drawable.h \
  _agent_energy_system.h _energy_system.h _energy_regime.h \
  _energy_charge.h _agent_energy_regime.h _map.h Render.h \
  _agent_goingToDelivery.h _token.h Writable.h _c_task.h ReportTask.h \
@@ -16,9 +16,9 @@ Identifiable.h:
 _site.h:
 _stepMap.h:
 _stepPath.h:
-_stepSite.h:
 MapdException.h:
 _path.h:
+_stepSite.h:
 _agent.h:
 Drawable.h:
 _agent_energy_system.h:

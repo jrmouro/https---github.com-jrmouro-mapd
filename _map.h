@@ -250,7 +250,7 @@ public:
     
     void listBotsEndPoints(const std::function<bool(unsigned, const _site&)>& function) const {
         
-        for (auto elem : botMap) {
+        for (auto const&  elem : botMap) {
             
             if(function(elem.first, elem.second)) return;
 
@@ -260,7 +260,7 @@ public:
     
     void listBotsEndPoints(const std::function<bool(const _site&)>& function) const {
         
-        for (auto elem : botMap) {
+        for (auto const& elem : botMap) {
             
             if(function(elem.second)) return;
 
@@ -270,7 +270,7 @@ public:
     
     void listEndpoints(const std::function<bool(const _site&)>& function) const {
         
-        for (auto endpoint : endpoints) {
+        for (auto const& endpoint : endpoints) {
             
             if(function(endpoint)) return;
 

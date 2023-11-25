@@ -106,11 +106,11 @@ public:
             
             if(colunm < other.colunm){
                 
-                return (other.row - row)*(other.colunm - colunm);
+                return (1 + other.row - row) * (1 + other.colunm - colunm);
                 
             } else {
                 
-                return (other.row - row)*(colunm - other.colunm);
+                return (1 + other.row - row) * (1 + colunm - other.colunm);
                 
             }
             
@@ -118,11 +118,11 @@ public:
         
         if(colunm < other.colunm){
             
-            return (row - other.row)*(other.colunm - colunm); 
+            return (1 + row - other.row)*(1 + other.colunm - colunm); 
             
         }
         
-        return (row - other.row)*(colunm - other.colunm);
+        return (1 + row - other.row)*(1 + colunm - other.colunm);
         
     }
     
@@ -150,6 +150,8 @@ public:
         return row >= s2.row && row <= s1.row && colunm >= s2.colunm && colunm <= s1.colunm;        
         
     }
+    
+    
         
 protected:
     unsigned row, colunm;

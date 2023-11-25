@@ -33,6 +33,18 @@ bool _astarAlgorithm::solve(const _map& map, const _site& start, const _site& go
 
         ret = true;
 
+    } else {
+        
+        
+        try {
+            std::ostringstream stream;
+            stream << "unsolved path: " << start << " to " << goal;
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        } 
+        
     }
 
     for (auto elem : visitedStates) {

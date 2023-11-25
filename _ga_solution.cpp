@@ -9,14 +9,14 @@
 #include "_closerTaskIndexerAlgorithm.h"
 #include "_manhattanAlgorithm.h"
 
-_ga_solution::_ga_solution(unsigned validity) : validity(validity) {
+_ga_solution::_ga_solution(unsigned validity) : _validity(validity) {
 }
 
 _ga_solution::_ga_solution(
         const _ga_token& token,
         unsigned validity) :
 _ga_pseudo_solution(),
-validity(validity) {
+_validity(validity) {
 
     this->greedySolution_e(token);
 
@@ -25,7 +25,7 @@ validity(validity) {
 _ga_solution::_ga_solution(const _ga_solution& other) :
 _ga_pseudo_solution(other),
 age(other.age),
-validity(other.validity),
+_validity(other._validity),
 allocation_map(other.allocation_map),
 evals(other.evals) {
 }
@@ -310,10 +310,10 @@ std::pair<std::pair<_ga_solution*, _ga_solution*>, std::pair<_ga_solution*, _ga_
         unsigned agentsCrossoverPoint,
         unsigned tasksCrossoverPoint) const {
 
-    _ga_solution* childA = new _ga_solution(validity);
-    _ga_solution* childB = new _ga_solution(validity);
-    _ga_solution* childC = new _ga_solution(validity);
-    _ga_solution* childD = new _ga_solution(validity);
+    _ga_solution* childA = new _ga_solution(_validity);
+    _ga_solution* childB = new _ga_solution(_validity);
+    _ga_solution* childC = new _ga_solution(_validity);
+    _ga_solution* childD = new _ga_solution(_validity);
 
     crossover(*this, other, *childA, *childB, *childC, *childD, agentsCrossoverPoint, tasksCrossoverPoint);
 
@@ -394,10 +394,10 @@ _allocation* _ga_solution::clone() const {
 }
 
 bool _ga_solution::isValid()const {
-    return age < validity;
+    return age < _validity;
 }
 
-void _ga_solution::valid() {
+void _ga_solution::revalidate() {
     age = 0;
 }
 
@@ -501,7 +501,7 @@ _ga_solution& _ga_solution::operator=(const _ga_solution& right) {
     (_ga_pseudo_solution&) (*this) = (_ga_pseudo_solution&) right;
 
     age = right.age;
-    validity = right.validity;
+    _validity = right._validity;
     evals = right.evals;
     allocation_map = right.allocation_map;
 

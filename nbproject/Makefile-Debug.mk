@@ -72,8 +72,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ga_agent_state_buzy.o \
 	${OBJECTDIR}/_ga_agent_state_free.o \
 	${OBJECTDIR}/_ga_balanced_solution.o \
+	${OBJECTDIR}/_ga_best_solution_selector.o \
 	${OBJECTDIR}/_ga_estimate_of.o \
-	${OBJECTDIR}/_ga_estimate_of_path.o \
+	${OBJECTDIR}/_ga_estimate_of_path_check.o \
+	${OBJECTDIR}/_ga_estimate_of_path_collision.o \
+	${OBJECTDIR}/_ga_estimate_of_path_count.o \
 	${OBJECTDIR}/_ga_objective_function.o \
 	${OBJECTDIR}/_ga_population.o \
 	${OBJECTDIR}/_ga_pseudo_solution.o \
@@ -96,9 +99,13 @@ OBJECTFILES= \
 	${OBJECTDIR}/_selectTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectTaskToAgentThresholdAlgorithm.o \
 	${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm.o \
+	${OBJECTDIR}/_siteBox.o \
+	${OBJECTDIR}/_stepPath.o \
 	${OBJECTDIR}/_stepPathAlgorithm.o \
+	${OBJECTDIR}/_stepSiteBox.o \
 	${OBJECTDIR}/_taskIndexerAlgorithm.o \
 	${OBJECTDIR}/_taskToAgentAlgorithm.o \
+	${OBJECTDIR}/_task_path.o \
 	${OBJECTDIR}/_token.o \
 	${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_updateEndpointToAgentAlgorithm.o \
@@ -113,11 +120,15 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 
 # Test Files
 TESTFILES= \
+	${TESTDIR}/TestFiles/f3 \
+	${TESTDIR}/TestFiles/f2 \
 	${TESTDIR}/TestFiles/f1
 
 # Test Object Files
 TESTOBJECTFILES= \
-	${TESTDIR}/tests/newsimpletest2.o
+	${TESTDIR}/tests/newsimpletest2.o \
+	${TESTDIR}/tests/newsimpletest3.o \
+	${TESTDIR}/tests/newsimpletest4.o
 
 # C Compiler Flags
 CFLAGS=
@@ -328,15 +339,30 @@ ${OBJECTDIR}/_ga_balanced_solution.o: _ga_balanced_solution.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_balanced_solution.o _ga_balanced_solution.cpp
 
+${OBJECTDIR}/_ga_best_solution_selector.o: _ga_best_solution_selector.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_best_solution_selector.o _ga_best_solution_selector.cpp
+
 ${OBJECTDIR}/_ga_estimate_of.o: _ga_estimate_of.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of.o _ga_estimate_of.cpp
 
-${OBJECTDIR}/_ga_estimate_of_path.o: _ga_estimate_of_path.cpp
+${OBJECTDIR}/_ga_estimate_of_path_check.o: _ga_estimate_of_path_check.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path.o _ga_estimate_of_path.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_check.o _ga_estimate_of_path_check.cpp
+
+${OBJECTDIR}/_ga_estimate_of_path_collision.o: _ga_estimate_of_path_collision.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_collision.o _ga_estimate_of_path_collision.cpp
+
+${OBJECTDIR}/_ga_estimate_of_path_count.o: _ga_estimate_of_path_count.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_count.o _ga_estimate_of_path_count.cpp
 
 ${OBJECTDIR}/_ga_objective_function.o: _ga_objective_function.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -448,10 +474,25 @@ ${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm.o: _selectTrivialPathToAgentAlgo
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm.o _selectTrivialPathToAgentAlgorithm.cpp
 
+${OBJECTDIR}/_siteBox.o: _siteBox.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_siteBox.o _siteBox.cpp
+
+${OBJECTDIR}/_stepPath.o: _stepPath.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepPath.o _stepPath.cpp
+
 ${OBJECTDIR}/_stepPathAlgorithm.o: _stepPathAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepPathAlgorithm.o _stepPathAlgorithm.cpp
+
+${OBJECTDIR}/_stepSiteBox.o: _stepSiteBox.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepSiteBox.o _stepSiteBox.cpp
 
 ${OBJECTDIR}/_taskIndexerAlgorithm.o: _taskIndexerAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -462,6 +503,11 @@ ${OBJECTDIR}/_taskToAgentAlgorithm.o: _taskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_taskToAgentAlgorithm.o _taskToAgentAlgorithm.cpp
+
+${OBJECTDIR}/_task_path.o: _task_path.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_task_path.o _task_path.cpp
 
 ${OBJECTDIR}/_token.o: _token.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -510,9 +556,29 @@ ${OBJECTDIR}/main.o: main.cpp
 .build-tests-conf: .build-tests-subprojects .build-conf ${TESTFILES}
 .build-tests-subprojects:
 
+${TESTDIR}/TestFiles/f3: ${TESTDIR}/tests/newsimpletest4.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc} -o ${TESTDIR}/TestFiles/f3 $^ ${LDLIBSOPTIONS}   
+
+${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/newsimpletest3.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc} -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS}   
+
 ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/newsimpletest2.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc} -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS}   
+
+
+${TESTDIR}/tests/newsimpletest4.o: tests/newsimpletest4.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest4.o tests/newsimpletest4.cpp
+
+
+${TESTDIR}/tests/newsimpletest3.o: tests/newsimpletest3.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest3.o tests/newsimpletest3.cpp
 
 
 ${TESTDIR}/tests/newsimpletest2.o: tests/newsimpletest2.cpp 
@@ -1002,6 +1068,19 @@ ${OBJECTDIR}/_ga_balanced_solution_nomain.o: ${OBJECTDIR}/_ga_balanced_solution.
 	    ${CP} ${OBJECTDIR}/_ga_balanced_solution.o ${OBJECTDIR}/_ga_balanced_solution_nomain.o;\
 	fi
 
+${OBJECTDIR}/_ga_best_solution_selector_nomain.o: ${OBJECTDIR}/_ga_best_solution_selector.o _ga_best_solution_selector.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_best_solution_selector.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_best_solution_selector_nomain.o _ga_best_solution_selector.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_best_solution_selector.o ${OBJECTDIR}/_ga_best_solution_selector_nomain.o;\
+	fi
+
 ${OBJECTDIR}/_ga_estimate_of_nomain.o: ${OBJECTDIR}/_ga_estimate_of.o _ga_estimate_of.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_estimate_of.o`; \
@@ -1015,17 +1094,43 @@ ${OBJECTDIR}/_ga_estimate_of_nomain.o: ${OBJECTDIR}/_ga_estimate_of.o _ga_estima
 	    ${CP} ${OBJECTDIR}/_ga_estimate_of.o ${OBJECTDIR}/_ga_estimate_of_nomain.o;\
 	fi
 
-${OBJECTDIR}/_ga_estimate_of_path_nomain.o: ${OBJECTDIR}/_ga_estimate_of_path.o _ga_estimate_of_path.cpp 
+${OBJECTDIR}/_ga_estimate_of_path_check_nomain.o: ${OBJECTDIR}/_ga_estimate_of_path_check.o _ga_estimate_of_path_check.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_estimate_of_path.o`; \
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_estimate_of_path_check.o`; \
 	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_nomain.o _ga_estimate_of_path.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_check_nomain.o _ga_estimate_of_path_check.cpp;\
 	else  \
-	    ${CP} ${OBJECTDIR}/_ga_estimate_of_path.o ${OBJECTDIR}/_ga_estimate_of_path_nomain.o;\
+	    ${CP} ${OBJECTDIR}/_ga_estimate_of_path_check.o ${OBJECTDIR}/_ga_estimate_of_path_check_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_estimate_of_path_collision_nomain.o: ${OBJECTDIR}/_ga_estimate_of_path_collision.o _ga_estimate_of_path_collision.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_estimate_of_path_collision.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_collision_nomain.o _ga_estimate_of_path_collision.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_estimate_of_path_collision.o ${OBJECTDIR}/_ga_estimate_of_path_collision_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_estimate_of_path_count_nomain.o: ${OBJECTDIR}/_ga_estimate_of_path_count.o _ga_estimate_of_path_count.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_estimate_of_path_count.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_count_nomain.o _ga_estimate_of_path_count.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_estimate_of_path_count.o ${OBJECTDIR}/_ga_estimate_of_path_count_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_ga_objective_function_nomain.o: ${OBJECTDIR}/_ga_objective_function.o _ga_objective_function.cpp 
@@ -1314,6 +1419,32 @@ ${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectTr
 	    ${CP} ${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm.o ${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm_nomain.o;\
 	fi
 
+${OBJECTDIR}/_siteBox_nomain.o: ${OBJECTDIR}/_siteBox.o _siteBox.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_siteBox.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_siteBox_nomain.o _siteBox.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_siteBox.o ${OBJECTDIR}/_siteBox_nomain.o;\
+	fi
+
+${OBJECTDIR}/_stepPath_nomain.o: ${OBJECTDIR}/_stepPath.o _stepPath.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_stepPath.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepPath_nomain.o _stepPath.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_stepPath.o ${OBJECTDIR}/_stepPath_nomain.o;\
+	fi
+
 ${OBJECTDIR}/_stepPathAlgorithm_nomain.o: ${OBJECTDIR}/_stepPathAlgorithm.o _stepPathAlgorithm.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_stepPathAlgorithm.o`; \
@@ -1325,6 +1456,19 @@ ${OBJECTDIR}/_stepPathAlgorithm_nomain.o: ${OBJECTDIR}/_stepPathAlgorithm.o _ste
 	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepPathAlgorithm_nomain.o _stepPathAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_stepPathAlgorithm.o ${OBJECTDIR}/_stepPathAlgorithm_nomain.o;\
+	fi
+
+${OBJECTDIR}/_stepSiteBox_nomain.o: ${OBJECTDIR}/_stepSiteBox.o _stepSiteBox.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_stepSiteBox.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepSiteBox_nomain.o _stepSiteBox.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_stepSiteBox.o ${OBJECTDIR}/_stepSiteBox_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_taskIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_taskIndexerAlgorithm.o _taskIndexerAlgorithm.cpp 
@@ -1351,6 +1495,19 @@ ${OBJECTDIR}/_taskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_taskToAgentAlgorithm.
 	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_taskToAgentAlgorithm_nomain.o _taskToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_taskToAgentAlgorithm.o ${OBJECTDIR}/_taskToAgentAlgorithm_nomain.o;\
+	fi
+
+${OBJECTDIR}/_task_path_nomain.o: ${OBJECTDIR}/_task_path.o _task_path.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_task_path.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_task_path_nomain.o _task_path.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_task_path.o ${OBJECTDIR}/_task_path_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_token_nomain.o: ${OBJECTDIR}/_token.o _token.cpp 
@@ -1461,6 +1618,8 @@ ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp
 .test-conf:
 	@if [ "${TEST}" = "" ]; \
 	then  \
+	    ${TESTDIR}/TestFiles/f3 || true; \
+	    ${TESTDIR}/TestFiles/f2 || true; \
 	    ${TESTDIR}/TestFiles/f1 || true; \
 	else  \
 	    ./${TEST} || true; \

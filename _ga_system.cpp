@@ -31,10 +31,10 @@ _ga_system::~_ga_system(){
 
 bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){ 
     
-    if(token.getCurrentStep() < token.getStepMap().getStep_size() && !(taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())){
+    if(token.getCurrentStep() < token.getStepMap().getStep_size()/* && !(taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())*/){
         
-        token.error_site_collision_check(); // TODO retirar
-        token.error_edge_collision_check();
+//        token.error_site_collision_check(); // TODO retirar
+//        token.error_edge_collision_check();
         
         bool addNewTask = false;
         
@@ -54,7 +54,7 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
         if(allocation == nullptr){
 
             allocation = agentsTasksAllocator.borrow(token);
-            allocation->valid();
+            allocation->revalidate();
             
 //            std::cout << "first allocation" << std::endl;
 //            std::cout << "current step: " << token.getCurrentStep() << std::endl;
@@ -70,11 +70,11 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
 //            std::cout << "current step: " << token.getCurrentStep() << std::endl;
 //            std::cout << "solution: " << *((_ga_solution*)allocation) << std::endl;
 
-        } else if(!allocation->isValid()){
+        } else if(!allocation->isValid() && token.isLate()){
             
             agentsTasksAllocator.giveBack(allocation);              
             allocation = agentsTasksAllocator.borrow(token);
-            allocation->valid();
+            allocation->revalidate();
             
 //            std::cout << "revalid allocation" << std::endl;
 //            std::cout << "current step: " << token.getCurrentStep() << std::endl;
@@ -96,6 +96,10 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
             
         });
         
+        if(taskMap.getLastTask() < token.getCurrentStep() && token.isIdle()){
+            return false;
+        }
+        
         token.stepping();       
         
         return true;
@@ -110,7 +114,7 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
 
 void _ga_system::run(const _taskMap& taskMap, _ga_token& token){    
         
-    while(token.getCurrentStep() < token.getStepMap().getStep_size() && !(taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())){
+    while(token.getCurrentStep() < token.getStepMap().getStep_size()/* && !(taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())*/){
         
 //        token.error_site_collision_check();//TODO retirar
 //        token.error_edge_collision_check();
@@ -133,7 +137,7 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
         if(allocation == nullptr){
 
             allocation = agentsTasksAllocator.borrow(token);
-            allocation->valid();
+            allocation->revalidate();
             
 //            std::cout << "first allocation" << std::endl;
 //            std::cout << "current step: " << token.getCurrentStep() << std::endl;
@@ -143,7 +147,7 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
             
             agentsTasksAllocator.giveBack(allocation);              
             allocation = agentsTasksAllocator.borrow(token);
-            allocation->valid();
+            allocation->revalidate();
             
 //            std::cout << "new task allocation" << std::endl;
 //            std::cout << "current step: " << token.getCurrentStep() << std::endl;
@@ -153,7 +157,7 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
             
             agentsTasksAllocator.giveBack(allocation);              
             allocation = agentsTasksAllocator.borrow(token);
-            allocation->valid();
+            allocation->revalidate();
             
 //            std::cout << "revalid allocation" << std::endl;
 //            std::cout << "current step: " << token.getCurrentStep() << std::endl;
@@ -174,6 +178,10 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
             }
             
         });
+        
+        if(taskMap.getLastTask() < token.getCurrentStep() && token.isIdle()){
+            break;
+        }
         
         token.stepping();
         

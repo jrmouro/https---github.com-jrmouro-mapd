@@ -23,7 +23,8 @@ public:
     
     enum EvalType{
         makespan,
-        energy
+        energy,
+        balanced
     };
         
     _ga_solution(unsigned validity);
@@ -33,18 +34,16 @@ public:
     _ga_solution(const _ga_solution&);
 
     virtual ~_ga_solution();
-    
-//    const std::map<EvalType, unsigned>& evaluate(const _ga_token&);
-    
-//    unsigned evaluate(const _ga_token&, const EvalType&);
-    
-//    void setEvaluate(const EvalType&, unsigned);
-    
+        
     virtual _allocation* clone() const;
     
     virtual bool isValid()const;
     
-    virtual void valid();
+    virtual unsigned validity() const {
+        return std::max<unsigned>(0, (int)_validity - (int)age);
+    }
+    
+    virtual void revalidate();
     
     virtual void nextPlanningUpdate(
         const _ga_token&,
@@ -72,13 +71,13 @@ public:
     
     virtual bool isDominatedBy(const _ga_token&, _ga_solution&);
     
-    unsigned getValidity() const {
-        return validity;
-    }
+//    unsigned getValidity() const {
+//        return validity;
+//    }
 
-    void setValidity(unsigned validity) {
-        this->validity = validity;
-    }
+//    void setValidity(unsigned validity) {
+//        this->validity = validity;
+//    }
     
     virtual bool check(const _ga_token&) const;
     virtual void restore(const _ga_token&);
@@ -93,17 +92,21 @@ public:
 private:
     friend class _ga_real_of;
     friend class _ga_estimate_of;
-    friend class _ga_estimate_of_path;
+    friend class _ga_estimate_of_path_count;
+    friend class _ga_estimate_of_path_check;
+    friend class _ga_estimate_of_path_collision;
     std::map<EvalType, unsigned> evals;
     
 private:
     friend class _ga_estimate_of;    
-    friend class _ga_estimate_of_path;
+    friend class _ga_estimate_of_path_count;
+    friend class _ga_estimate_of_path_check;
+    friend class _ga_estimate_of_path_collision;
     std::map<const _ga_agent*,std::vector<const _task*>> allocation_map;
     
 private:
     
-    unsigned validity, age = 0;
+    unsigned _validity, age = 0;
     
     
     virtual void alloc(const _ga_token& token);

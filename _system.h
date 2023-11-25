@@ -25,8 +25,8 @@ public:
         
         if(!token.isFinalizedCondition(lastStepTask)){
             
-            token.error_site_collision_check();
-            token.error_edge_collision_check();
+//            token.error_site_collision_check();
+//            token.error_edge_collision_check();
             
             int i = 0;
             
@@ -73,12 +73,12 @@ public:
     void run(const _taskMap& taskMap, _token& token){
       
         unsigned lastStepTask = taskMap.getLastTask() + 1;
-        unsigned step = token.getCurrentStep();
+//        unsigned step = token.getCurrentStep();
         
         while(!token.isFinalizedCondition(lastStepTask)){
             
-            token.error_site_collision_check();
-            token.error_edge_collision_check();
+//            token.error_site_collision_check();
+//            token.error_edge_collision_check();
             
                 taskMap.listTasksByStep(token.getCurrentStep(), [&token](const _task& task){
 

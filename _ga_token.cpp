@@ -215,6 +215,12 @@ bool _ga_token::isIdle()const {
 
 }
 
+bool _ga_token::isLate()const {
+
+    return !pendingTasks.empty();
+
+}
+
 bool _ga_token::liberateEndpoint(const _ga_agent& agent, const _site& endpoint) {
 
     _ga_agent* obstructor = getEndpointObstructor(agent, endpoint);

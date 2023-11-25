@@ -91,6 +91,7 @@ void _endpointsPathAlgorithm::reset(const _map& map){
                         if(e1.match(e2)){
 
                             distances[l1] = distances[l2] = 0;
+                            paths[l1] = paths[l2] = _path(e1);
 
                         } else {
 

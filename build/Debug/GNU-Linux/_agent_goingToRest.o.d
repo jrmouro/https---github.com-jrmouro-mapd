@@ -1,6 +1,6 @@
 build/Debug/GNU-Linux/_agent_goingToRest.o: _agent_goingToRest.cpp \
  _agent_goingToRest.h _agent_state.h _task.h Identifiable.h _site.h \
- _stepMap.h _stepPath.h _stepSite.h MapdException.h _path.h \
+ _stepMap.h _stepPath.h MapdException.h _path.h _stepSite.h \
  _agent_goingToRest_CL.h _agent.h Drawable.h _agent_energy_system.h \
  _energy_system.h _energy_regime.h _energy_charge.h \
  _agent_energy_regime.h _map.h Render.h _agent_parked.h \
@@ -18,9 +18,9 @@ Identifiable.h:
 _site.h:
 _stepMap.h:
 _stepPath.h:
-_stepSite.h:
 MapdException.h:
 _path.h:
+_stepSite.h:
 _agent_goingToRest_CL.h:
 _agent.h:
 Drawable.h:

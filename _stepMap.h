@@ -20,6 +20,7 @@
 #include <cstring>
 
 #include "_stepPath.h"
+#include "_stepSite.h"
 
 
 class _stepMap{

@@ -64,9 +64,21 @@ public:
         return ret;
     }
     
+    int getLoadedRegime()const{
+        int ret = 0;
+        regime.get(AERT::loaded, ret);
+        return ret;
+    }
+    
     int getMovingRegime()const{
         int ret = 0;
         regime.get(AERT::moving, ret);
+        return ret;
+    }
+    
+    int getUnloadedRegime()const{
+        int ret = 0;
+        regime.get(AERT::unloaded, ret);
         return ret;
     }
     

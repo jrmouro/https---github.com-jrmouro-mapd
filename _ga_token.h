@@ -55,6 +55,7 @@ public:
     void listConstAgents(const std::function<bool(unsigned, const _ga_agent&)> function) const;
     
     virtual bool isIdle() const;
+    virtual bool isLate() const;
     
     const _ga_agent& getAgentById(int agentId) const;
     

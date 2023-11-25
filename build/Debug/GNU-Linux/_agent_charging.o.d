@@ -1,6 +1,6 @@
 build/Debug/GNU-Linux/_agent_charging.o: _agent_charging.cpp \
  _agent_charging.h _agent_state.h _task.h Identifiable.h _site.h \
- _stepMap.h _stepPath.h _stepSite.h MapdException.h _path.h _agent.h \
+ _stepMap.h _stepPath.h MapdException.h _path.h _stepSite.h _agent.h \
  Drawable.h _agent_energy_system.h _energy_system.h _energy_regime.h \
  _energy_charge.h _agent_energy_regime.h _map.h Render.h _agent_parked.h \
  _agent_charging_CL.h _agent_goingToPickup.h _agent_goingToDelivery.h \
@@ -18,9 +18,9 @@ Identifiable.h:
 _site.h:
 _stepMap.h:
 _stepPath.h:
-_stepSite.h:
 MapdException.h:
 _path.h:
+_stepSite.h:
 _agent.h:
 Drawable.h:
 _agent_energy_system.h:

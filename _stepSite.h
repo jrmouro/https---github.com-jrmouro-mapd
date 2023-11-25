@@ -86,7 +86,14 @@ public:
         
         } else if(step == size.step){
             
-             std::cout << "\n#\n";             
+             try {
+                std::ostringstream stream;
+                stream << "overflow step: " << step;
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }             
             
         }  
         
@@ -111,11 +118,11 @@ public:
         
         if(step < other.step){
             
-            return (other.step - step) * siteBoxArea(other);
+            return (1 + other.step - step) * siteBoxArea(other);
             
         } 
         
-        return (step - other.step) * siteBoxArea(other);           
+        return (1+ step - other.step) * siteBoxArea(other);           
         
     }
     

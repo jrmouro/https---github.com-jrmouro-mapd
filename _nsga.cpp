@@ -90,14 +90,14 @@ void _nsga::solve(const _ga_token& token, _ga_solution& solution) const {
     
     unsigned generation = 0;
 
-    unsigned pop_min = std::max<unsigned>(2 * token.numberOfAgents(), population_size_min);
+//    unsigned pop_min = std::max<unsigned>(2 * token.numberOfAgents(), population_size_min);
 //    unsigned pop_max = std::min<unsigned>(pop_min * 3, population_size_max); ;
-    unsigned pop_max = pop_min * 2;
+//    unsigned pop_max = pop_min * 2;
     
 
     _ga_solution* best = &solution;
     
-    _ga_population population(*best, generator, pop_max, pop_min);
+    _ga_population population(*best, generator, population_size_max, population_size_min);
     
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
     std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();

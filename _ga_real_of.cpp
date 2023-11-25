@@ -26,26 +26,15 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_real_of::evals(const _ga_t
         _ga_solution solutionAux(solution);
 
         unsigned count = 0;
+        
+        unsigned validity = solution.validity();
 
-        while (//count++ < validity && 
-                tokenAux.getCurrentStep() < tokenAux.getStepMap().getStep_size() &&
-                !tokenAux.isIdle()) {
+        while ( //count < validity && 
+                tokenAux.getCurrentStep() < tokenAux.getStepMap().getStep_size() && !tokenAux.isIdle()) {
 
-//                        tokenAux.error_site_collision_check(); // TODO retirar
-//                        tokenAux.error_edge_collision_check();
+                        tokenAux.error_site_collision_check(); // TODO retirar
+                        tokenAux.error_edge_collision_check();
 
-            //            if(tokenAux.getCurrentStep() > 300){ // TODO retirar
-            //                
-            //                try {
-            //                    std::ostringstream stream;
-            //                    stream << "solution error";
-            //                    MAPD_EXCEPTION(stream.str());
-            //                } catch (std::exception& e) {
-            //                    std::cout << e.what() << std::endl;
-            //                    std::abort();
-            //                }
-            //                
-            //            }
 
             solutionAux.nextPlanningUpdate(tokenAux, [&tokenAux](const _ga_agent* agent, const _task * task) {
 
@@ -60,8 +49,11 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_real_of::evals(const _ga_t
                 }
 
             });
+            
+//            if(tokenAux.isIdle()) break;
 
             tokenAux.stepping();
+//            count++;
 
         }
 

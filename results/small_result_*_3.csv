@@ -1,2 +1,0 @@
-mapFilename;taskFilename;step_size;row_size;col_size;num_bots;num_endpoints;last_step;num_tasks;token_id;token_name;current_step;energy system id;energy expenditure;finished_taskstime(s);
-./Instances/small/kiva-30-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;30;332;2496;500;TP;TP[E_1(R_1)];2545;E_1(R_1);76350;5002.622793;

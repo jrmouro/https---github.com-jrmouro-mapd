@@ -1,7 +1,7 @@
 build/Debug/GNU-Linux/_agent_goingToDelivery.o: \
  _agent_goingToDelivery.cpp _agent_goingToDelivery.h _agent_state.h \
- _task.h Identifiable.h _site.h _stepMap.h _stepPath.h _stepSite.h \
- MapdException.h _path.h _agent_goingToDelivery_CL.h \
+ _task.h Identifiable.h _site.h _stepMap.h _stepPath.h MapdException.h \
+ _path.h _stepSite.h _agent_goingToDelivery_CL.h \
  _agent_goingToCharging_CL.h _agent_goingToCharging.h _agent.h Drawable.h \
  _agent_energy_system.h _energy_system.h _energy_regime.h \
  _energy_charge.h _agent_energy_regime.h _map.h Render.h _agent_dead.h \
@@ -19,9 +19,9 @@ Identifiable.h:
 _site.h:
 _stepMap.h:
 _stepPath.h:
-_stepSite.h:
 MapdException.h:
 _path.h:
+_stepSite.h:
 _agent_goingToDelivery_CL.h:
 _agent_goingToCharging_CL.h:
 _agent_goingToCharging.h:

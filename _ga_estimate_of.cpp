@@ -16,8 +16,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of::evals(const _
     if(!solution.isEvaluated()){
         
 //        std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-    
-    
+       
         
         if(!solution.isAllocated()){
             

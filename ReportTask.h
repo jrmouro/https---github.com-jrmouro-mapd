@@ -72,7 +72,7 @@ public:
         
         if(!obj.taskMap.empty()){
             os << "taskPaths:" << std::endl;
-            for(auto pair : obj.taskMap){
+            for(auto const& pair : obj.taskMap){
                 os << "agentId: " << pair.first << std::endl;
                 os << pair.second << std::endl;
             }
@@ -80,7 +80,7 @@ public:
              
         if(!obj.restMap.empty()){
             os << "restPaths:" << std::endl;
-            for(auto pair : obj.restMap){
+            for(auto const& pair : obj.restMap){
                 os << "agentId: " << pair.first << std::endl;
                 os << pair.second << std::endl;
             }
@@ -88,7 +88,7 @@ public:
         
         if(!obj.c_taskMap.empty()){
             os << "c_taskPaths:" << std::endl;
-            for(auto pair : obj.c_taskMap){
+            for(auto const& pair : obj.c_taskMap){
                 os << "agentId: " << pair.first << std::endl;
                 os << pair.second << std::endl;
             }
@@ -96,7 +96,7 @@ public:
         
         if(!obj.chargingMap.empty()){
             os << "chargingPaths:" << std::endl;
-            for(auto pair : obj.chargingMap){
+            for(auto const& pair : obj.chargingMap){
                 os << "agentId: " << pair.first << std::endl;
                 os << pair.second << std::endl;
             }
@@ -120,7 +120,7 @@ public:
     void listStepSite(const std::function<bool(int, PathType, _stepSite)>& function)const{
         
         bool flag = false;
-        for(auto pair : taskMap){
+        for(auto const& pair : taskMap){
             
             pair.second.backward([pair, function, &flag](const _stepSite& site){
                 
@@ -135,7 +135,7 @@ public:
         
         if(!flag){
         
-            for(auto pair : restMap){
+            for(auto const& pair : restMap){
                 
                 pair.second.backward([pair, function, &flag](const _stepSite& site){
                 
@@ -150,7 +150,7 @@ public:
             }
             if(!flag){
             
-                for(auto pair : c_taskMap){
+                for(auto const& pair : c_taskMap){
                     
                     pair.second.backward([pair, function, &flag](const _stepSite& site){
                 
@@ -166,7 +166,7 @@ public:
                 
                 if(!flag){
                     
-                    for(auto pair : chargingMap){
+                    for(auto const& pair : chargingMap){
                     
                         pair.second.backward([pair, function, &flag](const _stepSite& site){
 

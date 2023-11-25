@@ -1,5 +1,5 @@
 build/Debug/GNU-Linux/_ga_system.o: _ga_system.cpp _ga_system.h \
- _stepMap.h _stepPath.h _stepSite.h _site.h MapdException.h _path.h \
+ _stepMap.h _stepPath.h MapdException.h _path.h _site.h _stepSite.h \
  _ga_solution.h _ga_pseudo_solution.h _ga_token.h _stepPathAlgorithm.h \
  _agent.h Identifiable.h _task.h _agent_state.h Drawable.h \
  _agent_energy_system.h _energy_system.h _energy_regime.h \
@@ -12,10 +12,10 @@ build/Debug/GNU-Linux/_ga_system.o: _ga_system.cpp _ga_system.h \
 _ga_system.h:
 _stepMap.h:
 _stepPath.h:
-_stepSite.h:
-_site.h:
 MapdException.h:
 _path.h:
+_site.h:
+_stepSite.h:
 _ga_solution.h:
 _ga_pseudo_solution.h:
 _ga_token.h:
