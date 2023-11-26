@@ -32,6 +32,8 @@ public:
         return _id;
     }
     
+    virtual void setSeed(unsigned seed) { }
+    
     virtual _agentsTasksAllocator* emptyClone() const = 0;
         
 private:

@@ -32,7 +32,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
         
         std::map<const _ga_agent*, _stepPath> agentStepPaths;
         
-        for (auto alloc_pair1 : solution.allocation_map) {
+        for (auto const& alloc_pair1 : solution.allocation_map) {
             
             if(!alloc_pair1.second.empty()){
                 
@@ -67,7 +67,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
             
         }
         
-        for( auto stepPath_pair1: agentStepPaths){
+        for( auto const& stepPath_pair1: agentStepPaths){
             
             currentAgents.insert(stepPath_pair1.first);
             
@@ -80,7 +80,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
 
             }
             
-            for( auto stepPath_pair2: agentStepPaths){
+            for( auto const& stepPath_pair2: agentStepPaths){
                 
                 if(currentAgents.find(stepPath_pair2.first) == currentAgents.end()){
                 
@@ -88,7 +88,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
                     
                     if(stepPath_pair1.second.collideSiteWith(stepPath_pair2.second)){
                         
-                        eng_penalty += pickup_energy_penalty;
+                        eng_penalty += 2 * pickup_energy_penalty;
                         msp_penalty += makespan_penalty;
                         
                     }
@@ -97,7 +97,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
 
             }
                        
-            for (auto alloc_pair : solution.allocation_map){
+            for (auto const& alloc_pair : solution.allocation_map){
                 
                 if(currentAgents.find(alloc_pair.first) == currentAgents.end()){
                 
@@ -145,6 +145,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
 
                                     } 
 
+                                    eng_penalty += pickup_energy_penalty;
                                     msp_penalty += makespan_penalty;
                                     
                                 }
@@ -163,7 +164,9 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
         
         currentAgents.clear();
 
-        for (auto alloc_pair1 : solution.allocation_map) {
+        for (auto const& alloc_pair1 : solution.allocation_map) {
+            
+            currentAgents.insert(alloc_pair1.first);
 
             if(!alloc_pair1.second.empty()){
                 
@@ -173,7 +176,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
                 task_path.listPaths(
                     token.getMap().getEndpointsPathAlgorithm(),
                     alloc_pair1.second, 
-                    [&solution, &alloc_pair1, &currentStep1, &token, &energy, &makespan, &msp_penalty, &agentStepPaths, this](const _task_path::PathType& type1, const _path& path1, const _task* curr, const _task* next){
+                    [&solution, &alloc_pair1, &currentStep1, &token, &energy, &makespan, &msp_penalty, &eng_penalty, &agentStepPaths, &currentAgents, this](const _task_path::PathType& type1, const _path& path1, const _task* curr, const _task* next){
                                                 
                         if(path1.size() > 0) {
                         
@@ -197,9 +200,11 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
 
                             }
 
-                            for (auto alloc_pair2 : solution.allocation_map){
+                            for (auto const& alloc_pair2 : solution.allocation_map){
+                                
+                                if(currentAgents.find(alloc_pair2.first) == currentAgents.end()){
 
-                                if(alloc_pair1.first != alloc_pair2.first){
+//                                if(alloc_pair1.first != alloc_pair2.first){
 
                                     if(!alloc_pair2.second.empty()){
 
@@ -209,7 +214,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
                                         task_path.listPaths(
                                             token.getMap().getEndpointsPathAlgorithm(),
                                             alloc_pair2.second, 
-                                            [&solution, &stepPath1, &currentStep2, &token, &makespan, &msp_penalty, &energy, &type1](const _task_path::PathType& type2, const _path& path2, const _task* curr, const _task* next){
+                                            [&solution, &stepPath1, &currentStep2, &token, &makespan, &msp_penalty, &eng_penalty, &energy, &type1, this](const _task_path::PathType& type2, const _path& path2, const _task* curr, const _task* next){
 
                                                 if(path2.size() > 0) {
                                                     
@@ -232,22 +237,32 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
                                                         return true;
 
                                                     }
-                                                                                                        
+                                                    
                                                     if(stepPath1.collideSiteWith(stepPath2)){
                                     
-                                                        if(type2 == _task_path::PathType::delivery){ // delivery
+                                                        if(type1 == _task_path::PathType::delivery){ // delivery
 
-                                                            energy += token.getAgent_energy_system().getLoadedRegime();
+                                                            eng_penalty += delivery_energy_penalty;
 
                                                         } else { // pickup
 
-                                                            energy += token.getAgent_energy_system().getUnloadedRegime();
+                                                            eng_penalty += pickup_energy_penalty;
 
                                                         } 
+                                                        
+                                                        if(type2 == _task_path::PathType::delivery){ // delivery
 
-                                                        msp_penalty++;
+                                                            eng_penalty += delivery_energy_penalty;
 
-                                                    }  
+                                                        } else { // pickup
+
+                                                            eng_penalty += pickup_energy_penalty;
+
+                                                        }
+
+                                                        msp_penalty += makespan_penalty;
+
+                                                    }    
 
                                                 }
 
@@ -271,376 +286,10 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
         }
             
         solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::makespan, makespan + msp_penalty));
-        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::energy, energy));
+        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::energy, energy + eng_penalty));
                 
     }
     
     return solution.evals;
-    
-//    ///////////////
-//    
-//    if(!solution.isEvaluated()){
-//        
-//        if(!solution.isAllocated()){
-//            
-//            solution.alloc(token);
-//            
-//        }
-//        
-//        _astarAlgorithm astar;
-//
-//        unsigned makespan = 0;
-//        double energy = .0;
-//        std::map<const _ga_agent*, _stepPath> initialAgentStepPaths;
-//        std::set<const _ga_agent*> currentAgents;
-//        
-//        for (auto alloc_pair1 : solution.allocation_map) {
-//            
-//            if(!alloc_pair1.second.empty()){
-//                
-//                _path path;
-//                    
-//                bool flag = astar.solve(token.getMap(), alloc_pair1.first->goalSite(), alloc_pair1.second[0]->getPickup(), path);
-//
-//                if(flag){
-//                    
-//                    _stepPath stepPath;
-//                    _stepPath::buildFromPath(alloc_pair1.first->goalSite().GetStep(), path, stepPath);
-//                    initialAgentStepPaths.insert(std::pair<const _ga_agent*, _stepPath>(alloc_pair1.first, stepPath));
-//                    
-//                } else {
-//
-//                    try {
-//                        std::ostringstream stream;
-//                        stream << "path not found from " << alloc_pair1.first->goalSite() << " to " <<  alloc_pair1.second[0]->getPickup();
-//                        MAPD_EXCEPTION(stream.str());
-//                    } catch (std::exception& e) {
-//                        std::cout << e.what() << std::endl;
-//                        std::abort();
-//                    }
-//
-//                }
-//                
-//            } else {
-//                
-//                initialAgentStepPaths.insert(std::pair<const _ga_agent*, _stepPath>(alloc_pair1.first, _stepPath(alloc_pair1.first->goalSite())));
-//                
-//            }
-//            
-//        }
-//        
-//        solution.listConstAgents([&token, &solution, &initialAgentStepPaths, &currentAgents, &makespan, &energy, this](const _ga_agent* agent1){
-//            
-//            currentAgents.insert(agent1);
-//            
-//            auto iasp_it1 = initialAgentStepPaths.find(agent1);
-//            
-//            if(iasp_it1 != initialAgentStepPaths.end()){
-//                
-//                unsigned currentStep1 = iasp_it1->second.goalSite().GetStep();  
-//                energy += (iasp_it1->second.size() * token.getAgent_energy_system().getMovingRegime());
-//
-//                if(currentStep1 > makespan){
-//
-//                    makespan = currentStep1;
-//
-//                }
-//            
-//                solution.listConstAgents([&token, &solution, &initialAgentStepPaths, &currentAgents, &makespan, &energy, &iasp_it1](const _ga_agent* agent2){
-//
-//                    auto cait = currentAgents.find(agent2);
-//
-//                    if(cait == currentAgents.end()){
-//                        
-//                        auto iasp_it2 = initialAgentStepPaths.find(agent2);
-//
-//                        if(iasp_it2 != initialAgentStepPaths.end()){
-//                                                        
-//                            unsigned currentStep2 = iasp_it2->second.goalSite().GetStep();  
-//                            energy += (iasp_it2->second.size() * token.getAgent_energy_system().getMovingRegime());
-//
-//                            if(iasp_it1->second.collideWith(iasp_it2->second)){
-//
-//                                energy += token.getAgent_energy_system().getUnloadedRegime();
-//                                currentStep2++;
-//
-//                            }
-//                            
-//                            if(currentStep2 > makespan){
-//
-//                                makespan = currentStep2;
-//
-//                            }
-//                                                                                                                
-//                        } else {
-//                        
-//                            try {
-//                                std::ostringstream stream;
-//                                stream << "agent2 not found:" << agent2;
-//                                MAPD_EXCEPTION(stream.str());
-//                            } catch (std::exception& e) {
-//                                std::cout << e.what() << std::endl;
-//                                std::abort();
-//                            }
-//
-//                        }
-//
-//                    }
-//
-//                    return false;
-//
-//                }); 
-//                
-//                solution.listConstAgents([&token, &solution, &initialAgentStepPaths, &currentAgents, &makespan, &energy, &iasp_it1, this](const _ga_agent* agent2){
-//
-//                    auto cait = currentAgents.find(agent2);
-//
-//                    if(cait == currentAgents.end()){
-//                        
-//                        auto iasp_it2 = solution.allocation_map.find(agent2);
-//
-//                        if(iasp_it2 != solution.allocation_map.end()){
-//                                                        
-//                            auto pathInitialPair1 = initialAgentStepPaths.find(agent2);                
-//                            unsigned currentStep2 = pathInitialPair1->second.goalSite().GetStep();
-//                            
-//                            if(currentStep2 > makespan){
-//
-//                                makespan = currentStep2;
-//
-//                            }
-//                            
-//                            task_path.listPaths(
-//                                token.getMap().getEndpointsPathAlgorithm(),
-//                                iasp_it2->second, 
-//                                [&solution, &iasp_it1, &token, &makespan, &energy, &currentStep2](const _task_path::PathType& type2, const _path& path2, const _task* curr, const _task* next){
-//
-//                                    if(path2.size() > 0) {
-//
-//                                        _stepPath stepPath2;
-//                                        _stepPath::buildFromPath(currentStep2, path2, stepPath2);
-//                                        currentStep2 = stepPath2.goalSite().GetStep();  
-//                                        
-//                                        if(iasp_it1->second.goalSite().GetStep() < stepPath2.currentSite().GetStep()){
-//
-//                                            return false;
-//
-//                                        } else if(iasp_it1->second.currentSite().GetStep() > stepPath2.goalSite().GetStep()){
-//
-//                                            return true;
-//
-//                                        }
-//
-//                                        if(iasp_it1->second.collideSiteWith(stepPath2)){
-//
-//                                            energy += token.getAgent_energy_system().getUnloadedRegime(); 
-//                                            currentStep2++;
-//
-//                                        }
-//                                        
-//                                        if(currentStep2 > makespan){
-//
-//                                            makespan = currentStep2;
-//
-//                                        }
-//
-//                                    }
-//
-//                                    return false;
-//
-//                                });                             
-//                                                        
-//                        } else {
-//                        
-//                            try {
-//                                std::ostringstream stream;
-//                                stream << "agent2 not found:" << agent2;
-//                                MAPD_EXCEPTION(stream.str());
-//                            } catch (std::exception& e) {
-//                                std::cout << e.what() << std::endl;
-//                                std::abort();
-//                            }
-//
-//                        }
-//
-//                    }
-//
-//                    return false;
-//
-//                });
-//            
-//            } else {
-//                
-//                try {
-//                    std::ostringstream stream;
-//                    stream << "agent1 not found:" << agent1;
-//                    MAPD_EXCEPTION(stream.str());
-//                } catch (std::exception& e) {
-//                    std::cout << e.what() << std::endl;
-//                    std::abort();
-//                }
-//                
-//            }
-//            
-//            return false;
-//            
-//        });
-//        
-//        solution.listConstAgents([&token, &solution, &initialAgentStepPaths, &currentAgents, &makespan, &energy, this](const _ga_agent* agent1){
-//            
-//            currentAgents.insert(agent1);
-//            
-//            auto iasp_it1 = solution.allocation_map.find(agent1);
-//            
-//            if(iasp_it1 != solution.allocation_map.end()){
-//                
-//                auto pathInitialPair1 = initialAgentStepPaths.find(agent1);                
-//                unsigned currentStep1 = pathInitialPair1->second.goalSite().GetStep();   
-//                                                                
-//                task_path.listPaths(
-//                    token.getMap().getEndpointsPathAlgorithm(),
-//                    iasp_it1->second, 
-//                    [&currentAgents, &solution, &iasp_it1, &currentStep1, &token, &energy, &makespan, &initialAgentStepPaths, this](const _task_path::PathType& type1, const _path& path1, const _task* curr, const _task* next){
-//                                                
-//                        if(path1.size() > 0) {
-//                        
-//                            _stepPath stepPath1;
-//                            _stepPath::buildFromPath(currentStep1, path1, stepPath1);
-//                            currentStep1 = stepPath1.goalSite().GetStep();
-//                            
-//                            if(type1 == _task_path::PathType::delivery){ // delivery
-//
-//                                energy += (stepPath1.size() * token.getAgent_energy_system().getCarringRegime());
-//
-//                            } else { // pickup
-//
-//                                energy += (stepPath1.size() * token.getAgent_energy_system().getMovingRegime());
-//
-//                            } 
-//
-//                            if(currentStep1 > makespan){
-//
-//                                makespan = currentStep1;
-//
-//                            }
-//                            
-//                            solution.listConstAgents([&token, &solution, &initialAgentStepPaths, &currentAgents, &makespan, &energy, &stepPath1, &type1, this](const _ga_agent* agent2){
-//            
-//                                auto iasp_it2 = solution.allocation_map.find(agent2);
-//
-//                                if(iasp_it2 != solution.allocation_map.end()){
-//                                    
-//                                    if(!iasp_it2->second.empty()){
-//                                        
-//                                        auto pathInitialPair2 = initialAgentStepPaths.find(agent2);                
-//                                        unsigned currentStep2 = pathInitialPair2->second.goalSite().GetStep(); 
-//                                        
-//                                        if(currentStep2 > makespan){
-//
-//                                            makespan = currentStep2;
-//
-//                                        }
-//                                        
-//                                        task_path.listPaths(
-//                                            token.getMap().getEndpointsPathAlgorithm(),
-//                                            iasp_it2->second, 
-//                                            [&solution, &stepPath1, &currentStep2, &token, &makespan, &energy, &type1](const _task_path::PathType& type2, const _path& path2, const _task* curr, const _task* next){
-//
-//                                                if(path2.size() > 0) {
-//                                                    
-//                                                    _stepPath stepPath2;
-//                                                    _stepPath::buildFromPath(currentStep2, path2, stepPath2);
-//                                                    currentStep2 = stepPath2.goalSite().GetStep();
-//                                                    
-//
-//                                                    if(stepPath1.goalSite().GetStep() < stepPath2.currentSite().GetStep()){
-//        //                                
-//                                                        return false;
-//
-//                                                    } else if(stepPath1.currentSite().GetStep() > stepPath2.goalSite().GetStep()){
-//
-//                                                        return true;
-//
-//                                                    }
-//                                                    
-//                                                    if(stepPath1.collideSiteWith(stepPath2)){
-//
-//                                                        if(type1 == _task_path::PathType::delivery){ // delivery
-//
-//                                                            energy += token.getAgent_energy_system().getLoadedRegime();
-//
-//                                                        } else { // pickup
-//
-//                                                            energy += token.getAgent_energy_system().getUnloadedRegime();
-//
-//                                                        } 
-//                                                        
-//                                                        currentStep2++;
-//
-//                                                    }
-//                                                    
-//                                                    if(currentStep2 > makespan){
-//
-//                                                        makespan = currentStep2;
-//
-//                                                    }
-//                                                    
-//                                                    
-//
-//                                                }
-//
-//                                                return false;
-//
-//                                            });
-//                                        
-//                                    }                    
-//                                    
-//                                } else {
-//                                    
-//                                    try {
-//                                        std::ostringstream stream;
-//                                        stream << "agent2 not found:" << agent2;
-//                                        MAPD_EXCEPTION(stream.str());
-//                                    } catch (std::exception& e) {
-//                                        std::cout << e.what() << std::endl;
-//                                        std::abort();
-//                                    }
-//
-//                                }
-//                                
-//                                return false;
-//                                
-//                            });
-//                                                    
-//                        }
-//
-//                        return false;
-//
-//                    });          
-//                
-//                
-//            } else {
-//                
-//                try {
-//                    std::ostringstream stream;
-//                    stream << "agent1 not found:" << agent1;
-//                    MAPD_EXCEPTION(stream.str());
-//                } catch (std::exception& e) {
-//                    std::cout << e.what() << std::endl;
-//                    std::abort();
-//                }
-//                
-//            }
-//            
-//            return false;
-//            
-//        });
-//        
-//        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::makespan, makespan));
-//        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::energy, energy));
-//                
-//    }
-//    
-//    return solution.evals;
     
 }

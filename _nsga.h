@@ -53,7 +53,7 @@ public:
     virtual _allocation* restore(const _ga_token&, _allocation*);
     virtual _agentsTasksAllocator* emptyClone() const;
     
-    void setSeed(unsigned seed) {
+    virtual void setSeed(unsigned seed) {
         this->seed = seed;
     }
 

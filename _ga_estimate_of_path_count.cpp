@@ -32,7 +32,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_count::ev
         
         std::map<const _ga_agent*, _stepPath> agentStepPaths;
         
-        for (auto alloc_pair1 : solution.allocation_map) {
+        for (auto const& alloc_pair1 : solution.allocation_map) {
             
             if(!alloc_pair1.second.empty()){
                 
@@ -67,7 +67,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_count::ev
             
         }
         
-        for( auto stepPath_pair1: agentStepPaths){
+        for( auto const& stepPath_pair1: agentStepPaths){
             
             currentAgents.insert(stepPath_pair1.first);
             
@@ -80,7 +80,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_count::ev
 
             }
             
-            for( auto stepPath_pair2: agentStepPaths){
+            for( auto const& stepPath_pair2: agentStepPaths){
                 
                 if(currentAgents.find(stepPath_pair2.first) == currentAgents.end()){
                 
@@ -88,14 +88,14 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_count::ev
                     
                     unsigned count = stepPath_pair1.second.collideSiteCount(stepPath_pair2.second);
                     
-                    eng_penalty += count * pickup_energy_penalty;
+                    eng_penalty += 2 * count * pickup_energy_penalty;
                     msp_penalty += count * makespan_penalty;
                     
                 }
 
             }
                        
-            for (auto alloc_pair : solution.allocation_map){
+            for (auto const& alloc_pair : solution.allocation_map){
                 
                 if(currentAgents.find(alloc_pair.first) == currentAgents.end()){
                 
@@ -137,6 +137,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_count::ev
 
                                 } 
                                 
+                                eng_penalty += count * pickup_energy_penalty;
                                 msp_penalty += count * makespan_penalty;                                
                             
                             }
@@ -153,7 +154,9 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_count::ev
         
         currentAgents.clear();
 
-        for (auto alloc_pair1 : solution.allocation_map) {
+        for (auto const& alloc_pair1 : solution.allocation_map) {
+            
+            currentAgents.insert(alloc_pair1.first);
 
             if(!alloc_pair1.second.empty()){
                 
@@ -163,7 +166,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_count::ev
                 task_path.listPaths(
                     token.getMap().getEndpointsPathAlgorithm(),
                     alloc_pair1.second, 
-                    [&solution, &alloc_pair1, &currentStep1, &token, &energy, &msp_penalty, &makespan, &agentStepPaths, this](const _task_path::PathType& type1, const _path& path1, const _task* curr, const _task* next){
+                    [&solution, &alloc_pair1, &currentStep1, &token, &energy, &msp_penalty, &eng_penalty, &makespan, &agentStepPaths, &currentAgents, this](const _task_path::PathType& type1, const _path& path1, const _task* curr, const _task* next){
                                                 
                         if(path1.size() > 0) {
                         
@@ -187,9 +190,11 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_count::ev
 
                             }
 
-                            for (auto alloc_pair2 : solution.allocation_map){
+                            for (auto const& alloc_pair2 : solution.allocation_map){
+                                
+                                if(currentAgents.find(alloc_pair2.first) == currentAgents.end()){
 
-                                if(alloc_pair1.first != alloc_pair2.first){
+//                                if(alloc_pair1.first != alloc_pair2.first){
 
                                     if(!alloc_pair2.second.empty()){
 
@@ -225,6 +230,16 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_count::ev
                                                     
                                                     unsigned count = stepPath1.collideSiteCount(stepPath2);
 
+                                                    if(type1 == _task_path::PathType::delivery){ // delivery
+
+                                                        eng_penalty += count * delivery_energy_penalty;
+
+                                                    } else { // pickup
+
+                                                        eng_penalty += count * pickup_energy_penalty;
+
+                                                    }
+                                                    
                                                     if(type2 == _task_path::PathType::delivery){ // delivery
 
                                                         eng_penalty += count * delivery_energy_penalty;
@@ -233,7 +248,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_count::ev
 
                                                         eng_penalty += count * pickup_energy_penalty;
 
-                                                    } 
+                                                    }
 
                                                     msp_penalty += count * makespan_penalty; 
 
@@ -259,8 +274,15 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_count::ev
         }
             
         solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::makespan, makespan + msp_penalty));
-        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::energy, energy));
+        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::energy, energy + eng_penalty));
                 
+//        if(eng_penalty > 0){
+//            
+//            std::cout << "msp: " << makespan << " - penalty: " << msp_penalty << std::endl;
+//            std::cout << "eng: " << energy << " - penalty: " << eng_penalty << std::endl;
+//        
+//        }
+        
     }
     
     return solution.evals;

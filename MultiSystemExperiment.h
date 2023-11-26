@@ -24,7 +24,8 @@ class MultiSystemExperiment : public Experiment<std::string>{
 public:
     
     MultiSystemExperiment(
-            const std::string& resultFilename, 
+            const std::string& resultFilename,
+            const std::vector<unsigned>& seeds,
             const std::vector<std::string>& tokenIds,
             const std::vector<std::pair<float, float>>& thresholds,
             const std::vector<std::string>& taskFilenames,             
@@ -36,6 +37,7 @@ public:
             const unsigned timestep = 0) :
                     Experiment<std::string>("MultiSystemExperiment"),
                     resultFilename(resultFilename),
+                    seeds(seeds),
                     thresholds(thresholds),
                     mapFilenames(mapFilenames), 
                     taskFilenames(taskFilenames), 
@@ -49,6 +51,7 @@ public:
     MultiSystemExperiment(const MultiSystemExperiment& other) :
             Experiment<std::string>(other),
             resultFilename(other.resultFilename),
+            seeds(other.seeds),
             thresholds(other.thresholds),
             mapFilenames(other.mapFilenames), 
             taskFilenames(other.taskFilenames), 
@@ -65,11 +68,11 @@ public:
         
         std::ofstream ofs (resultFilename, std::ofstream::out);        
         
-        for (auto mapFilename : mapFilenames) {
+        for (auto const& mapFilename : mapFilenames) {
             
             auto imap = InstanceMap::load(mapFilename);
                         
-            for (auto taskFilename : taskFilenames) {
+            for (auto const& taskFilename : taskFilenames) {
                 
                 imap->retsetTaskEndpoint();
                 
@@ -86,7 +89,7 @@ public:
                 std::vector<_token*> ptokens;
                 std::vector<_ga_token*> p_ga_tokens;
                 
-                for (auto tokenId : tokenIds) {
+                for (auto const& tokenId : tokenIds) {
                     
                     if(tokenId == "GAT"){
                         
@@ -163,74 +166,80 @@ public:
                     
                     for (auto agentsTasksAllocator : agentsTasksAllocators) {
                         
+                        for(auto const& seed: seeds){
+                        
 //                        auto allocatorClone = agentsTasksAllocator->emptyClone();
+                            
+                            agentsTasksAllocator->setSeed(seed);
                         
-                        _ga_token* token = ptoken->getClone();
-                        
-                        token->setName(token->id() + "("+ agentsTasksAllocator->id() + ")");
-                        
-                        GA_SystemExperiment se(
-                                    token->getName() + ";" + mapFilename + " ;" + taskFilename,
-                                    *agentsTasksAllocator,
-                                    *token,  
-                                    itasks->getTaskMap(),
-                                    cell_size,
-                                    timestep);  
-                        
-                        
-                    
-    //                    std::cout << " - token: " << *ptoken << std::endl;
-                        std::cout << "GA System Experiment: " << std::endl;
-                        std::cout << " - id: " << se.id() << std::endl;
-                        std::cout << " - energy system: " << token->getAgent_energy_system().id() << std::endl;
+                            _ga_token* token = ptoken->getClone();
 
-                        std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+                            token->setName(token->id() + "("+ agentsTasksAllocator->id() + ")");
 
-                        se.run();
+                            GA_SystemExperiment se(
+                                        token->getName() + ";" + mapFilename + " ;" + taskFilename,
+                                        *agentsTasksAllocator,
+                                        *token,  
+                                        itasks->getTaskMap(),
+                                        cell_size,
+                                        timestep);  
 
-                        std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-                        std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
 
-                        std::cout << " - makespan: " << token->getCurrentStep() << std::endl;
-                        std::cout << " - energy expenditure: " << token->energyExpenditure() << std::endl;
-                        std::cout << " - pending tasks: " << token->getPendingTaskAmount() << std::endl;
-                        std::cout << " - assigned tasks: " << token->getAssignedTaskAmount() << std::endl;
-                        std::cout << " - running tasks: " << token->getRunningTaskAmount() << std::endl;
-                        std::cout << " - finished tasks: " << token->getFinishedTaskAmount() << std::endl;
-                        std::cout << " - duration: " << time_span.count() << " seconds." << std::endl << std::endl; 
-    //                    std::cout << " - report: " << std::endl << se.getToken().getReportTaskMap() <<  std::endl << std::endl;
-    //                    std::cout << " - token: " << *ptoken << std::endl;
 
-                        if(headerFlag){
+        //                    std::cout << " - token: " << *ptoken << std::endl;
+                            std::cout << "GA System Experiment: " << std::endl;
+                            std::cout << " - id: " << se.id() << std::endl;
+                            std::cout << " - energy system: " << token->getAgent_energy_system().id() << std::endl;
 
-                            headerFlag = false;
+                            std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 
-                            Writable::strWrite(*imap, ofs, "mapFilename", true);
-                            Writable::strWrite(*imap, ofs, "taskFilename", true); 
-                            imap->writeHeader(ofs);
+                            se.run();
+
+                            std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+                            std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+
+                            std::cout << " - makespan: " << token->getCurrentStep() << std::endl;
+                            std::cout << " - energy expenditure: " << token->energyExpenditure() << std::endl;
+                            std::cout << " - pending tasks: " << token->getPendingTaskAmount() << std::endl;
+                            std::cout << " - assigned tasks: " << token->getAssignedTaskAmount() << std::endl;
+                            std::cout << " - running tasks: " << token->getRunningTaskAmount() << std::endl;
+                            std::cout << " - finished tasks: " << token->getFinishedTaskAmount() << std::endl;
+                            std::cout << " - duration: " << time_span.count() << " seconds." << std::endl << std::endl; 
+        //                    std::cout << " - report: " << std::endl << se.getToken().getReportTaskMap() <<  std::endl << std::endl;
+        //                    std::cout << " - token: " << *ptoken << std::endl;
+
+                            if(headerFlag){
+
+                                headerFlag = false;
+
+                                Writable::strWrite(*imap, ofs, "mapFilename", true);
+                                Writable::strWrite(*imap, ofs, "taskFilename", true); 
+                                imap->writeHeader(ofs);
+                                Writable::sepWrite(*imap, ofs);
+                                itasks->writeHeader(ofs);
+                                Writable::sepWrite(*imap, ofs);
+                                token->writeHeader(ofs);
+                                Writable::strWrite(*imap, ofs, "time(s)", true);
+                                Writable::endlWrite(*imap, ofs);
+
+                            }
+
+                            Writable::strWrite(*imap, ofs, mapFilename, true);
+                            Writable::strWrite(*imap, ofs, taskFilename, true);
+                            imap->writeRow(ofs);
                             Writable::sepWrite(*imap, ofs);
-                            itasks->writeHeader(ofs);
+                            itasks->writeRow(ofs);
                             Writable::sepWrite(*imap, ofs);
-                            token->writeHeader(ofs);
-                            Writable::strWrite(*imap, ofs, "time(s)", true);
-                            Writable::endlWrite(*imap, ofs);
+                            token->writeRow(ofs);
+                            Writable::strWrite(*imap, ofs, std::to_string(time_span.count()), true);
+                            Writable::endlWrite(*imap, ofs); 
+
+    //                        delete allocatorClone;
+
+                            delete token;
 
                         }
-
-                        Writable::strWrite(*imap, ofs, mapFilename, true);
-                        Writable::strWrite(*imap, ofs, taskFilename, true);
-                        imap->writeRow(ofs);
-                        Writable::sepWrite(*imap, ofs);
-                        itasks->writeRow(ofs);
-                        Writable::sepWrite(*imap, ofs);
-                        token->writeRow(ofs);
-                        Writable::strWrite(*imap, ofs, std::to_string(time_span.count()), true);
-                        Writable::endlWrite(*imap, ofs); 
                         
-//                        delete allocatorClone;
-                        
-                        delete token;
-
                     }
 
                     delete ptoken;
@@ -316,6 +325,7 @@ public:
 private:
     
     const std::string& resultFilename; 
+    const std::vector<unsigned>& seeds;
     const std::vector<std::pair<float, float>>& thresholds;
     const std::vector<std::string>& tokenIds, taskFilenames, mapFilenames;  
     const std::vector<_agent_energy_system>& agent_energy_systems; 

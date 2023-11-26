@@ -306,6 +306,11 @@ bool _stepPath::collideSiteWith(const _stepPath& other) const {
         for (; i >= 0 && j >= 0; i--, j--) {
 
             if (sites[i].match(other.sites[j])) return true;
+            
+            if( j > 0 && 
+                i > 0 && 
+                sites[i].match(other.sites[j - 1]) && 
+                sites[i - 1].match(other.sites[j])) return true;
 
         }
 
@@ -342,6 +347,12 @@ unsigned _stepPath::collideSiteCount(const _stepPath& other) const {
         for (; i >= 0 && j >= 0; i--, j--) {
 
             if (sites[i].match(other.sites[j])) ret++;
+            
+            if( j > 0 && 
+                i > 0 && 
+                sites[i].match(other.sites[j - 1]) && 
+                sites[i - 1].match(other.sites[j])) ret++;
+            
 
         }
 

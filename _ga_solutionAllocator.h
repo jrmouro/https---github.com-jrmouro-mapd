@@ -33,8 +33,7 @@ public:
     virtual void giveBack(_allocation*) ;
     virtual _allocation* borrowClone(_allocation*) ;
     virtual _agentsTasksAllocator* emptyClone() const;
-    
-    
+           
     
 protected:
     
