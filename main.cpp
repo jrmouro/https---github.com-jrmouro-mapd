@@ -309,7 +309,7 @@ void test(
     
     _ga_best_solution_selector select_solution(evaltype);    
 //    
-    tokenIds.push_back("GAT");
+//    tokenIds.push_back("GAT");
     tokenIds.push_back("GAT_P");
     
     _ga_solutionAllocator ga_solutionAllocator("Greedy", validity);
@@ -321,10 +321,10 @@ void test(
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                 
 //                 return time_span.count() > 5.0 || generation > 99;
-                 return generation > 50;
+                 return generation > 99;
                 
             },
-            20, 10,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
+            30, 10,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
             
     _nsga nsga_estimative_path_count(
             "GA_count",
@@ -333,10 +333,10 @@ void test(
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                 
 //                 return time_span.count() > 5.0 || generation > 99;
-                 return generation > 50;
+                 return generation > 99;
                 
             },
-            20, 10,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
+            30, 10,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
             
             
     _nsga nsga_estimative_path_check(
@@ -346,10 +346,10 @@ void test(
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                 
 //                 return time_span.count() > 5.0 || generation > 99;
-                 return generation > 50;
+                 return generation > 99;
                 
             },
-            20, 10,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
+            30, 10,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
             
     _nsga nsga_estimative_path_collision(
             "GA_collision",
@@ -358,10 +358,10 @@ void test(
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                 
 //                 return time_span.count() > 5.0 || generation > 99;
-                 return generation > 50;
+                 return generation > 99;
                 
             },
-            20, 10,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
+            30, 10,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
             
     _nsga nsga_real(
             "GA_real",
@@ -370,10 +370,10 @@ void test(
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                 
 //                 return time_span.count() > 5.0 || generation > 99;
-                 return generation > 50;
+                 return generation > 99;
                 
             },
-            20, 10,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
+            30, 10,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
             
     if(of == "g"){
 
@@ -394,10 +394,10 @@ void test(
     } else if(of == "ep"){
         
         agentsTasksAllocators.push_back(&ga_solutionAllocator); 
-        agentsTasksAllocators.push_back(&nsga_estimative);  
+//        agentsTasksAllocators.push_back(&nsga_estimative);  
         agentsTasksAllocators.push_back(&nsga_estimative_path_count); 
         agentsTasksAllocators.push_back(&nsga_estimative_path_check);  
-        agentsTasksAllocators.push_back(&nsga_estimative_path_collision); 
+//        agentsTasksAllocators.push_back(&nsga_estimative_path_collision); 
         
     } else if(of == "r"){
         
@@ -410,7 +410,7 @@ void test(
         agentsTasksAllocators.push_back(&nsga_estimative_path_count); 
         agentsTasksAllocators.push_back(&nsga_estimative_path_check);
 //        agentsTasksAllocators.push_back(&nsga_estimative_path_collision); 
-        agentsTasksAllocators.push_back(&nsga_real); 
+//        agentsTasksAllocators.push_back(&nsga_real); 
         
     } else {
                 
@@ -739,8 +739,8 @@ void small(int map = 0,
             ga_estimate_of,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                                 
-                return time_span.count() > 300.0 || generation > 50;
-//                return generation > 50;
+//                return time_span.count() > 300.0 || generation > 50;
+                return generation > 50;
                 
             },  20,   10,  validity, .5f, .5f, .5f,  .3f,  .3f, 1);
             
@@ -750,10 +750,10 @@ void small(int map = 0,
             ga_estimate_of_path_count,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                                 
-                return time_span.count() > 300.0 || generation > 50;
-//                return generation > 50;
+//                return time_span.count() > 300.0 || generation > 50;
+                return generation > 50;
                 
-            },  20,   10,  validity, .5f, .5f, .5f,  .3f,  .3f, 1);
+            },  40,   20,  validity, .5f, .5f, .5f,  .3f,  .3f, 1);
             
     _nsga nsga_estimative_path_check(
             "GA_check",
@@ -761,10 +761,10 @@ void small(int map = 0,
             ga_estimate_of_path_check,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                                 
-                return time_span.count() > 300.0 || generation > 50;
-//                return generation > 50;
+//                return time_span.count() > 300.0 || generation > 50;
+                return generation > 50;
                 
-            },  20,   10,  validity, .5f, .5f, .5f,  .3f,  .3f, 1);
+            },  40,   20,  validity, .5f, .5f, .5f,  .3f,  .3f, 1);
             
     _nsga nsga_estimative_path_collision(
             "GA_collision",
@@ -772,8 +772,8 @@ void small(int map = 0,
             ga_estimate_of_path_collision,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                                 
-                return time_span.count() > 300.0 || generation > 50;
-//                return generation > 50;
+//                return time_span.count() > 300.0 || generation > 50;
+                return generation > 50;
                 
             },  20,   10,  validity, .5f, .5f, .5f,  .3f,  .3f, 1);
             
@@ -784,8 +784,8 @@ void small(int map = 0,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                 
                 
-                return time_span.count() > 300.0 || generation > 50;
-//                return generation > 50;
+//                return time_span.count() > 300.0 || generation > 50;
+                return generation > 50;
                 
             },  20,   10,  validity, .5f, .5f, .5f,  .3f,  .3f, 1);
             
@@ -808,14 +808,14 @@ void small(int map = 0,
     } else if(of == "ep"){
         
         agentsTasksAllocators.push_back(&ga_solutionAllocator); 
-        agentsTasksAllocators.push_back(&nsga_estimative);
+//        agentsTasksAllocators.push_back(&nsga_estimative);
         agentsTasksAllocators.push_back(&nsga_estimative_path_count); 
         agentsTasksAllocators.push_back(&nsga_estimative_path_check); 
-        agentsTasksAllocators.push_back(&nsga_estimative_path_collision); 
+//        agentsTasksAllocators.push_back(&nsga_estimative_path_collision); 
         
     } else if(of == "r"){
         
-        agentsTasksAllocators.push_back(&ga_solutionAllocator); 
+//        agentsTasksAllocators.push_back(&ga_solutionAllocator); 
         agentsTasksAllocators.push_back(&nsga_real);
         
     } else {
@@ -1014,10 +1014,10 @@ void small_closed(int map = 0,
     } else if(of == "ep"){
         
         agentsTasksAllocators.push_back(&ga_solutionAllocator); 
-        agentsTasksAllocators.push_back(&nsga_estimative);  
+//        agentsTasksAllocators.push_back(&nsga_estimative);  
         agentsTasksAllocators.push_back(&nsga_estimative_path_count); 
         agentsTasksAllocators.push_back(&nsga_estimative_path_check);  
-        agentsTasksAllocators.push_back(&nsga_estimative_path_collision); 
+//        agentsTasksAllocators.push_back(&nsga_estimative_path_collision); 
         
     } else if(of == "r"){
         
@@ -1060,10 +1060,10 @@ void small_closed(int map = 0,
 int main(int argc, char** argv) {
     
     char* instance = "test";
-    char* of = "t"; // * -> all obj func
+    char* of = "ep"; // * -> all obj func
     
     unsigned evaltype = 2;
-    unsigned validity = 1000;    
+    unsigned validity = 5000;    
     int map_index = 0; // 0 -> all maps
     
     if(argc > 1){
