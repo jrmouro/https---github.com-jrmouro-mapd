@@ -91,7 +91,7 @@ public:
     
 protected:
     std::string _name = "GAT";
-    const _map& map;
+    _map map;
     _stepMap stepMap;
     std::map<unsigned, _site> nonTaskEndpoints;
     std::map<int, _task> pendingTasks, assignedTasks, runningTasks, finishedTasks;

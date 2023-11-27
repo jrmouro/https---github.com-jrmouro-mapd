@@ -16,11 +16,11 @@ _endpointsPathAlgorithm::_endpointsPathAlgorithm() :
 _endpointsPathAlgorithm::_endpointsPathAlgorithm(const _endpointsPathAlgorithm& other) :
     _endpointsDistanceAlgorithm(other) {
 
-    if(size > 0){
+    if(other.size > 0){
 
-        paths.resize(size);
+        paths.resize(other.size);
 
-        for(unsigned i= 0; i < size; i++)
+        for(unsigned i= 0; i < other.size; i++)
 
                 paths[i] = other.paths[i];
 

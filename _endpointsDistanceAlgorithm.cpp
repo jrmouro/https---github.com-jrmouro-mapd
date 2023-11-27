@@ -13,11 +13,11 @@ _endpointsDistanceAlgorithm::_endpointsDistanceAlgorithm(const _endpointsDistanc
         endpointsSize(other.endpointsSize),  
         domain(other.domain){
 
-    if(size > 0){
+    if(other.size > 0){
         
-        distances = new unsigned[size];
+        distances = new unsigned[other.size];
 
-        for(unsigned i= 0; i < size; i++)
+        for(unsigned i= 0; i < other.size; i++)
             distances[i] = other.distances[i];
     
     }

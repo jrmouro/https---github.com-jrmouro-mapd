@@ -278,7 +278,7 @@ public:
         
     }
     
-    const _endpointsPathAlgorithm& getEndpointsPathAlgorithm() const;
+    const _endpointsPathAlgorithm* getEndpointsPathAlgorithm() const;
        
 private:
 

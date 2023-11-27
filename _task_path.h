@@ -30,7 +30,7 @@ public:
     portion(other.portion){ }   
         
     void listPortionPaths(
-        const _endpointsPathAlgorithm& endpointsPathAlgorithm,
+        const _endpointsPathAlgorithm* endpointsPathAlgorithm,
         const std::vector<const _task*>& task_vector, 
         const std::function<bool(const PathType& type, const _path& path, const _task*, const _task*)>& function) const{
                        
@@ -40,8 +40,8 @@ public:
             int i = 0;
             for (; i < task_vector.size() - 1; i++) {
                 
-                const _path& path_delirery = endpointsPathAlgorithm.solve_path(task_vector[i]->getPickup(), task_vector[i]->getDelivery());
-                const _path& path_pickup = endpointsPathAlgorithm.solve_path(task_vector[i]->getDelivery(), task_vector[i + 1]->getPickup());
+                const _path& path_delirery = endpointsPathAlgorithm->solve_path(task_vector[i]->getPickup(), task_vector[i]->getDelivery());
+                const _path& path_pickup = endpointsPathAlgorithm->solve_path(task_vector[i]->getDelivery(), task_vector[i + 1]->getPickup());
                 
                 path_delirery.rlistPortion(portion, [&flag, &function, &task_vector, i](const _path& path_portion){
                     
@@ -80,7 +80,7 @@ public:
             
             if(flag){
                 
-                const _path& path_delirery = endpointsPathAlgorithm.solve_path(task_vector[i]->getPickup(), task_vector[i]->getDelivery());
+                const _path& path_delirery = endpointsPathAlgorithm->solve_path(task_vector[i]->getPickup(), task_vector[i]->getDelivery());
                 
                 path_delirery.rlistPortion(portion, [&flag, &function, &task_vector, i](const _path& path_portion){
                     
@@ -104,7 +104,7 @@ public:
     }
     
     void listPaths(
-        const _endpointsPathAlgorithm& endpointsPathAlgorithm,
+        const _endpointsPathAlgorithm* endpointsPathAlgorithm,
         const std::vector<const _task*>& task_vector, 
         const std::function<bool(const PathType& type, const _path& path, const _task*, const _task*)>& function) const{
                        
@@ -113,8 +113,8 @@ public:
             int i = 0;
             for (; i < task_vector.size() - 1; i++) {
                 
-                const _path& path_delirery = endpointsPathAlgorithm.solve_path(task_vector[i]->getPickup(), task_vector[i]->getDelivery());
-                const _path& path_pickup = endpointsPathAlgorithm.solve_path(task_vector[i]->getDelivery(), task_vector[i + 1]->getPickup());
+                const _path& path_delirery = endpointsPathAlgorithm->solve_path(task_vector[i]->getPickup(), task_vector[i]->getDelivery());
+                const _path& path_pickup = endpointsPathAlgorithm->solve_path(task_vector[i]->getDelivery(), task_vector[i + 1]->getPickup());
                 
                 if(function(PathType::delivery, path_delirery, task_vector[i], task_vector[i + 1])){
                         
@@ -131,7 +131,7 @@ public:
 
             }            
                 
-            const _path& path_delirery = endpointsPathAlgorithm.solve_path(task_vector[i]->getPickup(), task_vector[i]->getDelivery());
+            const _path& path_delirery = endpointsPathAlgorithm->solve_path(task_vector[i]->getPickup(), task_vector[i]->getDelivery());
 
             function(PathType::delivery, path_delirery, task_vector[i], nullptr);
                 

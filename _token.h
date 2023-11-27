@@ -46,7 +46,7 @@ public:
                     nonTaskDeliveryEndpoints(),
                     taskEndpoints(){
         
-        map.listEndpoints([this, map](const _site& endpoint){
+        map.listEndpoints([this, &map](const _site& endpoint){
             
             nonTaskDeliveryEndpoints.insert(std::pair<unsigned, _site>(
                 endpoint.linearIndex(map.getColumn_size()), 
@@ -55,7 +55,7 @@ public:
             return false;
         });
         
-        map.listBotsEndPoints([this, agent_energy_system](unsigned botId, const _site& endpoint){
+        map.listBotsEndPoints([this, &agent_energy_system](unsigned botId, const _site& endpoint){
             
             agents.insert(
                 std::pair<unsigned, _agent>(
@@ -179,11 +179,11 @@ public:
                 assignTaskAgent.insert(std::pair<int, int>(taskId, agentId));
                 assignedTasks.insert(std::pair<int, _task>(taskId, it->second));
 
-                pendingTasks.erase(it);
-                
                 it2->second.assignTaskSwap(it->second, path);
                 
                 stepMap.setMoving(path, agentId);
+                
+                pendingTasks.erase(it);
             
             } else {                
                 
@@ -212,35 +212,7 @@ public:
         }
         
     }
-    
-//    void assignTaskSwap(int taskId, int agentId){
-//                
-//        std::map<int, _task>::const_iterator it = assignedTasks.find(taskId);
-//        
-//        if(it != assignedTasks.end()){
-//            
-//            assignedTasks.erase(taskId);
-//            assignTaskAgent.erase(taskId);            
-//            
-//            assignedTasks.insert(std::pair<int, _task>(taskId, it->second));
-//            assignTaskAgent.insert(std::pair<int, int>(taskId, agentId));        
-//            
-//            
-//        } else {
-//            
-//            try {
-//                std::ostringstream stream;
-//                stream << "assigned task not found: " << task;
-//                MAPD_EXCEPTION(stream.str());
-//            } catch (std::exception& e) {
-//                std::cout << e.what() << std::endl;
-//                std::abort();
-//            }
-//            
-//        }
-//        
-//    }
-    
+        
     void unassignTaskSwap(int taskId, int agentId){
         
         std::map<int, _task>::const_iterator it = assignedTasks.find(taskId);
@@ -249,17 +221,17 @@ public:
             
             std::map<int, _agent>::iterator it2 = agents.find(agentId);
             
-            if(it2 != agents.end()){
-            
-                assignedTasks.erase(taskId);
-                assignTaskAgent.erase(taskId);
-                
+            if(it2 != agents.end()){                           
+                                
                 stepMap.deleteMoving(it2->second.currentPath(), agentId);
                 
                 it2->second.unassignTaskSwap(it->second);
                 
                 pendingTasks.insert(std::pair<int, _task>(taskId, it->second));
-            
+                            
+                assignTaskAgent.erase(taskId);                
+                assignedTasks.erase(taskId);
+                
             } else {                
                 
                 try {
@@ -351,7 +323,7 @@ public:
         return map;
     }
     
-    const _endpointsPathAlgorithm& getEndpointsPathAlgorithm() const {
+    const _endpointsPathAlgorithm* getEndpointsPathAlgorithm() const {
         return map.getEndpointsPathAlgorithm();
     }
     
@@ -692,7 +664,7 @@ private:
     
     unsigned currentStep = 0;
     int new_task_ids = -1;    
-    const _map& map;
+    _map map;
     _stepMap stepMap;        
     _agent_energy_system agent_energy_system;
     

@@ -74,17 +74,30 @@ public:
                         
             for (auto const& taskFilename : taskFilenames) {
                 
-                imap->retsetTaskEndpoint();
+                _map map(imap->getMap());
                 
-                auto itasks = InstanceTask::load(taskFilename, [imap](unsigned id){
-                    return *imap->getMap().getNoBotEndPointById(id);
+                auto itasks = InstanceTask::load(taskFilename, [&map](unsigned id){
+                    return *map.getNoBotEndPointById(id);
                 });
-
-                itasks->getTaskMap().listTasks([imap](unsigned step, const _task& task){       
-                    imap->setTaskEndpoint(task.getPickup().GetRow(), task.getPickup().GetColunm());
-                    imap->setTaskEndpoint(task.getDelivery().GetRow(), task.getDelivery().GetColunm());            
+                
+                itasks->getTaskMap().listTasks([&map](unsigned step, const _task& task){  
+                    map.setTypeOfSite(task.getPickup().GetRow(), task.getPickup().GetColunm(), _map::TypeOfSite::task);
+                    map.setTypeOfSite(task.getDelivery().GetRow(), task.getDelivery().GetColunm(), _map::TypeOfSite::task);           
                     return false;
                 });
+                
+                
+//                imap->resetTaskEndpoint();
+                
+//                auto itasks = InstanceTask::load(taskFilename, [&imap](unsigned id){
+//                    return *imap->getMap().getNoBotEndPointById(id);
+//                });
+//
+//                itasks->getTaskMap().listTasks([&imap](unsigned step, const _task& task){       
+//                    imap->setTaskEndpoint(task.getPickup().GetRow(), task.getPickup().GetColunm());
+//                    imap->setTaskEndpoint(task.getDelivery().GetRow(), task.getDelivery().GetColunm());            
+//                    return false;
+//                });
                 
                 std::vector<_token*> ptokens;
                 std::vector<_ga_token*> p_ga_tokens;
@@ -95,7 +108,7 @@ public:
                         
                         for (auto agent_energy_system : agent_energy_systems) {
                             
-                            p_ga_tokens.push_back(new _ga_token(imap->getMap(), imap->getStepMap(), agent_energy_system));
+                            p_ga_tokens.push_back(new _ga_token(map, imap->getStepMap(), agent_energy_system));
 
                         }
                     
@@ -103,7 +116,7 @@ public:
                         
                         for (auto agent_energy_system : agent_energy_systems) {
                             
-                            p_ga_tokens.push_back(new _ga_token_p(imap->getMap(), imap->getStepMap(), agent_energy_system));
+                            p_ga_tokens.push_back(new _ga_token_p(map, imap->getStepMap(), agent_energy_system));
 
                         }
                     
@@ -111,7 +124,7 @@ public:
                         
                         for (auto agent_energy_system : agent_energy_systems) {
                             
-                            ptokens.push_back(new TokenPass(imap->getMap(), imap->getStepMap(), agent_energy_system, task_threshold));
+                            ptokens.push_back(new TokenPass(map, imap->getStepMap(), agent_energy_system, task_threshold));
 
                         }
                         
@@ -119,7 +132,7 @@ public:
                         
                         for (auto agent_energy_system : agent_energy_systems) {
                             
-                            ptokens.push_back(new TaskSwapTokenPass(imap->getMap(), imap->getStepMap(), agent_energy_system, task_threshold));
+                            ptokens.push_back(new TaskSwapTokenPass(map, imap->getStepMap(), agent_energy_system, task_threshold));
 
                         }
                         
@@ -137,7 +150,7 @@ public:
                             
                                 for (auto agent_energy_system : agent_energy_systems) {
 
-                                    ptokens.push_back(new BackwardTaskToken(imap->getMap(), imap->getStepMap(), agent_energy_system, threshold.second, task_threshold));
+                                    ptokens.push_back(new BackwardTaskToken(map, imap->getStepMap(), agent_energy_system, threshold.second, task_threshold));
 
                                 }
                             
@@ -152,7 +165,7 @@ public:
                             
                             for (auto agent_energy_system : agent_energy_systems) {                               
                                 
-                                ptokens.push_back(new ThresholdTokenPass(imap->getMap(), imap->getStepMap(), agent_energy_system, threshold.first, threshold.second, task_threshold));
+                                ptokens.push_back(new ThresholdTokenPass(map, imap->getStepMap(), agent_energy_system, threshold.first, threshold.second, task_threshold));
 
                             }
 

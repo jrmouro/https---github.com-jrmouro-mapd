@@ -97,7 +97,7 @@ void _map::load(std::ifstream& filestream, std::function<bool(unsigned, unsigned
 
 }
 
-const _endpointsPathAlgorithm& _map::getEndpointsPathAlgorithm() const {
-    return *endpointsPathAlgorithm;
+const _endpointsPathAlgorithm* _map::getEndpointsPathAlgorithm() const {
+    return endpointsPathAlgorithm;
 }
 

@@ -58,7 +58,7 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
 
         bool flag = true;
 
-        token.listConstAgents([task, &flag, agent, this](const _agent& otherAgent) {
+        token.listConstAgents([&task, &flag, &agent, this](const _agent& otherAgent) {
 
             if (otherAgent.id() != agent.id()) {
 

@@ -14,9 +14,7 @@ class _endpointsPathAlgorithm : public _endpointsDistanceAlgorithm{
 public:
     
     _endpointsPathAlgorithm();
-    
-//    _endpointsPathAlgorithm(const _map& map);
-    
+        
     _endpointsPathAlgorithm(const _endpointsPathAlgorithm& other);
 
     virtual ~_endpointsPathAlgorithm();

@@ -72,11 +72,11 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_solution::evaluateAux(cons
                 
             } else {
                 
-                pickupDist = token.getMap().getEndpointsPathAlgorithm().solve_distance(currentSite, task->getPickup());
+                pickupDist = token.getMap().getEndpointsPathAlgorithm()->solve_distance(currentSite, task->getPickup());
                 
             }
             
-            deliveryDist = token.getMap().getEndpointsPathAlgorithm().solve_distance(task->getPickup(), task->getDelivery());
+            deliveryDist = token.getMap().getEndpointsPathAlgorithm()->solve_distance(task->getPickup(), task->getDelivery());
             
             currentSite.SetRow(task->getPickup().GetRow());
             currentSite.SetColunm(task->getPickup().GetColunm());
@@ -773,10 +773,10 @@ void _ga_solution::alloc2(const _ga_token& token) {
 
         for (const _task* task : tasks) {
 
-            unsigned dist = token.getMap().getEndpointsPathAlgorithm().solve_distance(stepSite_min, task->getPickup());
+            unsigned dist = token.getMap().getEndpointsPathAlgorithm()->solve_distance(stepSite_min, task->getPickup());
             energy += dist * token.getAgent_energy_system().getMovingRegime();
 
-            dist = dist + token.getMap().getEndpointsPathAlgorithm().solve_distance(task->getPickup(), task->getDelivery());
+            dist = dist + token.getMap().getEndpointsPathAlgorithm()->solve_distance(task->getPickup(), task->getDelivery());
 
             std::map<const _ga_agent*, _stepSite>::iterator agentsGoalSitesIterator = agentGoalSites.find(agent_min);
 
@@ -1026,7 +1026,7 @@ void _ga_solution::greedySolution_e(const _ga_token& token) {
 
                     agentsSites[i] = pendingTasks_it->second->getDelivery();
 
-                    const unsigned carryingDistance = token.getMap().getEndpointsPathAlgorithm().solve_distance(
+                    const unsigned carryingDistance = token.getMap().getEndpointsPathAlgorithm()->solve_distance(
                             pendingTasks_it->second->getPickup(),
                             pendingTasks_it->second->getDelivery());
 

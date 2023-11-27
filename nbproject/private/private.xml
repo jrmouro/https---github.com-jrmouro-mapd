@@ -7,25 +7,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_stepMap.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/dist/Debug/GNU-Linux/Instances/test/test_3.map</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_agentsTasksAllocator.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/GA_SystemExperiment.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/dist/Debug/GNU-Linux/Instances/test/test_1.map</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_estimate_of_path_check.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_manhattanAlgorithm.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/dist/Debug/GNU-Linux/Instances/test/test_5.map</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_stepPath.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_estimate_of_path_count.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_site.h</file>
             <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/main.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/dist/Debug/GNU-Linux/Instances/test/test_2.map</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_nsga.h</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_system.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_nsga.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/dist/Debug/GNU-Linux/Instances/test/test_4.map</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_token.cpp</file>
-            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/_ga_estimate_of_path_count.cpp</file>
+            <file>file:/home/ronaldo/Documentos/DCC-123/Projeto/Netbeans/mapd/MultiSystemExperiment.h</file>
         </group>
     </open-files>
 </project-private>

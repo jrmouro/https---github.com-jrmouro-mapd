@@ -38,6 +38,8 @@ void test(
             + "_" + std::to_string(validity) 
             + ".csv";
     
+
+    
     unsigned myints[] = {
         1258,7365,77179,201234,
         145,2345,97679,231234,
@@ -181,14 +183,15 @@ void test(
     } else if(of == "TP"){
         
         tokenIds.push_back("TP");
-        tokenIds.push_back("TSTP");
+        tokenIds.push_back("TTP");
+        tokenIds.push_back("BTT");
         
     } else {
             
         tokenIds.push_back("GAT");
         tokenIds.push_back("GAT_P");
         tokenIds.push_back("TP");
-        tokenIds.push_back("TSTP");
+        tokenIds.push_back("TTP");
         agentsTasksAllocators.push_back(&ga_solutionAllocator);
         agentsTasksAllocators.push_back(&nsga_estimative_path_count);
         agentsTasksAllocators.push_back(&nsga_estimative_path_check);
@@ -227,13 +230,16 @@ void small(int map = 0,
             + "_" + std::to_string(validity) 
             + ".csv";
     
+//    unsigned myints[] = {
+//        1258,7365,77179,201234,
+//        145,2345,97679,231234,
+//        1753,9845,77679,591234,
+//        1685,2345,87679,297234,
+//        101,3045,67609,899234,
+//        17,8885,70679,291734};
+    
     unsigned myints[] = {
-        1258,7365,77179,201234,
-        145,2345,97679,231234,
-        1753,9845,77679,591234,
-        1685,2345,87679,297234,
-        101,3045,67609,899234,
-        17,8885,70679,291734};
+        158,7365,70179,291234};
     
     std::vector<unsigned> seeds (myints, myints + sizeof(myints) / sizeof(unsigned));
     
@@ -364,14 +370,16 @@ void small(int map = 0,
     } else if(of == "TP"){
         
         tokenIds.push_back("TP");
-        tokenIds.push_back("TSTP");
+        tokenIds.push_back("TTP");
+        tokenIds.push_back("BTT");
+//        tokenIds.push_back("TSTP");
         
     } else {
             
         tokenIds.push_back("GAT");
         tokenIds.push_back("GAT_P");
         tokenIds.push_back("TP");
-        tokenIds.push_back("TSTP");
+        tokenIds.push_back("TTP");
         agentsTasksAllocators.push_back(&ga_solutionAllocator);
         agentsTasksAllocators.push_back(&nsga_estimative_path_count);
         agentsTasksAllocators.push_back(&nsga_estimative_path_check);
@@ -404,11 +412,11 @@ void small(int map = 0,
  */
 int main(int argc, char** argv) {
     
-    char* instance = "test";
+    char* instance = "small";
     char* of = "TP"; // * -> all obj func
     
     unsigned evaltype = 2;
-    unsigned validity = 5;    
+    unsigned validity = 5000;    
     int map_index = 0; // 0 -> all maps
     
     if(argc > 1){

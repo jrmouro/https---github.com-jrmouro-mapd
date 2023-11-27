@@ -134,7 +134,7 @@ public:
         
     } 
     
-    void retsetTaskEndpoint() {
+    void resetTaskEndpoint() {
         
         this->map.resetTaskTypeOfSite();        
         

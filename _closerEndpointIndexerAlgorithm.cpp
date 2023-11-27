@@ -11,13 +11,13 @@ void _closerEndpointIndexerAlgorithm::solve(
         const _site& endpointReference,
         std::vector<_site>& siteIndex) const {
 
-    const unsigned siteDistance = token.getEndpointsPathAlgorithm().solve_distance(endpointReference, endpoint);
+    const unsigned siteDistance = token.getEndpointsPathAlgorithm()->solve_distance(endpointReference, endpoint);
 
     std::vector<_site>::iterator it = siteIndex.begin();
 
     for (; it != siteIndex.end(); it++) {
 
-        const unsigned dist = token.getEndpointsPathAlgorithm().solve_distance(endpointReference, *it);
+        const unsigned dist = token.getEndpointsPathAlgorithm()->solve_distance(endpointReference, *it);
 
         if (siteDistance < dist) {
 
@@ -39,15 +39,15 @@ void _closerEndpointIndexerAlgorithm::ga_solve_to_site(
         const _site& endpointReference,
         std::vector<_site>& siteIndex) const {
     
-    const _endpointsPathAlgorithm& endpointsPathAlgorithm = token.getMap().getEndpointsPathAlgorithm();
+    const _endpointsPathAlgorithm* endpointsPathAlgorithm = token.getMap().getEndpointsPathAlgorithm();
 
-    const unsigned siteDistance = endpointsPathAlgorithm.solve_distance(endpointReference, endpoint);
+    const unsigned siteDistance = endpointsPathAlgorithm->solve_distance(endpointReference, endpoint);
 
     std::vector<_site>::iterator it = siteIndex.begin();
 
     for (; it != siteIndex.end(); it++) {
 
-        const unsigned dist = endpointsPathAlgorithm.solve_distance(endpointReference, *it);
+        const unsigned dist = endpointsPathAlgorithm->solve_distance(endpointReference, *it);
 
         if (siteDistance < dist) {
 

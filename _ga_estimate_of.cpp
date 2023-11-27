@@ -67,11 +67,11 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of::evals(const _
 
                 } else {
 
-                    pickupDist = token.getMap().getEndpointsPathAlgorithm().solve_distance(currentSite, task->getPickup());
+                    pickupDist = token.getMap().getEndpointsPathAlgorithm()->solve_distance(currentSite, task->getPickup());
 
                 }
 
-                deliveryDist = token.getMap().getEndpointsPathAlgorithm().solve_distance(task->getPickup(), task->getDelivery());
+                deliveryDist = token.getMap().getEndpointsPathAlgorithm()->solve_distance(task->getPickup(), task->getDelivery());
 
                 currentSite.SetRow(task->getPickup().GetRow());
                 currentSite.SetColunm(task->getPickup().GetColunm());
