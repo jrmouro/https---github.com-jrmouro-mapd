@@ -119,9 +119,9 @@ unsigned _ga_token::getCurrentStep() const {
 
 void _ga_token::stepping() {
 
-//        if(currentStep > 38){
+//        if(currentStep > 18){
 //            stepMap.stepView(currentStep);
-//            stepMap.free_step_view();
+//            stepMap.max_step_view();
 //            stepMap.free_agent_view();
 //            std::cout << std::endl;
 //        }
@@ -227,7 +227,6 @@ bool _ga_token::liberateEndpoint(const _ga_agent& agent, const _site& endpoint) 
 
     if (obstructor != nullptr) {
 
-//        updateAgentRestPathCloserEndpoint(*obstructor, obstructor->currentSite());
         updateAgentRestPathCloserEndpoint(*obstructor, endpoint);
 
         return true;
@@ -296,10 +295,6 @@ bool _ga_token::updateAgentRestPathCloserEndpoint(_ga_agent& agent, const _site&
             if (flag) {
 
                 if (newAgentPath.isTrivial()) {
-
-//                    _stepSite future = agent.currentSite();
-//                    future.SetStep(future.GetStep() + 1);
-//                    newAgentPath.progress(future);
                     
                     try {
                         std::ostringstream stream;
@@ -381,7 +376,7 @@ bool _ga_token::updateAgentTaskPath_pendingTask(_ga_agent& agent, int newTaskId,
 
         } else { // go to pickup   
             
-            if(!trivialPath) stepMap.deleteMoving(agent.getPath(), agent.id());
+            
             
             agent.assignTask(pendingTask);
 
@@ -396,6 +391,8 @@ bool _ga_token::updateAgentTaskPath_pendingTask(_ga_agent& agent, int newTaskId,
                 ret = true;
 
                 liberateEndpoint(agent, pendingTask.getDelivery());
+                
+                if(!trivialPath) stepMap.deleteMoving(agent.getPath(), agent.id());
 
                 _stepAstarAlgorithm astar;
 
@@ -418,6 +415,8 @@ bool _ga_token::updateAgentTaskPath_pendingTask(_ga_agent& agent, int newTaskId,
             } else {
 
                 liberateEndpoint(agent, pendingTask.getPickup());
+                
+                if(!trivialPath) stepMap.deleteMoving(agent.getPath(), agent.id());
 
                 _stepAstarAlgorithm astar;
 
@@ -488,6 +487,101 @@ bool _ga_token::updateAgentTaskPath_pendingTask(_ga_agent& agent, int newTaskId,
     stepMap.setMoving(newAgentPath, agent.id());
     
     return ret;
+    
+//    bool ret = false;
+//    
+//    agent.unassignTask();
+//    agent.setStateFree();
+//    
+//    _stepPath newAgentPath(agent.currentSite());
+//    
+//    std::map<int, _task>::const_iterator new_task_it = pendingTasks.find(newTaskId);
+//
+//    if (new_task_it != pendingTasks.end()) {
+//
+//        const _task pendingTask = new_task_it->second;
+//        
+//        if (pendingTask.getPickup().match(pendingTask.getDelivery())) { // innocuous pending task   
+//
+//            finishedTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
+//            pendingTasks.erase(new_task_it);
+//            assignTaskAgent.insert(std::pair<int, int>(pendingTask.id(), agent.id()));
+//            
+//            if(!agent.getPath().isTrivial()){
+//                
+//                return true;
+//                
+//            }
+//                            
+//            ret = true;                
+//
+//        } else { // go to pickup   
+//            
+//            _stepAstarAlgorithm astar;
+//                        
+//            if (agent.currentSite().match(pendingTask.getPickup())) {
+//                
+//                liberateEndpoint(agent, pendingTask.getDelivery());
+//                
+//                stepMap.deleteMoving(agent.getPath(), agent.id());
+//
+//                bool flag = astar.solve(stepMap, newAgentPath, pendingTask.getDelivery(), agent.id());
+//
+//                if(flag){
+//
+//                    runningTasks.insert(std::pair<int, _task>(pendingTask.id(), pendingTask));
+//                    pendingTasks.erase(new_task_it);
+//                    assignTaskAgent.insert(std::pair<int, int>(pendingTask.id(), agent.id()));
+//
+//                    agent.assignTask(pendingTask);
+//                    agent.setStateBuzy();
+//
+//                    ret = true;
+//
+//                } else {
+//
+//                    stepMap.setMoving(agent.getPath(), agent.id());
+//
+//                }
+//                
+//            } else {
+//                
+//                liberateEndpoint(agent, pendingTask.getPickup());
+//                 
+//                stepMap.deleteMoving(agent.getPath(), agent.id());
+//
+//                bool flag = astar.solve(stepMap, newAgentPath, pendingTask.getPickup(), agent.id());
+//
+//                if(flag){                        
+//
+//                    agent.assignTask(pendingTask);
+//
+//                    ret = true;
+//
+//                }else{
+//
+//                    stepMap.setMoving(agent.getPath(), agent.id());
+//
+//                }
+//                  
+//            }      
+//            
+//        }
+//        
+//    } 
+//    
+//    if(newAgentPath.isTrivial()){
+//                            
+//        _stepSite future = newAgentPath.currentSite();
+//        future.SetStep(future.GetStep() + 1);
+//        newAgentPath.progress(future);
+//
+//    }
+//    
+//    agent.assignPath(newAgentPath);
+//    stepMap.setMoving(newAgentPath, agent.id());
+//    
+//    return ret;
     
 }
 
@@ -725,12 +819,12 @@ bool _ga_token::updateAgentTaskPath_going_to_rest_pickuping_to_pickuping(_ga_age
         assignTaskAgent.insert(std::pair<int, int>(currentTask->id(), agent.id()));
 
         agent.setStateBuzy();
-
-        stepMap.deleteMoving(agent.getPath(), agent.id());
-
+        
         ret = true;
 
         liberateEndpoint(agent, currentTask->getDelivery());
+        
+        stepMap.deleteMoving(agent.getPath(), agent.id());
 
         bool flag = astar.solve(stepMap, newAgentPath, currentTask->getDelivery(), agent.id());
 

@@ -32,8 +32,8 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_real_of::evals(const _ga_t
         while ( //count < validity && 
                 tokenAux.getCurrentStep() < tokenAux.getStepMap().getStep_size() && !tokenAux.isIdle()) {
 
-                        tokenAux.error_site_collision_check(); // TODO retirar
-                        tokenAux.error_edge_collision_check();
+//                        tokenAux.error_site_collision_check(); // TODO retirar
+//                        tokenAux.error_edge_collision_check();
 
 
             solutionAux.nextPlanningUpdate(tokenAux, [&tokenAux](const _ga_agent* agent, const _task * task) {

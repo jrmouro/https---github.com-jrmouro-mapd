@@ -23,7 +23,7 @@ public:
         delivery
     };
     
-    _task_path(unsigned portion) :
+    _task_path(unsigned portion = 1) :
     portion(portion){ }
     
     _task_path(const _task_path& other) :

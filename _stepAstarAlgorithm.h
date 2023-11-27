@@ -71,14 +71,14 @@ public:
                 }
         
                 
-                try {
-                    std::ostringstream stream;
-                    stream << "unsolved path from " << path.goalSite() << " to " << goal;
-                    MAPD_EXCEPTION(stream.str());
-                } catch (std::exception& e) {
-                    std::cout << e.what() << std::endl;
-                    std::abort();
-                } 
+//                try {
+//                    std::ostringstream stream;
+//                    stream << "unsolved path from " << path.goalSite() << " to " << goal;
+//                    MAPD_EXCEPTION(stream.str());
+//                } catch (std::exception& e) {
+//                    std::cout << e.what() << std::endl;
+//                    std::abort();
+//                } 
                 
             }
             

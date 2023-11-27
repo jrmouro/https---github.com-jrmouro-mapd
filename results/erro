@@ -1,0 +1,6 @@
+./dist/Debug/GNU-Linux/mapd small GP-R 1 2 5000 & ./dist/Debug/GNU-Linux/mapd small GP-R 2 2 5000 & ./dist/Debug/GNU-Linux/mapd small GP-R 3 2 5000 & ./dist/Debug/GNU-Linux/mapd small GP-R 4 2 5000 & ./dist/Debug/GNU-Linux/mapd small GP-R 5 2 5000 & ./dist/Debug/GNU-Linux/mapd small G-R 1 2 5000 & ./dist/Debug/GNU-Linux/mapd small G-R 2 2 5000 & ./dist/Debug/GNU-Linux/mapd small G-R 3 2 5000 & ./dist/Debug/GNU-Linux/mapd small G-R 4 2 5000 & ./dist/Debug/GNU-Linux/mapd small G-R 5 2 5000 &
+
+
+./dist/Debug/GNU-Linux/mapd small GP-E 1 2 5000 & ./dist/Debug/GNU-Linux/mapd small GP-E 2 2 5000 & ./dist/Debug/GNU-Linux/mapd small GP-E 3 2 5000 & ./dist/Debug/GNU-Linux/mapd small GP-E 4 2 5000 & ./dist/Debug/GNU-Linux/mapd small GP-E 5 2 5000 & ./dist/Debug/GNU-Linux/mapd small G-E 1 2 5000 & ./dist/Debug/GNU-Linux/mapd small G-E 2 2 5000 & ./dist/Debug/GNU-Linux/mapd small G-E 3 2 5000 & ./dist/Debug/GNU-Linux/mapd small G-E 4 2 5000 & ./dist/Debug/GNU-Linux/mapd small G-E 5 2 5000 &
+
+./dist/Debug/GNU-Linux/mapd small TP 1 2 5000 & ./dist/Debug/GNU-Linux/mapd small TP 2 2 5000 & ./dist/Debug/GNU-Linux/mapd small TP 3 2 5000 & ./dist/Debug/GNU-Linux/mapd small TP 4 2 5000 & ./dist/Debug/GNU-Linux/mapd small TP 5 2 5000 & 

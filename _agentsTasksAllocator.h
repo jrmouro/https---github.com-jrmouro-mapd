@@ -33,6 +33,8 @@ public:
     }
     
     virtual void setSeed(unsigned seed) { }
+    virtual unsigned getSeed() const { return 0; }
+    virtual bool isStochastic()const{return false;}
     
     virtual _agentsTasksAllocator* emptyClone() const = 0;
         

@@ -62,13 +62,15 @@ bool _ga_token_p::updateAgentTaskPath_pendingTask(_ga_agent& agent, int newTaskI
 
         } else { // go to pickup   
             
-            if(!trivialPath) stepMap.deleteMoving(agent.getPath(), agent.id());
+            
             
             if (agent.currentSite().match(pendingTask.getPickup())) {
                 
                 agent.setStateBuzy();
 
                 liberateEndpoint(agent, pendingTask.getDelivery());
+                
+                if(!trivialPath) stepMap.deleteMoving(agent.getPath(), agent.id());
 
                 _stepAstarAlgorithm astar;
 
@@ -91,6 +93,8 @@ bool _ga_token_p::updateAgentTaskPath_pendingTask(_ga_agent& agent, int newTaskI
             } else {
 
                 liberateEndpoint(agent, pendingTask.getPickup());
+                
+                if(!trivialPath) stepMap.deleteMoving(agent.getPath(), agent.id());
 
                 _stepAstarAlgorithm astar;
 
@@ -252,9 +256,9 @@ bool _ga_token_p::updateAgentTaskPath_going_to_rest_pickuping_to_pickuping(_ga_a
 
         agent.setStateBuzy();
 
-        stepMap.deleteMoving(agent.getPath(), agent.id());
-
         liberateEndpoint(agent, currentTask->getDelivery());
+        
+        stepMap.deleteMoving(agent.getPath(), agent.id());
 
         bool flag = astar.solve(stepMap, newAgentPath, currentTask->getDelivery(), agent.id());
 

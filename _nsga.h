@@ -56,6 +56,10 @@ public:
     virtual void setSeed(unsigned seed) {
         this->seed = seed;
     }
+    
+    virtual unsigned getSeed() const { return seed; }
+    
+    virtual bool isStochastic()const{return true;}
 
     
 protected:

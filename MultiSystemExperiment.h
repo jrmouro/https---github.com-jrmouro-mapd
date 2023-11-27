@@ -204,7 +204,8 @@ public:
                             std::cout << " - assigned tasks: " << token->getAssignedTaskAmount() << std::endl;
                             std::cout << " - running tasks: " << token->getRunningTaskAmount() << std::endl;
                             std::cout << " - finished tasks: " << token->getFinishedTaskAmount() << std::endl;
-                            std::cout << " - duration: " << time_span.count() << " seconds." << std::endl << std::endl; 
+                            std::cout << " - duration: " << time_span.count() << " seconds." << std::endl;
+                            std::cout << " - seed: " <<  agentsTasksAllocator->getSeed() << std::endl << std::endl;
         //                    std::cout << " - report: " << std::endl << se.getToken().getReportTaskMap() <<  std::endl << std::endl;
         //                    std::cout << " - token: " << *ptoken << std::endl;
 
@@ -219,6 +220,7 @@ public:
                                 itasks->writeHeader(ofs);
                                 Writable::sepWrite(*imap, ofs);
                                 token->writeHeader(ofs);
+                                Writable::sepWrite(*imap, ofs);
                                 Writable::strWrite(*imap, ofs, "time(s)", true);
                                 Writable::endlWrite(*imap, ofs);
 
@@ -231,12 +233,15 @@ public:
                             itasks->writeRow(ofs);
                             Writable::sepWrite(*imap, ofs);
                             token->writeRow(ofs);
+                            Writable::sepWrite(*imap, ofs);
                             Writable::strWrite(*imap, ofs, std::to_string(time_span.count()), true);
                             Writable::endlWrite(*imap, ofs); 
 
     //                        delete allocatorClone;
 
                             delete token;
+                            
+                            if(!agentsTasksAllocator->isStochastic()) break;
 
                         }
                         
@@ -289,6 +294,7 @@ public:
                         itasks->writeHeader(ofs);
                         Writable::sepWrite(*imap, ofs);
                         ptoken->writeHeader(ofs);
+                        Writable::sepWrite(*imap, ofs);
                         Writable::strWrite(*imap, ofs, "time(s)", true);
                         Writable::endlWrite(*imap, ofs);
                         
@@ -301,6 +307,7 @@ public:
                     itasks->writeRow(ofs);
                     Writable::sepWrite(*imap, ofs);
                     ptoken->writeRow(ofs);
+                    Writable::sepWrite(*imap, ofs);
                     Writable::strWrite(*imap, ofs, std::to_string(time_span.count()), true);
                     Writable::endlWrite(*imap, ofs);               
                     
