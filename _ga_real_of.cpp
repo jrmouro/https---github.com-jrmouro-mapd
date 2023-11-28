@@ -22,7 +22,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_real_of::evals(const _ga_t
             
         }
         
-        _ga_token tokenAux(token);
+        _ga_token* tokenAux = token.getClone();
         _ga_solution solutionAux(solution);
 
         unsigned count = 0;
@@ -30,21 +30,21 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_real_of::evals(const _ga_t
         unsigned validity = solution.validity();
 
         while ( //count < validity && 
-                tokenAux.getCurrentStep() < tokenAux.getStepMap().getStep_size() && !tokenAux.isIdle()) {
+                tokenAux->getCurrentStep() < tokenAux->getStepMap().getStep_size() && !tokenAux->isIdle()) {
 
 //                        tokenAux.error_site_collision_check(); // TODO retirar
 //                        tokenAux.error_edge_collision_check();
 
 
-            solutionAux.nextPlanningUpdate(tokenAux, [&tokenAux](const _ga_agent* agent, const _task * task) {
+            solutionAux.nextPlanningUpdate(*tokenAux, [tokenAux](const _ga_agent* agent, const _task * task) {
 
                 if (task != nullptr) {
 
-                    return tokenAux.updateAgentTaskPath(agent->id(), task->id());
+                    return tokenAux->updateAgentTaskPath(agent->id(), task->id());
 
                 } else {
 
-                    return tokenAux.updateAgentTaskPath(agent->id(), INT_MIN);
+                    return tokenAux->updateAgentTaskPath(agent->id(), INT_MIN);
 
                 }
 
@@ -52,13 +52,17 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_real_of::evals(const _ga_t
             
 //            if(tokenAux.isIdle()) break;
 
-            tokenAux.stepping();
+            tokenAux->stepping();
 //            count++;
 
         }
+        
+        
 
-        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::makespan, tokenAux.GetMaxPlannedStep()));
-        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::energy, tokenAux.energyExpenditure()));
+        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::makespan, tokenAux->GetMaxPlannedStep()));
+        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::energy, tokenAux->energyExpenditure()));
+        
+        delete tokenAux;
         
 //        std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
 //        std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);

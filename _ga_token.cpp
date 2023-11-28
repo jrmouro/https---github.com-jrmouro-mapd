@@ -477,11 +477,17 @@ bool _ga_token::updateAgentTaskPath_pendingTask(_ga_agent& agent, int newTaskId,
     
     if (newAgentPath.isTrivial()) {
 
-        _stepSite future = agent.currentSite();
+        _stepSite future = newAgentPath.currentSite();
         future.SetStep(future.GetStep() + 1);
         newAgentPath.progress(future);
+        
+//        if(future.GetStep() >= 1000){
+//            std::cout << "aqui";
+//        }
 
     }
+    
+    
 
     agent.assignPath(newAgentPath);
     stepMap.setMoving(newAgentPath, agent.id());
@@ -1073,6 +1079,10 @@ bool _ga_token::updateAgentTaskPath(
                 } else if (agent.isAtResting()) {
                     
 //                    std::cout << "agent.isAtResting() : "<< std::endl;
+                    
+//                    if(agent.currentSite().GetStep() >= 999){
+//                        std::cout << "aqui";
+//                    }
 
                     return updateAgentTaskPath_resting(agent, newTaskId);
 

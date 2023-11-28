@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 
-df = pd.read_csv('./small_closed_result_ep_0_2_10.csv',sep=';')
+df = pd.read_csv('./Monografia/TP/small_result_TP.csv',sep=';')
 
 df['token_name'] = df['token_name'].map(lambda x: x.upper())
 df['mapFilename'] = df['mapFilename'].map(lambda x: Path(x).name.upper())

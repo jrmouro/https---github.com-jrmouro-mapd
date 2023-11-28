@@ -40,15 +40,15 @@ void test(
     
 
     
-    unsigned myints[] = {
-        1258,7365,77179,201234,
-        145,2345,97679,231234,
-        1753,9845,77679,591234,
-        1685,2345,87679,297234,
-        101,3045,67609,899234,
-        17,8885,70679,291734};
+//    unsigned myints[] = {
+//        1258,7365,77179,201234,
+//        145,2345,97679,231234,
+//        1753,9845,77679,591234,
+//        1685,2345,87679,297234,
+//        101,3045,67609,899234,
+//        17,8885,70679,291734};
     
-//    unsigned myints[] = {2345};
+    unsigned myints[] = {2345};
     
     std::vector<unsigned> seeds (myints, myints + sizeof(myints) / sizeof(unsigned));    
     
@@ -86,9 +86,9 @@ void test(
             
     }
         
-    taskFilenames.push_back("./Instances/test/test_1.task");
-    taskFilenames.push_back("./Instances/test/test_20.task");
-    taskFilenames.push_back("./Instances/test/test_82.task");
+//    taskFilenames.push_back("./Instances/test/test_1.task");
+//    taskFilenames.push_back("./Instances/test/test_20.task");
+//    taskFilenames.push_back("./Instances/test/test_82.task");
     taskFilenames.push_back("./Instances/test/test_136.task");
     
     
@@ -238,8 +238,8 @@ void small(int map = 0,
 //        101,3045,67609,899234,
 //        17,8885,70679,291734};
     
-    unsigned myints[] = {
-        158,7365,70179,291234};
+    unsigned myints[] = {158,7365,70179,291234};
+    
     
     std::vector<unsigned> seeds (myints, myints + sizeof(myints) / sizeof(unsigned));
     
@@ -372,7 +372,6 @@ void small(int map = 0,
         tokenIds.push_back("TP");
         tokenIds.push_back("TTP");
         tokenIds.push_back("BTT");
-//        tokenIds.push_back("TSTP");
         
     } else {
             
@@ -412,12 +411,12 @@ void small(int map = 0,
  */
 int main(int argc, char** argv) {
     
-    char* instance = "small";
-    char* of = "TP"; // * -> all obj func
+    char* instance = "test";
+    char* of = "GP-R"; // * -> all obj func
     
     unsigned evaltype = 2;
     unsigned validity = 5000;    
-    int map_index = 0; // 0 -> all maps
+    int map_index = 5; // 0 -> all maps
     
     if(argc > 1){
         instance = argv[1];

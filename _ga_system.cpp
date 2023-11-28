@@ -5,6 +5,8 @@
  * Created on 9 de outubro de 2023, 13:44
  */
 
+#include <chrono>
+
 #include "_ga_system.h"
 #include "_ga_token.h"
 #include "_stepMap.h"
@@ -30,7 +32,7 @@ _ga_system::~_ga_system(){
 }
 
 bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){ 
-    
+        
     if(token.getCurrentStep() < token.getStepMap().getStep_size()/* && !(taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())*/){
         
 //        token.error_site_collision_check(); // TODO retirar
@@ -52,16 +54,15 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
 //            token.getStepMap().stepView(token.getCurrentStep());
                 
         if(allocation == nullptr){
-
+            
             allocation = agentsTasksAllocator.borrow(token);
             allocation->revalidate();
-            
+                        
 //            std::cout << "first allocation" << std::endl;
 //            std::cout << "current step: " << token.getCurrentStep() << std::endl;
 //            std::cout << "solution: " << *((_ga_solution*)allocation) << std::endl;
 
         } else if(addNewTask) {
-            
             
             agentsTasksAllocator.giveBack(allocation);              
             allocation = agentsTasksAllocator.borrow(token);
@@ -113,6 +114,8 @@ bool _ga_system::step(const _taskMap& taskMap, _ga_token& token){
 
 
 void _ga_system::run(const _taskMap& taskMap, _ga_token& token){    
+    
+//    int count = 0, vcount = 0;
         
     while(token.getCurrentStep() < token.getStepMap().getStep_size()/* && !(taskMap.getLastTask() < token.getCurrentStep() && token.isIdle())*/){
         
@@ -135,9 +138,22 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
 //            token.getStepMap().stepView(token.getCurrentStep());
         
         if(allocation == nullptr){
+            
+//            count++;
+//            
+//            std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+//
+//            std::cout << count << " - " << token.getCurrentStep() << " - new task allocation count.... ";
 
             allocation = agentsTasksAllocator.borrow(token);
             allocation->revalidate();
+            
+//            std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();            
+//            std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+//            
+//            std::cout << time_span.count() << std::endl;
+            
+            
             
 //            std::cout << "first allocation" << std::endl;
 //            std::cout << "current step: " << token.getCurrentStep() << std::endl;
@@ -145,9 +161,21 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
 
         } else if(addNewTask) {
             
+//            count++;
+//            
+//            std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+//
+//            std::cout << count << " - " << token.getCurrentStep() << " - new task allocation count.... ";
+
+            
             agentsTasksAllocator.giveBack(allocation);              
             allocation = agentsTasksAllocator.borrow(token);
             allocation->revalidate();
+            
+//            std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();            
+//            std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+//            
+//            std::cout << time_span.count() << std::endl;
             
 //            std::cout << "new task allocation" << std::endl;
 //            std::cout << "current step: " << token.getCurrentStep() << std::endl;
@@ -155,9 +183,20 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
 
         } else if(!allocation->isValid()){
             
+//            vcount++;
+//
+//            std::cout << vcount << " - validity allocation count.... ";
+//
+//            std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+            
             agentsTasksAllocator.giveBack(allocation);              
             allocation = agentsTasksAllocator.borrow(token);
             allocation->revalidate();
+            
+//            std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();            
+//            std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+//            
+//            std::cout << time_span.count() << std::endl;
             
 //            std::cout << "revalid allocation" << std::endl;
 //            std::cout << "current step: " << token.getCurrentStep() << std::endl;

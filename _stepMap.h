@@ -467,43 +467,58 @@ public:
 
     }
     
-    void checkRowColunm(unsigned row, unsigned column)const{
+    void checkRowColunm(unsigned step, unsigned row, unsigned column)const{
         
-        if (row < row_size){
-            
-            if(column < colunm_size){
-                
-                return;
-                
-            } else {
-                
+        if(step < step_size){
+        
+                if (row < row_size){
+
+                    if(column < colunm_size){
+
+                        return;
+
+                    } else {
+
+                        try {
+                            std::ostringstream stream;
+                            stream << "invalid colunm: " << column;
+                            MAPD_EXCEPTION(stream.str());
+                        } catch (std::exception& e) {
+                            std::cout << e.what() << std::endl;
+                            std::abort();
+                        }
+
+                    }
+
+                }
+
                 try {
                     std::ostringstream stream;
-                    stream << "invalid colunm: " << column;
+                    stream << "invalid row: " << row;
                     MAPD_EXCEPTION(stream.str());
                 } catch (std::exception& e) {
                     std::cout << e.what() << std::endl;
                     std::abort();
-                }
+                } 
                 
-            }
+        } else {
+            
+            try {
+            std::ostringstream stream;
+            stream << "invalid step: " << step;
+            MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            } 
             
         }
-        
-        try {
-            std::ostringstream stream;
-            stream << "invalid row: " << row;
-            MAPD_EXCEPTION(stream.str());
-        } catch (std::exception& e) {
-            std::cout << e.what() << std::endl;
-            std::abort();
-        }       
         
     }
     
     bool isPathDefinitelyFree(unsigned step, unsigned row, unsigned column, int type) const {
        
-        checkRowColunm(row, column);
+        checkRowColunm(step, row, column);
         
         unsigned index = row * colunm_size + column;
                 
@@ -527,7 +542,7 @@ public:
     
     void setTypesFrom(unsigned fromStep, unsigned row, unsigned column, int from,  int to) {
 
-        checkRowColunm(row, column);
+        checkRowColunm(fromStep, row, column);
         
         unsigned index = row * colunm_size + column;
         
@@ -596,7 +611,7 @@ public:
                     
                     max_step[index] = 0;
                 
-                    for (int s = fromStep; s > 0; s--) {
+                    for (int s = fromStep; s >= 0; s--) {
 
                         if(this->nodes[s * nodes_product + index] != NodeType::freeNode){
 
@@ -617,7 +632,7 @@ public:
     
     void resetTypesInStepColunm(unsigned row, unsigned column, int type) {
         
-        checkRowColunm(row, column); 
+        checkRowColunm(0, row, column); 
         
         int step = 0;
         this->nodes[step++ * nodes_product + row * colunm_size + column] = type;

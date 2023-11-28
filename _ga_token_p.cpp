@@ -335,6 +335,10 @@ bool _ga_token_p::updateAgentTaskPath(
                 } else  if (agent.isAtResting()) {
                     
 //                    std::cout << "agent.isAtResting() : "<< std::endl;
+                    
+//                    if(agent.currentSite().GetStep() >= 999){
+//                        std::cout << "aqui";
+//                    }
 
                     return updateAgentTaskPath_resting(agent, newTaskId);
 
