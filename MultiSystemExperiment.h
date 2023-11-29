@@ -86,19 +86,7 @@ public:
                     return false;
                 });
                 
-                
-//                imap->resetTaskEndpoint();
-                
-//                auto itasks = InstanceTask::load(taskFilename, [&imap](unsigned id){
-//                    return *imap->getMap().getNoBotEndPointById(id);
-//                });
-//
-//                itasks->getTaskMap().listTasks([&imap](unsigned step, const _task& task){       
-//                    imap->setTaskEndpoint(task.getPickup().GetRow(), task.getPickup().GetColunm());
-//                    imap->setTaskEndpoint(task.getDelivery().GetRow(), task.getDelivery().GetColunm());            
-//                    return false;
-//                });
-                
+                                
                 std::vector<_token*> ptokens;
                 std::vector<_ga_token*> p_ga_tokens;
                 
@@ -112,7 +100,7 @@ public:
 
                         }
                     
-                    } else if(tokenId == "GAT_P"){
+                    } else if(tokenId == "GATP"){
                         
                         for (auto agent_energy_system : agent_energy_systems) {
                             

@@ -22,7 +22,7 @@ _ga_token* _ga_token_p::getClone()const{
 }
 
 std::string _ga_token_p::id() const {
-    return "GAT_P";
+    return "GATP";
 }
 
 bool _ga_token_p::updateAgentTaskPath_pendingTask(_ga_agent& agent, int newTaskId, bool trivialPath){

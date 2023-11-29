@@ -48,7 +48,8 @@ void test(
 //        101,3045,67609,899234,
 //        17,8885,70679,291734};
     
-    unsigned myints[] = {2345};
+    unsigned myints[] = {1258, 7365};
+    
     
     std::vector<unsigned> seeds (myints, myints + sizeof(myints) / sizeof(unsigned));    
     
@@ -57,7 +58,12 @@ void test(
     std::vector<_agent_energy_system> agent_energy_systems;
     std::vector<_agentsTasksAllocator*> agentsTasksAllocators;
     
-    thresholds.push_back(std::make_pair(.8f, .8f));    
+    thresholds.push_back(std::make_pair(1.0f, 1.0f));
+    thresholds.push_back(std::make_pair(.8f, .8f));
+    thresholds.push_back(std::make_pair(.5f, .5f));
+    thresholds.push_back(std::make_pair(.3f, .3f));
+    thresholds.push_back(std::make_pair(.8f, .3f));
+    thresholds.push_back(std::make_pair(.3f, .8f));   
     
     switch(map){
         
@@ -86,9 +92,9 @@ void test(
             
     }
         
-//    taskFilenames.push_back("./Instances/test/test_1.task");
-//    taskFilenames.push_back("./Instances/test/test_20.task");
-//    taskFilenames.push_back("./Instances/test/test_82.task");
+    taskFilenames.push_back("./Instances/test/test_1.task");
+    taskFilenames.push_back("./Instances/test/test_20.task");
+    taskFilenames.push_back("./Instances/test/test_82.task");
     taskFilenames.push_back("./Instances/test/test_136.task");
     
     
@@ -104,6 +110,7 @@ void test(
     _task_path task_path;
     
     _ga_real_of ga_real_of;
+    _ga_estimate_of_path_collision ga_estimate_of_path_collision(task_path, 1, 1, 2);
     _ga_estimate_of_path_count ga_estimate_of_path_count(task_path, 1, 1, 2);
     _ga_estimate_of_path_check ga_estimate_of_path_check(task_path, 2, 2, 6);
     
@@ -111,42 +118,54 @@ void test(
 //        
     _ga_solutionAllocator ga_solutionAllocator("Greedy", validity);
                     
+    _nsga nsga_estimative_path_collision(
+            "coll",
+            select_solution,
+            ga_estimate_of_path_collision,
+            [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
+                
+//                 return time_span.count() > 5.0 || generation > 99;
+                 return generation > 29;
+                
+            },
+            12, 6,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
+            
     _nsga nsga_estimative_path_count(
-            "GA_count",
+            "count",
             select_solution,
             ga_estimate_of_path_count,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                 
 //                 return time_span.count() > 5.0 || generation > 99;
-                 return generation > 49;
+                 return generation > 29;
                 
             },
-            20, 10,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
+            12, 6,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
             
             
     _nsga nsga_estimative_path_check(
-            "GA_check",
+            "check",
             select_solution,
             ga_estimate_of_path_check,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                 
 //                 return time_span.count() > 5.0 || generation > 99;
-                 return generation > 49;
+                 return generation > 29;
                 
             },
-            20, 10,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
+            12, 6,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
                             
     _nsga nsga_real(
-            "GA_real",
+            "real",
             select_solution,
             ga_real_of,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
                 
 //                 return time_span.count() > 5.0 || generation > 99;
-                 return generation > 49;
+                 return generation > 29;
                 
             },
-            20, 10,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
+            12, 6,  validity, .5f, .5f, .5f, .3f,  .3f, 1);
             
     if(of == "G-G"){
 
@@ -155,18 +174,21 @@ void test(
         
     } else if(of == "GP-G"){
         
-        tokenIds.push_back("GAT_P");
+        tokenIds.push_back("GATP");
         agentsTasksAllocators.push_back(&ga_solutionAllocator);     
         
     } else if(of == "G-E"){
         
         tokenIds.push_back("GAT");
+        agentsTasksAllocators.push_back(&ga_solutionAllocator);    
+        agentsTasksAllocators.push_back(&nsga_estimative_path_collision);
         agentsTasksAllocators.push_back(&nsga_estimative_path_count); 
         agentsTasksAllocators.push_back(&nsga_estimative_path_check);   
         
     } else if(of == "GP-E"){
         
-        tokenIds.push_back("GAT_P"); 
+        tokenIds.push_back("GATP"); 
+        agentsTasksAllocators.push_back(&nsga_estimative_path_collision);
         agentsTasksAllocators.push_back(&nsga_estimative_path_count); 
         agentsTasksAllocators.push_back(&nsga_estimative_path_check);   
         
@@ -177,7 +199,7 @@ void test(
         
     } else if(of == "GP-R"){
         
-        tokenIds.push_back("GAT_P");
+        tokenIds.push_back("GATP");
         agentsTasksAllocators.push_back(&nsga_real);
         
     } else if(of == "TP"){
@@ -189,9 +211,10 @@ void test(
     } else {
             
         tokenIds.push_back("GAT");
-        tokenIds.push_back("GAT_P");
+        tokenIds.push_back("GATP");
         tokenIds.push_back("TP");
         tokenIds.push_back("TTP");
+        tokenIds.push_back("BTT");
         agentsTasksAllocators.push_back(&ga_solutionAllocator);
         agentsTasksAllocators.push_back(&nsga_estimative_path_count);
         agentsTasksAllocators.push_back(&nsga_estimative_path_check);
@@ -249,6 +272,10 @@ void small(int map = 0,
     std::vector<_agentsTasksAllocator*> agentsTasksAllocators;   
     
     thresholds.push_back(std::make_pair(.8f, .8f));
+    thresholds.push_back(std::make_pair(.5f, .5f));
+    thresholds.push_back(std::make_pair(.3f, .3f));
+    thresholds.push_back(std::make_pair(.8f, .3f));
+    thresholds.push_back(std::make_pair(.3f, .8f));
     
     switch(map){
         case 1:
@@ -302,7 +329,7 @@ void small(int map = 0,
     _ga_solutionAllocator ga_solutionAllocator("Greedy", validity);
                 
     _nsga nsga_estimative_path_count(
-            "GA_count",
+            "count",
             select_solution,
             ga_estimate_of_path_count,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
@@ -313,7 +340,7 @@ void small(int map = 0,
             },  20,   10,  validity, .5f, .5f, .5f,  .3f,  .3f, 1);
             
     _nsga nsga_estimative_path_check(
-            "GA_check",
+            "check",
             select_solution,
             ga_estimate_of_path_check,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
@@ -324,7 +351,7 @@ void small(int map = 0,
             },  20,   10,  validity, .5f, .5f, .5f,  .3f,  .3f, 1);
                             
     _nsga nsga_real(
-            "GA_real",
+            "real",
             select_solution,
             ga_real_of,
             [](const _ga_solution& solution, unsigned generation, const std::chrono::duration<double>& time_span){ 
@@ -342,7 +369,7 @@ void small(int map = 0,
         
     } else if(of == "GP-G"){
         
-        tokenIds.push_back("GAT_P");
+        tokenIds.push_back("GATP");
         agentsTasksAllocators.push_back(&ga_solutionAllocator);     
         
     } else if(of == "G-E"){
@@ -353,7 +380,7 @@ void small(int map = 0,
         
     } else if(of == "GP-E"){
         
-        tokenIds.push_back("GAT_P"); 
+        tokenIds.push_back("GATP"); 
         agentsTasksAllocators.push_back(&nsga_estimative_path_count); 
         agentsTasksAllocators.push_back(&nsga_estimative_path_check);   
         
@@ -364,7 +391,7 @@ void small(int map = 0,
         
     } else if(of == "GP-R"){
         
-        tokenIds.push_back("GAT_P");
+        tokenIds.push_back("GATP");
         agentsTasksAllocators.push_back(&nsga_real);
         
     } else if(of == "TP"){
@@ -376,9 +403,10 @@ void small(int map = 0,
     } else {
             
         tokenIds.push_back("GAT");
-        tokenIds.push_back("GAT_P");
+        tokenIds.push_back("GATP");
         tokenIds.push_back("TP");
         tokenIds.push_back("TTP");
+        tokenIds.push_back("BTT");
         agentsTasksAllocators.push_back(&ga_solutionAllocator);
         agentsTasksAllocators.push_back(&nsga_estimative_path_count);
         agentsTasksAllocators.push_back(&nsga_estimative_path_check);
@@ -406,17 +434,105 @@ void small(int map = 0,
     
 }
 
+void small_tp(int map = 0, 
+    _ga_solution::EvalType evaltype = _ga_solution::EvalType::balanced, 
+    unsigned validity = 1000000){
+    
+    std::string resultFile =  
+            "./results/small_tp_result_" + std::to_string(map) + ".csv";
+    
+    
+    std::vector<std::string> mapFilenames, taskFilenames, tokenIds;
+    std::vector<std::pair<float, float>> thresholds;    
+    std::vector<_agent_energy_system> agent_energy_systems;
+    std::vector<_agentsTasksAllocator*> agentsTasksAllocators;  
+    std::vector<unsigned> seeds;
+    
+    thresholds.push_back(std::make_pair(1.0f, 1.0f));
+    thresholds.push_back(std::make_pair(.8f, .8f));
+    thresholds.push_back(std::make_pair(.5f, .5f));
+    thresholds.push_back(std::make_pair(.3f, .3f));
+    thresholds.push_back(std::make_pair(.8f, .3f));
+    thresholds.push_back(std::make_pair(.3f, .8f));
+    
+    switch(map){
+        case 1:
+            mapFilenames.push_back("./Instances/small/kiva-10-500-5.map");
+            break;
+        case 2:
+            mapFilenames.push_back("./Instances/small/kiva-20-500-5.map");
+            break;
+        case 3:
+            mapFilenames.push_back("./Instances/small/kiva-30-500-5.map");
+            break;
+        case 4:
+            mapFilenames.push_back("./Instances/small/kiva-40-500-5.map");
+        break;
+        case 5:
+            mapFilenames.push_back("./Instances/small/kiva-50-500-5.map");
+        break;
+        default:
+            mapFilenames.push_back("./Instances/small/kiva-10-500-5.map");
+            mapFilenames.push_back("./Instances/small/kiva-20-500-5.map");
+            mapFilenames.push_back("./Instances/small/kiva-30-500-5.map");
+            mapFilenames.push_back("./Instances/small/kiva-40-500-5.map");
+            mapFilenames.push_back("./Instances/small/kiva-50-500-5.map");
+    }
+    
+    taskFilenames.push_back("./Instances/small/kiva-0.2.task");
+    taskFilenames.push_back("./Instances/small/kiva-0.5.task");
+    taskFilenames.push_back("./Instances/small/kiva-1.task");
+    taskFilenames.push_back("./Instances/small/kiva-2.task");
+    taskFilenames.push_back("./Instances/small/kiva-5.task");
+    taskFilenames.push_back("./Instances/small/kiva-10.task");
+    taskFilenames.push_back("./Instances/small/kiva-500.task");
+    
+    
+    _energy_charge<int> ec_1(80000000, 80000000, 60000000, 4000000);
+    
+    _agent_energy_regime aer_1("R_1", -20, 1, 3, 2, 10);
+    
+    _agent_energy_system aes_1("E_1", ec_1, aer_1);
+    
+    agent_energy_systems.push_back(aes_1);
+        
+        
+    tokenIds.push_back("TP");
+    tokenIds.push_back("TTP");
+    tokenIds.push_back("BTT");
+        
+   
+    auto experiment = MultiSystemExperiment(
+        resultFile,
+        seeds,
+        tokenIds,
+        thresholds,
+        taskFilenames,                      
+        mapFilenames,                      
+        agent_energy_systems,  
+        agentsTasksAllocators,
+        500,
+        46,                               
+        0);                              
+           
+    experiment.run();
+    
+    _updateTokenAlgorithms::deleteInstance();
+    
+    
+}
+
 /*
  * 
  */
 int main(int argc, char** argv) {
     
     char* instance = "test";
-    char* of = "GP-R"; // * -> all obj func
+    char* of = "G-E"; // * -> all obj func
     
     unsigned evaltype = 2;
     unsigned validity = 5000;    
-    int map_index = 5; // 0 -> all maps
+    int map_index = 0; // 0 -> all maps
     
     if(argc > 1){
         instance = argv[1];
@@ -440,6 +556,10 @@ int main(int argc, char** argv) {
     if(str == "test"){
         
         test(map_index, ofs, (_ga_solution::EvalType)evaltype, validity);
+        
+    }else if(str == "small_tp"){
+        
+        small_tp(map_index);
         
     }else if(str == "small"){
         

@@ -36,7 +36,7 @@ public:
     virtual std::string name() const {
         
         std::stringstream s;
-        s << "BTT(" << delivery_threshold << ")["<< _token::name() << "]"; 
+        s << "BTT(" << delivery_threshold << ")";//["<< _token::name() << "]"; 
         
         return s.str();
         

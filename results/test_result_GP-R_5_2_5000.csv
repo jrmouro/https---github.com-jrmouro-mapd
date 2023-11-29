@@ -1,2 +1,0 @@
-mapFilename;taskFilename;step_size;row_size;col_size;num_bots;num_endpoints;last_step;num_tasks;token_id;token_name;current_step;energy system id;energy expenditure;finished_tasks;time(s);
-./Instances/test/test_5.map;./Instances/test/test_136.task;1000;5;9;5;19;136;28;GAT_P;GAT_P(GA_real);152;ES_1(R_1);2073;28;5.398367;

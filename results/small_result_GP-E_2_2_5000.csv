@@ -1,3 +1,0 @@
-mapFilename;taskFilename;step_size;row_size;col_size;num_bots;num_endpoints;last_step;num_tasks;token_id;token_name;current_step;energy system id;energy expenditure;finished_tasks;time(s);
-./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-500.task;5000;21;35;20;322;1;500;GAT_P;GAT_P(GA_count);638;E_1(R_1);101363;500;97.857465;
-./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-500.task;5000;21;35;20;322;1;500;GAT_P;GAT_P(GA_check);638;E_1(R_1);101363;500;95.520763;

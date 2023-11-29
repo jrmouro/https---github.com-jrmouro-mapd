@@ -36,10 +36,12 @@ public:
     
     virtual std::string name() const {
         
-        std::stringstream s;
-        s << "TSTP[" << _token::name() << "]"; 
+//        std::stringstream s;
+//        s << "TSTP[" << _token::name() << "]"; 
+//        
+//        return s.str();
         
-        return s.str();
+        return "TSTP";
         
     }
     

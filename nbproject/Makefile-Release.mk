@@ -122,13 +122,15 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 TESTFILES= \
 	${TESTDIR}/TestFiles/f3 \
 	${TESTDIR}/TestFiles/f2 \
-	${TESTDIR}/TestFiles/f1
+	${TESTDIR}/TestFiles/f1 \
+	${TESTDIR}/TestFiles/f4
 
 # Test Object Files
 TESTOBJECTFILES= \
 	${TESTDIR}/tests/newsimpletest2.o \
 	${TESTDIR}/tests/newsimpletest3.o \
-	${TESTDIR}/tests/newsimpletest4.o
+	${TESTDIR}/tests/newsimpletest4.o \
+	${TESTDIR}/tests/newsimpletest5.o
 
 # C Compiler Flags
 CFLAGS=
@@ -568,6 +570,10 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/newsimpletest2.o ${OBJECTFILES:%.o=%_n
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc} -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS}   
 
+${TESTDIR}/TestFiles/f4: ${TESTDIR}/tests/newsimpletest5.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc} -o ${TESTDIR}/TestFiles/f4 $^ ${LDLIBSOPTIONS}   
+
 
 ${TESTDIR}/tests/newsimpletest4.o: tests/newsimpletest4.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
@@ -585,6 +591,12 @@ ${TESTDIR}/tests/newsimpletest2.o: tests/newsimpletest2.cpp
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -I. -std=c++14 -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest2.o tests/newsimpletest2.cpp
+
+
+${TESTDIR}/tests/newsimpletest5.o: tests/newsimpletest5.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -I. -std=c++14 -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest5.o tests/newsimpletest5.cpp
 
 
 ${OBJECTDIR}/Circle_nomain.o: ${OBJECTDIR}/Circle.o Circle.cpp 
@@ -1621,6 +1633,7 @@ ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp
 	    ${TESTDIR}/TestFiles/f3 || true; \
 	    ${TESTDIR}/TestFiles/f2 || true; \
 	    ${TESTDIR}/TestFiles/f1 || true; \
+	    ${TESTDIR}/TestFiles/f4 || true; \
 	else  \
 	    ./${TEST} || true; \
 	fi

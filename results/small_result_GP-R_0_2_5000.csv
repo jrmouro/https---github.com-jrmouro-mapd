@@ -1,0 +1,11 @@
+mapFilename;taskFilename;step_size;row_size;col_size;num_bots;num_endpoints;last_step;num_tasks;token_id;token_name;current_step;energy system id;energy expenditure;finished_tasks;time(s);
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;10;312;2496;500;GATP;GATP(real);2515;E_1(R_1);117911;500;5221.387742;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;10;312;2496;500;GATP;GATP(real);2514;E_1(R_1);117921;500;6555.072428;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;10;312;2496;500;GATP;GATP(real);2520;E_1(R_1);118508;500;6695.718301;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;10;312;2496;500;GATP;GATP(real);2529;E_1(R_1);119395;500;7436.929500;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.5.task;5000;21;35;10;312;999;500;GATP;GATP(real);1370;E_1(R_1);104376;500;7092.562852;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.5.task;5000;21;35;10;312;999;500;GATP;GATP(real);1375;E_1(R_1);104252;500;7698.363951;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.5.task;5000;21;35;10;312;999;500;GATP;GATP(real);1335;E_1(R_1);103633;500;9517.287126;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-0.5.task;5000;21;35;10;312;999;500;GATP;GATP(real);1372;E_1(R_1);104107;500;10342.748226;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-1.task;5000;21;35;10;312;500;500;GATP;GATP(real);1287;E_1(R_1);101556;500;12507.024379;
+./Instances/small/kiva-10-500-5.map;./Instances/small/kiva-1.task;5000;21;35;10;312;500;500;GATP;GATP(real);1300;E_1(R_1);101031;500;12032.719250;

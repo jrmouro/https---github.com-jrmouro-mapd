@@ -1,0 +1,13 @@
+mapFilename;taskFilename;step_size;row_size;col_size;num_bots;num_endpoints;last_step;num_tasks;token_id;token_name;current_step;energy system id;energy expenditure;finished_tasks;time(s);
+./Instances/test/test_4.map;./Instances/test/test_1.task;1000;5;9;4;18;1;28;TP;TP[ES_1(R_1)];78;ES_1(R_1);1802;28;0.006885;
+./Instances/test/test_4.map;./Instances/test/test_1.task;1000;5;9;4;18;1;28;TTP;TTP(0.8 : 0.8)[ES_1(R_1)];73;ES_1(R_1);1585;28;0.007265;
+./Instances/test/test_4.map;./Instances/test/test_1.task;1000;5;9;4;18;1;28;BTT;BTT(0.8)[ES_1(R_1)];73;ES_1(R_1);1649;28;0.006236;
+./Instances/test/test_4.map;./Instances/test/test_20.task;1000;5;9;4;18;20;28;TP;TP[ES_1(R_1)];70;ES_1(R_1);1671;28;0.004539;
+./Instances/test/test_4.map;./Instances/test/test_20.task;1000;5;9;4;18;20;28;TTP;TTP(0.8 : 0.8)[ES_1(R_1)];74;ES_1(R_1);1680;28;0.006558;
+./Instances/test/test_4.map;./Instances/test/test_20.task;1000;5;9;4;18;20;28;BTT;BTT(0.8)[ES_1(R_1)];71;ES_1(R_1);1633;30;0.003948;
+./Instances/test/test_4.map;./Instances/test/test_82.task;1000;5;9;4;18;82;28;TP;TP[ES_1(R_1)];97;ES_1(R_1);1822;28;0.004603;
+./Instances/test/test_4.map;./Instances/test/test_82.task;1000;5;9;4;18;82;28;TTP;TTP(0.8 : 0.8)[ES_1(R_1)];98;ES_1(R_1);1831;28;0.004873;
+./Instances/test/test_4.map;./Instances/test/test_82.task;1000;5;9;4;18;82;28;BTT;BTT(0.8)[ES_1(R_1)];97;ES_1(R_1);1822;28;0.004969;
+./Instances/test/test_4.map;./Instances/test/test_136.task;1000;5;9;4;18;136;28;TP;TP[ES_1(R_1)];155;ES_1(R_1);2061;28;0.005255;
+./Instances/test/test_4.map;./Instances/test/test_136.task;1000;5;9;4;18;136;28;TTP;TTP(0.8 : 0.8)[ES_1(R_1)];154;ES_1(R_1);2106;28;0.005753;
+./Instances/test/test_4.map;./Instances/test/test_136.task;1000;5;9;4;18;136;28;BTT;BTT(0.8)[ES_1(R_1)];152;ES_1(R_1);2026;32;0.005326;

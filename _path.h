@@ -97,11 +97,7 @@ public:
     
     const _site& currentSite() const{
         
-        if(!this->sites.empty()){   
-            
-            return this->sites.back();
-            
-        } else {
+        if(this->sites.empty()){ 
             
              try {
                 std::ostringstream stream;
@@ -112,7 +108,10 @@ public:
                 std::abort();
             }
             
-        }     
+        }   
+        
+        return this->sites.back();
+        
     }
     
     _site pop(){
@@ -168,6 +167,16 @@ public:
     void rlist(const std::function<bool(const _site&)>& function) const {
         
         for(std::vector<_site>::const_reverse_iterator it = sites.crbegin(); it != sites.crend(); it++){
+            
+            if(function(*it)) return;
+            
+        }
+        
+    }
+    
+    void rlistOffset(unsigned offset, const std::function<bool(const _site&)>& function) const {
+        
+        for(std::vector<_site>::const_reverse_iterator it = sites.crbegin() + offset; it != sites.crend(); it++){
             
             if(function(*it)) return;
             
