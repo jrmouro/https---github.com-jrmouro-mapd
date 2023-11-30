@@ -343,6 +343,7 @@
           <standard>10</standard>
         </cTool>
         <ccTool>
+          <developmentMode>6</developmentMode>
           <standard>11</standard>
         </ccTool>
         <linkerTool>

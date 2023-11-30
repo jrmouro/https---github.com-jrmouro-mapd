@@ -187,19 +187,46 @@ void _nsga::expand_population(
         n_children--;
         
         if(n_children > 0){
+            
             children_pool[n_children - 1] = children.second.first;
             n_children--;
-        } else { break; }
+            
+        } else { 
+            
+            delete children.second.first;
+            delete children.first.second;
+            delete children.second.second;
+            
+            break; 
+        
+        }
         
         if(n_children > 0){
+            
             children_pool[n_children - 1] = children.first.second;
             n_children--;
-        } else { break; }
+            
+        } else { 
+            
+            delete children.first.second;
+            delete children.second.second;
+            
+            break; 
+        
+        }
         
         if(n_children > 0){
+            
             children_pool[n_children - 1] = children.second.second;
             n_children--;
-        } else { break; }
+            
+        } else { 
+            
+            delete children.second.second;
+            
+            break; 
+            
+        }
         
     }
     
