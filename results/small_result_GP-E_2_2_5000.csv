@@ -67,3 +67,8 @@ mapFilename;taskFilename;step_size;row_size;col_size;num_bots;num_endpoints;last
 ./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;20;322;2496;500;GATP;GATP(check);2528;E_1(R_1);143304;500;13.849375;
 ./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;20;322;2496;500;GATP;GATP(check);2529;E_1(R_1);143015;500;9.589632;
 ./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;20;322;2496;500;GATP;GATP(check);2549;E_1(R_1);144668;500;9.189485;
+./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;20;322;2496;500;GATP;GATP(check);2536;E_1(R_1);142790;500;8.985429;
+./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;20;322;2496;500;GATP;GATP(check);2520;E_1(R_1);142747;500;8.815159;
+./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;20;322;2496;500;GATP;GATP(check);2518;E_1(R_1);142888;500;9.527600;
+./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;20;322;2496;500;GATP;GATP(check);2520;E_1(R_1);142487;500;8.998791;
+./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.5.task;5000;21;35;20;322;999;500;GATP;GATP(coll);1080;E_1(R_1);119151;500;17.714168;
