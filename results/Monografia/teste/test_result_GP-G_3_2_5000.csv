@@ -1,5 +1,0 @@
-mapFilename;taskFilename;step_size;row_size;col_size;num_bots;num_endpoints;last_step;num_tasks;token_id;token_name;current_step;energy system id;energy expenditure;finished_tasks;time(s);
-./Instances/test/test_3.map;./Instances/test/test_1.task;1000;5;9;3;17;1;28;GAT_P;GAT_P(Greedy);87;ES_1(R_1);1638;28;0.007182;
-./Instances/test/test_3.map;./Instances/test/test_20.task;1000;5;9;3;17;20;28;GAT_P;GAT_P(Greedy);87;ES_1(R_1);1649;28;0.006922;
-./Instances/test/test_3.map;./Instances/test/test_82.task;1000;5;9;3;17;82;28;GAT_P;GAT_P(Greedy);100;ES_1(R_1);1674;28;0.004750;
-./Instances/test/test_3.map;./Instances/test/test_136.task;1000;5;9;3;17;136;28;GAT_P;GAT_P(Greedy);159;ES_1(R_1);1814;28;0.005385;

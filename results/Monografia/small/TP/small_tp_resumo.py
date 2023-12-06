@@ -10,7 +10,7 @@ df['token_name'] = df['token_name'].map(lambda x: x.upper())
 df['mapFilename'] = df['mapFilename'].map(lambda x: Path(x).name.upper())
 df['taskFilename'] = df['taskFilename'].map(lambda x: Path(x).name.upper())
 
-df2 = df[["mapFilename","taskFilename","token_name","current_step","energy expenditure"]]
+df2 = df[["mapFilename","taskFilename","token_name","current_step","energy expenditure", "time(s)", "finished_tasks"]]
 
 
 
@@ -20,21 +20,19 @@ df2["taskFilename"]= df2["taskFilename"].str.split("-", n = 1, expand = False).s
 
 df2 = df2.rename(
     columns={
-        'mapFilename': 'Nº Agentes', 
-        'taskFilename': 'Frenquência', 
+        'mapFilename': 'Ag', 
+        'taskFilename': 'F', 
         'current_step': 'Makespan', 
         'energy expenditure': 'Energia',
-        'token_name': 'Token'
+        'token_name': 'Token',
+        'time(s)':'time',
+        "finished_tasks": "tasks"
         })
 
 
-print(df2)
+df4 = df2.groupby(["F", "Ag", "Token"]).agg({'Makespan':np.median, 'Energia':np.median, 'time': np.median, 'tasks': np.median}).round(3).reset_index()
 
-df2["Energia"] = df2["Energia"] / df2["Energia"].max() 
-
-df4 = df2.groupby(["Nº Agentes","Frenquência","Token"]).agg({'Makespan':np.median, 'Energia':np.median}).round(3).reset_index()
-
-df5 = df4.pivot_table(["Makespan","Energia"], ["Nº Agentes","Frenquência"], 'Token')
+df5 = df4.pivot_table(["Makespan","Energia", "time", "tasks"], ["F", "Ag"], 'Token')
 
 print(df5)
 

@@ -511,7 +511,7 @@ _ga_solution& _ga_solution::operator=(const _ga_solution& right) {
 
 std::ostream& operator<<(std::ostream& os, const _ga_solution& obj) {
 
-    os << (_ga_pseudo_solution&) obj;
+//    os << (_ga_pseudo_solution&) obj;
 
     if (obj.isEvaluated()) {
 
@@ -523,29 +523,29 @@ std::ostream& operator<<(std::ostream& os, const _ga_solution& obj) {
         os << "is not evaluated" << std::endl;
 
     }
-    if (obj.isAllocated()) {
-
-        os << "allocation:" << std::endl;
-
-        for (auto alloc : obj.allocation_map) {
-
-            os << *alloc.first << ": ";
-
-            for (auto task : alloc.second) {
-
-                os << task->id() << ", ";
-
-            }
-
-            os << std::endl;
-
-        }
-
-    } else {
-
-        os << "is not allocated" << std::endl;
-
-    }
+//    if (obj.isAllocated()) {
+//
+//        os << "allocation:" << std::endl;
+//
+//        for (auto alloc : obj.allocation_map) {
+//
+//            os << *alloc.first << ": ";
+//
+//            for (auto task : alloc.second) {
+//
+//                os << task->id() << ", ";
+//
+//            }
+//
+//            os << std::endl;
+//
+//        }
+//
+//    } else {
+//
+//        os << "is not allocated" << std::endl;
+//
+//    }
 
     return os;
 

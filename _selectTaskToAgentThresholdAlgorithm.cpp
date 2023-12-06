@@ -2,6 +2,8 @@
 #include "_token.h"
 #include "_thresholdAlgorithm.h"
 
+#include <limits>
+
 #include "_taskPathToAgentAlgorithm.h"
 #include "_taskIndexerAlgorithm.h"
 
@@ -53,6 +55,7 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
     bool aux = false;
     _task auxTask;
     _stepPath auxPath;
+    float best_dist = std::numeric_limits<float>::max();
 
     for (auto task : vtask) {
 
@@ -83,26 +86,23 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
             _stepPath taskPath(selectedPath);
 
             _stepSite pickupSite, deliverySite;
+            unsigned pickup_step = 0, delivery_step = 0;
+            float pickupRate = .0, deliveryRate = .0;
 
             flag = taskPathToAgentAlgorithm.solve(token, agent, selectedTask, taskPath, pickupSite, deliverySite);
 
             if (flag) {
                 
-                //Guarda para uso futuro
-                aux = true;
-                auxTask = task;
-                auxPath = taskPath;
+                pickup_step = pickupSite.GetStep() - taskPath.currentSite().GetStep();
                 
-                unsigned step = pickupSite.GetStep() - taskPath.currentSite().GetStep();
-
-                flag = thresholdAlgorithm.solve(taskPath.currentSite(), selectedTask.getPickup(), step, pickup_threshold);
-
+                flag = thresholdAlgorithm.solve(taskPath.currentSite(), selectedTask.getPickup(), pickup_step, pickup_threshold, pickupRate);
+                
                 if (flag) {
 
-                    step = taskPath.goalSite().GetStep() - pickupSite.GetStep();
-
-                    flag = thresholdAlgorithm.solve(selectedTask.getPickup(), selectedTask.getDelivery(), step, delivery_threshold);
-
+                    delivery_step = taskPath.goalSite().GetStep() - pickupSite.GetStep();
+                                        
+                    flag = thresholdAlgorithm.solve(selectedTask.getPickup(), selectedTask.getDelivery(), delivery_step, delivery_threshold, deliveryRate);
+                    
                     if (flag) {
 
                         flag = agent.isAbleToFulfillTaskPath(token.getMap(), selectedTask, taskPath);
@@ -119,8 +119,30 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
                     }
 
                 }
+                
+            }            
+            
+            if(!aux){
 
-            }
+                aux = true;
+                auxTask = task;
+                auxPath = taskPath;
+                best_dist = pickupRate * pickup_step + deliveryRate * delivery_step;
+
+            } else {
+                
+                float best_dist_aux = pickupRate * pickup_step + deliveryRate * delivery_step;
+                
+                if(best_dist_aux < best_dist){
+                    
+                    auxTask = task;
+                    auxPath = taskPath;
+                    best_dist = best_dist_aux;
+                    
+                }                
+
+            }              
+                
 
         }
 

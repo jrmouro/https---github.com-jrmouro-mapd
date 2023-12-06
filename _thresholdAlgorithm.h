@@ -65,9 +65,11 @@ public:
         
     }
     
-    virtual bool solve(const _site& s1, const _site& s2, unsigned size, float threshold) const {
+    virtual bool solve(const _site& s1, const _site& s2, unsigned size, float threshold, float& rate) const {
         
-        return threshold <= solve(s1, s2, size);
+        rate = solve(s1, s2, size);
+        
+        return threshold <= rate;
         
     }
     

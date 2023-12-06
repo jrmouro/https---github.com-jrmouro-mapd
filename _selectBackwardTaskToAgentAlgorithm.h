@@ -27,6 +27,7 @@ public:
     _selectBackwardTaskToAgentAlgorithm(    
         const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm, 
         _taskIndexerAlgorithm& taskIndexerAlgorithm,
+        float pickup_threshold,
         float delivery_threshold);
 
     _selectBackwardTaskToAgentAlgorithm(const _selectBackwardTaskToAgentAlgorithm& other);
@@ -48,10 +49,14 @@ public:
         this->delivery_threshold = delivery_threshold;
     }
     
+    void setPickup_threshold(float pickup_threshold) {
+        this->pickup_threshold = pickup_threshold;
+    }
+    
         
 protected:
     
-    float   delivery_threshold;
+    float   pickup_threshold, delivery_threshold;
         
     const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm;
     _taskIndexerAlgorithm& taskIndexerAlgorithm;

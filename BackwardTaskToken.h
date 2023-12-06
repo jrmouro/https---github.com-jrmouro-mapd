@@ -18,13 +18,16 @@ public:
             const _map& map, 
             const _stepMap& stepMap, 
             const _agent_energy_system& agent_energy_system,
+            float pickup_threshold,
             float delivery_threshold,
             unsigned task_threshold) :
                 TokenPass(map, stepMap, agent_energy_system, task_threshold),
+                pickup_threshold(pickup_threshold),
                 delivery_threshold(delivery_threshold) { }
     
     BackwardTaskToken(const BackwardTaskToken& other) : 
                 TokenPass(other), 
+                pickup_threshold(other.pickup_threshold),
                 delivery_threshold(other.delivery_threshold){ }
 
     virtual ~BackwardTaskToken(){}
@@ -36,7 +39,7 @@ public:
     virtual std::string name() const {
         
         std::stringstream s;
-        s << "BTT(" << delivery_threshold << ")";//["<< _token::name() << "]"; 
+        s << "BTT(" << pickup_threshold << ":" << delivery_threshold << ")";//["<< _token::name() << "]"; 
         
         return s.str();
         
@@ -50,7 +53,7 @@ public:
     
     virtual _token::TokenUpdateType updatePath(_agent& agent){
         
-        auto uta = _updateTokenAlgorithms::getInstance(task_threshold, .0f, delivery_threshold);
+        auto uta = _updateTokenAlgorithms::getInstance(task_threshold, pickup_threshold, delivery_threshold);
                         
         TokenUpdateType ret = TokenUpdateType::none;
     
@@ -108,7 +111,7 @@ public:
     
     virtual _token::TokenUpdateType updateChargingPath(_agent& agent){
         
-        auto uta = _updateTokenAlgorithms::getInstance(task_threshold, .0f, delivery_threshold);
+        auto uta = _updateTokenAlgorithms::getInstance(task_threshold, pickup_threshold, delivery_threshold);
         
         TokenUpdateType ret = TokenUpdateType::none;
     
@@ -165,13 +168,17 @@ public:
 
     }
     
+    void setPickup_threshold(float pickup_threshold) {
+        this->pickup_threshold = pickup_threshold;
+    }
+    
     void setDelivery_threshold(float delivery_threshold) {
         this->delivery_threshold = delivery_threshold;
     }
     
 private:
     
-    float delivery_threshold;
+    float pickup_threshold, delivery_threshold;
 
 };
 

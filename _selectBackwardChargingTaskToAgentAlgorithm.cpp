@@ -20,10 +20,12 @@ _selectBackwardChargingTaskToAgentAlgorithm::_selectBackwardChargingTaskToAgentA
         const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm,
         _taskIndexerAlgorithm& taskIndexerAlgorithm,
         _endpointIndexerAlgorithm& endpointIndexerAlgorithm,
+        float pickup_threshold,
         float delivery_threshold) :
             _selectBackwardTaskToAgentAlgorithm(
                 taskPathToAgentAlgorithm,
                 taskIndexerAlgorithm,
+                pickup_threshold,
                 delivery_threshold),
         endpointIndexerAlgorithm(endpointIndexerAlgorithm) {}
 
@@ -131,8 +133,10 @@ bool _selectBackwardChargingTaskToAgentAlgorithm::solve(
                                 if (ret) {
 
                                     unsigned step = site.GetStep() - pickupSite.GetStep();
+                                    
+                                    float deliveryRate;
 
-                                    ret = thresholdAlgorithm.solve(pickupSite, site, step, this->delivery_threshold);
+                                    ret = thresholdAlgorithm.solve(pickupSite, site, step, this->delivery_threshold, deliveryRate);
 
                                     if (ret) {
 

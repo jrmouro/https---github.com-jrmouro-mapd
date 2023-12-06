@@ -68,14 +68,18 @@ bool _selectChargingTaskToAgentThresholdAlgorithm::solve(
                 if (flag) {
 
                     unsigned step = pickupSite.GetStep() - taskPath.currentSite().GetStep();
+                    
+                    float pickupRate;
 
-                    flag = thresholdAlgorithm.solve(taskPath.currentSite(), selectedTask.getPickup(), step, pickup_threshold);
+                    flag = thresholdAlgorithm.solve(taskPath.currentSite(), selectedTask.getPickup(), step, pickup_threshold, pickupRate);
 
                     if (flag) {
 
                         step = taskPath.goalSite().GetStep() - pickupSite.GetStep();
+                        
+                        float deliveryRate;
 
-                        flag = thresholdAlgorithm.solve(selectedTask.getPickup(), selectedTask.getDelivery(), step, delivery_threshold);
+                        flag = thresholdAlgorithm.solve(selectedTask.getPickup(), selectedTask.getDelivery(), step, delivery_threshold, deliveryRate);
 
                         if (flag) {
 

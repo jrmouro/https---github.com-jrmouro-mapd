@@ -65,6 +65,8 @@
             <itemPath>_ga_estimate_of_path_collision.h</itemPath>
             <itemPath>_ga_estimate_of_path_count.cpp</itemPath>
             <itemPath>_ga_estimate_of_path_count.h</itemPath>
+            <itemPath>_ga_estimate_of_path_task_endpoint.cpp</itemPath>
+            <itemPath>_ga_estimate_of_path_task_endpoint.h</itemPath>
             <itemPath>_ga_objective_function.cpp</itemPath>
             <itemPath>_ga_objective_function.h</itemPath>
             <itemPath>_ga_real_of.cpp</itemPath>
@@ -584,6 +586,16 @@
       <item path="_ga_estimate_of_path_count.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_estimate_of_path_count.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_estimate_of_path_task_endpoint.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_ga_estimate_of_path_task_endpoint.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="_ga_objective_function.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1156,6 +1168,16 @@
       <item path="_ga_estimate_of_path_count.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_estimate_of_path_count.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_ga_estimate_of_path_task_endpoint.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="_ga_estimate_of_path_task_endpoint.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="_ga_objective_function.cpp" ex="false" tool="1" flavor2="0">
       </item>

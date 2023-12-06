@@ -60,7 +60,9 @@ public:
             instance->selectChargingTaskToAgentThresholdAlgorithm->setPickup_threshold(pickup_threshold);
 
             instance->selectBackwardTaskToAgentAlgorithm->setDelivery_threshold(delivery_threshold);
+            instance->selectBackwardTaskToAgentAlgorithm->setPickup_threshold(pickup_threshold);
             instance->selectBackwardChargingTaskToAgentAlgorithm->setDelivery_threshold(delivery_threshold);
+            instance->selectBackwardChargingTaskToAgentAlgorithm->setPickup_threshold(pickup_threshold);
                                         
         }
                         

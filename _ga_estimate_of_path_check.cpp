@@ -21,12 +21,9 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
         }
         
         _astarAlgorithm astar;
+        _task_path task_path;
 
-        unsigned 
-                makespan = 0, 
-                msp_penalty = 0, 
-                energy = 0, 
-                eng_penalty = 0;
+        unsigned makespan = 0, energy = 0;
         
         std::set<const _ga_agent*> currentAgents;
         
@@ -37,16 +34,22 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
         int index = 0;
         for (auto const& alloc_pair1 : solution.allocation_map) {
             
+            _site initialSite;
+            
+            if(current){
+                initialSite = alloc_pair1.first->currentSite();
+            } else {
+                initialSite = alloc_pair1.first->goalSite();
+            }
+            
             auto it = agentPaths.insert(
                 std::pair<const _ga_agent*, _path>(
                     alloc_pair1.first, 
-                    _path(_site(
-                        alloc_pair1.first->goalSite().GetRow(), 
-                        alloc_pair1.first->goalSite().GetColunm()))));
+                    _path(initialSite)));
             
             if(!alloc_pair1.second.empty()){
                                     
-                bool flag = astar.solve(token.getMap(), alloc_pair1.first->goalSite(), alloc_pair1.second[0]->getPickup(), it.first->second);
+                bool flag = astar.solve(token.getMap(), initialSite, alloc_pair1.second[0]->getPickup(), it.first->second);
 
                 if(flag){
                     
@@ -88,7 +91,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
             task_path.listSites(
                 token.getMap().getEndpointsPathAlgorithm(),
                 alloc_pair1.second, 
-                0,
+                1,
                 pickup_span,
                 delivary_span,
                 [&token, &paths, &types, &energy, index](const _task_path::PathType& type, const _site& site, const _task* t1, const _task* t2){
@@ -116,7 +119,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
             
         }
         
-        unsigned pckp = 0, dlvy = 0;
+        double pckp = .0, dlvy = .0, spanp = .0;
         
         for (int i = 0; i < paths.size(); i++) {
                         
@@ -128,13 +131,15 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
                         
                         if(paths[j][k]->match(*paths[i][k])){
                             
+                            spanp = spanp + makespan_penalty /*/ (k+1)*/;
+                            
                             if(types[j][k] == _task_path::PathType::pickup){
                                 
-                                pckp++;
+                                pckp = pckp + (pickup_energy_penalty  /*/ (k+1)*/);
                                 
                             } else {
                                 
-                                dlvy++;
+                                dlvy = dlvy + (delivery_energy_penalty  /*/ (k+1)*/);
                                 
                             }
                             
@@ -150,13 +155,15 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
                         
                         if(paths[j][k]->match(*paths[i][k])){
                             
+                            spanp = spanp + makespan_penalty  /*/ (k+1)*/;
+                            
                             if(types[j][k] == _task_path::PathType::pickup){
                                 
-                                pckp++;
+                                pckp = pckp + (pickup_energy_penalty  /*/ (k+1)*/);
                                 
                             } else {
                                 
-                                dlvy++;
+                                dlvy = dlvy + (delivery_energy_penalty  /*/ (k+1)*/);
                                 
                             }
                             
@@ -170,15 +177,10 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
 
             }
 
-        }
-        
-        eng_penalty += (pckp * pickup_energy_penalty) + (dlvy * delivery_energy_penalty);
-
-        msp_penalty += (pckp + dlvy) * makespan_penalty;
-                                
+        }                                
                     
-        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::makespan, makespan + msp_penalty));
-        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::energy, energy + eng_penalty));
+        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::makespan, makespan + (unsigned)spanp));
+        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::energy, energy + (unsigned)pckp + (unsigned)dlvy));
                 
     }
     

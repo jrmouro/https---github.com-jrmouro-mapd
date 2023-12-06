@@ -14,14 +14,14 @@
 class _ga_estimate_of_path_collision : public _ga_objective_function{
 public:
     
-    _ga_estimate_of_path_collision(const _task_path& task_path, unsigned makespan_penalty, unsigned pickup_energy_penalty, unsigned delivery_energy_penalty) :
-            task_path(task_path), 
+    _ga_estimate_of_path_collision(bool current, unsigned makespan_penalty, unsigned pickup_energy_penalty, unsigned delivery_energy_penalty) :
+            current(current), 
             makespan_penalty(makespan_penalty), 
             pickup_energy_penalty(pickup_energy_penalty), 
             delivery_energy_penalty(delivery_energy_penalty) { }
     
     _ga_estimate_of_path_collision(const _ga_estimate_of_path_collision& other) :
-            task_path(other.task_path), 
+            current(other.current), 
             makespan_penalty(other.makespan_penalty), 
             pickup_energy_penalty(other.pickup_energy_penalty), 
             delivery_energy_penalty(other.delivery_energy_penalty) { }
@@ -30,9 +30,9 @@ public:
 
 private:
         
-    const _task_path& task_path;
+    const bool current;
     
-    unsigned 
+    const unsigned 
                 makespan_penalty,
                 pickup_energy_penalty,
                 delivery_energy_penalty;

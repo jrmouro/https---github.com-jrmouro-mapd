@@ -226,8 +226,8 @@ void _ga_system::run(const _taskMap& taskMap, _ga_token& token){
         
     }
     
-//    ((_ga_solution*)allocation)->evaluate(token);
-//     std::cout << "sistem allocation" << std::endl;
+    
+//    std::cout << "sistem allocation" << std::endl;
 //    std::cout << "current step: " << token.getCurrentStep() << std::endl;
 //    std::cout << "solution: "  << std::endl << *((_ga_solution*)allocation) << std::endl;
     

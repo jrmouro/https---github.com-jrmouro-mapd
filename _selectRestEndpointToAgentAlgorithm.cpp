@@ -8,8 +8,10 @@ bool _selectRestEndpointToAgentAlgorithm::solve(
         _site& selectedNewSite,
         _stepPath& selectedPath) const {
 
-    bool flag = token.isTaskEndpoint(agent.currentSite());
-
+//    bool flag = token.isTaskEndpoint(agent.currentSite());
+    
+    bool flag = token.isTaskPendingDeliveryEndpoint(agent.currentSite());
+    
     if (flag) {
 
         std::vector<_site> vsite;

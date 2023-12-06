@@ -14,19 +14,22 @@
 #include "_agent.h"
 #include "_task.h"
 #include "_stepPath.h"
+#include <limits>
 
 _selectBackwardTaskToAgentAlgorithm::_selectBackwardTaskToAgentAlgorithm(
         const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm,
         _taskIndexerAlgorithm& taskIndexerAlgorithm,
-        float delivery_threshold) :
+        float pickup_threshold,float delivery_threshold) :
             taskPathToAgentAlgorithm(taskPathToAgentAlgorithm),
             taskIndexerAlgorithm(taskIndexerAlgorithm),
+            pickup_threshold(pickup_threshold),
             delivery_threshold(delivery_threshold){}
 
 _selectBackwardTaskToAgentAlgorithm::_selectBackwardTaskToAgentAlgorithm(
         const _selectBackwardTaskToAgentAlgorithm& other) :
             taskPathToAgentAlgorithm(other.taskPathToAgentAlgorithm),
             taskIndexerAlgorithm(other.taskIndexerAlgorithm),
+            pickup_threshold(other.pickup_threshold),
             delivery_threshold(other.delivery_threshold){}
 
 void _selectBackwardTaskToAgentAlgorithm::setTaskIndexerAlgorithm(
@@ -60,7 +63,8 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
     
     bool aux = false;
     _task auxTask;
-    _stepPath auxPath;
+    _stepPath auxPath;    
+    float best_dist = std::numeric_limits<float>::max();
 
     for (auto task : vtask) {
 
@@ -91,17 +95,17 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
             _stepPath taskPath(selectedPath);
 
             _stepSite pickupSite, deliverySite;
+            
+            unsigned pickup_step = 0;
+            float pickupRate = .0;
 
             ret = taskPathToAgentAlgorithm.solve(token, agent, originalTask, taskPath, pickupSite, deliverySite);
+            
+            pickup_step = pickupSite.GetStep() - taskPath.currentSite().GetStep();
+                
+            thresholdAlgorithm.solve(taskPath.currentSite(), originalTask.getPickup(), pickup_step, pickup_threshold, pickupRate);
 
             if (ret) {
-                
-                //Guarda para uso futuro
-                aux = true;
-                auxTask = task;
-                auxPath = taskPath;
-                
-//                if(task.id() < 0) continue;
                 
                 taskPath.backward(
                         [&ret, &token, agent, &taskPath, thresholdAlgorithm, 
@@ -135,8 +139,10 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
                         if (ret) {
 
                             unsigned step = site.GetStep() - pickupSite.GetStep();
+                            
+                            float deliveryRate;
 
-                            ret = thresholdAlgorithm.solve(pickupSite, site, step, this->delivery_threshold);
+                            ret = thresholdAlgorithm.solve(pickupSite, site, step, this->delivery_threshold, deliveryRate);
 
                             if (ret) {
 
@@ -176,15 +182,38 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
                             }
 
                         }
-                        
-                        
-
+                       
                     }
 
                     return false;
 
-                });                
+                }); 
                 
+            }
+            
+            if(!ret){
+            
+                float best_dist_aux = pickupRate * pickup_step;
+
+                if(!aux){
+
+                    aux = true;
+                    auxTask = task;
+                    auxPath = taskPath; 
+                    best_dist = best_dist_aux;
+
+                } else {
+
+                    if(best_dist_aux < best_dist){
+
+                        auxTask = task;
+                        auxPath = taskPath;
+                        best_dist = best_dist_aux;
+
+                    } 
+
+                }
+            
             }
 
         }

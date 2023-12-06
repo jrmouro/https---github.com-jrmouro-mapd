@@ -77,6 +77,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ga_estimate_of_path_check.o \
 	${OBJECTDIR}/_ga_estimate_of_path_collision.o \
 	${OBJECTDIR}/_ga_estimate_of_path_count.o \
+	${OBJECTDIR}/_ga_estimate_of_path_task_endpoint.o \
 	${OBJECTDIR}/_ga_objective_function.o \
 	${OBJECTDIR}/_ga_population.o \
 	${OBJECTDIR}/_ga_pseudo_solution.o \
@@ -365,6 +366,11 @@ ${OBJECTDIR}/_ga_estimate_of_path_count.o: _ga_estimate_of_path_count.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_count.o _ga_estimate_of_path_count.cpp
+
+${OBJECTDIR}/_ga_estimate_of_path_task_endpoint.o: _ga_estimate_of_path_task_endpoint.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint.o _ga_estimate_of_path_task_endpoint.cpp
 
 ${OBJECTDIR}/_ga_objective_function.o: _ga_objective_function.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -1143,6 +1149,19 @@ ${OBJECTDIR}/_ga_estimate_of_path_count_nomain.o: ${OBJECTDIR}/_ga_estimate_of_p
 	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_count_nomain.o _ga_estimate_of_path_count.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_estimate_of_path_count.o ${OBJECTDIR}/_ga_estimate_of_path_count_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ga_estimate_of_path_task_endpoint_nomain.o: ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint.o _ga_estimate_of_path_task_endpoint.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint_nomain.o _ga_estimate_of_path_task_endpoint.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint.o ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_ga_objective_function_nomain.o: ${OBJECTDIR}/_ga_objective_function.o _ga_objective_function.cpp 

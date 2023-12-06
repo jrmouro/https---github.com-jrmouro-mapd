@@ -69,12 +69,14 @@ _updateTokenAlgorithms::_updateTokenAlgorithms(
     selectBackwardTaskToAgentAlgorithm = new _selectBackwardTaskToAgentAlgorithm(
             *taskPathToAgentAlgorithm, 
             *this->taskIndexerAlgorithm, 
+            pickup_threshold,
             delivery_threshold);
     
     selectBackwardChargingTaskToAgentAlgorithm = new _selectBackwardChargingTaskToAgentAlgorithm(
             *taskPathToAgentAlgorithm, 
             *this->taskIndexerAlgorithm, 
             *this->endpointIndexerAlgorithm,
+            pickup_threshold,
             delivery_threshold);
     
     selectTaskSwapToAgentAlgorithm = new _selectTaskSwapToAgentAlgorithm(

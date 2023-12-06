@@ -15,17 +15,17 @@ class _ga_estimate_of_path_check : public _ga_objective_function{
 public:
     
     _ga_estimate_of_path_check(
-            const _task_path& task_path, 
+            bool current, 
             unsigned makespan_penalty, 
             unsigned pickup_energy_penalty,
             unsigned delivery_energy_penalty) :
-                task_path(task_path), 
+                current(current), 
                 makespan_penalty(makespan_penalty),
                 pickup_energy_penalty(pickup_energy_penalty), 
                 delivery_energy_penalty(delivery_energy_penalty){ }
 
     _ga_estimate_of_path_check(const _ga_estimate_of_path_check& other) :
-                task_path(other.task_path), 
+                current(other.current), 
                 makespan_penalty(other.makespan_penalty), 
                 pickup_energy_penalty(other.pickup_energy_penalty),
                 delivery_energy_penalty(other.delivery_energy_penalty){ }
@@ -35,7 +35,7 @@ public:
 
 private:
         
-    const _task_path& task_path;
+    const bool current;
     
     unsigned 
                 makespan_penalty,

@@ -20,6 +20,7 @@ public:
     const _taskPathToAgentAlgorithm& taskPathToAgentAlgorithm, 
             _taskIndexerAlgorithm& taskIndexerAlgorithm,
             _endpointIndexerAlgorithm& endpointIndexerAlgorithm,
+            float pickup_threshold,
             float delivery_threshold);
     
     _selectBackwardChargingTaskToAgentAlgorithm(

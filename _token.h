@@ -361,7 +361,7 @@ public:
     
     void listPendingTasks(const std::function<bool(const _task&)> function)const{
         
-        for (auto taskPair : pendingTasks) {
+        for (auto const& taskPair : pendingTasks) {
             
             if(function(taskPair.second))return;
 
@@ -371,7 +371,7 @@ public:
     
     void listAssignedTasks(const std::function<bool(const _task&)> function)const{
         
-        for (auto taskPair : assignedTasks) {
+        for (auto const& taskPair : assignedTasks) {
             
             if(function(taskPair.second))return;
 
@@ -381,13 +381,13 @@ public:
     
     void listNoRunningYetTasks(const std::function<bool(const _task&)> function)const{
         
-        for (auto taskPair : pendingTasks) {
+        for (auto const& taskPair : pendingTasks) {
             
             if(function(taskPair.second))return;
 
         }
         
-        for (auto taskPair : assignedTasks) {
+        for (auto const& taskPair : assignedTasks) {
             
             if(function(taskPair.second))return;
 
@@ -397,7 +397,7 @@ public:
     
     void listTaskDeliveryEndpoints(const std::function<bool(const _site&)> function)const{
         
-        for (auto pendpoint : taskEndpoints) {
+        for (auto const& pendpoint : taskEndpoints) {
             
             if(function(pendpoint.second))return;
 
@@ -407,12 +407,24 @@ public:
     
     void listNonTaskDeliveryEndpoints(const std::function<bool(const _site&)> function)const{
         
-        for (auto pendpoint : nonTaskDeliveryEndpoints) {
+        for (auto const& pendpoint : nonTaskDeliveryEndpoints) {
             
             if(function(pendpoint.second))return;
 
         }
 
+    }
+    
+    bool isTaskPendingDeliveryEndpoint(const _site& site) const {
+        
+        for(auto const& taskPair: pendingTasks){
+            
+            if(site.match(taskPair.second.getDelivery())) return true;
+            
+        }
+        
+        return false;
+        
     }
     
     bool isTaskEndpoint(const _site& site) const {
@@ -664,7 +676,7 @@ private:
     
     unsigned currentStep = 0;
     int new_task_ids = -1;    
-    _map map;
+    const _map& map;
     _stepMap stepMap;        
     _agent_energy_system agent_energy_system;
     

@@ -92,9 +92,10 @@ public:
 private:
     friend class _ga_real_of;
     friend class _ga_estimate_of;
-    friend class _ga_estimate_of_path_count;
-    friend class _ga_estimate_of_path_check;
-    friend class _ga_estimate_of_path_collision;
+//    friend class _ga_estimate_of_path_count;
+//    friend class _ga_estimate_of_path_check;
+//    friend class _ga_estimate_of_path_collision;
+//    friend class _ga_estimate_of_path_task_endpoint;
     std::map<EvalType, unsigned> evals;
     
 private:
@@ -102,6 +103,7 @@ private:
     friend class _ga_estimate_of_path_count;
     friend class _ga_estimate_of_path_check;
     friend class _ga_estimate_of_path_collision;
+    friend class _ga_estimate_of_path_task_endpoint;
     std::map<const _ga_agent*,std::vector<const _task*>> allocation_map;
     
 private:

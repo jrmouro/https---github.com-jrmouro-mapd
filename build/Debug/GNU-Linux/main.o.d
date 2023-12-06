@@ -32,7 +32,8 @@ build/Debug/GNU-Linux/main.o: main.cpp MultiSystemExperiment.h \
  _ga_solutionAllocator.h _ga_balanced_solution.h _ga_select_solution.h \
  _ga_objective_function.h _nsga.h _ga_real_of.h _ga_estimate_of.h \
  _task_path.h _ga_estimate_of_path_count.h _ga_estimate_of_path_check.h \
- _ga_estimate_of_path_collision.h _ga_best_solution_selector.h
+ _ga_estimate_of_path_collision.h _ga_estimate_of_path_task_endpoint.h \
+ _ga_best_solution_selector.h
 MultiSystemExperiment.h:
 SystemExperiment.h:
 Experiment.h:
@@ -128,4 +129,5 @@ _task_path.h:
 _ga_estimate_of_path_count.h:
 _ga_estimate_of_path_check.h:
 _ga_estimate_of_path_collision.h:
+_ga_estimate_of_path_task_endpoint.h:
 _ga_best_solution_selector.h:

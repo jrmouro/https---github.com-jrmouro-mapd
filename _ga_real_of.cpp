@@ -15,7 +15,7 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_real_of::evals(const _ga_t
     if(!solution.isEvaluated()){
         
 //        std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-        
+                
         if(!solution.isAllocated()){
             
             solution.alloc(token);
@@ -24,6 +24,8 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_real_of::evals(const _ga_t
         
         _ga_token* tokenAux = token.getClone();
         _ga_solution solutionAux(solution);
+        
+               
 
         unsigned count = 0;
         

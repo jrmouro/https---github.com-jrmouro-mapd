@@ -160,15 +160,19 @@ public:
                 task_vector, 
                     [&function, offset, &count, &flag, &pickup_span, &delivary_span](const PathType& type, const _path& path, const _task* current, const _task* next){
                         
-                        if(type == PathType::pickup){
+//                        if(count >= offset){
                             
-                            pickup_span += path.size();
+                            if(type == PathType::pickup){
+
+                                pickup_span += path.size();
+
+                            } else {
+
+                                delivary_span += path.size();
+
+                            }
                             
-                        } else {
-                            
-                            delivary_span += path.size();
-                            
-                        }
+//                        }
                         
                         bool flag2 = false;
                         
