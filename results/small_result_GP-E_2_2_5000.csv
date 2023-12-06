@@ -6,3 +6,6 @@ mapFilename;taskFilename;step_size;row_size;col_size;num_bots;num_endpoints;last
 ./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;20;322;2496;500;GATP;GATP(task);2525;ES_1(R_1);115208;500;7.871049;
 ./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;20;322;2496;500;GATP;GATP(task);2527;ES_1(R_1);115086;500;6.113104;
 ./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;20;322;2496;500;GATP;GATP(task);2534;ES_1(R_1);114914;500;5.812558;
+./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;20;322;2496;500;GATP;GATP(task);2527;ES_1(R_1);114774;500;4.240262;
+./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;20;322;2496;500;GATP;GATP(task);2513;ES_1(R_1);114494;500;3.953546;
+./Instances/small/kiva-20-500-5.map;./Instances/small/kiva-0.2.task;5000;21;35;20;322;2496;500;GATP;GATP(task);2524;ES_1(R_1);114762;500;3.872233;
