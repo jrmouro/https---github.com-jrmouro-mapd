@@ -14,7 +14,6 @@
 #include "_ga_balanced_solution.h"
 #include "_nsga.h"
 #include "_ga_real_of.h"
-#include "_ga_estimate_of.h"
 #include "_task_path.h"
 #include "_ga_estimate_of_path_count.h"
 #include "_ga_estimate_of_path_check.h"
@@ -41,6 +40,8 @@ void test(
     
 
     
+//    unsigned myints[] = {8885};
+    
     unsigned myints[] = {
         1258,7365,77179,201234,
         145,2345,97679,231234,
@@ -49,7 +50,7 @@ void test(
         1685,2345,87679,297234,
         101,3045,67609,899234,
         17,8885,70679,291734};
-        
+            
     
     std::vector<unsigned> seeds (myints, myints + sizeof(myints) / sizeof(unsigned));    
     
@@ -79,6 +80,9 @@ void test(
             break;
         case 5:
             mapFilenames.push_back("./Instances/test/test_5.map");
+            break;            
+        case 13:
+            mapFilenames.push_back("./Instances/test/test_prob.map");
             break;
         default:
             
@@ -93,9 +97,9 @@ void test(
     taskFilenames.push_back("./Instances/test/test_0.2.task");
     taskFilenames.push_back("./Instances/test/test_0.5.task");
     taskFilenames.push_back("./Instances/test/test_1.task");
-    taskFilenames.push_back("./Instances/test/test_2.task");    
+    taskFilenames.push_back("./Instances/test/test_2.task");    ;
     taskFilenames.push_back("./Instances/test/test_5.task");
-//    taskFilenames.push_back("./Instances/test/test_28.task");
+//    taskFilenames.push_back("./Instances/test/test_prob.task");
     
     
     _energy_charge<int> ec_1(20000, 20000, 15000, 3000);
@@ -277,20 +281,25 @@ void test(
         
     } else {
             
-//        tokenIds.push_back("GAT");
-//        tokenIds.push_back("GATP");
-//        tokenIds.push_back("TP");
-//        tokenIds.push_back("TTP");
-//        tokenIds.push_back("BTT");
-//        agentsTasksAllocators.push_back(&ga_solutionAllocator);
-//        agentsTasksAllocators.push_back(&nsga_estimative_path_collision_p);
-//        agentsTasksAllocators.push_back(&nsga_estimative_path_count_p);
-//        agentsTasksAllocators.push_back(&nsga_estimative_path_check_p);
-//        agentsTasksAllocators.push_back(&ga_solutionAllocator);
-//        agentsTasksAllocators.push_back(&nsga_estimative_path_collision);
-//        agentsTasksAllocators.push_back(&nsga_estimative_path_count);
-//        agentsTasksAllocators.push_back(&nsga_estimative_path_check);
-//        agentsTasksAllocators.push_back(&nsga_real);   
+        tokenIds.push_back("GAT");
+        tokenIds.push_back("GATP");
+        tokenIds.push_back("TP");
+        tokenIds.push_back("TTP");
+        tokenIds.push_back("BTT");
+        
+        agentsTasksAllocators.push_back(&ga_solutionAllocator);
+        
+        agentsTasksAllocators.push_back(&nsga_estimative_path_task_endpoint_p);
+        agentsTasksAllocators.push_back(&nsga_estimative_path_collision_p);
+        agentsTasksAllocators.push_back(&nsga_estimative_path_count_p); 
+        agentsTasksAllocators.push_back(&nsga_estimative_path_check_p); 
+        
+        agentsTasksAllocators.push_back(&nsga_estimative_path_task_endpoint);
+        agentsTasksAllocators.push_back(&nsga_estimative_path_collision);
+        agentsTasksAllocators.push_back(&nsga_estimative_path_count); 
+        agentsTasksAllocators.push_back(&nsga_estimative_path_check); 
+        
+        agentsTasksAllocators.push_back(&nsga_real);   
         
     }
           
@@ -304,7 +313,7 @@ void test(
         agent_energy_systems,              
         agentsTasksAllocators,
         500,
-        60,                               
+        100,                               
         0);                              
            
     experiment.run();
@@ -319,7 +328,7 @@ void small(int map = 0,
     unsigned validity = 1000000){
     
     std::string resultFile =  
-            "./results/small_result_" + of 
+            "./results/_small_result_" + of 
             + "_" + std::to_string(map)
             + "_" + std::to_string((unsigned)evaltype) 
             + "_" + std::to_string(validity) 
@@ -345,13 +354,13 @@ void small(int map = 0,
     std::vector<_agent_energy_system> agent_energy_systems;
     std::vector<_agentsTasksAllocator*> agentsTasksAllocators;   
     
-    thresholds.push_back(std::make_pair(1.0f, 1.0f));
+//    thresholds.push_back(std::make_pair(1.0f, 1.0f));
     thresholds.push_back(std::make_pair(.8f, .8f));
-    thresholds.push_back(std::make_pair(.5f, .5f));
-    thresholds.push_back(std::make_pair(.3f, .3f));
-    thresholds.push_back(std::make_pair(.8f, .3f));
-    thresholds.push_back(std::make_pair(.3f, .8f));
-    thresholds.push_back(std::make_pair(.0f, .0f));
+//    thresholds.push_back(std::make_pair(.5f, .5f));
+//    thresholds.push_back(std::make_pair(.3f, .3f));
+//    thresholds.push_back(std::make_pair(.8f, .3f));
+//    thresholds.push_back(std::make_pair(.3f, .8f));
+//    thresholds.push_back(std::make_pair(.0f, .0f));
     
     switch(map){
         case 1:
@@ -377,11 +386,11 @@ void small(int map = 0,
             mapFilenames.push_back("./Instances/small/kiva-50-500-5.map");
     }
     
-    taskFilenames.push_back("./Instances/small/kiva-0.2.task");
-    taskFilenames.push_back("./Instances/small/kiva-0.5.task");
-    taskFilenames.push_back("./Instances/small/kiva-1.task");
-    taskFilenames.push_back("./Instances/small/kiva-2.task");
-    taskFilenames.push_back("./Instances/small/kiva-5.task");
+//    taskFilenames.push_back("./Instances/small/kiva-0.2.task");
+//    taskFilenames.push_back("./Instances/small/kiva-0.5.task");
+//    taskFilenames.push_back("./Instances/small/kiva-1.task");
+//    taskFilenames.push_back("./Instances/small/kiva-2.task");
+//    taskFilenames.push_back("./Instances/small/kiva-5.task");
     taskFilenames.push_back("./Instances/small/kiva-10.task");
 //    taskFilenames.push_back("./Instances/small/kiva-500.task");
     
@@ -550,10 +559,10 @@ void small(int map = 0,
         agentsTasksAllocators.push_back(&nsga_real);
         
     } else if(of == "TP"){
-        
-        tokenIds.push_back("TP");
+                
         tokenIds.push_back("TTP");
-        tokenIds.push_back("BTT");
+//        tokenIds.push_back("BTT");
+        tokenIds.push_back("TP");
         
     } else {
             
@@ -581,7 +590,7 @@ void small(int map = 0,
         agentsTasksAllocators,
         500,
         46,                               
-        0);                              
+        10);                              
            
     experiment.run();
     
@@ -597,11 +606,11 @@ void small(int map = 0,
 int main(int argc, char** argv) {
     
     char* instance = "small";
-    char* of = "G-E"; // * -> all obj func
+    char* of = "TP"; // * -> all obj func
     
     unsigned evaltype = 2;
     unsigned validity = 5000;    
-    int map_index = 0; // 0 -> all maps
+    int map_index = 5; // 0 -> all maps
     
     if(argc > 1){
         instance = argv[1];

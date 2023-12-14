@@ -1,0 +1,2 @@
+mapFilename;taskFilename;step_size;row_size;col_size;num_bots;num_endpoints;last_step;num_tasks;token_id;token_name;current_step;energy system id;energy expenditure;finished_tasks;time(s);
+./Instances/test/test_prob.map;./Instances/test/test_prob.task;1000;3;13;4;12;1;3;GATP;GATP(Greedy);16;ES_1(R_1);226;3;0.000069;

@@ -145,6 +145,7 @@ public:
     void listSites(
         const _endpointsPathAlgorithm* endpointsPathAlgorithm,
         const std::vector<const _task*>& task_vector, 
+        unsigned taskOffset,
         unsigned offset,
         unsigned& pickup_span,
         unsigned& delivary_span,
@@ -152,15 +153,17 @@ public:
         
         pickup_span = delivary_span = 0;
         
-        unsigned count = 0;
+        unsigned count = 0, tcount = 0;
         bool flag = true;
         
             listPaths(
                 endpointsPathAlgorithm,
                 task_vector, 
-                    [&function, offset, &count, &flag, &pickup_span, &delivary_span](const PathType& type, const _path& path, const _task* current, const _task* next){
+                    [&function, taskOffset, offset, &tcount, &count, &flag, &pickup_span, &delivary_span](const PathType& type, const _path& path, const _task* current, const _task* next){
+                               
+                        bool flag2 = false;
                         
-//                        if(count >= offset){
+                        if(tcount >= taskOffset){
                             
                             if(type == PathType::pickup){
 
@@ -172,45 +175,45 @@ public:
 
                             }
                             
-//                        }
+                            if(flag){
+
+                                path.rlistOffset(0, [&flag2, &function, &count, offset, type, current, next](const _site& site){
+
+                                    if(count >= offset){
+
+                                        flag2 = function(type, site, current, next);
+
+                                    }
+
+                                    count++;
+
+                                    return flag2;
+
+                                });
+
+                                flag = false;
+
+                            } else {
+
+                                path.rlistOffset(1, [&flag2, &function, &count, offset, type, current, next](const _site& site){
+
+                                    if(count >= offset){
+
+                                        flag2 = function(type, site, current, next);
+
+                                    }
+
+                                    count++;
+
+                                    return flag2;
+
+                                });
+
+                            }
+                            
+                        }  
                         
-                        bool flag2 = false;
-                        
-                        if(flag){
-                            
-                            path.rlistOffset(0, [&flag2, &function, &count, offset, type, current, next](const _site& site){
-                                
-                                if(count >= offset){
-                            
-                                    flag2 = function(type, site, current, next);
-                                    
-                                }
-                                
-                                count++;
-                                
-                                return flag2;
-                                
-                            });
-                            
-                            flag = false;
-                            
-                        } else {
-                            
-                            path.rlistOffset(1, [&flag2, &function, &count, offset, type, current, next](const _site& site){
-                            
-                                if(count >= offset){
-                            
-                                    flag2 = function(type, site, current, next);
-                                    
-                                }
-                                
-                                count++;
-                                
-                                return flag2;
-                            
-                            });
-                            
-                        }
+                        tcount++;
                                                 
                         return flag2;
                         
@@ -237,6 +240,7 @@ public:
         listSites(
             endpointsPathAlgorithm, 
             task_vector1, 
+                0,
             offset1,
             pickup_span,
             delivery_span,
@@ -252,6 +256,7 @@ public:
         listSites(
             endpointsPathAlgorithm, 
             task_vector2, 
+                0,
             offset2,
             i1,
             i2,
@@ -371,6 +376,7 @@ public:
             listSites(
                 endpointsPathAlgorithm, 
                 task_vector, 
+                    0,
                 offset,
                 pickup_span,
                 delivary_span,
@@ -404,6 +410,7 @@ public:
             listSites(
                 endpointsPathAlgorithm, 
                 task_vector, 
+                    0,
                 offset,
                 pickup_span,
                 delivary_span,
@@ -451,6 +458,7 @@ public:
             listSites(
                 endpointsPathAlgorithm, 
                 task_vector, 
+                    0,
                 offset,
                 pickup_span,
                 delivary_span,
@@ -489,6 +497,7 @@ public:
             listSites(
                 endpointsPathAlgorithm, 
                 task_vector, 
+                    0,
                 offset,
                 pickup_span,
                 delivary_span,

@@ -1,7 +1,7 @@
 build/Debug/GNU-Linux/_agent_parker_CL.o: _agent_parker_CL.cpp \
  _agent_parked_CL.h _agent_parked.h _agent_state.h _task.h Identifiable.h \
- _site.h _stepMap.h _stepPath.h MapdException.h _path.h _stepSite.h \
- _agent.h Drawable.h _agent_energy_system.h _energy_system.h \
+ _site.h _stepMap.h Recoverable.h _stepPath.h MapdException.h _path.h \
+ _stepSite.h _agent.h Drawable.h _agent_energy_system.h _energy_system.h \
  _energy_regime.h _energy_charge.h _agent_energy_regime.h _map.h Render.h \
  _agent_goingToPickup_CL.h _agent_goingToPickup.h \
  _agent_goingToDelivery_CL.h _agent_goingToDelivery.h \
@@ -20,6 +20,7 @@ _task.h:
 Identifiable.h:
 _site.h:
 _stepMap.h:
+Recoverable.h:
 _stepPath.h:
 MapdException.h:
 _path.h:

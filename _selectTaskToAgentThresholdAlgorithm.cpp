@@ -55,7 +55,7 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
     bool aux = false;
     _task auxTask;
     _stepPath auxPath;
-    float best_dist = std::numeric_limits<float>::max();
+    float best_dist = 0.0;
 
     for (auto task : vtask) {
 
@@ -94,15 +94,14 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
             if (flag) {
                 
                 pickup_step = pickupSite.GetStep() - taskPath.currentSite().GetStep();
+                delivery_step = taskPath.goalSite().GetStep() - pickupSite.GetStep();
                 
                 flag = thresholdAlgorithm.solve(taskPath.currentSite(), selectedTask.getPickup(), pickup_step, pickup_threshold, pickupRate);
                 
+                flag = flag && thresholdAlgorithm.solve(selectedTask.getPickup(), selectedTask.getDelivery(), delivery_step, delivery_threshold, deliveryRate);
+                
                 if (flag) {
 
-                    delivery_step = taskPath.goalSite().GetStep() - pickupSite.GetStep();
-                                        
-                    flag = thresholdAlgorithm.solve(selectedTask.getPickup(), selectedTask.getDelivery(), delivery_step, delivery_threshold, deliveryRate);
-                    
                     if (flag) {
 
                         flag = agent.isAbleToFulfillTaskPath(token.getMap(), selectedTask, taskPath);
@@ -127,13 +126,13 @@ bool _selectTaskToAgentThresholdAlgorithm::solve(
                 aux = true;
                 auxTask = task;
                 auxPath = taskPath;
-                best_dist = pickupRate * pickup_step + deliveryRate * delivery_step;
+                best_dist = pickupRate + deliveryRate;
 
             } else {
                 
-                float best_dist_aux = pickupRate * pickup_step + deliveryRate * delivery_step;
+                float best_dist_aux = pickupRate + deliveryRate;
                 
-                if(best_dist_aux < best_dist){
+                if(best_dist_aux > best_dist){
                     
                     auxTask = task;
                     auxPath = taskPath;

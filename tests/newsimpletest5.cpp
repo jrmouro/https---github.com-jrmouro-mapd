@@ -72,6 +72,7 @@ void test_task_path() {
             map.getEndpointsPathAlgorithm(), 
             tasks1,
             0,
+            0,
             ps, ds,
             [](const _task_path::PathType& type, const _site& site, const _task*, const _task*){
                 
@@ -100,6 +101,7 @@ void test_task_path() {
     task_path.listSites(
             map.getEndpointsPathAlgorithm(), 
             tasks2,
+            0,
             0,
             ps, ds,
             [](const _task_path::PathType& type, const _site& site, const _task*, const _task*){

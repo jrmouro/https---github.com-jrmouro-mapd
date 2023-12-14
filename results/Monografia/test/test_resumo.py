@@ -26,7 +26,7 @@ df2 = df2.rename(
         })
 
 
-df4 = df2.groupby(["F", "Ag", "Token"]).agg({'Makespan':np.median, 'Energia':np.median, 'time': np.median}).round(3).reset_index()
+df4 = df2.groupby(["F", "Ag", "Token"]).agg({'Makespan':np.median, 'Energia':np.median, 'time': np.median}).round(9).reset_index()
 
 df5 = df4.pivot_table(["Makespan","Energia", "time"], ["F", "Ag"], 'Token')
 

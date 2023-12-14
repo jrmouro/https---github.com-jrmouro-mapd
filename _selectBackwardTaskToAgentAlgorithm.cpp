@@ -64,7 +64,7 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
     bool aux = false;
     _task auxTask;
     _stepPath auxPath;    
-    float best_dist = std::numeric_limits<float>::max();
+    float best_dist = 0.0;
 
     for (auto task : vtask) {
 
@@ -97,6 +97,7 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
             _stepSite pickupSite, deliverySite;
             
             unsigned pickup_step = 0;
+            float deliveryRate = .0;
             float pickupRate = .0;
 
             ret = taskPathToAgentAlgorithm.solve(token, agent, originalTask, taskPath, pickupSite, deliverySite);
@@ -110,7 +111,7 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
                 taskPath.backward(
                         [&ret, &token, agent, &taskPath, thresholdAlgorithm, 
                         pickupSite, deliverySite, &originalTask, &selectedTask, 
-                        &pendingTask, &selectedPath, this](const _stepSite & site) {
+                        &pendingTask, &selectedPath, this, &deliveryRate](const _stepSite & site) {
 
                     if (site.step_match(pickupSite)) return true;
 
@@ -139,9 +140,7 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
                         if (ret) {
 
                             unsigned step = site.GetStep() - pickupSite.GetStep();
-                            
-                            float deliveryRate;
-
+                                                        
                             ret = thresholdAlgorithm.solve(pickupSite, site, step, this->delivery_threshold, deliveryRate);
 
                             if (ret) {
@@ -193,7 +192,7 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
             
             if(!ret){
             
-                float best_dist_aux = pickupRate * pickup_step;
+                float best_dist_aux = pickupRate + deliveryRate;
 
                 if(!aux){
 
@@ -204,7 +203,7 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
 
                 } else {
 
-                    if(best_dist_aux < best_dist){
+                    if(best_dist_aux > best_dist){
 
                         auxTask = task;
                         auxPath = taskPath;

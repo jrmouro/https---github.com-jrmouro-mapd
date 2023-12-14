@@ -1,7 +1,7 @@
 build/Debug/GNU-Linux/_closerTaskIndexerAlgorithm.o: \
  _closerTaskIndexerAlgorithm.cpp _closerTaskIndexerAlgorithm.h \
  _taskIndexerAlgorithm.h _task.h Identifiable.h _site.h _agent.h \
- _stepMap.h _stepPath.h MapdException.h _path.h _stepSite.h \
+ _stepMap.h Recoverable.h _stepPath.h MapdException.h _path.h _stepSite.h \
  _agent_state.h Drawable.h _agent_energy_system.h _energy_system.h \
  _energy_regime.h _energy_charge.h _agent_energy_regime.h _map.h Render.h \
  _endpointsDistanceAlgorithm.h _distanceAlgorithm.h \
@@ -16,6 +16,7 @@ Identifiable.h:
 _site.h:
 _agent.h:
 _stepMap.h:
+Recoverable.h:
 _stepPath.h:
 MapdException.h:
 _path.h:

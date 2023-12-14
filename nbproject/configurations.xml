@@ -57,8 +57,6 @@
       <logicalFolder name="f1" displayName="Algorithm" projectFiles="true">
         <logicalFolder name="f8" displayName="GA" projectFiles="true">
           <logicalFolder name="f4" displayName="ObjectiveFunction" projectFiles="true">
-            <itemPath>_ga_estimate_of.cpp</itemPath>
-            <itemPath>_ga_estimate_of.h</itemPath>
             <itemPath>_ga_estimate_of_path_check.cpp</itemPath>
             <itemPath>_ga_estimate_of_path_check.h</itemPath>
             <itemPath>_ga_estimate_of_path_collision.cpp</itemPath>
@@ -67,6 +65,8 @@
             <itemPath>_ga_estimate_of_path_count.h</itemPath>
             <itemPath>_ga_estimate_of_path_task_endpoint.cpp</itemPath>
             <itemPath>_ga_estimate_of_path_task_endpoint.h</itemPath>
+            <itemPath>_ga_estimative_of_path.cpp</itemPath>
+            <itemPath>_ga_estimative_of_path.h</itemPath>
             <itemPath>_ga_objective_function.cpp</itemPath>
             <itemPath>_ga_objective_function.h</itemPath>
             <itemPath>_ga_real_of.cpp</itemPath>
@@ -295,6 +295,7 @@
       <logicalFolder name="f10" displayName="Util" projectFiles="true">
         <itemPath>Identifiable.h</itemPath>
         <itemPath>MapdException.h</itemPath>
+        <itemPath>Recoverable.h</itemPath>
         <itemPath>Resetable.h</itemPath>
         <itemPath>Writable.h</itemPath>
       </logicalFolder>
@@ -379,6 +380,8 @@
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MultiSystemExperiment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Recoverable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Rectangle.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -571,10 +574,6 @@
       </item>
       <item path="_ga_best_solution_selector.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_ga_estimate_of.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="_ga_estimate_of.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="_ga_estimate_of_path_check.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_estimate_of_path_check.h" ex="false" tool="3" flavor2="0">
@@ -596,6 +595,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="_ga_estimative_of_path.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_estimative_of_path.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_ga_objective_function.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -962,6 +965,8 @@
       </item>
       <item path="MultiSystemExperiment.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Recoverable.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Rectangle.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Rectangle.h" ex="false" tool="3" flavor2="0">
@@ -1153,10 +1158,6 @@
       </item>
       <item path="_ga_best_solution_selector.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="_ga_estimate_of.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="_ga_estimate_of.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="_ga_estimate_of_path_check.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_estimate_of_path_check.h" ex="false" tool="3" flavor2="0">
@@ -1178,6 +1179,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="_ga_estimative_of_path.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_ga_estimative_of_path.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_ga_objective_function.cpp" ex="false" tool="1" flavor2="0">
       </item>

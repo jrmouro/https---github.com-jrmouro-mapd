@@ -75,20 +75,24 @@ public:
     const _stepSite& previousSite() const {
         return _previousSite;
     }
-
+    
+    
+    const _task* getCurrentTask() const;
         
+    const _stepPath& getPath() const;
+    
 private:
     
     friend class _ga_token;
     friend class _ga_token_p;
        
-    const _task* getCurrentTask() const;
+    
     void assignTask(const _task& task);
     void unassignTask();
     void assignPath(const _stepPath& path);
     void progressPath(const _stepPath& path);
     
-    const _stepPath& getPath() const;
+    
     
 private:
     friend class _ga_agent_state;

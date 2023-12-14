@@ -63,7 +63,7 @@ void _agent_state::onDraw(const Render& render, const _agent& agent) const {
     Circle backgroundId(
             position,
             sf::Vector2f(render.GetCell().first / 4, 0),
-            energy);
+            sf::Color::Yellow);
 
     Text textAgentId(
             std::to_string(agent.id()),

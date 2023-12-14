@@ -20,102 +20,33 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
             
         }
         
-        _astarAlgorithm astar;
-        _task_path task_path;
-
         unsigned makespan = 0, energy = 0;
-        
-        std::set<const _ga_agent*> currentAgents;
-        
+        std::vector<std::vector<const _site*>> paths;
+        std::vector<std::vector<_task_path::PathType>> types;
         std::map<const _ga_agent*, _path> agentPaths;
-        std::vector<std::vector<const _site*>> paths(solution.allocation_map.size(), std::vector<const _site*>());
-        std::vector<std::vector<_task_path::PathType>> types(solution.allocation_map.size(), std::vector<_task_path::PathType>());
         
-        int index = 0;
-        for (auto const& alloc_pair1 : solution.allocation_map) {
+        if(current){
             
-            _site initialSite;
+            pathSwap(
+            token, 
+            solution, 
+            makespan,
+            energy,
+            agentPaths,
+            paths,
+            types);
             
-            if(current){
-                initialSite = alloc_pair1.first->currentSite();
-            } else {
-                initialSite = alloc_pair1.first->goalSite();
-            }
+        } else {
             
-            auto it = agentPaths.insert(
-                std::pair<const _ga_agent*, _path>(
-                    alloc_pair1.first, 
-                    _path(initialSite)));
+             path(
+            token, 
+            solution, 
+            makespan,
+            energy,
+            agentPaths,
+            paths,
+            types);
             
-            if(!alloc_pair1.second.empty()){
-                                    
-                bool flag = astar.solve(token.getMap(), initialSite, alloc_pair1.second[0]->getPickup(), it.first->second);
-
-                if(flag){
-                    
-                    it.first->second.rlist([&token, &paths, &types, &energy, index](const _site& site){
-                        
-                        paths[index].push_back(&site);
-                        types[index].push_back(_task_path::PathType::pickup);
-                        
-                        energy += token.getAgent_energy_system().getMovingRegime();
-                        
-                        return false;
-                        
-                    });
-                    
-                } else {
-
-                    try {
-                        std::ostringstream stream;
-                        stream << "path not found from " << alloc_pair1.first->goalSite() << " to " <<  alloc_pair1.second[0]->getPickup();
-                        MAPD_EXCEPTION(stream.str());
-                    } catch (std::exception& e) {
-                        std::cout << e.what() << std::endl;
-                        std::abort();
-                    }
-
-                }
-                
-            } else {
-                
-                paths[index].push_back(&it.first->second.currentSite());
-                types[index].push_back(_task_path::PathType::pickup);
-                
-                energy += token.getAgent_energy_system().getMovingRegime();
-                
-            }
-                                    
-            unsigned pickup_span, delivary_span;
-            
-            task_path.listSites(
-                token.getMap().getEndpointsPathAlgorithm(),
-                alloc_pair1.second, 
-                1,
-                pickup_span,
-                delivary_span,
-                [&token, &paths, &types, &energy, index](const _task_path::PathType& type, const _site& site, const _task* t1, const _task* t2){
-                   
-                    paths[index].push_back(&site);
-                    types[index].push_back(type);
-                    
-                    if(type == _task_path::PathType::pickup){
-
-                        energy += token.getAgent_energy_system().getMovingRegime();
-
-                    } else {
-
-                        energy += token.getAgent_energy_system().getCarringRegime();
-
-                    }
-                    
-                    return false;
-                    
-                });
-                
-            makespan = std::max<unsigned>(paths[index].size(), makespan);  
-            
-            index++;
             
         }
         
@@ -123,58 +54,38 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_check::ev
         
         for (int i = 0; i < paths.size(); i++) {
                         
-            for (int j = i + 1; j < paths.size(); j++) {
+            for (int j = i; j < paths.size(); j++) {
                 
-                if(paths[i].size() > paths[j].size()){
-                    
+                if(j != i){
+
+                    bool pflag = false, dflag = false;
+
                     for (int k = 0; k < paths[j].size(); k++) {
-                        
+
                         if(paths[j][k]->match(*paths[i][k])){
-                            
-                            spanp = spanp + makespan_penalty /*/ (k+1)*/;
-                            
-                            if(types[j][k] == _task_path::PathType::pickup){
-                                
-                                pckp = pckp + (pickup_energy_penalty  /*/ (k+1)*/);
-                                
-                            } else {
-                                
-                                dlvy = dlvy + (delivery_energy_penalty  /*/ (k+1)*/);
-                                
-                            }
-                            
-                            break;
-                            
+
+                            spanp = spanp + makespan_penalty;
+
+                            if(types[j][k] == _task_path::PathType::pickup && !pflag){
+
+                                pckp = pckp + (pickup_energy_penalty);
+                                pflag = true;
+
+                            } else if(!dflag){
+
+                                dlvy = dlvy + (delivery_energy_penalty);
+                                dflag = true;
+
+                            }   
+
+                            if(pflag && dflag)break;
+
                         }
 
                     }
-                    
-                } else {
-                    
-                    for (int k = 0; k < paths[i].size(); k++) {
-                        
-                        if(paths[j][k]->match(*paths[i][k])){
-                            
-                            spanp = spanp + makespan_penalty  /*/ (k+1)*/;
-                            
-                            if(types[j][k] == _task_path::PathType::pickup){
-                                
-                                pckp = pckp + (pickup_energy_penalty  /*/ (k+1)*/);
-                                
-                            } else {
-                                
-                                dlvy = dlvy + (delivery_energy_penalty  /*/ (k+1)*/);
-                                
-                            }
-                            
-                            break;
-                            
-                        }
-
-                    }                    
-                    
+                
                 }
-
+                
             }
 
         }                                

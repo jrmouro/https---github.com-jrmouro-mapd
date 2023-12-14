@@ -18,12 +18,13 @@
 #include <vector>
 #include <algorithm>
 #include <cstring>
+#include "Recoverable.h"
 
 #include "_stepPath.h"
 #include "_stepSite.h"
 
 
-class _stepMap{
+class _stepMap : public Recoverable{
 public:
     
     enum NodeType{
@@ -276,7 +277,220 @@ public:
 
         
     }
+    
+    virtual void listNeighborFreePaths(const _stepSite& site, int type, const std::function<bool(const _stepSite&)>& function) const {
         
+        _stepSite size = _stepSite(step_size, row_size, colunm_size);
+                
+        site.listNeighbors(size, [this, type, &function, site](const _stepSite& neigh){
+
+            if(isFreeToType( neigh, type) && hasPath(site, neigh)) 
+                if(function(neigh)) return true;
+
+            return false;
+
+        });
+                
+    }
+    
+    bool isPathDefinitelyFree(const _stepSite& site, int type) const {
+        
+        return isPathDefinitelyFree(site.GetStep(), site.GetRow(), site.GetColunm(), type);
+        
+    }
+    
+    void resetTypesInStepColunm(unsigned row, unsigned column, int type) {
+        
+        checkRowColunm(0, row, column); 
+        
+        int step = 0;
+        this->nodes[step++ * nodes_product + row * colunm_size + column] = type;
+        
+        for (; step < this->step_size; step++){
+            unsigned index = step * nodes_product + row * colunm_size + column;    
+            this->nodes[index] = NodeType::freeNode;                
+        }
+        
+        unsigned index = row * colunm_size + column;
+            
+        max_step[index] = 0;
+        free_type[index] = type;   
+        
+    }
+    
+    
+    void setMoving(const _stepPath& path, int type){
+        
+        if(!path.empty()){
+        
+            auto current = path.currentSite();
+            this->setTypesFrom(current.GetStep() + 1, current.GetRow(), current.GetColunm(), type, NodeType::freeNode);
+            
+            auto goal = path.goalSite();
+            this->setTypesFrom(goal.GetStep(), goal.GetRow(), goal.GetColunm(), NodeType::freeNode, type);       
+
+            path.movingList([this,type](const _stepSite& s, const _stepSite& g){
+
+                this->setNodeType(s, type);
+                this->setEdgeType(s.GetStep(), s, g, type);
+
+                return false;
+
+            });
+            
+//            if(save_state){
+//                
+//                saved.push_back(
+//                        std::pair<TypeSaved, std::pair<int, _stepPath>>(
+//                        TypeSaved::set,
+//                        std::pair<int, _stepPath>(type, path)));
+//                
+//            }
+        
+        } else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "empty path";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }
+        
+    }
+        
+    void deleteMoving(const _stepPath& path, int type){
+        
+        if(!path.empty()){
+        
+            auto goal = path.goalSite();
+            this->setTypesFrom(goal.GetStep(), goal.GetRow(), goal.GetColunm(), type, NodeType::freeNode);  
+            
+            
+            path.movingList([this](const _stepSite& s, const _stepSite& g){
+
+                this->setNodeType(s, NodeType::freeNode);
+                this->setEdgeType(s.GetStep(), s, g, EdgeType::freeEdge);
+
+                return false;
+
+            }); 
+            
+//            auto current = path.currentSite();
+//            this->setTypesFrom(current.GetStep()+1, current.GetRow(), current.GetColunm(), NodeType::freeNode, type);
+            
+            
+//            if(save_state){
+//                
+//                saved.push_back(
+//                        std::pair<TypeSaved, std::pair<int, _stepPath>>(
+//                        TypeSaved::del,
+//                        std::pair<int, _stepPath>(type, path)));
+//                
+//            }
+        
+        } else {
+            
+            try {
+                std::ostringstream stream;
+                stream << "empty path";
+                MAPD_EXCEPTION(stream.str());
+            } catch (std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::abort();
+            }
+            
+        }
+        
+    }
+   
+
+    unsigned getColumn_size() const {
+        return colunm_size;
+    }
+
+    unsigned getRow_size() const {
+        return row_size;
+    }
+    
+    unsigned getStep_size() const {
+        return step_size;
+    } 
+    
+    virtual void save(){
+        
+        save_state = true;
+        
+    }
+    
+    virtual void recover(){
+        
+        save_state = false;
+        
+        auto it = saved.crbegin();
+        
+        for(; it != saved.crend(); it++){
+            
+            if(it->first == TypeSaved::set){  
+                
+                deleteMoving(it->second.second, it->second.first);
+                
+            } else {
+                
+                setMoving(it->second.second, it->second.first);
+                
+            }
+            
+        }
+        
+    }
+    
+private:
+    
+    enum TypeSaved{ set, del};
+    
+    bool save_state = false;
+    std::vector<std::pair<TypeSaved, std::pair<int, _stepPath>>> saved;
+
+    int *nodes = nullptr, 
+        *row_edge = nullptr, 
+        *colunm_edge = nullptr,
+            *free_type = nullptr;
+    
+    unsigned
+    
+            *max_step = nullptr;
+    
+    unsigned 
+        step_size = 0, 
+        colunm_size = 0, 
+        row_size = 0, 
+        nodes_product = 0,
+        row_product = 0,
+        colunm_product = 0;
+    
+     bool isPathDefinitelyFree(unsigned step, unsigned row, unsigned column, int type) const {
+       
+        checkRowColunm(step, row, column);
+        
+        unsigned index = row * colunm_size + column;
+                
+        if(max_step[index] < step  && 
+                (free_type[index] == NodeType::freeNode || 
+                    free_type[index] == type)){
+            
+            return true;
+            
+        }
+        
+        return false;
+        
+    }
+    
+         
     void setRowEdgeType(unsigned step, unsigned row, unsigned column, int type)const {
 
         int _size_colunm = colunm_size - 1;
@@ -516,29 +730,9 @@ public:
         
     }
     
-    bool isPathDefinitelyFree(unsigned step, unsigned row, unsigned column, int type) const {
-       
-        checkRowColunm(step, row, column);
-        
-        unsigned index = row * colunm_size + column;
-                
-        if(max_step[index] < step  && 
-                (free_type[index] == NodeType::freeNode || 
-                    free_type[index] == type)){
-            
-            return true;
-            
-        }
-        
-        return false;
-        
-    }
+   
     
-    bool isPathDefinitelyFree(const _stepSite& site, int type) const {
-        
-        return isPathDefinitelyFree(site.GetStep(), site.GetRow(), site.GetColunm(), type);
-        
-    }
+    
     
     void setTypesFrom(unsigned fromStep, unsigned row, unsigned column, int from,  int to) {
 
@@ -630,96 +824,13 @@ public:
 
     }
     
-    void resetTypesInStepColunm(unsigned row, unsigned column, int type) {
-        
-        checkRowColunm(0, row, column); 
-        
-        int step = 0;
-        this->nodes[step++ * nodes_product + row * colunm_size + column] = type;
-        
-        for (; step < this->step_size; step++){
-            unsigned index = step * nodes_product + row * colunm_size + column;    
-            this->nodes[index] = NodeType::freeNode;                
-        }
-        
-        unsigned index = row * colunm_size + column;
-            
-        max_step[index] = 0;
-        free_type[index] = type;   
-        
-    }
+    
         
     void setTypesFrom(const _stepSite& site, int from,  int to) {
 
         setTypesFrom(site.GetStep(), site.GetRow(), site.GetColunm(), from, to);
 
     }
-        
-    void setMoving(const _stepPath& path, int type){
-        
-        if(!path.empty()){
-        
-            auto current = path.currentSite();
-            this->setTypesFrom(current.GetStep() + 1, current.GetRow(), current.GetColunm(), type, NodeType::freeNode);
-            
-            auto goal = path.goalSite();
-            this->setTypesFrom(goal.GetStep(), goal.GetRow(), goal.GetColunm(), NodeType::freeNode, type);       
-
-            path.movingList([this,type](const _stepSite& s, const _stepSite& g){
-
-                this->setNodeType(s, type);
-                this->setEdgeType(s.GetStep(), s, g, type);
-
-                return false;
-
-            });
-        
-        } else {
-            
-            try {
-                std::ostringstream stream;
-                stream << "empty path";
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
-            
-        }
-        
-    }
-        
-    void deleteMoving(const _stepPath& path, int type){
-        
-        if(!path.empty()){
-        
-            auto goal = path.goalSite();
-            this->setTypesFrom(goal.GetStep(), goal.GetRow(), goal.GetColunm(), type, NodeType::freeNode);      
-            
-            path.movingList([this](const _stepSite& s, const _stepSite& g){
-
-                this->setNodeType(s, NodeType::freeNode);
-                this->setEdgeType(s.GetStep(), s, g, EdgeType::freeEdge);
-
-                return false;
-
-            });            
-        
-        } else {
-            
-            try {
-                std::ostringstream stream;
-                stream << "empty path";
-                MAPD_EXCEPTION(stream.str());
-            } catch (std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::abort();
-            }
-            
-        }
-        
-    }
-    
     
     virtual bool isNodeBelonging(const _stepSite& site) const {
         
@@ -744,22 +855,7 @@ public:
         return nodotype == NodeType::freeNode || nodotype == type;
         
     }
-    
-    virtual void listNeighborFreePaths(const _stepSite& site, int type, const std::function<bool(const _stepSite&)>& function) const {
         
-        _stepSite size = _stepSite(step_size, row_size, colunm_size);
-                
-        site.listNeighbors(size, [this, type, &function, site](const _stepSite& neigh){
-
-            if(isFreeToType( neigh, type) && hasPath(site, neigh)) 
-                if(function(neigh)) return true;
-
-            return false;
-
-        });
-                
-    }
-    
     int nodoType(const _stepSite& site) const {
         
         if(isNodeBelonging(site))
@@ -815,37 +911,6 @@ public:
         return os;
 
     }
-
-    unsigned getColumn_size() const {
-        return colunm_size;
-    }
-
-    unsigned getRow_size() const {
-        return row_size;
-    }
-    
-    unsigned getStep_size() const {
-        return step_size;
-    }           
-    
-private:
-
-    int *nodes = nullptr, 
-        *row_edge = nullptr, 
-        *colunm_edge = nullptr,
-            *free_type = nullptr;
-    
-    unsigned
-    
-            *max_step = nullptr;
-    
-    unsigned 
-        step_size = 0, 
-        colunm_size = 0, 
-        row_size = 0, 
-        nodes_product = 0,
-        row_product = 0,
-        colunm_product = 0;
     
 };
 

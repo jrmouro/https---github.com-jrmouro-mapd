@@ -91,7 +91,7 @@ public:
     
 private:
     friend class _ga_real_of;
-    friend class _ga_estimate_of;
+//    friend class _ga_estimate_of;
 //    friend class _ga_estimate_of_path_count;
 //    friend class _ga_estimate_of_path_check;
 //    friend class _ga_estimate_of_path_collision;
@@ -99,7 +99,8 @@ private:
     std::map<EvalType, unsigned> evals;
     
 private:
-    friend class _ga_estimate_of;    
+//    friend class _ga_estimate_of;    
+    friend class _ga_estimative_of_path;
     friend class _ga_estimate_of_path_count;
     friend class _ga_estimate_of_path_check;
     friend class _ga_estimate_of_path_collision;
