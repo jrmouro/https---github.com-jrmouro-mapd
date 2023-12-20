@@ -96,98 +96,106 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
 
             _stepSite pickupSite, deliverySite;
             
-            unsigned pickup_step = 0;
+            unsigned pickup_step = 0, delivery_step = 0;
             float deliveryRate = .0;
             float pickupRate = .0;
 
             ret = taskPathToAgentAlgorithm.solve(token, agent, originalTask, taskPath, pickupSite, deliverySite);
             
-            pickup_step = pickupSite.GetStep() - taskPath.currentSite().GetStep();
+            if(ret){
+            
+                pickup_step = pickupSite.GetStep() - taskPath.currentSite().GetStep();
                 
-            thresholdAlgorithm.solve(taskPath.currentSite(), originalTask.getPickup(), pickup_step, pickup_threshold, pickupRate);
 
-            if (ret) {
-                
-                taskPath.backward(
-                        [&ret, &token, agent, &taskPath, thresholdAlgorithm, 
-                        pickupSite, deliverySite, &originalTask, &selectedTask, 
-                        &pendingTask, &selectedPath, this, &deliveryRate](const _stepSite & site) {
+                ret = ret && thresholdAlgorithm.solve(taskPath.currentSite(), originalTask.getPickup(), pickup_step, pickup_threshold, pickupRate);
 
-                    if (site.step_match(pickupSite)) return true;
+                if (ret) {
+                    
+                    delivery_step = taskPath.goalSite().GetStep() - pickupSite.GetStep();
+                    thresholdAlgorithm.solve(selectedTask.getPickup(), selectedTask.getDelivery(), delivery_step, delivery_threshold, deliveryRate);
 
-                    if (token.isTaskEndpoint(site) && token.getStepMap().isPathDefinitelyFree(site, agent.id())) {
+                    taskPath.backward(
+                            [&ret, &token, agent, &taskPath, thresholdAlgorithm, 
+                            pickupSite, deliverySite, &originalTask, &selectedTask, 
+                            &pendingTask, &selectedPath, this, &deliveryRate](const _stepSite & site) {
 
-                        ret = true;                       
+                        if (site.step_match(pickupSite)) return true;
 
-                        token.listConstAgents([&ret, site, agent](const _agent& otherAgent) { // verifica se o task endpoint está disponível
+                        if (token.isTaskEndpoint(site) && token.getStepMap().isPathDefinitelyFree(site, agent.id())) {
 
-                            if (otherAgent.id() != agent.id()) {
+                            ret = true;                       
 
-                                if (otherAgent.goalSite().match(site)) {
+                            token.listConstAgents([&ret, site, agent](const _agent& otherAgent) { // verifica se o task endpoint está disponível
 
-                                    ret = false;
+                                if (otherAgent.id() != agent.id()) {
 
-                                    return true;
+                                    if (otherAgent.goalSite().match(site)) {
 
-                                }
-
-                            }
-
-                            return false;
-
-                        });
-
-                        if (ret) {
-
-                            unsigned step = site.GetStep() - pickupSite.GetStep();
-                                                        
-                            ret = thresholdAlgorithm.solve(pickupSite, site, step, this->delivery_threshold, deliveryRate);
-
-                            if (ret) {
-
-                                selectedTask.setPickup(pickupSite);
-                                selectedTask.setDelivery(site);
-                                
-                                _stepPath backwardTaskPath;
-                                
-                                taskPath.forward([site, &backwardTaskPath](const _stepSite& tsite) {
-
-                                    backwardTaskPath.progress(tsite);
-
-                                    if (tsite.step_match(site)) {
+                                        ret = false;
 
                                         return true;
 
                                     }
 
-                                    return false;
+                                }
 
-                                });
-                                
-                                ret = agent.isAbleToFulfillTaskPath(token.getMap(), selectedTask, backwardTaskPath);
+                                return false;
+
+                            });
+
+                            if (ret) {
+
+                                unsigned step = site.GetStep() - pickupSite.GetStep();
+
+                                ret = thresholdAlgorithm.solve(pickupSite, site, step, this->delivery_threshold, deliveryRate);
 
                                 if (ret) {
-                                    
-                                    pendingTask.setPickup(site);
-                                    pendingTask.setDelivery(deliverySite);
-                                    
-                                    backwardTaskPath.pop();
-                                    selectedPath.progress(backwardTaskPath);
-                                    
-                                    return true;
 
-                                }                                
+                                    selectedTask.setPickup(pickupSite);
+                                    selectedTask.setDelivery(site);
+
+                                    _stepPath backwardTaskPath;
+
+                                    taskPath.forward([site, &backwardTaskPath](const _stepSite& tsite) {
+
+                                        backwardTaskPath.progress(tsite);
+
+                                        if (tsite.step_match(site)) {
+
+                                            return true;
+
+                                        }
+
+                                        return false;
+
+                                    });
+
+                                    ret = agent.isAbleToFulfillTaskPath(token.getMap(), selectedTask, backwardTaskPath);
+
+                                    if (ret) {
+
+                                        pendingTask.setPickup(site);
+                                        pendingTask.setDelivery(deliverySite);
+
+                                        backwardTaskPath.pop();
+                                        selectedPath.progress(backwardTaskPath);
+
+                                        return true;
+
+                                    }                                
+
+                                }
 
                             }
 
                         }
-                       
-                    }
 
-                    return false;
+                        return false;
 
-                }); 
-                
+                    }); 
+
+                }
+            
             }
             
             if(!ret){
@@ -242,3 +250,207 @@ bool _selectBackwardTaskToAgentAlgorithm::solve(
     return false;
 
 }
+
+//bool _selectBackwardTaskToAgentAlgorithm::solve(
+//        const _token& token, 
+//        const _agent& agent, 
+//        _task& originalTask, 
+//        _task& selectedTask, 
+//        _task& pendingTask,
+//        _stepPath& selectedPath) const {
+//
+//    _thresholdAlgorithm thresholdAlgorithm(token.getEndpointsPathAlgorithm());
+//
+//    bool ret = false;
+//
+//    std::vector<_task> vtask;
+//
+//    token.listPendingTasks([&vtask, &token, agent, this](const _task & task) {
+//
+//        this->taskIndexerAlgorithm.solve(token, task, agent, vtask);
+//
+//        return false;
+//
+//    });
+//    
+//    bool aux = false;
+//    _task auxTask;
+//    _stepPath auxPath;    
+//    float best_dist = 0.0;
+//
+//    for (auto task : vtask) {
+//
+//        ret = true;
+//
+//        token.listConstAgents([task, &ret, agent](const _agent& otherAgent) {
+//
+//            if (otherAgent.id() != agent.id()) {
+//
+//                if (otherAgent.goalSite().match(task.getPickup()) || otherAgent.goalSite().match(task.getDelivery())) {
+//
+//                    ret = false;
+//
+//                    return true;
+//
+//                }
+//
+//            }
+//
+//            return false;
+//
+//        });
+//        
+//        if (ret) {
+//
+//            originalTask = task;
+//
+//            _stepPath taskPath(selectedPath);
+//
+//            _stepSite pickupSite, deliverySite;
+//            
+//            unsigned pickup_step = 0;
+//            float deliveryRate = .0;
+//            float pickupRate = .0;
+//
+//            ret = taskPathToAgentAlgorithm.solve(token, agent, originalTask, taskPath, pickupSite, deliverySite);
+//            
+//            pickup_step = pickupSite.GetStep() - taskPath.currentSite().GetStep();
+//                
+//            thresholdAlgorithm.solve(taskPath.currentSite(), originalTask.getPickup(), pickup_step, pickup_threshold, pickupRate);
+//
+//            if (ret) {
+//                
+//                taskPath.backward(
+//                        [&ret, &token, agent, &taskPath, thresholdAlgorithm, 
+//                        pickupSite, deliverySite, &originalTask, &selectedTask, 
+//                        &pendingTask, &selectedPath, this, &deliveryRate](const _stepSite & site) {
+//
+//                    if (site.step_match(pickupSite)) return true;
+//
+//                    if (token.isTaskEndpoint(site) && token.getStepMap().isPathDefinitelyFree(site, agent.id())) {
+//
+//                        ret = true;                       
+//
+//                        token.listConstAgents([&ret, site, agent](const _agent& otherAgent) { // verifica se o task endpoint está disponível
+//
+//                            if (otherAgent.id() != agent.id()) {
+//
+//                                if (otherAgent.goalSite().match(site)) {
+//
+//                                    ret = false;
+//
+//                                    return true;
+//
+//                                }
+//
+//                            }
+//
+//                            return false;
+//
+//                        });
+//
+//                        if (ret) {
+//
+//                            unsigned step = site.GetStep() - pickupSite.GetStep();
+//                                                        
+//                            ret = thresholdAlgorithm.solve(pickupSite, site, step, this->delivery_threshold, deliveryRate);
+//
+//                            if (ret) {
+//
+//                                selectedTask.setPickup(pickupSite);
+//                                selectedTask.setDelivery(site);
+//                                
+//                                _stepPath backwardTaskPath;
+//                                
+//                                taskPath.forward([site, &backwardTaskPath](const _stepSite& tsite) {
+//
+//                                    backwardTaskPath.progress(tsite);
+//
+//                                    if (tsite.step_match(site)) {
+//
+//                                        return true;
+//
+//                                    }
+//
+//                                    return false;
+//
+//                                });
+//                                
+//                                ret = agent.isAbleToFulfillTaskPath(token.getMap(), selectedTask, backwardTaskPath);
+//
+//                                if (ret) {
+//                                    
+//                                    pendingTask.setPickup(site);
+//                                    pendingTask.setDelivery(deliverySite);
+//                                    
+//                                    backwardTaskPath.pop();
+//                                    selectedPath.progress(backwardTaskPath);
+//                                    
+//                                    return true;
+//
+//                                }                                
+//
+//                            }
+//
+//                        }
+//                       
+//                    }
+//
+//                    return false;
+//
+//                }); 
+//                
+//            }
+//            
+//            if(!ret){
+//            
+//                float best_dist_aux = pickupRate + deliveryRate;
+//
+//                if(!aux){
+//
+//                    aux = true;
+//                    auxTask = task;
+//                    auxPath = taskPath; 
+//                    best_dist = best_dist_aux;
+//
+//                } else {
+//
+//                    if(best_dist_aux > best_dist){
+//
+//                        auxTask = task;
+//                        auxPath = taskPath;
+//                        best_dist = best_dist_aux;
+//
+//                    } 
+//
+//                }
+//            
+//            }
+//
+//        }
+//        
+//        if(ret) return true;
+//
+//    }
+//    
+//    if(aux){
+//        
+//        aux = agent.isAbleToFulfillTaskPath(token.getMap(), auxTask, auxPath);
+//
+//        if (aux) {
+//            
+//            originalTask = auxTask;
+//            selectedTask = auxTask;
+//
+//            auxPath.pop();
+//            selectedPath.progress(auxPath);
+//
+//            return true;
+//
+//        }
+//        
+//    }
+//
+//    return false;
+//
+//}

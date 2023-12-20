@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 
-df = pd.read_csv('./small_result.csv',sep=';')
+df = pd.read_csv('./small_result_TP_0_2_5000.csv',sep=';')
 
 df['token_name'] = df['token_name'].map(lambda x: x.upper())
 df['mapFilename'] = df['mapFilename'].map(lambda x: Path(x).name.upper())
@@ -43,4 +43,4 @@ df5 = df4.pivot_table(["eq","time", 'tasks'], ["Frenq.", "Agentes"], 'Token')
 
 print(df5)
 
-df5.to_csv('./small_resumo_norm.csv',';')
+df5.to_csv('./small_resumo_norm_TP_0_2_5000.csv',';')

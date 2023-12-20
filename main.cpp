@@ -354,13 +354,13 @@ void small(int map = 0,
     std::vector<_agent_energy_system> agent_energy_systems;
     std::vector<_agentsTasksAllocator*> agentsTasksAllocators;   
     
-//    thresholds.push_back(std::make_pair(1.0f, 1.0f));
+    thresholds.push_back(std::make_pair(1.0f, 1.0f));
     thresholds.push_back(std::make_pair(.8f, .8f));
-//    thresholds.push_back(std::make_pair(.5f, .5f));
-//    thresholds.push_back(std::make_pair(.3f, .3f));
-//    thresholds.push_back(std::make_pair(.8f, .3f));
-//    thresholds.push_back(std::make_pair(.3f, .8f));
-//    thresholds.push_back(std::make_pair(.0f, .0f));
+    thresholds.push_back(std::make_pair(.5f, .5f));
+    thresholds.push_back(std::make_pair(.3f, .3f));
+    thresholds.push_back(std::make_pair(.8f, .3f));
+    thresholds.push_back(std::make_pair(.3f, .8f));
+    thresholds.push_back(std::make_pair(.0f, .0f));
     
     switch(map){
         case 1:
@@ -386,13 +386,13 @@ void small(int map = 0,
             mapFilenames.push_back("./Instances/small/kiva-50-500-5.map");
     }
     
-//    taskFilenames.push_back("./Instances/small/kiva-0.2.task");
-//    taskFilenames.push_back("./Instances/small/kiva-0.5.task");
-//    taskFilenames.push_back("./Instances/small/kiva-1.task");
-//    taskFilenames.push_back("./Instances/small/kiva-2.task");
-//    taskFilenames.push_back("./Instances/small/kiva-5.task");
+    taskFilenames.push_back("./Instances/small/kiva-0.2.task");
+    taskFilenames.push_back("./Instances/small/kiva-0.5.task");
+    taskFilenames.push_back("./Instances/small/kiva-1.task");
+    taskFilenames.push_back("./Instances/small/kiva-2.task");
+    taskFilenames.push_back("./Instances/small/kiva-5.task");
     taskFilenames.push_back("./Instances/small/kiva-10.task");
-//    taskFilenames.push_back("./Instances/small/kiva-500.task");
+    taskFilenames.push_back("./Instances/small/kiva-500.task");
     
     
     _energy_charge<int> ec_1(80000000, 80000000, 60000000, 4000000);
@@ -561,7 +561,7 @@ void small(int map = 0,
     } else if(of == "TP"){
                 
         tokenIds.push_back("TTP");
-//        tokenIds.push_back("BTT");
+        tokenIds.push_back("BTT");
         tokenIds.push_back("TP");
         
     } else {
@@ -590,7 +590,7 @@ void small(int map = 0,
         agentsTasksAllocators,
         500,
         46,                               
-        10);                              
+        0);                              
            
     experiment.run();
     
@@ -610,7 +610,7 @@ int main(int argc, char** argv) {
     
     unsigned evaltype = 2;
     unsigned validity = 5000;    
-    int map_index = 5; // 0 -> all maps
+    int map_index = 0; // 0 -> all maps
     
     if(argc > 1){
         instance = argv[1];
