@@ -90,6 +90,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ga_token_p.o \
 	${OBJECTDIR}/_map.o \
 	${OBJECTDIR}/_nsga.o \
+	${OBJECTDIR}/_r_ga_token.o \
+	${OBJECTDIR}/_r_stepMap.o \
 	${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm.o \
@@ -122,12 +124,14 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 # Test Files
 TESTFILES= \
 	${TESTDIR}/TestFiles/f3 \
+	${TESTDIR}/TestFiles/f5 \
 	${TESTDIR}/TestFiles/f2 \
 	${TESTDIR}/TestFiles/f1 \
 	${TESTDIR}/TestFiles/f4
 
 # Test Object Files
 TESTOBJECTFILES= \
+	${TESTDIR}/_ext/7e63588e/newsimpletest4.o \
 	${TESTDIR}/tests/newsimpletest2.o \
 	${TESTDIR}/tests/newsimpletest3.o \
 	${TESTDIR}/tests/newsimpletest4.o \
@@ -432,6 +436,16 @@ ${OBJECTDIR}/_nsga.o: _nsga.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_nsga.o _nsga.cpp
 
+${OBJECTDIR}/_r_ga_token.o: _r_ga_token.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_r_ga_token.o _r_ga_token.cpp
+
+${OBJECTDIR}/_r_stepMap.o: _r_stepMap.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_r_stepMap.o _r_stepMap.cpp
+
 ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o: _selectBackwardChargingTaskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -568,6 +582,10 @@ ${TESTDIR}/TestFiles/f3: ${TESTDIR}/tests/newsimpletest4.o ${OBJECTFILES:%.o=%_n
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc} -o ${TESTDIR}/TestFiles/f3 $^ ${LDLIBSOPTIONS}   
 
+${TESTDIR}/TestFiles/f5: ${TESTDIR}/_ext/7e63588e/newsimpletest4.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc} -o ${TESTDIR}/TestFiles/f5 $^ ${LDLIBSOPTIONS}   
+
 ${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/newsimpletest3.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc} -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS}   
@@ -585,6 +603,12 @@ ${TESTDIR}/tests/newsimpletest4.o: tests/newsimpletest4.cpp
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -I. -std=c++14 -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest4.o tests/newsimpletest4.cpp
+
+
+${TESTDIR}/_ext/7e63588e/newsimpletest4.o: ../../../../../NetBeansProjects/Map/tests/newsimpletest4.cpp 
+	${MKDIR} -p ${TESTDIR}/_ext/7e63588e
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -I. -std=c++14 -MMD -MP -MF "$@.d" -o ${TESTDIR}/_ext/7e63588e/newsimpletest4.o ../../../../../NetBeansProjects/Map/tests/newsimpletest4.cpp
 
 
 ${TESTDIR}/tests/newsimpletest3.o: tests/newsimpletest3.cpp 
@@ -1320,6 +1344,32 @@ ${OBJECTDIR}/_nsga_nomain.o: ${OBJECTDIR}/_nsga.o _nsga.cpp
 	    ${CP} ${OBJECTDIR}/_nsga.o ${OBJECTDIR}/_nsga_nomain.o;\
 	fi
 
+${OBJECTDIR}/_r_ga_token_nomain.o: ${OBJECTDIR}/_r_ga_token.o _r_ga_token.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_r_ga_token.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_r_ga_token_nomain.o _r_ga_token.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_r_ga_token.o ${OBJECTDIR}/_r_ga_token_nomain.o;\
+	fi
+
+${OBJECTDIR}/_r_stepMap_nomain.o: ${OBJECTDIR}/_r_stepMap.o _r_stepMap.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_r_stepMap.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -O2 -std=c++14 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_r_stepMap_nomain.o _r_stepMap.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_r_stepMap.o ${OBJECTDIR}/_r_stepMap_nomain.o;\
+	fi
+
 ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o _selectBackwardChargingTaskToAgentAlgorithm.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o`; \
@@ -1650,6 +1700,7 @@ ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp
 	@if [ "${TEST}" = "" ]; \
 	then  \
 	    ${TESTDIR}/TestFiles/f3 || true; \
+	    ${TESTDIR}/TestFiles/f5 || true; \
 	    ${TESTDIR}/TestFiles/f2 || true; \
 	    ${TESTDIR}/TestFiles/f1 || true; \
 	    ${TESTDIR}/TestFiles/f4 || true; \

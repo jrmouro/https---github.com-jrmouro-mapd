@@ -12,7 +12,8 @@ class Recoverable {
 public:
     
     virtual void save() = 0;
-    virtual void recover() = 0;
+    virtual void unsave() = 0;
+    virtual void restore() = 0;
 
 };
 

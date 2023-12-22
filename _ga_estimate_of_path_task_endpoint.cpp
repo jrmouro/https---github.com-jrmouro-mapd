@@ -94,8 +94,11 @@ const std::map<_ga_solution::EvalType, unsigned>& _ga_estimate_of_path_task_endp
 
         }
                 
-        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::makespan, makespan + (unsigned)spanp));
-        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::energy, energy + (unsigned)pckp + (unsigned)dlvy));
+        makespan += token.getCurrentStep()  + (unsigned)spanp;
+        energy += token.energyExpenditure() + (unsigned)pckp + (unsigned)dlvy;
+                    
+        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::makespan, makespan));
+        solution.evals.insert(std::pair<_ga_solution::EvalType, unsigned>(_ga_solution::EvalType::energy, energy));
                 
     }
     

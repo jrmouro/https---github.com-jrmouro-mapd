@@ -19,7 +19,7 @@ void test1() {
     
     _stepAstarAlgorithm astar;
     
-    _stepMap sm(50,5,5);
+    _stepMap sm(5,5,5);
     
     for (int r = 0; r < 5; r++)        
         for (int c = 0; c < 5; c++)
@@ -28,6 +28,7 @@ void test1() {
     sm.resetTypesInStepColunm(2,0,0);
     sm.resetTypesInStepColunm(1,2,1);
     
+    std::cout << sm << std::endl;
     
     sm.stepView(0,1);
     sm.free_agent_view();

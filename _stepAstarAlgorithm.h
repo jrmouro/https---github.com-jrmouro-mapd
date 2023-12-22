@@ -25,7 +25,7 @@ public:
     
     _stepAstarAlgorithm(const _stepAstarAlgorithm& other){}
     
-    virtual bool solve(const _stepMap& map, _stepPath& path, const _site& goal, int type)  const {
+    virtual bool solve(const _env_map& map, _stepPath& path, const _site& goal, int type)  const {
         
         bool ret = false;
         
@@ -255,7 +255,8 @@ private:
         
     AstarState* solveAux_iterative(
         AstarState* current,
-        const _stepMap& map,
+//        const _stepMap& map,
+            const _env_map& map,
         const _site& goal,
         ClosedStates& closedStates,
         PriorityStates& priorityStates,

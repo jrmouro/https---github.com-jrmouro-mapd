@@ -240,8 +240,11 @@
         <itemPath>InstanceTask.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f8" displayName="Map" projectFiles="true">
+        <itemPath>_env_map.h</itemPath>
         <itemPath>_map.cpp</itemPath>
         <itemPath>_map.h</itemPath>
+        <itemPath>_r_stepMap.cpp</itemPath>
+        <itemPath>_r_stepMap.h</itemPath>
         <itemPath>_stepMap.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f9" displayName="Path" projectFiles="true">
@@ -282,6 +285,8 @@
           <itemPath>_ga_token.h</itemPath>
           <itemPath>_ga_token_p.cpp</itemPath>
           <itemPath>_ga_token_p.h</itemPath>
+          <itemPath>_r_ga_token.cpp</itemPath>
+          <itemPath>_r_ga_token.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="TP" projectFiles="true">
           <itemPath>BackwardTaskToken.h</itemPath>
@@ -293,9 +298,16 @@
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f10" displayName="Util" projectFiles="true">
+        <logicalFolder name="Map" displayName="Map" projectFiles="true">
+          <itemPath>../../../../../NetBeansProjects/Map/Recoverable.h</itemPath>
+          <itemPath>../../../../../NetBeansProjects/Map/_cutrix.h</itemPath>
+          <itemPath>../../../../../NetBeansProjects/Map/_map.h</itemPath>
+          <itemPath>../../../../../NetBeansProjects/Map/_map_1d.h</itemPath>
+          <itemPath>../../../../../NetBeansProjects/Map/_map_2d.h</itemPath>
+          <itemPath>../../../../../NetBeansProjects/Map/_row.h</itemPath>
+        </logicalFolder>
         <itemPath>Identifiable.h</itemPath>
         <itemPath>MapdException.h</itemPath>
-        <itemPath>Recoverable.h</itemPath>
         <itemPath>Resetable.h</itemPath>
         <itemPath>Writable.h</itemPath>
       </logicalFolder>
@@ -312,6 +324,12 @@
                      projectFiles="true"
                      kind="TEST">
         <itemPath>tests/newsimpletest4.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f5"
+                     displayName="R_stepMap"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>../../../../../NetBeansProjects/Map/tests/newsimpletest4.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="SiteBox" projectFiles="true" kind="TEST">
         <itemPath>tests/newsimpletest3.cpp</itemPath>
@@ -333,6 +351,9 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>../../../../../NetBeansProjects/Map</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="1">
@@ -346,7 +367,6 @@
           <standard>10</standard>
         </cTool>
         <ccTool>
-          <developmentMode>6</developmentMode>
           <standard>11</standard>
         </ccTool>
         <linkerTool>
@@ -355,6 +375,41 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="../../../../../NetBeansProjects/Map/Recoverable.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../../NetBeansProjects/Map/_cutrix.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../../NetBeansProjects/Map/_map.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../../NetBeansProjects/Map/_map_1d.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../../NetBeansProjects/Map/_map_2d.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../../NetBeansProjects/Map/_row.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../../NetBeansProjects/Map/tests/newsimpletest4.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="BackwardTaskToken.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
@@ -380,8 +435,6 @@
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MultiSystemExperiment.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Recoverable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Rectangle.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -550,6 +603,8 @@
       </item>
       <item path="_energy_system.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_env_map.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_ga_agent.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_agent.h" ex="false" tool="3" flavor2="0">
@@ -655,6 +710,14 @@
       <item path="_pathAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_pathToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_r_ga_token.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_r_ga_token.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_r_stepMap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_r_stepMap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_selectBackwardChargingTaskToAgentAlgorithm.cpp"
             ex="false"
@@ -905,6 +968,21 @@
         </ccTool>
         <linkerTool>
           <output>${TESTDIR}/TestFiles/f4</output>
+        </linkerTool>
+      </folder>
+      <folder path="TestFiles/f5">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f5</output>
         </linkerTool>
       </folder>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
@@ -939,6 +1017,41 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="../../../../../NetBeansProjects/Map/Recoverable.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../../NetBeansProjects/Map/_cutrix.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../../NetBeansProjects/Map/_map.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../../NetBeansProjects/Map/_map_1d.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../../NetBeansProjects/Map/_map_2d.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../../NetBeansProjects/Map/_row.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../../NetBeansProjects/Map/tests/newsimpletest4.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="BackwardTaskToken.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Circle.cpp" ex="false" tool="1" flavor2="0">
@@ -964,8 +1077,6 @@
       <item path="MapdException.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MultiSystemExperiment.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Recoverable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Rectangle.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1134,6 +1245,8 @@
       </item>
       <item path="_energy_system.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="_env_map.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="_ga_agent.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="_ga_agent.h" ex="false" tool="3" flavor2="0">
@@ -1239,6 +1352,14 @@
       <item path="_pathAlgorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_pathToAgentAlgorithm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_r_ga_token.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_r_ga_token.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="_r_stepMap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="_r_stepMap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="_selectBackwardChargingTaskToAgentAlgorithm.cpp"
             ex="false"
@@ -1489,6 +1610,21 @@
         </ccTool>
         <linkerTool>
           <output>${TESTDIR}/TestFiles/f4</output>
+        </linkerTool>
+      </folder>
+      <folder path="TestFiles/f5">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f5</output>
         </linkerTool>
       </folder>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">

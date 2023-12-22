@@ -1,6 +1,6 @@
 build/Debug/GNU-Linux/_endpointIndexerAlgorithm.o: \
  _endpointIndexerAlgorithm.cpp _endpointIndexerAlgorithm.h _site.h \
- _agent.h Identifiable.h _stepMap.h Recoverable.h _stepPath.h \
+ _agent.h Identifiable.h _stepMap.h _env_map.h Recoverable.h _stepPath.h \
  MapdException.h _path.h _stepSite.h _task.h _agent_state.h Drawable.h \
  _agent_energy_system.h _energy_system.h _energy_regime.h \
  _energy_charge.h _agent_energy_regime.h _map.h Render.h _ga_agent.h \
@@ -14,6 +14,7 @@ _site.h:
 _agent.h:
 Identifiable.h:
 _stepMap.h:
+_env_map.h:
 Recoverable.h:
 _stepPath.h:
 MapdException.h:

@@ -18,13 +18,13 @@
 #include <vector>
 #include <algorithm>
 #include <cstring>
-#include "Recoverable.h"
 
+#include "_env_map.h"
 #include "_stepPath.h"
 #include "_stepSite.h"
 
 
-class _stepMap : public Recoverable{
+class _stepMap : public _env_map{
 public:
     
     enum NodeType{
@@ -163,13 +163,13 @@ public:
 
     }
     
-    void stepView(const _stepPath& path)const{
+    virtual void stepView(const _stepPath& path)const{
         
         stepView(path.currentSite().GetStep(), path.goalSite().GetStep());
         
     }
     
-    void stepView(unsigned from, unsigned to)const{
+    virtual void stepView(unsigned from, unsigned to)const{
         
         for (int i = 0; i < to - from + 1; i++) {
             
@@ -179,7 +179,7 @@ public:
         
     }
         
-    void stepView(unsigned step)const{
+    virtual void stepView(unsigned step)const{
         
         unsigned p = step * nodes_product;
         
@@ -224,7 +224,7 @@ public:
         
     }
     
-    void free_agent_view()const{
+    virtual void free_agent_view()const{
         
         std::cout << "free_agent" << std::endl;
         
@@ -255,7 +255,7 @@ public:
         
     }
     
-    void max_step_view()const{
+    virtual void max_step_view()const{
         
         std::cout << "max_step" << std::endl;
         
@@ -293,33 +293,31 @@ public:
                 
     }
     
-    bool isPathDefinitelyFree(const _stepSite& site, int type) const {
+    virtual bool isPathDefinitelyFree(const _stepSite& site, int type) const {
         
         return isPathDefinitelyFree(site.GetStep(), site.GetRow(), site.GetColunm(), type);
         
     }
     
-    void resetTypesInStepColunm(unsigned row, unsigned column, int type) {
+    virtual void resetTypesInStepColunm(unsigned row, unsigned column, int type) {
         
         checkRowColunm(0, row, column); 
         
-        int step = 0;
-        this->nodes[step++ * nodes_product + row * colunm_size + column] = type;
-        
-        for (; step < this->step_size; step++){
-            unsigned index = step * nodes_product + row * colunm_size + column;    
-            this->nodes[index] = NodeType::freeNode;                
-        }
-        
         unsigned index = row * colunm_size + column;
-            
+        
+        this->nodes[index] = type;
+        
+        for (int step = 1; step < this->step_size; step++){   
+            this->nodes[step * nodes_product + index] = NodeType::freeNode;                
+        }
+                            
         max_step[index] = 0;
         free_type[index] = type;   
         
     }
     
     
-    void setMoving(const _stepPath& path, int type){
+    virtual void setMoving(const _stepPath& path, int type){
         
         if(!path.empty()){
         
@@ -337,15 +335,6 @@ public:
                 return false;
 
             });
-            
-//            if(save_state){
-//                
-//                saved.push_back(
-//                        std::pair<TypeSaved, std::pair<int, _stepPath>>(
-//                        TypeSaved::set,
-//                        std::pair<int, _stepPath>(type, path)));
-//                
-//            }
         
         } else {
             
@@ -362,7 +351,7 @@ public:
         
     }
         
-    void deleteMoving(const _stepPath& path, int type){
+    virtual void deleteMoving(const _stepPath& path, int type){
         
         if(!path.empty()){
         
@@ -378,19 +367,6 @@ public:
                 return false;
 
             }); 
-            
-//            auto current = path.currentSite();
-//            this->setTypesFrom(current.GetStep()+1, current.GetRow(), current.GetColunm(), NodeType::freeNode, type);
-            
-            
-//            if(save_state){
-//                
-//                saved.push_back(
-//                        std::pair<TypeSaved, std::pair<int, _stepPath>>(
-//                        TypeSaved::del,
-//                        std::pair<int, _stepPath>(type, path)));
-//                
-//            }
         
         } else {
             
@@ -408,46 +384,57 @@ public:
     }
    
 
-    unsigned getColumn_size() const {
+    virtual unsigned getColumn_size() const {
         return colunm_size;
     }
 
-    unsigned getRow_size() const {
+    virtual unsigned getRow_size() const {
         return row_size;
     }
     
-    unsigned getStep_size() const {
+    virtual unsigned getStep_size() const {
         return step_size;
     } 
     
     virtual void save(){
-        
-        save_state = true;
-        
-    }
-    
-    virtual void recover(){
-        
-        save_state = false;
-        
-        auto it = saved.crbegin();
-        
-        for(; it != saved.crend(); it++){
-            
-            if(it->first == TypeSaved::set){  
                 
-                deleteMoving(it->second.second, it->second.first);
-                
-            } else {
-                
-                setMoving(it->second.second, it->second.first);
-                
-            }
-            
+        try {
+            std::ostringstream stream;
+            stream << "not implemented";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
         }
         
     }
     
+    virtual void unsave(){
+        
+        try {
+            std::ostringstream stream;
+            stream << "not implemented";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+    }
+    
+    virtual void restore(){
+        
+        try {
+            std::ostringstream stream;
+            stream << "not implemented";
+            MAPD_EXCEPTION(stream.str());
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+            std::abort();
+        }
+        
+    }
+            
 private:
     
     enum TypeSaved{ set, del};
@@ -826,18 +813,18 @@ private:
     
     
         
-    void setTypesFrom(const _stepSite& site, int from,  int to) {
-
-        setTypesFrom(site.GetStep(), site.GetRow(), site.GetColunm(), from, to);
-
-    }
+//    void setTypesFrom(const _stepSite& site, int from,  int to) {
+//
+//        setTypesFrom(site.GetStep(), site.GetRow(), site.GetColunm(), from, to);
+//
+//    }
     
-    virtual bool isNodeBelonging(const _stepSite& site) const {
-        
-        return site.GetStep() < step_size && site.GetRow() < row_size && site.GetColunm() < colunm_size;
-        
-    }
-    
+//    virtual bool isNodeBelonging(const _stepSite& site) const {
+//        
+//        return site.GetStep() < step_size && site.GetRow() < row_size && site.GetColunm() < colunm_size;
+//        
+//    }
+//    
     bool isFreeToType(const _stepSite& site, int type)const{
         
         unsigned index = site.GetRow() * colunm_size + site.GetColunm();
@@ -854,24 +841,6 @@ private:
         
         return nodotype == NodeType::freeNode || nodotype == type;
         
-    }
-        
-    int nodoType(const _stepSite& site) const {
-        
-        if(isNodeBelonging(site))
-            return this->nodes[site.GetStep() * nodes_product + site.GetRow() * colunm_size + site.GetColunm()];
-
-        return NodeType::blockedNode;
-
-    }
-
-    int nodoType(int step, int row, int colunm) const {
-
-        if (step > -1 && step < step_size && row > -1 && row < row_size && colunm > -1 && colunm < colunm_size)
-            return this->nodes[step * nodes_product + row * colunm_size + colunm];
-
-        return NodeType::blockedNode;
-
     }
         
     friend std::ostream& operator<<(std::ostream& os, const _stepMap& obj) {

@@ -1,7 +1,7 @@
 build/Debug/GNU-Linux/GA_SystemExperiment.o: GA_SystemExperiment.cpp \
  GA_SystemExperiment.h Experiment.h Identifiable.h _ga_system.h \
- _stepMap.h Recoverable.h _stepPath.h MapdException.h _path.h _site.h \
- _stepSite.h _ga_solution.h _ga_pseudo_solution.h _ga_token.h \
+ _stepMap.h _env_map.h Recoverable.h _stepPath.h MapdException.h _path.h \
+ _site.h _stepSite.h _ga_solution.h _ga_pseudo_solution.h _ga_token.h \
  _stepPathAlgorithm.h _agent.h _task.h _agent_state.h Drawable.h \
  _agent_energy_system.h _energy_system.h _energy_regime.h \
  _energy_charge.h _agent_energy_regime.h _map.h Render.h Writable.h \
@@ -15,6 +15,7 @@ Experiment.h:
 Identifiable.h:
 _ga_system.h:
 _stepMap.h:
+_env_map.h:
 Recoverable.h:
 _stepPath.h:
 MapdException.h:

@@ -22,6 +22,7 @@ class _ga_agent;
 class __stepPathAlgorithm;
 
 class _ga_token  : public Identifiable<std::string>, public Drawable, public Writable{
+
 public:
     
     _ga_token(
@@ -88,24 +89,21 @@ public:
     void error_edge_collision_check() const;
     
     unsigned GetMaxPlannedStep() const;
-    
+        
 protected:
     std::string _name = "GAT";
-    _map map;
+    const _agent_energy_system agent_energy_system;
+    const _map& map;
+    
     _stepMap stepMap;
     std::map<unsigned, _site> nonTaskEndpoints;
     std::map<int, _task> pendingTasks, assignedTasks, runningTasks, finishedTasks;
     std::map<int, _ga_agent> agents;
-    std::map<int, int> assignTaskAgent;
-    const _agent_energy_system agent_energy_system;
+    std::map<int, int> assignTaskAgent;    
     unsigned currentStep = 0;
     
-//    bool updateAgentRestPath(_ga_agent&);
-    bool updateAgentRestPathCloserEndpoint(_ga_agent&, const _site&);
-//    bool updateAgentPickupRestPath(_ga_agent&);
-    
-    virtual bool updateAgentTaskPath_pendingTask(_ga_agent&, int, bool);
-    
+    bool updateAgentRestPathCloserEndpoint(_ga_agent&, const _site&);    
+    virtual bool updateAgentTaskPath_pendingTask(_ga_agent&, int, bool);    
     virtual bool updateAgentTaskPath_resting(_ga_agent&, int);
     virtual bool updateAgentTaskPath_going_to_resting(_ga_agent&, int);
     virtual bool updateAgentTaskPath_pickuping(_ga_agent&, int);
@@ -115,9 +113,7 @@ protected:
     virtual bool updateAgentTaskPath_delivering(_ga_agent&, int);
     virtual bool updateAgentTaskPath_rest_pickuping(_ga_agent&, int);
     virtual bool updateAgentTaskPath_rest_delivering(_ga_agent&);
-    virtual bool updateAgentTaskPath_going_to_rest_delivering_to_delivering(_ga_agent&, int);
-    
-    
+    virtual bool updateAgentTaskPath_going_to_rest_delivering_to_delivering(_ga_agent&, int);  
     _ga_agent* getEndpointObstructor(const _ga_agent& agent, const _site& endpoint);    
     bool liberateEndpoint(const _ga_agent& agent, const _site& endpoint);
     

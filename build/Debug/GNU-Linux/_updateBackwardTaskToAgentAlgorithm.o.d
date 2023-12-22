@@ -1,7 +1,7 @@
 build/Debug/GNU-Linux/_updateBackwardTaskToAgentAlgorithm.o: \
  _updateBackwardTaskToAgentAlgorithm.cpp \
  _updateBackwardTaskToAgentAlgorithm.h _updateToAgentAlgorithm.h \
- ReportTask.h _agent.h Identifiable.h _stepMap.h Recoverable.h \
+ ReportTask.h _agent.h Identifiable.h _stepMap.h _env_map.h Recoverable.h \
  _stepPath.h MapdException.h _path.h _site.h _stepSite.h _task.h \
  _agent_state.h Drawable.h _agent_energy_system.h _energy_system.h \
  _energy_regime.h _energy_charge.h _agent_energy_regime.h _map.h Render.h \
@@ -18,6 +18,7 @@ ReportTask.h:
 _agent.h:
 Identifiable.h:
 _stepMap.h:
+_env_map.h:
 Recoverable.h:
 _stepPath.h:
 MapdException.h:

@@ -1,8 +1,8 @@
 build/Debug/GNU-Linux/main.o: main.cpp MultiSystemExperiment.h \
  SystemExperiment.h Experiment.h Identifiable.h InstanceMAPD.h \
  InstanceMap.h _map.h Drawable.h Render.h _site.h MapdException.h \
- _stepMap.h Recoverable.h _stepPath.h _path.h _stepSite.h Writable.h \
- _endpointsDistanceAlgorithm.h _distanceAlgorithm.h \
+ _stepMap.h _env_map.h Recoverable.h _stepPath.h _path.h _stepSite.h \
+ Writable.h _endpointsDistanceAlgorithm.h _distanceAlgorithm.h \
  _astarDistanceAlgorithm.h _astarAlgorithm.h _pathAlgorithm.h \
  InstanceTask.h _taskMap.h _task.h _system.h _token.h _c_task.h \
  ReportTask.h _agent.h _agent_state.h _agent_energy_system.h \
@@ -46,6 +46,7 @@ Render.h:
 _site.h:
 MapdException.h:
 _stepMap.h:
+_env_map.h:
 Recoverable.h:
 _stepPath.h:
 _path.h:

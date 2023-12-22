@@ -62,3 +62,31 @@ void _closerEndpointIndexerAlgorithm::ga_solve_to_site(
     siteIndex.push_back(endpoint);
 
 }
+
+void _closerEndpointIndexerAlgorithm::epa_solve(
+        const _endpointsPathAlgorithm& endpointsPathAlgorithm,
+        const _site& endpoint,
+        const _site& endpointReference,
+        std::vector<_site>& siteIndex) const {
+    
+    const unsigned siteDistance = endpointsPathAlgorithm.solve_distance(endpointReference, endpoint);
+
+    std::vector<_site>::iterator it = siteIndex.begin();
+
+    for (; it != siteIndex.end(); it++) {
+
+        const unsigned dist = endpointsPathAlgorithm.solve_distance(endpointReference, *it);
+
+        if (siteDistance < dist) {
+
+            siteIndex.insert(it, endpoint);
+
+            return;
+
+        }
+
+    }
+
+    siteIndex.push_back(endpoint);
+
+}

@@ -16,23 +16,29 @@ _ga_agent::_ga_agent(
         const _stepSite& initialSite,
         const _agent_energy_system& agent_energy_system) :
             _id(id),
-            state(_ga_agent_state_free::getInstance()),
-            path(initialSite),
+            _state(_ga_agent_state_free::getInstance()),
+            _path(initialSite),
             _previousSite(initialSite),
             agent_energy_system(agent_energy_system) { }
 
 _ga_agent::_ga_agent(const _ga_agent& other) :
         _id(other._id),
-        state(other.state),
-        path(other.path),
+        _state(other._state),
+        _path(other._path),
         _previousSite(other._previousSite),
         agent_energy_system(other.agent_energy_system) {
-    if (other.currentTask != nullptr)
-        currentTask = new _task(*other.currentTask);
+    if (other._currentTask != nullptr)
+        _currentTask = new _task(*other._currentTask);
 }
 
 _ga_agent::~_ga_agent() {
-    if (currentTask != nullptr) delete currentTask;
+    if (_currentTask != nullptr) delete _currentTask;
+    if(r_path != nullptr){
+        
+        delete r_path;
+        delete r_previousSite;
+
+    }
 }
 
 int _ga_agent::id()const {
@@ -41,17 +47,17 @@ int _ga_agent::id()const {
 
 void _ga_agent::draw(const Render& render) const {
 
-    this->state->onDraw(render, *this);
+    this->_state->onDraw(render, *this);
 
 }
 
 void _ga_agent::stepping(const _map& map) {
 
-    state->onStepping(map, *this);
+    _state->onStepping(map, *this);
     
-    if (path.size() > 1) {
+    if (_path.size() > 1) {
 
-        this->_previousSite = path.pop();   
+        this->_previousSite = _path.pop();   
 
     } else {
 
@@ -69,19 +75,19 @@ void _ga_agent::stepping(const _map& map) {
 }
 
 bool _ga_agent::isFree()const {
-    return this->state->id() == 0;
+    return this->_state->id() == 0;
 }
 
 bool _ga_agent::isBuzy()const {
-    return this->state->id() == 1;
+    return this->_state->id() == 1;
 }
 
 void _ga_agent::setStateFree(){
-    state = _ga_agent_state_free::getInstance();
+    _state = _ga_agent_state_free::getInstance();
 }
 
 void _ga_agent::setStateBuzy(){
-    state = _ga_agent_state_buzy::getInstance();
+    _state = _ga_agent_state_buzy::getInstance();
 }
 
 bool _ga_agent::isAtEnergyChargedLevel()const {
@@ -97,11 +103,11 @@ bool _ga_agent::isAtEnergyDeadLevel()const {
 }
 
 bool _ga_agent::isTaskAssigned()const {
-    return this->currentTask != nullptr;
+    return this->_currentTask != nullptr;
 }
 
 bool _ga_agent::isAtTrivialPath()const {
-    return path.size() == 1;
+    return _path.size() == 1;
 }
 
 bool _ga_agent::isAtDelivering()const {
@@ -110,7 +116,7 @@ bool _ga_agent::isAtDelivering()const {
 //            isBuzy()
 //            && isAtTrivialPath()
             isTaskAssigned()
-            && path.currentSite().match(currentTask->getDelivery());
+            && _path.currentSite().match(_currentTask->getDelivery());
 
 }
 
@@ -120,7 +126,7 @@ bool _ga_agent::isAtPickuping()const {
 //            isFree()
 //            && isAtTrivialPath()
             isTaskAssigned()
-            && path.currentSite().match(currentTask->getPickup());
+            && _path.currentSite().match(_currentTask->getPickup());
 }
 
 bool _ga_agent::isAtResting()const{
@@ -138,7 +144,7 @@ bool _ga_agent::isAtRestPickuping()const{
 //            isFree()
 //            && isAtTrivialPath()
             isTaskAssigned()
-            && !path.currentSite().match(currentTask->getPickup());
+            && !_path.currentSite().match(_currentTask->getPickup());
 }
 
 
@@ -148,7 +154,7 @@ bool _ga_agent::isAtRestDelivering()const{
 //            isBuzy() 
 //            && isAtTrivialPath() ;
             isTaskAssigned()      
-            && !path.currentSite().match(currentTask->getDelivery());
+            && !_path.currentSite().match(_currentTask->getDelivery());
     
 }
 
@@ -158,7 +164,7 @@ bool _ga_agent::isGoingToDelivering()const {
 //            isBuzy()             
 //            && !isAtTrivialPath() ;
             isTaskAssigned()
-            && path.goalSite().match(currentTask->getDelivery());
+            && _path.goalSite().match(_currentTask->getDelivery());
 }
 
 bool _ga_agent::isGoingToPickuping() const {
@@ -167,7 +173,7 @@ bool _ga_agent::isGoingToPickuping() const {
 //            isFree()            
 //            && !isAtTrivialPath() ;
             isTaskAssigned()
-            && path.goalSite().match(currentTask->getPickup());
+            && _path.goalSite().match(_currentTask->getPickup());
 }
 
 bool _ga_agent::isGoingToResting() const {
@@ -184,7 +190,7 @@ bool _ga_agent::isGoingToRestDelivering() const {
 //            isBuzy()            
 //            && !isAtTrivialPath() ;
             isTaskAssigned()
-            && !path.goalSite().match(currentTask->getDelivery());
+            && !_path.goalSite().match(_currentTask->getDelivery());
 }
 
 bool _ga_agent::isGoingToRestPickuping() const {
@@ -193,19 +199,19 @@ bool _ga_agent::isGoingToRestPickuping() const {
 //            isFree()            
 //            && isAtTrivialPath() ;
             isTaskAssigned()
-            && !path.goalSite().match(currentTask->getPickup());
+            && !_path.goalSite().match(_currentTask->getPickup());
 }
 
 const _stepSite& _ga_agent::goalSite() const {
-    return path.goalSite();
+    return _path.goalSite();
 }
 
 const _stepSite& _ga_agent::currentSite() const {
-    return path.currentSite();
+    return _path.currentSite();
 }
 
 const _stepSite& _ga_agent::getFutureSite() const {
-    return path.futureSite();
+    return _path.futureSite();
 }
 
 const _agent_energy_system& _ga_agent::getAgentEnergySystem() const {
@@ -213,43 +219,43 @@ const _agent_energy_system& _ga_agent::getAgentEnergySystem() const {
 }
 
 const _task* _ga_agent::getCurrentTask() const {
-    return currentTask;
+    return _currentTask;
 }
 
 void _ga_agent::assignTask(const _task& task) {
-    if (this->currentTask != nullptr) delete this->currentTask;
-    this->currentTask = new _task(task);
+    if (this->_currentTask != nullptr) delete this->_currentTask;
+    this->_currentTask = new _task(task);
 }
 
 void _ga_agent::unassignTask() {
-    if (this->currentTask != nullptr) delete this->currentTask;
-    this->currentTask = nullptr;
+    if (this->_currentTask != nullptr) delete this->_currentTask;
+    this->_currentTask = nullptr;
 }
 
 void _ga_agent::assignPath(const _stepPath& path) {
-    this->path = path;
+    this->_path = path;
 }
 void _ga_agent::progressPath(const _stepPath& path) {
-    this->path.progress(path);
+    this->_path.progress(path);
 }
 
 const _stepPath& _ga_agent::getPath() const {
-    return path;
+    return _path;
 }
 
 void _ga_agent::change_state(_ga_agent_state* state) {
-    this->state = state;
+    this->_state = state;
 }
 
 bool _ga_agent::updateTaskPath(const _stepPathAlgorithm& astar, _stepMap& map, const _task * const task) {
 
     if (isAtTrivialPath()) {
 
-        _site goal(path.currentSite().GetRow(), path.currentSite().GetColunm());
+        _site goal(_path.currentSite().GetRow(), _path.currentSite().GetColunm());
 
         if (isGoingToPickuping()) {
 
-            goal = currentTask->getDelivery();
+            goal = _currentTask->getDelivery();
 
         } else if (task != nullptr) {
 
@@ -258,7 +264,7 @@ bool _ga_agent::updateTaskPath(const _stepPathAlgorithm& astar, _stepMap& map, c
 
         }
 
-        return astar.solve(map, path, goal, id());
+        return astar.solve(map, _path, goal, id());
 
     }
 

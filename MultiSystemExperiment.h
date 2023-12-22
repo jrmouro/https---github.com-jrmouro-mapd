@@ -90,7 +90,7 @@ public:
 
 
                 std::vector<_token*> ptokens;
-                std::vector<_ga_token*> p_ga_tokens;
+                std::vector<_ga_token*> p_ga_tokens;       
 
                 for (auto const& tokenId : tokenIds) {
 

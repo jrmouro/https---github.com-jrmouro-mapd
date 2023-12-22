@@ -34,6 +34,13 @@ public:
             const _site& endpointReference, 
             std::vector<_site>& siteIndex) const;
     
+    
+    void epa_solve(
+        const _endpointsPathAlgorithm& endpointsPathAlgorithm,
+        const _site& endpoint,
+        const _site& endpointReference,
+        std::vector<_site>& siteIndex) const;
+    
 };
 
 #endif /* _CLOSERENDPOINTINDEXERALGORITHM_H */

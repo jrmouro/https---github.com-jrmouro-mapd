@@ -1,8 +1,8 @@
 build/Debug/GNU-Linux/_agent_goingToCharging_CL.o: \
  _agent_goingToCharging_CL.cpp _agent_goingToCharging_CL.h \
  _agent_goingToCharging.h _agent_state.h _task.h Identifiable.h _site.h \
- _stepMap.h Recoverable.h _stepPath.h MapdException.h _path.h _stepSite.h \
- _agent_charging.h _agent_charging_CL.h _agent.h Drawable.h \
+ _stepMap.h _env_map.h Recoverable.h _stepPath.h MapdException.h _path.h \
+ _stepSite.h _agent_charging.h _agent_charging_CL.h _agent.h Drawable.h \
  _agent_energy_system.h _energy_system.h _energy_regime.h \
  _energy_charge.h _agent_energy_regime.h _map.h Render.h _agent_dead.h \
  _token.h Writable.h _c_task.h ReportTask.h _manhattanAlgorithm.h \
@@ -18,6 +18,7 @@ _task.h:
 Identifiable.h:
 _site.h:
 _stepMap.h:
+_env_map.h:
 Recoverable.h:
 _stepPath.h:
 MapdException.h:

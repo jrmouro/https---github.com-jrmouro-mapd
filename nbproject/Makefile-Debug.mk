@@ -90,6 +90,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ga_token_p.o \
 	${OBJECTDIR}/_map.o \
 	${OBJECTDIR}/_nsga.o \
+	${OBJECTDIR}/_r_ga_token.o \
+	${OBJECTDIR}/_r_stepMap.o \
 	${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o \
 	${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm.o \
@@ -122,12 +124,14 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 # Test Files
 TESTFILES= \
 	${TESTDIR}/TestFiles/f3 \
+	${TESTDIR}/TestFiles/f5 \
 	${TESTDIR}/TestFiles/f2 \
 	${TESTDIR}/TestFiles/f1 \
 	${TESTDIR}/TestFiles/f4
 
 # Test Object Files
 TESTOBJECTFILES= \
+	${TESTDIR}/_ext/7e63588e/newsimpletest4.o \
 	${TESTDIR}/tests/newsimpletest2.o \
 	${TESTDIR}/tests/newsimpletest3.o \
 	${TESTDIR}/tests/newsimpletest4.o \
@@ -160,402 +164,412 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mapd: ${OBJECTFILES}
 ${OBJECTDIR}/Circle.o: Circle.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Circle.o Circle.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Circle.o Circle.cpp
 
 ${OBJECTDIR}/GA_SystemExperiment.o: GA_SystemExperiment.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GA_SystemExperiment.o GA_SystemExperiment.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GA_SystemExperiment.o GA_SystemExperiment.cpp
 
 ${OBJECTDIR}/Rectangle.o: Rectangle.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Rectangle.o Rectangle.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Rectangle.o Rectangle.cpp
 
 ${OBJECTDIR}/Render.o: Render.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Render.o Render.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Render.o Render.cpp
 
 ${OBJECTDIR}/Shape.o: Shape.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Shape.o Shape.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Shape.o Shape.cpp
 
 ${OBJECTDIR}/Text.o: Text.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Text.o Text.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Text.o Text.cpp
 
 ${OBJECTDIR}/_agent.o: _agent.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent.o _agent.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent.o _agent.cpp
 
 ${OBJECTDIR}/_agent_charging.o: _agent_charging.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging.o _agent_charging.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging.o _agent_charging.cpp
 
 ${OBJECTDIR}/_agent_charging_CL.o: _agent_charging_CL.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging_CL.o _agent_charging_CL.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging_CL.o _agent_charging_CL.cpp
 
 ${OBJECTDIR}/_agent_dead.o: _agent_dead.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_dead.o _agent_dead.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_dead.o _agent_dead.cpp
 
 ${OBJECTDIR}/_agent_goingToCharging.o: _agent_goingToCharging.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToCharging.o _agent_goingToCharging.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToCharging.o _agent_goingToCharging.cpp
 
 ${OBJECTDIR}/_agent_goingToCharging_CL.o: _agent_goingToCharging_CL.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToCharging_CL.o _agent_goingToCharging_CL.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToCharging_CL.o _agent_goingToCharging_CL.cpp
 
 ${OBJECTDIR}/_agent_goingToDelivery.o: _agent_goingToDelivery.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToDelivery.o _agent_goingToDelivery.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToDelivery.o _agent_goingToDelivery.cpp
 
 ${OBJECTDIR}/_agent_goingToDelivery_CL.o: _agent_goingToDelivery_CL.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToDelivery_CL.o _agent_goingToDelivery_CL.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToDelivery_CL.o _agent_goingToDelivery_CL.cpp
 
 ${OBJECTDIR}/_agent_goingToPickup.o: _agent_goingToPickup.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToPickup.o _agent_goingToPickup.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToPickup.o _agent_goingToPickup.cpp
 
 ${OBJECTDIR}/_agent_goingToPickup_CL.o: _agent_goingToPickup_CL.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToPickup_CL.o _agent_goingToPickup_CL.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToPickup_CL.o _agent_goingToPickup_CL.cpp
 
 ${OBJECTDIR}/_agent_goingToRest.o: _agent_goingToRest.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToRest.o _agent_goingToRest.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToRest.o _agent_goingToRest.cpp
 
 ${OBJECTDIR}/_agent_goingToRest_CL.o: _agent_goingToRest_CL.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToRest_CL.o _agent_goingToRest_CL.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToRest_CL.o _agent_goingToRest_CL.cpp
 
 ${OBJECTDIR}/_agent_parked.o: _agent_parked.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parked.o _agent_parked.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parked.o _agent_parked.cpp
 
 ${OBJECTDIR}/_agent_parker_CL.o: _agent_parker_CL.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parker_CL.o _agent_parker_CL.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parker_CL.o _agent_parker_CL.cpp
 
 ${OBJECTDIR}/_agent_state.o: _agent_state.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_state.o _agent_state.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_state.o _agent_state.cpp
 
 ${OBJECTDIR}/_allocation.o: _allocation.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_allocation.o _allocation.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_allocation.o _allocation.cpp
 
 ${OBJECTDIR}/_astarAlgorithm.o: _astarAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarAlgorithm.o _astarAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarAlgorithm.o _astarAlgorithm.cpp
 
 ${OBJECTDIR}/_astarDistanceAlgorithm.o: _astarDistanceAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarDistanceAlgorithm.o _astarDistanceAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarDistanceAlgorithm.o _astarDistanceAlgorithm.cpp
 
 ${OBJECTDIR}/_chargingTaskToAgentAlgorithm.o: _chargingTaskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_chargingTaskToAgentAlgorithm.o _chargingTaskToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_chargingTaskToAgentAlgorithm.o _chargingTaskToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm.o: _closerCooperatorAgentIndexerAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm.o _closerCooperatorAgentIndexerAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm.o _closerCooperatorAgentIndexerAlgorithm.cpp
 
 ${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o: _closerEndpointIndexerAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o _closerEndpointIndexerAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o _closerEndpointIndexerAlgorithm.cpp
 
 ${OBJECTDIR}/_closerTaskIndexerAlgorithm.o: _closerTaskIndexerAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerTaskIndexerAlgorithm.o _closerTaskIndexerAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerTaskIndexerAlgorithm.o _closerTaskIndexerAlgorithm.cpp
 
 ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o: _closerTaskIndexerThresholdAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o _closerTaskIndexerThresholdAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o _closerTaskIndexerThresholdAlgorithm.cpp
 
 ${OBJECTDIR}/_endpointIndexerAlgorithm.o: _endpointIndexerAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointIndexerAlgorithm.o _endpointIndexerAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointIndexerAlgorithm.o _endpointIndexerAlgorithm.cpp
 
 ${OBJECTDIR}/_endpointsDistanceAlgorithm.o: _endpointsDistanceAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointsDistanceAlgorithm.o _endpointsDistanceAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointsDistanceAlgorithm.o _endpointsDistanceAlgorithm.cpp
 
 ${OBJECTDIR}/_endpointsPathAlgorithm.o: _endpointsPathAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointsPathAlgorithm.o _endpointsPathAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointsPathAlgorithm.o _endpointsPathAlgorithm.cpp
 
 ${OBJECTDIR}/_ga_agent.o: _ga_agent.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent.o _ga_agent.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent.o _ga_agent.cpp
 
 ${OBJECTDIR}/_ga_agent_state.o: _ga_agent_state.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state.o _ga_agent_state.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state.o _ga_agent_state.cpp
 
 ${OBJECTDIR}/_ga_agent_state_buzy.o: _ga_agent_state_buzy.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_buzy.o _ga_agent_state_buzy.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_buzy.o _ga_agent_state_buzy.cpp
 
 ${OBJECTDIR}/_ga_agent_state_free.o: _ga_agent_state_free.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_free.o _ga_agent_state_free.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_free.o _ga_agent_state_free.cpp
 
 ${OBJECTDIR}/_ga_balanced_solution.o: _ga_balanced_solution.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_balanced_solution.o _ga_balanced_solution.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_balanced_solution.o _ga_balanced_solution.cpp
 
 ${OBJECTDIR}/_ga_best_solution_selector.o: _ga_best_solution_selector.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_best_solution_selector.o _ga_best_solution_selector.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_best_solution_selector.o _ga_best_solution_selector.cpp
 
 ${OBJECTDIR}/_ga_estimate_of_path_check.o: _ga_estimate_of_path_check.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_check.o _ga_estimate_of_path_check.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_check.o _ga_estimate_of_path_check.cpp
 
 ${OBJECTDIR}/_ga_estimate_of_path_collision.o: _ga_estimate_of_path_collision.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_collision.o _ga_estimate_of_path_collision.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_collision.o _ga_estimate_of_path_collision.cpp
 
 ${OBJECTDIR}/_ga_estimate_of_path_count.o: _ga_estimate_of_path_count.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_count.o _ga_estimate_of_path_count.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_count.o _ga_estimate_of_path_count.cpp
 
 ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint.o: _ga_estimate_of_path_task_endpoint.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint.o _ga_estimate_of_path_task_endpoint.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint.o _ga_estimate_of_path_task_endpoint.cpp
 
 ${OBJECTDIR}/_ga_estimative_of_path.o: _ga_estimative_of_path.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimative_of_path.o _ga_estimative_of_path.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimative_of_path.o _ga_estimative_of_path.cpp
 
 ${OBJECTDIR}/_ga_objective_function.o: _ga_objective_function.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_objective_function.o _ga_objective_function.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_objective_function.o _ga_objective_function.cpp
 
 ${OBJECTDIR}/_ga_population.o: _ga_population.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_population.o _ga_population.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_population.o _ga_population.cpp
 
 ${OBJECTDIR}/_ga_pseudo_solution.o: _ga_pseudo_solution.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_pseudo_solution.o _ga_pseudo_solution.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_pseudo_solution.o _ga_pseudo_solution.cpp
 
 ${OBJECTDIR}/_ga_real_of.o: _ga_real_of.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_real_of.o _ga_real_of.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_real_of.o _ga_real_of.cpp
 
 ${OBJECTDIR}/_ga_select_solution.o: _ga_select_solution.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_select_solution.o _ga_select_solution.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_select_solution.o _ga_select_solution.cpp
 
 ${OBJECTDIR}/_ga_solution.o: _ga_solution.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solution.o _ga_solution.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solution.o _ga_solution.cpp
 
 ${OBJECTDIR}/_ga_solutionAllocator.o: _ga_solutionAllocator.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solutionAllocator.o _ga_solutionAllocator.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solutionAllocator.o _ga_solutionAllocator.cpp
 
 ${OBJECTDIR}/_ga_system.o: _ga_system.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_system.o _ga_system.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_system.o _ga_system.cpp
 
 ${OBJECTDIR}/_ga_token.o: _ga_token.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token.o _ga_token.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token.o _ga_token.cpp
 
 ${OBJECTDIR}/_ga_token_p.o: _ga_token_p.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token_p.o _ga_token_p.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token_p.o _ga_token_p.cpp
 
 ${OBJECTDIR}/_map.o: _map.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_map.o _map.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_map.o _map.cpp
 
 ${OBJECTDIR}/_nsga.o: _nsga.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_nsga.o _nsga.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_nsga.o _nsga.cpp
+
+${OBJECTDIR}/_r_ga_token.o: _r_ga_token.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_r_ga_token.o _r_ga_token.cpp
+
+${OBJECTDIR}/_r_stepMap.o: _r_stepMap.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_r_stepMap.o _r_stepMap.cpp
 
 ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o: _selectBackwardChargingTaskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o _selectBackwardChargingTaskToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o _selectBackwardChargingTaskToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o: _selectBackwardTaskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o _selectBackwardTaskToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o _selectBackwardTaskToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm.o: _selectChargingEndpointToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm.o _selectChargingEndpointToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm.o _selectChargingEndpointToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_selectChargingTaskToAgentAlgorithm.o: _selectChargingTaskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectChargingTaskToAgentAlgorithm.o _selectChargingTaskToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectChargingTaskToAgentAlgorithm.o _selectChargingTaskToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_selectChargingTaskToAgentThresholdAlgorithm.o: _selectChargingTaskToAgentThresholdAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectChargingTaskToAgentThresholdAlgorithm.o _selectChargingTaskToAgentThresholdAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectChargingTaskToAgentThresholdAlgorithm.o _selectChargingTaskToAgentThresholdAlgorithm.cpp
 
 ${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm.o: _selectRestEndpointToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm.o _selectRestEndpointToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm.o _selectRestEndpointToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm.o: _selectTaskSwapToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm.o _selectTaskSwapToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm.o _selectTaskSwapToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_selectTaskToAgentAlgorithm.o: _selectTaskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskToAgentAlgorithm.o _selectTaskToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskToAgentAlgorithm.o _selectTaskToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_selectTaskToAgentThresholdAlgorithm.o: _selectTaskToAgentThresholdAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskToAgentThresholdAlgorithm.o _selectTaskToAgentThresholdAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskToAgentThresholdAlgorithm.o _selectTaskToAgentThresholdAlgorithm.cpp
 
 ${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm.o: _selectTrivialPathToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm.o _selectTrivialPathToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm.o _selectTrivialPathToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_siteBox.o: _siteBox.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_siteBox.o _siteBox.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_siteBox.o _siteBox.cpp
 
 ${OBJECTDIR}/_stepPath.o: _stepPath.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepPath.o _stepPath.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepPath.o _stepPath.cpp
 
 ${OBJECTDIR}/_stepPathAlgorithm.o: _stepPathAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepPathAlgorithm.o _stepPathAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepPathAlgorithm.o _stepPathAlgorithm.cpp
 
 ${OBJECTDIR}/_stepSiteBox.o: _stepSiteBox.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepSiteBox.o _stepSiteBox.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepSiteBox.o _stepSiteBox.cpp
 
 ${OBJECTDIR}/_taskIndexerAlgorithm.o: _taskIndexerAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_taskIndexerAlgorithm.o _taskIndexerAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_taskIndexerAlgorithm.o _taskIndexerAlgorithm.cpp
 
 ${OBJECTDIR}/_taskToAgentAlgorithm.o: _taskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_taskToAgentAlgorithm.o _taskToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_taskToAgentAlgorithm.o _taskToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_task_path.o: _task_path.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_task_path.o _task_path.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_task_path.o _task_path.cpp
 
 ${OBJECTDIR}/_token.o: _token.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_token.o _token.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_token.o _token.cpp
 
 ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm.o: _updateBackwardTaskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm.o _updateBackwardTaskToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm.o _updateBackwardTaskToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_updateEndpointToAgentAlgorithm.o: _updateEndpointToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateEndpointToAgentAlgorithm.o _updateEndpointToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateEndpointToAgentAlgorithm.o _updateEndpointToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm.o: _updateTaskSwapToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm.o _updateTaskSwapToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm.o _updateTaskSwapToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_updateTaskToAgentAlgorithm.o: _updateTaskToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskToAgentAlgorithm.o _updateTaskToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskToAgentAlgorithm.o _updateTaskToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/_updateTokenAlgorithms.o: _updateTokenAlgorithms.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTokenAlgorithms.o _updateTokenAlgorithms.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTokenAlgorithms.o _updateTokenAlgorithms.cpp
 
 ${OBJECTDIR}/_updateTrivialPathToAgentAlgorithm.o: _updateTrivialPathToAgentAlgorithm.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTrivialPathToAgentAlgorithm.o _updateTrivialPathToAgentAlgorithm.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTrivialPathToAgentAlgorithm.o _updateTrivialPathToAgentAlgorithm.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
@@ -567,6 +581,10 @@ ${OBJECTDIR}/main.o: main.cpp
 ${TESTDIR}/TestFiles/f3: ${TESTDIR}/tests/newsimpletest4.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc} -o ${TESTDIR}/TestFiles/f3 $^ ${LDLIBSOPTIONS}   
+
+${TESTDIR}/TestFiles/f5: ${TESTDIR}/_ext/7e63588e/newsimpletest4.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc} -o ${TESTDIR}/TestFiles/f5 $^ ${LDLIBSOPTIONS}   
 
 ${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/newsimpletest3.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
@@ -584,25 +602,31 @@ ${TESTDIR}/TestFiles/f4: ${TESTDIR}/tests/newsimpletest5.o ${OBJECTFILES:%.o=%_n
 ${TESTDIR}/tests/newsimpletest4.o: tests/newsimpletest4.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest4.o tests/newsimpletest4.cpp
+	$(COMPILE.cc) -g -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest4.o tests/newsimpletest4.cpp
+
+
+${TESTDIR}/_ext/7e63588e/newsimpletest4.o: ../../../../../NetBeansProjects/Map/tests/newsimpletest4.cpp 
+	${MKDIR} -p ${TESTDIR}/_ext/7e63588e
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/_ext/7e63588e/newsimpletest4.o ../../../../../NetBeansProjects/Map/tests/newsimpletest4.cpp
 
 
 ${TESTDIR}/tests/newsimpletest3.o: tests/newsimpletest3.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest3.o tests/newsimpletest3.cpp
+	$(COMPILE.cc) -g -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest3.o tests/newsimpletest3.cpp
 
 
 ${TESTDIR}/tests/newsimpletest2.o: tests/newsimpletest2.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest2.o tests/newsimpletest2.cpp
+	$(COMPILE.cc) -g -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest2.o tests/newsimpletest2.cpp
 
 
 ${TESTDIR}/tests/newsimpletest5.o: tests/newsimpletest5.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
-	$(COMPILE.cc) -O3 -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest5.o tests/newsimpletest5.cpp
+	$(COMPILE.cc) -g -I. `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest5.o tests/newsimpletest5.cpp
 
 
 ${OBJECTDIR}/Circle_nomain.o: ${OBJECTDIR}/Circle.o Circle.cpp 
@@ -613,7 +637,7 @@ ${OBJECTDIR}/Circle_nomain.o: ${OBJECTDIR}/Circle.o Circle.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Circle_nomain.o Circle.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Circle_nomain.o Circle.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/Circle.o ${OBJECTDIR}/Circle_nomain.o;\
 	fi
@@ -626,7 +650,7 @@ ${OBJECTDIR}/GA_SystemExperiment_nomain.o: ${OBJECTDIR}/GA_SystemExperiment.o GA
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GA_SystemExperiment_nomain.o GA_SystemExperiment.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GA_SystemExperiment_nomain.o GA_SystemExperiment.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/GA_SystemExperiment.o ${OBJECTDIR}/GA_SystemExperiment_nomain.o;\
 	fi
@@ -639,7 +663,7 @@ ${OBJECTDIR}/Rectangle_nomain.o: ${OBJECTDIR}/Rectangle.o Rectangle.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Rectangle_nomain.o Rectangle.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Rectangle_nomain.o Rectangle.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/Rectangle.o ${OBJECTDIR}/Rectangle_nomain.o;\
 	fi
@@ -652,7 +676,7 @@ ${OBJECTDIR}/Render_nomain.o: ${OBJECTDIR}/Render.o Render.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Render_nomain.o Render.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Render_nomain.o Render.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/Render.o ${OBJECTDIR}/Render_nomain.o;\
 	fi
@@ -665,7 +689,7 @@ ${OBJECTDIR}/Shape_nomain.o: ${OBJECTDIR}/Shape.o Shape.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Shape_nomain.o Shape.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Shape_nomain.o Shape.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/Shape.o ${OBJECTDIR}/Shape_nomain.o;\
 	fi
@@ -678,7 +702,7 @@ ${OBJECTDIR}/Text_nomain.o: ${OBJECTDIR}/Text.o Text.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Text_nomain.o Text.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Text_nomain.o Text.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/Text.o ${OBJECTDIR}/Text_nomain.o;\
 	fi
@@ -691,7 +715,7 @@ ${OBJECTDIR}/_agent_nomain.o: ${OBJECTDIR}/_agent.o _agent.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_nomain.o _agent.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_nomain.o _agent.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent.o ${OBJECTDIR}/_agent_nomain.o;\
 	fi
@@ -704,7 +728,7 @@ ${OBJECTDIR}/_agent_charging_nomain.o: ${OBJECTDIR}/_agent_charging.o _agent_cha
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging_nomain.o _agent_charging.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging_nomain.o _agent_charging.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_charging.o ${OBJECTDIR}/_agent_charging_nomain.o;\
 	fi
@@ -717,7 +741,7 @@ ${OBJECTDIR}/_agent_charging_CL_nomain.o: ${OBJECTDIR}/_agent_charging_CL.o _age
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging_CL_nomain.o _agent_charging_CL.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_charging_CL_nomain.o _agent_charging_CL.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_charging_CL.o ${OBJECTDIR}/_agent_charging_CL_nomain.o;\
 	fi
@@ -730,7 +754,7 @@ ${OBJECTDIR}/_agent_dead_nomain.o: ${OBJECTDIR}/_agent_dead.o _agent_dead.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_dead_nomain.o _agent_dead.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_dead_nomain.o _agent_dead.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_dead.o ${OBJECTDIR}/_agent_dead_nomain.o;\
 	fi
@@ -743,7 +767,7 @@ ${OBJECTDIR}/_agent_goingToCharging_nomain.o: ${OBJECTDIR}/_agent_goingToChargin
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToCharging_nomain.o _agent_goingToCharging.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToCharging_nomain.o _agent_goingToCharging.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_goingToCharging.o ${OBJECTDIR}/_agent_goingToCharging_nomain.o;\
 	fi
@@ -756,7 +780,7 @@ ${OBJECTDIR}/_agent_goingToCharging_CL_nomain.o: ${OBJECTDIR}/_agent_goingToChar
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToCharging_CL_nomain.o _agent_goingToCharging_CL.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToCharging_CL_nomain.o _agent_goingToCharging_CL.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_goingToCharging_CL.o ${OBJECTDIR}/_agent_goingToCharging_CL_nomain.o;\
 	fi
@@ -769,7 +793,7 @@ ${OBJECTDIR}/_agent_goingToDelivery_nomain.o: ${OBJECTDIR}/_agent_goingToDeliver
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToDelivery_nomain.o _agent_goingToDelivery.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToDelivery_nomain.o _agent_goingToDelivery.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_goingToDelivery.o ${OBJECTDIR}/_agent_goingToDelivery_nomain.o;\
 	fi
@@ -782,7 +806,7 @@ ${OBJECTDIR}/_agent_goingToDelivery_CL_nomain.o: ${OBJECTDIR}/_agent_goingToDeli
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToDelivery_CL_nomain.o _agent_goingToDelivery_CL.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToDelivery_CL_nomain.o _agent_goingToDelivery_CL.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_goingToDelivery_CL.o ${OBJECTDIR}/_agent_goingToDelivery_CL_nomain.o;\
 	fi
@@ -795,7 +819,7 @@ ${OBJECTDIR}/_agent_goingToPickup_nomain.o: ${OBJECTDIR}/_agent_goingToPickup.o 
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToPickup_nomain.o _agent_goingToPickup.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToPickup_nomain.o _agent_goingToPickup.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_goingToPickup.o ${OBJECTDIR}/_agent_goingToPickup_nomain.o;\
 	fi
@@ -808,7 +832,7 @@ ${OBJECTDIR}/_agent_goingToPickup_CL_nomain.o: ${OBJECTDIR}/_agent_goingToPickup
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToPickup_CL_nomain.o _agent_goingToPickup_CL.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToPickup_CL_nomain.o _agent_goingToPickup_CL.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_goingToPickup_CL.o ${OBJECTDIR}/_agent_goingToPickup_CL_nomain.o;\
 	fi
@@ -821,7 +845,7 @@ ${OBJECTDIR}/_agent_goingToRest_nomain.o: ${OBJECTDIR}/_agent_goingToRest.o _age
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToRest_nomain.o _agent_goingToRest.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToRest_nomain.o _agent_goingToRest.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_goingToRest.o ${OBJECTDIR}/_agent_goingToRest_nomain.o;\
 	fi
@@ -834,7 +858,7 @@ ${OBJECTDIR}/_agent_goingToRest_CL_nomain.o: ${OBJECTDIR}/_agent_goingToRest_CL.
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToRest_CL_nomain.o _agent_goingToRest_CL.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_goingToRest_CL_nomain.o _agent_goingToRest_CL.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_goingToRest_CL.o ${OBJECTDIR}/_agent_goingToRest_CL_nomain.o;\
 	fi
@@ -847,7 +871,7 @@ ${OBJECTDIR}/_agent_parked_nomain.o: ${OBJECTDIR}/_agent_parked.o _agent_parked.
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parked_nomain.o _agent_parked.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parked_nomain.o _agent_parked.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_parked.o ${OBJECTDIR}/_agent_parked_nomain.o;\
 	fi
@@ -860,7 +884,7 @@ ${OBJECTDIR}/_agent_parker_CL_nomain.o: ${OBJECTDIR}/_agent_parker_CL.o _agent_p
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parker_CL_nomain.o _agent_parker_CL.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_parker_CL_nomain.o _agent_parker_CL.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_parker_CL.o ${OBJECTDIR}/_agent_parker_CL_nomain.o;\
 	fi
@@ -873,7 +897,7 @@ ${OBJECTDIR}/_agent_state_nomain.o: ${OBJECTDIR}/_agent_state.o _agent_state.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_state_nomain.o _agent_state.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_agent_state_nomain.o _agent_state.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_agent_state.o ${OBJECTDIR}/_agent_state_nomain.o;\
 	fi
@@ -886,7 +910,7 @@ ${OBJECTDIR}/_allocation_nomain.o: ${OBJECTDIR}/_allocation.o _allocation.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_allocation_nomain.o _allocation.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_allocation_nomain.o _allocation.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_allocation.o ${OBJECTDIR}/_allocation_nomain.o;\
 	fi
@@ -899,7 +923,7 @@ ${OBJECTDIR}/_astarAlgorithm_nomain.o: ${OBJECTDIR}/_astarAlgorithm.o _astarAlgo
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarAlgorithm_nomain.o _astarAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarAlgorithm_nomain.o _astarAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_astarAlgorithm.o ${OBJECTDIR}/_astarAlgorithm_nomain.o;\
 	fi
@@ -912,7 +936,7 @@ ${OBJECTDIR}/_astarDistanceAlgorithm_nomain.o: ${OBJECTDIR}/_astarDistanceAlgori
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarDistanceAlgorithm_nomain.o _astarDistanceAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_astarDistanceAlgorithm_nomain.o _astarDistanceAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_astarDistanceAlgorithm.o ${OBJECTDIR}/_astarDistanceAlgorithm_nomain.o;\
 	fi
@@ -925,7 +949,7 @@ ${OBJECTDIR}/_chargingTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_chargingTaskT
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_chargingTaskToAgentAlgorithm_nomain.o _chargingTaskToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_chargingTaskToAgentAlgorithm_nomain.o _chargingTaskToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_chargingTaskToAgentAlgorithm.o ${OBJECTDIR}/_chargingTaskToAgentAlgorithm_nomain.o;\
 	fi
@@ -938,7 +962,7 @@ ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_clos
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm_nomain.o _closerCooperatorAgentIndexerAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm_nomain.o _closerCooperatorAgentIndexerAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm.o ${OBJECTDIR}/_closerCooperatorAgentIndexerAlgorithm_nomain.o;\
 	fi
@@ -951,7 +975,7 @@ ${OBJECTDIR}/_closerEndpointIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_closerEndpo
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerEndpointIndexerAlgorithm_nomain.o _closerEndpointIndexerAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerEndpointIndexerAlgorithm_nomain.o _closerEndpointIndexerAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_closerEndpointIndexerAlgorithm.o ${OBJECTDIR}/_closerEndpointIndexerAlgorithm_nomain.o;\
 	fi
@@ -964,7 +988,7 @@ ${OBJECTDIR}/_closerTaskIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_closerTaskIndex
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerTaskIndexerAlgorithm_nomain.o _closerTaskIndexerAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerTaskIndexerAlgorithm_nomain.o _closerTaskIndexerAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_closerTaskIndexerAlgorithm.o ${OBJECTDIR}/_closerTaskIndexerAlgorithm_nomain.o;\
 	fi
@@ -977,7 +1001,7 @@ ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm_nomain.o: ${OBJECTDIR}/_closer
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm_nomain.o _closerTaskIndexerThresholdAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm_nomain.o _closerTaskIndexerThresholdAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm.o ${OBJECTDIR}/_closerTaskIndexerThresholdAlgorithm_nomain.o;\
 	fi
@@ -990,7 +1014,7 @@ ${OBJECTDIR}/_endpointIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_endpointIndexerAl
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointIndexerAlgorithm_nomain.o _endpointIndexerAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointIndexerAlgorithm_nomain.o _endpointIndexerAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_endpointIndexerAlgorithm.o ${OBJECTDIR}/_endpointIndexerAlgorithm_nomain.o;\
 	fi
@@ -1003,7 +1027,7 @@ ${OBJECTDIR}/_endpointsDistanceAlgorithm_nomain.o: ${OBJECTDIR}/_endpointsDistan
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointsDistanceAlgorithm_nomain.o _endpointsDistanceAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointsDistanceAlgorithm_nomain.o _endpointsDistanceAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_endpointsDistanceAlgorithm.o ${OBJECTDIR}/_endpointsDistanceAlgorithm_nomain.o;\
 	fi
@@ -1016,7 +1040,7 @@ ${OBJECTDIR}/_endpointsPathAlgorithm_nomain.o: ${OBJECTDIR}/_endpointsPathAlgori
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointsPathAlgorithm_nomain.o _endpointsPathAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_endpointsPathAlgorithm_nomain.o _endpointsPathAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_endpointsPathAlgorithm.o ${OBJECTDIR}/_endpointsPathAlgorithm_nomain.o;\
 	fi
@@ -1029,7 +1053,7 @@ ${OBJECTDIR}/_ga_agent_nomain.o: ${OBJECTDIR}/_ga_agent.o _ga_agent.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_nomain.o _ga_agent.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_nomain.o _ga_agent.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_agent.o ${OBJECTDIR}/_ga_agent_nomain.o;\
 	fi
@@ -1042,7 +1066,7 @@ ${OBJECTDIR}/_ga_agent_state_nomain.o: ${OBJECTDIR}/_ga_agent_state.o _ga_agent_
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_nomain.o _ga_agent_state.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_nomain.o _ga_agent_state.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_agent_state.o ${OBJECTDIR}/_ga_agent_state_nomain.o;\
 	fi
@@ -1055,7 +1079,7 @@ ${OBJECTDIR}/_ga_agent_state_buzy_nomain.o: ${OBJECTDIR}/_ga_agent_state_buzy.o 
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_buzy_nomain.o _ga_agent_state_buzy.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_buzy_nomain.o _ga_agent_state_buzy.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_agent_state_buzy.o ${OBJECTDIR}/_ga_agent_state_buzy_nomain.o;\
 	fi
@@ -1068,7 +1092,7 @@ ${OBJECTDIR}/_ga_agent_state_free_nomain.o: ${OBJECTDIR}/_ga_agent_state_free.o 
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_free_nomain.o _ga_agent_state_free.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_agent_state_free_nomain.o _ga_agent_state_free.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_agent_state_free.o ${OBJECTDIR}/_ga_agent_state_free_nomain.o;\
 	fi
@@ -1081,7 +1105,7 @@ ${OBJECTDIR}/_ga_balanced_solution_nomain.o: ${OBJECTDIR}/_ga_balanced_solution.
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_balanced_solution_nomain.o _ga_balanced_solution.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_balanced_solution_nomain.o _ga_balanced_solution.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_balanced_solution.o ${OBJECTDIR}/_ga_balanced_solution_nomain.o;\
 	fi
@@ -1094,7 +1118,7 @@ ${OBJECTDIR}/_ga_best_solution_selector_nomain.o: ${OBJECTDIR}/_ga_best_solution
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_best_solution_selector_nomain.o _ga_best_solution_selector.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_best_solution_selector_nomain.o _ga_best_solution_selector.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_best_solution_selector.o ${OBJECTDIR}/_ga_best_solution_selector_nomain.o;\
 	fi
@@ -1107,7 +1131,7 @@ ${OBJECTDIR}/_ga_estimate_of_path_check_nomain.o: ${OBJECTDIR}/_ga_estimate_of_p
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_check_nomain.o _ga_estimate_of_path_check.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_check_nomain.o _ga_estimate_of_path_check.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_estimate_of_path_check.o ${OBJECTDIR}/_ga_estimate_of_path_check_nomain.o;\
 	fi
@@ -1120,7 +1144,7 @@ ${OBJECTDIR}/_ga_estimate_of_path_collision_nomain.o: ${OBJECTDIR}/_ga_estimate_
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_collision_nomain.o _ga_estimate_of_path_collision.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_collision_nomain.o _ga_estimate_of_path_collision.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_estimate_of_path_collision.o ${OBJECTDIR}/_ga_estimate_of_path_collision_nomain.o;\
 	fi
@@ -1133,7 +1157,7 @@ ${OBJECTDIR}/_ga_estimate_of_path_count_nomain.o: ${OBJECTDIR}/_ga_estimate_of_p
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_count_nomain.o _ga_estimate_of_path_count.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_count_nomain.o _ga_estimate_of_path_count.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_estimate_of_path_count.o ${OBJECTDIR}/_ga_estimate_of_path_count_nomain.o;\
 	fi
@@ -1146,7 +1170,7 @@ ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint_nomain.o: ${OBJECTDIR}/_ga_estim
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint_nomain.o _ga_estimate_of_path_task_endpoint.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint_nomain.o _ga_estimate_of_path_task_endpoint.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint.o ${OBJECTDIR}/_ga_estimate_of_path_task_endpoint_nomain.o;\
 	fi
@@ -1159,7 +1183,7 @@ ${OBJECTDIR}/_ga_estimative_of_path_nomain.o: ${OBJECTDIR}/_ga_estimative_of_pat
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimative_of_path_nomain.o _ga_estimative_of_path.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_estimative_of_path_nomain.o _ga_estimative_of_path.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_estimative_of_path.o ${OBJECTDIR}/_ga_estimative_of_path_nomain.o;\
 	fi
@@ -1172,7 +1196,7 @@ ${OBJECTDIR}/_ga_objective_function_nomain.o: ${OBJECTDIR}/_ga_objective_functio
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_objective_function_nomain.o _ga_objective_function.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_objective_function_nomain.o _ga_objective_function.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_objective_function.o ${OBJECTDIR}/_ga_objective_function_nomain.o;\
 	fi
@@ -1185,7 +1209,7 @@ ${OBJECTDIR}/_ga_population_nomain.o: ${OBJECTDIR}/_ga_population.o _ga_populati
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_population_nomain.o _ga_population.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_population_nomain.o _ga_population.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_population.o ${OBJECTDIR}/_ga_population_nomain.o;\
 	fi
@@ -1198,7 +1222,7 @@ ${OBJECTDIR}/_ga_pseudo_solution_nomain.o: ${OBJECTDIR}/_ga_pseudo_solution.o _g
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_pseudo_solution_nomain.o _ga_pseudo_solution.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_pseudo_solution_nomain.o _ga_pseudo_solution.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_pseudo_solution.o ${OBJECTDIR}/_ga_pseudo_solution_nomain.o;\
 	fi
@@ -1211,7 +1235,7 @@ ${OBJECTDIR}/_ga_real_of_nomain.o: ${OBJECTDIR}/_ga_real_of.o _ga_real_of.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_real_of_nomain.o _ga_real_of.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_real_of_nomain.o _ga_real_of.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_real_of.o ${OBJECTDIR}/_ga_real_of_nomain.o;\
 	fi
@@ -1224,7 +1248,7 @@ ${OBJECTDIR}/_ga_select_solution_nomain.o: ${OBJECTDIR}/_ga_select_solution.o _g
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_select_solution_nomain.o _ga_select_solution.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_select_solution_nomain.o _ga_select_solution.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_select_solution.o ${OBJECTDIR}/_ga_select_solution_nomain.o;\
 	fi
@@ -1237,7 +1261,7 @@ ${OBJECTDIR}/_ga_solution_nomain.o: ${OBJECTDIR}/_ga_solution.o _ga_solution.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solution_nomain.o _ga_solution.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solution_nomain.o _ga_solution.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_solution.o ${OBJECTDIR}/_ga_solution_nomain.o;\
 	fi
@@ -1250,7 +1274,7 @@ ${OBJECTDIR}/_ga_solutionAllocator_nomain.o: ${OBJECTDIR}/_ga_solutionAllocator.
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solutionAllocator_nomain.o _ga_solutionAllocator.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_solutionAllocator_nomain.o _ga_solutionAllocator.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_solutionAllocator.o ${OBJECTDIR}/_ga_solutionAllocator_nomain.o;\
 	fi
@@ -1263,7 +1287,7 @@ ${OBJECTDIR}/_ga_system_nomain.o: ${OBJECTDIR}/_ga_system.o _ga_system.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_system_nomain.o _ga_system.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_system_nomain.o _ga_system.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_system.o ${OBJECTDIR}/_ga_system_nomain.o;\
 	fi
@@ -1276,7 +1300,7 @@ ${OBJECTDIR}/_ga_token_nomain.o: ${OBJECTDIR}/_ga_token.o _ga_token.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token_nomain.o _ga_token.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token_nomain.o _ga_token.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_token.o ${OBJECTDIR}/_ga_token_nomain.o;\
 	fi
@@ -1289,7 +1313,7 @@ ${OBJECTDIR}/_ga_token_p_nomain.o: ${OBJECTDIR}/_ga_token_p.o _ga_token_p.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token_p_nomain.o _ga_token_p.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ga_token_p_nomain.o _ga_token_p.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ga_token_p.o ${OBJECTDIR}/_ga_token_p_nomain.o;\
 	fi
@@ -1302,7 +1326,7 @@ ${OBJECTDIR}/_map_nomain.o: ${OBJECTDIR}/_map.o _map.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_map_nomain.o _map.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_map_nomain.o _map.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_map.o ${OBJECTDIR}/_map_nomain.o;\
 	fi
@@ -1315,9 +1339,35 @@ ${OBJECTDIR}/_nsga_nomain.o: ${OBJECTDIR}/_nsga.o _nsga.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_nsga_nomain.o _nsga.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_nsga_nomain.o _nsga.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_nsga.o ${OBJECTDIR}/_nsga_nomain.o;\
+	fi
+
+${OBJECTDIR}/_r_ga_token_nomain.o: ${OBJECTDIR}/_r_ga_token.o _r_ga_token.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_r_ga_token.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_r_ga_token_nomain.o _r_ga_token.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_r_ga_token.o ${OBJECTDIR}/_r_ga_token_nomain.o;\
+	fi
+
+${OBJECTDIR}/_r_stepMap_nomain.o: ${OBJECTDIR}/_r_stepMap.o _r_stepMap.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_r_stepMap.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_r_stepMap_nomain.o _r_stepMap.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_r_stepMap.o ${OBJECTDIR}/_r_stepMap_nomain.o;\
 	fi
 
 ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o _selectBackwardChargingTaskToAgentAlgorithm.cpp 
@@ -1328,7 +1378,7 @@ ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm_nomain.o _selectBackwardChargingTaskToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm_nomain.o _selectBackwardChargingTaskToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm.o ${OBJECTDIR}/_selectBackwardChargingTaskToAgentAlgorithm_nomain.o;\
 	fi
@@ -1341,7 +1391,7 @@ ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectB
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm_nomain.o _selectBackwardTaskToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm_nomain.o _selectBackwardTaskToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm.o ${OBJECTDIR}/_selectBackwardTaskToAgentAlgorithm_nomain.o;\
 	fi
@@ -1354,7 +1404,7 @@ ${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_sel
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm_nomain.o _selectChargingEndpointToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm_nomain.o _selectChargingEndpointToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm.o ${OBJECTDIR}/_selectChargingEndpointToAgentAlgorithm_nomain.o;\
 	fi
@@ -1367,7 +1417,7 @@ ${OBJECTDIR}/_selectChargingTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectC
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectChargingTaskToAgentAlgorithm_nomain.o _selectChargingTaskToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectChargingTaskToAgentAlgorithm_nomain.o _selectChargingTaskToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_selectChargingTaskToAgentAlgorithm.o ${OBJECTDIR}/_selectChargingTaskToAgentAlgorithm_nomain.o;\
 	fi
@@ -1380,7 +1430,7 @@ ${OBJECTDIR}/_selectChargingTaskToAgentThresholdAlgorithm_nomain.o: ${OBJECTDIR}
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectChargingTaskToAgentThresholdAlgorithm_nomain.o _selectChargingTaskToAgentThresholdAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectChargingTaskToAgentThresholdAlgorithm_nomain.o _selectChargingTaskToAgentThresholdAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_selectChargingTaskToAgentThresholdAlgorithm.o ${OBJECTDIR}/_selectChargingTaskToAgentThresholdAlgorithm_nomain.o;\
 	fi
@@ -1393,7 +1443,7 @@ ${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectR
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm_nomain.o _selectRestEndpointToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm_nomain.o _selectRestEndpointToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm.o ${OBJECTDIR}/_selectRestEndpointToAgentAlgorithm_nomain.o;\
 	fi
@@ -1406,7 +1456,7 @@ ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectTaskS
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm_nomain.o _selectTaskSwapToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm_nomain.o _selectTaskSwapToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm.o ${OBJECTDIR}/_selectTaskSwapToAgentAlgorithm_nomain.o;\
 	fi
@@ -1419,7 +1469,7 @@ ${OBJECTDIR}/_selectTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectTaskToAge
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskToAgentAlgorithm_nomain.o _selectTaskToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskToAgentAlgorithm_nomain.o _selectTaskToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_selectTaskToAgentAlgorithm.o ${OBJECTDIR}/_selectTaskToAgentAlgorithm_nomain.o;\
 	fi
@@ -1432,7 +1482,7 @@ ${OBJECTDIR}/_selectTaskToAgentThresholdAlgorithm_nomain.o: ${OBJECTDIR}/_select
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskToAgentThresholdAlgorithm_nomain.o _selectTaskToAgentThresholdAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTaskToAgentThresholdAlgorithm_nomain.o _selectTaskToAgentThresholdAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_selectTaskToAgentThresholdAlgorithm.o ${OBJECTDIR}/_selectTaskToAgentThresholdAlgorithm_nomain.o;\
 	fi
@@ -1445,7 +1495,7 @@ ${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_selectTr
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm_nomain.o _selectTrivialPathToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm_nomain.o _selectTrivialPathToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm.o ${OBJECTDIR}/_selectTrivialPathToAgentAlgorithm_nomain.o;\
 	fi
@@ -1458,7 +1508,7 @@ ${OBJECTDIR}/_siteBox_nomain.o: ${OBJECTDIR}/_siteBox.o _siteBox.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_siteBox_nomain.o _siteBox.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_siteBox_nomain.o _siteBox.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_siteBox.o ${OBJECTDIR}/_siteBox_nomain.o;\
 	fi
@@ -1471,7 +1521,7 @@ ${OBJECTDIR}/_stepPath_nomain.o: ${OBJECTDIR}/_stepPath.o _stepPath.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepPath_nomain.o _stepPath.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepPath_nomain.o _stepPath.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_stepPath.o ${OBJECTDIR}/_stepPath_nomain.o;\
 	fi
@@ -1484,7 +1534,7 @@ ${OBJECTDIR}/_stepPathAlgorithm_nomain.o: ${OBJECTDIR}/_stepPathAlgorithm.o _ste
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepPathAlgorithm_nomain.o _stepPathAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepPathAlgorithm_nomain.o _stepPathAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_stepPathAlgorithm.o ${OBJECTDIR}/_stepPathAlgorithm_nomain.o;\
 	fi
@@ -1497,7 +1547,7 @@ ${OBJECTDIR}/_stepSiteBox_nomain.o: ${OBJECTDIR}/_stepSiteBox.o _stepSiteBox.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepSiteBox_nomain.o _stepSiteBox.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_stepSiteBox_nomain.o _stepSiteBox.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_stepSiteBox.o ${OBJECTDIR}/_stepSiteBox_nomain.o;\
 	fi
@@ -1510,7 +1560,7 @@ ${OBJECTDIR}/_taskIndexerAlgorithm_nomain.o: ${OBJECTDIR}/_taskIndexerAlgorithm.
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_taskIndexerAlgorithm_nomain.o _taskIndexerAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_taskIndexerAlgorithm_nomain.o _taskIndexerAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_taskIndexerAlgorithm.o ${OBJECTDIR}/_taskIndexerAlgorithm_nomain.o;\
 	fi
@@ -1523,7 +1573,7 @@ ${OBJECTDIR}/_taskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_taskToAgentAlgorithm.
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_taskToAgentAlgorithm_nomain.o _taskToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_taskToAgentAlgorithm_nomain.o _taskToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_taskToAgentAlgorithm.o ${OBJECTDIR}/_taskToAgentAlgorithm_nomain.o;\
 	fi
@@ -1536,7 +1586,7 @@ ${OBJECTDIR}/_task_path_nomain.o: ${OBJECTDIR}/_task_path.o _task_path.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_task_path_nomain.o _task_path.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_task_path_nomain.o _task_path.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_task_path.o ${OBJECTDIR}/_task_path_nomain.o;\
 	fi
@@ -1549,7 +1599,7 @@ ${OBJECTDIR}/_token_nomain.o: ${OBJECTDIR}/_token.o _token.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_token_nomain.o _token.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_token_nomain.o _token.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_token.o ${OBJECTDIR}/_token_nomain.o;\
 	fi
@@ -1562,7 +1612,7 @@ ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateB
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm_nomain.o _updateBackwardTaskToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm_nomain.o _updateBackwardTaskToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm.o ${OBJECTDIR}/_updateBackwardTaskToAgentAlgorithm_nomain.o;\
 	fi
@@ -1575,7 +1625,7 @@ ${OBJECTDIR}/_updateEndpointToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateEndpo
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateEndpointToAgentAlgorithm_nomain.o _updateEndpointToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateEndpointToAgentAlgorithm_nomain.o _updateEndpointToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_updateEndpointToAgentAlgorithm.o ${OBJECTDIR}/_updateEndpointToAgentAlgorithm_nomain.o;\
 	fi
@@ -1588,7 +1638,7 @@ ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateTaskS
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm_nomain.o _updateTaskSwapToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm_nomain.o _updateTaskSwapToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm.o ${OBJECTDIR}/_updateTaskSwapToAgentAlgorithm_nomain.o;\
 	fi
@@ -1601,7 +1651,7 @@ ${OBJECTDIR}/_updateTaskToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateTaskToAge
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskToAgentAlgorithm_nomain.o _updateTaskToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTaskToAgentAlgorithm_nomain.o _updateTaskToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_updateTaskToAgentAlgorithm.o ${OBJECTDIR}/_updateTaskToAgentAlgorithm_nomain.o;\
 	fi
@@ -1614,7 +1664,7 @@ ${OBJECTDIR}/_updateTokenAlgorithms_nomain.o: ${OBJECTDIR}/_updateTokenAlgorithm
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTokenAlgorithms_nomain.o _updateTokenAlgorithms.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTokenAlgorithms_nomain.o _updateTokenAlgorithms.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_updateTokenAlgorithms.o ${OBJECTDIR}/_updateTokenAlgorithms_nomain.o;\
 	fi
@@ -1627,7 +1677,7 @@ ${OBJECTDIR}/_updateTrivialPathToAgentAlgorithm_nomain.o: ${OBJECTDIR}/_updateTr
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTrivialPathToAgentAlgorithm_nomain.o _updateTrivialPathToAgentAlgorithm.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_updateTrivialPathToAgentAlgorithm_nomain.o _updateTrivialPathToAgentAlgorithm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_updateTrivialPathToAgentAlgorithm.o ${OBJECTDIR}/_updateTrivialPathToAgentAlgorithm_nomain.o;\
 	fi
@@ -1640,7 +1690,7 @@ ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O3 `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main_nomain.o main.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main_nomain.o main.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/main.o ${OBJECTDIR}/main_nomain.o;\
 	fi
@@ -1650,6 +1700,7 @@ ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp
 	@if [ "${TEST}" = "" ]; \
 	then  \
 	    ${TESTDIR}/TestFiles/f3 || true; \
+	    ${TESTDIR}/TestFiles/f5 || true; \
 	    ${TESTDIR}/TestFiles/f2 || true; \
 	    ${TESTDIR}/TestFiles/f1 || true; \
 	    ${TESTDIR}/TestFiles/f4 || true; \

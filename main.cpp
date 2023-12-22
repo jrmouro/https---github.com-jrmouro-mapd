@@ -605,8 +605,8 @@ void small(int map = 0,
  */
 int main(int argc, char** argv) {
     
-    char* instance = "small";
-    char* of = "TP"; // * -> all obj func
+    char* instance = "test";
+    char* of = "G-E"; // * -> all obj func
     
     unsigned evaltype = 2;
     unsigned validity = 5000;    

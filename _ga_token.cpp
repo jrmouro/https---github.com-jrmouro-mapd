@@ -185,8 +185,8 @@ const std::string& _ga_token::getName() const {
 }
 
 void _ga_token::setName(const std::string& name){
-        this->_name = name;
-    }
+    this->_name = name;
+}
 
 int _ga_token::energyExpenditure() const {
     int ret = 0;

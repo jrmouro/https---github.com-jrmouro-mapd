@@ -9,7 +9,8 @@
 #define _STEPPATHALGORITHM_H
 
 #include "_site.h"
-#include "_stepMap.h"
+//#include "_stepMap.h"
+#include "_env_map.h"
 #include "_stepPath.h"
 #include "_agent.h"
 
@@ -17,9 +18,9 @@ class _token;
 class _stepPathAlgorithm {
 public:
     
-//    virtual bool solve(const _stepMap& map, const _site& start, const _site& goal, _stepPath& path, unsigned step, int type) const = 0;
+//    virtual bool solve(const _stepMap& map, _stepPath& path, const _site& goal, int type) const = 0;
     
-    virtual bool solve(const _stepMap& map, _stepPath& path, const _site& goal, int type) const = 0;
+    virtual bool solve(const _env_map& map, _stepPath& path, const _site& goal, int type) const = 0;
     
     bool solve(const _token& token, const _agent& agent, _stepPath& path, const _site& goal) const ;
     

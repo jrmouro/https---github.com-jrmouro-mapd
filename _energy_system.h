@@ -13,7 +13,7 @@
 #include "_energy_charge.h"
 
 template <class ID, class UNIT>
-class _energy_system : Identifiable<std::string>{
+class _energy_system : public Identifiable<std::string>{
     
 public:
     
@@ -31,6 +31,20 @@ public:
             current_level(other.current_level), 
             energy_charge(other.energy_charge),
             regime(other.regime) { }
+    
+//    _energy_system<ID, UNIT>& operator=(const _energy_system<ID, UNIT>& right) {
+//        
+//        if (this == &right)
+//            return *this;
+//        
+//        _id = right._id;
+//        current_level = right.current_level;   
+//        energy_charge = right.energy_charge;
+//        regime = right.regime;
+//        
+//        return *this;
+//    }
+
     
     virtual std::string id() const {
         return _id + "(" + regime.id() + ")";
@@ -94,7 +108,9 @@ public:
     
     virtual bool isAtDeadLevel() const = 0;
     
-    
+    void setCurrent_level(UNIT current_level) {
+        this->current_level = current_level;
+    }
     
 protected:
     const std::string _id;

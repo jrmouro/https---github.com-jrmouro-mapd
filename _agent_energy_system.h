@@ -325,6 +325,11 @@ public:
         return charging;
     }
     
+    void setCharging(int charging) {
+        this->charging = charging;
+    }
+
+    
 private:
     
     int charging = 0;
